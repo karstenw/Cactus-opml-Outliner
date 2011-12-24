@@ -1,0 +1,13 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {Cancel = id; OK = id; }; 
+            CLASS = OpenURLWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {label = id; textfield = id; }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}

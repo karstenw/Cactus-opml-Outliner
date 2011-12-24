@@ -1,0 +1,20 @@
+{
+    IBClasses = (
+        {CLASS = KWOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
+        {
+            ACTIONS = {
+                newOutline = id; 
+                newTable = id; 
+                openFile = id; 
+                openOPML = id; 
+                openURL = id; 
+                saveAs = id; 
+            }; 
+            CLASS = PythonBrowserAppDelegate; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = PythonBrowserModel; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

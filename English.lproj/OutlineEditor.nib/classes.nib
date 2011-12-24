@@ -1,0 +1,26 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = KWOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
+        {
+            ACTIONS = {applySettings = id; loadFile = id; }; 
+            CLASS = PythonBrowserWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                butApplySettings = id; 
+                menBehaviour = id; 
+                menFormat = id; 
+                optAlterLines = id; 
+                optCommentVisible = id; 
+                optHLines = id; 
+                optNameVisible = id; 
+                optTypeVisible = id; 
+                optVLines = id; 
+                optValueVisible = id; 
+                outlineView = id; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}

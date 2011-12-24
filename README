@@ -1,0 +1,65 @@
+This is the Cactus-opml outliner/editor.
+
+It is based on the PythonBrowser example from PyObjC.
+
+Developed on OSX 10.4, Xcode 2.5, pyobjc 1.4, py2app 0.53
+
+Prerequisites:
+- python 2.7 - older versions may work
+- PyobjC
+- py2app
+- Apple developer tools
+
+
+
+It's flakey, buggy and a lot of fun.
+
+Don't use it to save your current data. Just to watch it and get a new pov on opml.
+
+This started as an excercise to learn about the NSOutlineView. Well one thing lead to another...
+
+
+Things that work:
+
+# files, outlines and tables
+- open file (opml)
+- open url (opml)
+- new outline
+- new table
+
+
+
+Things that don't work:
+
+- open document via open event or the dock
+- rss
+- save (only save as)
+- saving when outline structure does not conform to opml (head & body element)
+- node movements up & down
+- cut, copy & paste
+
+
+
+Shortcuts:
+# open/save files
+cmd-O       open file dialog
+cmd-alt-O   open URL dialog
+cmd-shift-S save as dialog
+
+# editing
+tab         indent selection
+shift-tab   outdent selection
+
+backspace   delete selection
+delete      delete selection
+
+
+cmd-enter   open node in a table view (usefull if node has attributes)
+
+cmd-alt-enter
+            try to open node selection either in a new document (opml include) or in the schema handler.
+            does not work on impropper encoded urls.            
+
+enter       start/end editing current node
+Return      create a new node after the current and start editing
+
