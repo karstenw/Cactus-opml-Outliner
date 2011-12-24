@@ -4,6 +4,13 @@ It is based on the PythonBrowser example from PyObjC.
 
 Developed on OSX 10.4, Xcode 2.5, pyobjc 1.4, py2app 0.53
 
+To build:
+
+python setup.py py2app
+
+This will build the app in the dist folder.
+
+
 Prerequisites:
 - python 2.7 - older versions may work
 - PyobjC
