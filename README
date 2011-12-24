@@ -10,6 +10,8 @@ python setup.py py2app
 
 This will build the app in the dist folder.
 
+A universal binary is in the download section.
+
 
 Prerequisites:
 - python 2.7 - older versions may work
@@ -44,7 +46,10 @@ Things that don't work:
 - saving when outline structure does not conform to opml (head & body element)
 - node movements up & down
 - cut, copy & paste
-
+- nodetypes
+- header nodes are saved untouched
+- honoring expansionstate, windowstate
+- freeing memory (take anything you get, give nothing back ;-)
 
 
 Shortcuts:
