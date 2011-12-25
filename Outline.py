@@ -741,8 +741,7 @@ class OutlineDocumentModel(NSObject):
 
     # delegate method
     def outlineView_shouldEditTableColumn_item_(self, view, col, item):
-        #pdb.set_trace()
-        return True
+        return item.editable
 
 
     def outlineView_heightOfRowByItem_(self, ov, item):
@@ -756,7 +755,7 @@ class OutlineDocumentModel(NSObject):
         else:
             return lineheight
 
-
+    # UNUSED
     def ovUpdateItem_Key_Value_(self, item, key, value):
         # update a single key value pair in the value dict
         pass
@@ -1273,8 +1272,10 @@ def createNode(ov, selection, startEditing=True):
         p = selection.parent
         node = OutlineNode(u"", "", selection.parent, typ)
         targetIdx = selection.nextIndex()
-        
-        p.addChild_atIndex_( node, targetIdx )
+        if targetIdx == -1:
+            p.addChild_( node )
+        else:
+            p.addChild_atIndex_( node, targetIdx )
         ov.reloadData()
         ov.selectRowItem_( node )
         rowIndex = ov.rowForItem_( node )
