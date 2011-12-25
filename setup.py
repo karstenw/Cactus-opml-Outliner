@@ -9,7 +9,7 @@ import os
 from distutils.core import setup
 import py2app
 
-version = "0.2.1"
+version = "0.2.2"
 infostr = 'Cactus OPML-Reader ' + version + ' Copyright 2011 Karsten Wolf'
 
 
