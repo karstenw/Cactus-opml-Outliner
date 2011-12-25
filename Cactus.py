@@ -32,7 +32,7 @@ NSSavePanel = AppKit.NSSavePanel
 NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton 
 
 
-# grod styles
+# grid styles
 NSTableViewGridNone = AppKit.NSTableViewGridNone
 NSTableViewSolidVerticalGridLineMask = AppKit.NSTableViewSolidVerticalGridLineMask
 NSTableViewSolidHorizontalGridLineMask = AppKit.NSTableViewSolidHorizontalGridLineMask
@@ -196,6 +196,7 @@ class PythonBrowserWindowController(AutoBaseClass):
         self.path = ""
         self.root = None
         self.parentNode = None
+        self.variableRowHeight = True
 
         if isinstance(obj, Document):
             self.path = obj.fileorurl
@@ -285,6 +286,9 @@ class PythonBrowserWindowController(AutoBaseClass):
         typeVisible = self.optTypeVisible.state()
         valueVisible = self.optValueVisible.state()
         commentVisible = self.optCommentVisible.state()
+
+        self.variableRowHeight = self.optVariableRow.state()
+        
         formatChoice = self.menFormat.state()
         behaviourChoice = self.menBehaviour.state()
 
@@ -331,7 +335,7 @@ class PythonBrowserWindowController(AutoBaseClass):
 
         #
         self.outlineView.setUsesAlternatingRowBackgroundColors_(alterLines)
-
+        self.outlineView.reloadData()
         self.outlineView.setNeedsDisplay_( True )
 
 
@@ -339,16 +343,11 @@ class PythonBrowserAppDelegate(NSObject):
     # defined in mainmenu
     def applicationDidFinishLaunching_(self, notification):
         pass
-        # self.newBrowser_(self)
-        # self.newOutline_(None)
-        # self.newTable_(None)
         
     def newTableWithRoot_(self, root):
-        #pdb.set_trace()
         self.newTableWithRoot_title_(root, None)
 
     def newTableWithRoot_title_(self, root, title):
-        #pdb.set_trace()
         # find owning controller here and pass on
         if not title:
             title = u"Table Editor"
@@ -363,21 +362,26 @@ class PythonBrowserAppDelegate(NSObject):
         PythonBrowserWindowController.alloc().initWithObject_type_(doc, typeTable)
 
 
+    # menu "New Table"
     def newTable_(self, sender):
         doc = Document("Untitled Table", None)
         PythonBrowserWindowController.alloc().initWithObject_type_(doc, typeTable)
 
 
+    # menu "New Outline"
     def newOutline_(self, sender):
         doc = Document("Untitled Outline", None)
         PythonBrowserWindowController.alloc().initWithObject_type_(doc, typeOutline)
 
+    # UNUSED
     def newRoot_(self, sender):
         pass
-    
+
+    # menu "Open URL"    
     def openURL_(self, sender):
         OpenURLWindowController().init()
 
+    # used by OpenURL delegate OK_ action
     def newOutlineFromURL_(self, url):
         f = urllib.FancyURLopener()
         fob = f.open(url)
@@ -413,8 +417,9 @@ class PythonBrowserAppDelegate(NSObject):
 
 
     def openOPML_(self, rootOPML, filepath):
-        """This builds the node tree
-        """
+        """This builds the node tree and opens a window."""
+        #
+        #  Split this up.
         def getChildrenforNode(node, children):
             for c in children:
                 name = c.get('name', '')

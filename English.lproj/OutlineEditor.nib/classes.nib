@@ -17,6 +17,7 @@
                 optTypeVisible = id; 
                 optVLines = id; 
                 optValueVisible = id; 
+                optVariableRow = id; 
                 outlineView = id; 
             }; 
             SUPERCLASS = NSWindowController; 

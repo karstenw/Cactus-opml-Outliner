@@ -11,7 +11,7 @@ import StringIO
 import pprint
 pp = pprint.pprint
 
-kwdbg = False
+kwdbg = True
 import pdb
 
 keyTypes = {}

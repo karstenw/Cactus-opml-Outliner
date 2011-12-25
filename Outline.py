@@ -9,6 +9,9 @@
 import sys
 import os
 
+import urllib
+import urlparse
+
 import pdb
 import pprint
 pp = pprint.pprint
@@ -269,7 +272,7 @@ class KWOutlineView(AutoBaseClass):
             # cmd+alt enter
             # cmd enter
             # cmd shift enter
-            #cmd alt shift enter
+            # cmd alt shift enter
 
             # pdb.set_trace()
 
@@ -304,28 +307,31 @@ class KWOutlineView(AutoBaseClass):
                             # for generic xml make getOPML a getXML with params
                             #
                             
+                            # in a table
                             if name in (u"url", u"htmlUrl", u"xmlUrl", u"xmlurl"):
                                 #
                                 # FIXING HACK
                                 # url = item.value
+                                # pdb.set_trace()
                                 url = item.displayValue
-                                if name == u"xmlUrl" or url.endswith(".opml"):
+                                url = cleanupURL( url )
+                                if url.endswith(".opml"):
                                     appdelg.newOutlineFromURL_( url )
                                 else:
                                     url = NSURL.URLWithString_( url )
                                     workspace.openURL_( url )
 
+                            # in an outline
                             else:
-                                #
-                                # 
                                 #
                                 v = item.getValueDict()
                                 typ = v.get("type", "")
-                                u = v.get("url", "")
-                                url = unicode(u)
-                                if typ in ("include", "outline"):
+                                url = v.get("url", "")
+
+                                url = cleanupURL( url )
+                                if url.endswith(".opml"):
                                     appdelg.newOutlineFromURL_( url )
-                                elif typ in ("link", "scripting2Post"):
+                                else:
                                     url = NSURL.URLWithString_( url )
                                     workspace.openURL_( url )
                             consumed = True
@@ -740,7 +746,11 @@ class OutlineDocumentModel(NSObject):
 
 
     def outlineView_heightOfRowByItem_(self, ov, item):
+        # where to store this
         lineheight = 14
+
+        if not self.controller.variableRowHeight:
+            return lineheight
         if item.value:
             return len(item.value) * lineheight
         else:
@@ -1073,6 +1083,14 @@ class OutlineNode(NSObject):
                 return s
             s = s.parent
 
+    def pathFromRoot(self):
+        l = []
+        s = self
+        while True:
+            if s.parent == None:
+                return l
+            s = s.parent
+            l.append( s.name )
 
     #
     # node math
@@ -1315,4 +1333,21 @@ def moveSelectionLeft(ov, selection):
 
 def moveSelectionRight(ov, selection):
     pass
+
+
+def cleanupURL( url ):
+    # lots of URLs contain spaces, &, '
+    purl = urlparse.urlparse( url )
+    purl = list(purl)
+    path = purl[2]
+    path = urllib.unquote( 'http://' + path )
+    path = urllib.quote( path )
+    path = path[9:]
+    purl[2] = path
+    purl = urlparse.urlunparse( purl )
+    purl = unicode(purl)
+    return purl
+        
+
+
 
