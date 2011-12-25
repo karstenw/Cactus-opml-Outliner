@@ -30,7 +30,7 @@ Will build the app in the dist folder.
 
 #### A universal binary is in the download section. ####
 
-#### Prerequisites fro compiling: ####
+#### Prerequisites for compiling: ####
 
 + python 2.7 - older versions may work
 + PyobjC
@@ -45,7 +45,7 @@ v0.2.1 Node movements
 
 v0.2.2 Row height option
 
-v0.2.3 Corrected a bug introduced with node movements and preventig nodes to be manually created at the end of a level.
+v0.2.3 Corrected a bug introduced with node movements and preventing nodes to be manually created at the end of a level.
 
 
 
