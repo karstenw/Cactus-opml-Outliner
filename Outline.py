@@ -73,6 +73,13 @@ NSEnterCharacter = AppKit.NSEnterCharacter
 NSTabCharacter = AppKit.NSTabCharacter
 NSBackTabCharacter = AppKit.NSBackTabCharacter
 
+NSDownArrowFunctionKey = AppKit.NSDownArrowFunctionKey
+NSLeftArrowFunctionKey = AppKit.NSLeftArrowFunctionKey
+NSRightArrowFunctionKey = AppKit.NSRightArrowFunctionKey
+NSUpArrowFunctionKey = AppKit.NSUpArrowFunctionKey
+NSUpTextMovement = AppKit.NSUpTextMovement
+
+
 # text movements
 NSReturnTextMovement = AppKit.NSReturnTextMovement
 NSTabTextMovement = AppKit.NSTabTextMovement
@@ -112,72 +119,6 @@ AutoBaseClass = PyObjCTools.NibClassBuilder.AutoBaseClass
 extractClasses("OutlineEditor")
 extractClasses("TableEditor")
 extractClasses("NodeEditor")
-
-
-#
-# node editing
-#
-# TODO: deleting does not update correctly.
-# line stays visible in parent view. needsRedraw_?
-#
-def deleteNodes(ov, nodes=(), selection=False):
-    if selection:
-        sel = ov.getSelectionItems()
-    else:
-        sel = nodes
-    delg = ov.delegate()
-    parentNode = delg.parentNode
-    for item in sel:
-        p = item.parent
-        deleted = True
-        if parentNode:
-            deleted = parentNode.removeValue_( (item.name, item.value) )
-        if deleted:
-            p.removeChild_( item )
-    ov.reloadData()
-
-
-def createNode(ov, selection, startEditing=True):
-    # create node at selection and start editing
-    
-    # open new line and start editing
-    # if already editing, start new line, continue editing
-    typ = ov.delegate().typ
-    if selection == -1:
-        rowIndex = ov.delegate().appendToRoot_Value_(u"", u"")
-    else:
-        # pdb.set_trace()
-        p = selection.parent
-        node = OutlineNode(u"", "", selection.parent, typ)
-        targetIdx = selection.nextIndex()
-        
-        p.addChild_atIndex_( node, targetIdx )
-        ov.reloadData()
-        ov.selectRowItem_( node )
-        rowIndex = ov.rowForItem_( node )
-        consumed = True
-    
-    if startEditing:
-        s = NSIndexSet.indexSetWithIndex_( rowIndex )
-        ov.selectRowIndexes_byExtendingSelection_(s, False)
-        ov.reloadData()
-        ov.editColumn_row_withEvent_select_(0, rowIndex, None, True)
-
-
-
-def moveSelectionUp(ov, selection):
-    pass
-
-def moveSelectionDown(ov, selection):
-    pass
-
-def moveSelectionLeft(ov, selection):
-    pass
-
-def moveSelectionRight(ov, selection):
-    pass
-
-
 
 
 
@@ -246,13 +187,32 @@ class KWOutlineView(AutoBaseClass):
 
         mykeys = (NSBackspaceCharacter, NSDeleteCharacter,
                   NSCarriageReturnCharacter, NSEnterCharacter,
-                  NSTabCharacter, NSBackTabCharacter) #0x19
+                  NSTabCharacter, NSBackTabCharacter,
+                  ord(NSUpArrowFunctionKey),
+                  ord(NSDownArrowFunctionKey) )
 
         # tab has       0x09/0x00100
         # shift tab has 0x19/0x20102
         # alt   tab has 0x09/0x80120
         # shftalttab    0x19/0xa0122
-        # up 
+        # ctrl up 0xf700 0xa40101
+        # NSDownArrowFunctionKey
+        # NSLeftArrowFunctionKey
+        # NSRightArrowFunctionKey
+        # NSUpArrowFunctionKey
+        # NSUpTextMovement
+        # 
+        # NSBacktabTextMovement
+        # NSCancelTextMovement
+        # NSDownTextMovement
+        # NSIllegalTextMovement
+        # NSLeftTextMovement
+        # NSOtherTextMovement
+        # NSReturnTextMovement
+        # NSRightTextMovement
+        # NSTabTextMovement
+        # NSUpTextMovement
+        # 
         
 
         # pdb.set_trace()
@@ -412,7 +372,7 @@ class KWOutlineView(AutoBaseClass):
 
                 ###################################################################
                 #
-                #
+                # not control but some combination of cmdShiftAlt
                 else:
                     pass
 
@@ -428,6 +388,7 @@ class KWOutlineView(AutoBaseClass):
                             print "SHIFT Enter"
                         
                         nodes = visitOutline(delg.root)
+                        consumed = True
             
             #######################################################################
             #
@@ -458,7 +419,7 @@ class KWOutlineView(AutoBaseClass):
         
         ###########################################################################
         #
-        # Indenting / Dedenting
+        # Outdenting
         elif eventCharNum == NSBackTabCharacter:
             # shift tab has it's own character
             if eventModifiers & NSShiftKeyMask:
@@ -479,6 +440,9 @@ class KWOutlineView(AutoBaseClass):
                     consumed = True
                     self.reloadData()
         
+        ###########################################################################
+        #
+        # Indenting
         elif eventCharNum == NSTabCharacter:
             # indent selection
             
@@ -503,6 +467,50 @@ class KWOutlineView(AutoBaseClass):
                 
                 consumed = True
                 self.reloadData()
+
+
+        ###########################################################################
+        #
+        # Move selection up
+        elif eventCharNum == ord(NSUpArrowFunctionKey):
+            if eventModifiers & NSControlKeyMask:
+                # pdb.set_trace()
+                # get selected rows
+                if delg.typ in hierarchicalTypes:
+                    items = self.getSelectionItems()
+                    moveSelectionUp(self, items)
+                    # 
+                    self.reloadData()
+
+                    selection = [self.rowForItem_(i) for i in items]
+                    if selection:
+                        self.selectItemRows_( selection )
+                
+                    self.setNeedsDisplay_( True )
+                    consumed = True
+
+
+        ###########################################################################
+        #
+        # Move selection up
+        elif eventCharNum == ord(NSDownArrowFunctionKey):
+            if eventModifiers & NSControlKeyMask:
+                # pdb.set_trace()
+                # get selected rows
+                if delg.typ in hierarchicalTypes:
+                    items = self.getSelectionItems()
+                    moveSelectionDown(self, items)
+                    # 
+                    self.reloadData()
+                    
+                    selection = [self.rowForItem_(i) for i in items]
+                    if selection:
+                        self.selectItemRows_( selection )
+                
+                    self.setNeedsDisplay_( True )
+                    consumed = True
+                    
+
 
         if not consumed:
             super(KWOutlineView, self).keyDown_( theEvent )
@@ -1111,7 +1119,7 @@ class OutlineNode(NSObject):
         n = self.siblingIndex()
         if n >= 0:
             l = self.siblingCount()
-            if n < l: # - 1:
+            if n < l - 1:
                 # last index is allowed since it will be appended to the array
                 return n+1
             # is last
@@ -1201,9 +1209,6 @@ class OutlineNode(NSObject):
             grandparent.addChild_atIndex_(self, parentIndex+1)
             parent.removeChild_(self)
 
-    #
-    # These are obviously wrong
-    #
     def moveRight(self):
         # make self child of previous
         if not self.typ in hierarchicalTypes:
@@ -1214,38 +1219,100 @@ class OutlineNode(NSObject):
             self.makeChildOf_(previous)        
 
 
-    def moveUp(self):
-        # move self before previous
+#
+# node editing
+#
+# TODO: deleting does not update correctly.
+# line stays visible in parent view. needsRedraw_?
+#
+def deleteNodes(ov, nodes=(), selection=False):
+    if selection:
+        sel = ov.getSelectionItems()
+    else:
+        sel = nodes
+    delg = ov.delegate()
+    parentNode = delg.parentNode
+    for item in sel:
+        p = item.parent
+        deleted = True
+        if parentNode:
+            deleted = parentNode.removeValue_( (item.name, item.value) )
+        if deleted:
+            p.removeChild_( item )
+    ov.reloadData()
+
+
+def createNode(ov, selection, startEditing=True):
+    # create node at selection and start editing
+    
+    # open new line and start editing
+    # if already editing, start new line, continue editing
+    typ = ov.delegate().typ
+    if selection == -1:
+        rowIndex = ov.delegate().appendToRoot_Value_(u"", u"")
+    else:
+        # pdb.set_trace()
+        p = selection.parent
+        node = OutlineNode(u"", "", selection.parent, typ)
+        targetIdx = selection.nextIndex()
+        
+        p.addChild_atIndex_( node, targetIdx )
+        ov.reloadData()
+        ov.selectRowItem_( node )
+        rowIndex = ov.rowForItem_( node )
+        consumed = True
+    
+    if startEditing:
+        s = NSIndexSet.indexSetWithIndex_( rowIndex )
+        ov.selectRowIndexes_byExtendingSelection_(s, False)
+        ov.reloadData()
+        ov.editColumn_row_withEvent_select_(0, rowIndex, None, True)
+
+
+def moveSelectionUp(ov, items):
+    for item in items:
+        # move item before previous
         #  get grandparent
         #  insert at index of previous
-        previous = self.previous()
+        previous = item.previous()
         if previous == -1:
             return
-        preprevious = previous.previous()
-        if preprevious == -1:
+        parent = item.parent
+        if parent == None:
             return
-        self.makeChildOf_(preprevious)
+        previousIndex = previous.siblingIndex()
+        parent.removeChild_( item )
+        parent.addChild_atIndex_(item, previousIndex)
 
 
-    def moveDown(self):
-        # get index of next
-        # 
-        next = self.next()
-        if self.next != -1:
-            self.makeChildOf_(next)
+def moveSelectionDown(ov, items):
+    #
 
+    # this really needs to be sorted down; use indices
+    # otherwise there will be overlapping moves destroying
+    # sortorder
+    items.reverse()
+    # pdb.set_trace()
+    for item in items:
 
+        parent = item.parent
+        if parent == None:
+            return
+        next = item.next()
+        if next == -1:
+            return
+        parent.removeChild_( item )
+        # pdb.set_trace()
+        # after removal of item, nexitndex changes
+        nextIndex = next.nextIndex()
+        if nextIndex == -1:
+            parent.addChild_( item )
+        else:
+            parent.addChild_atIndex_(item, nextIndex)
 
+def moveSelectionLeft(ov, selection):
+    pass
 
-
-
-
-
-
-
-
-
-
-
-
+def moveSelectionRight(ov, selection):
+    pass
 
