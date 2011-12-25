@@ -45,6 +45,8 @@ Will build the app in the dist folder.
 - new table
 - node movements up & down
 - create new node (Return)
+- different styles in views. Grids, alternating background and variable row height.
+-- Press "Apply" to apply a style.
 
 
 ## Things that don't work: ##
