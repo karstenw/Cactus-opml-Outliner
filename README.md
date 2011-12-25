@@ -13,6 +13,14 @@ Use it to explore an OPML file.
 
 
 
+## Lates changes ##
+Moved the Apply button close to those options it "applies" to. Placement was misleading.
+
+URLs are now cleaned up so a lot more nodes can be opened in a browser.
+
+
+
+## Build ##
 #### To build you need a 32-bit python.  ####
 
     python setup.py py2app
@@ -20,10 +28,7 @@ Use it to explore an OPML file.
 
 Will build the app in the dist folder.
 
-
 #### A universal binary is in the download section. ####
-
-
 
 #### Prerequisites fro compiling: ####
 
@@ -31,7 +36,6 @@ Will build the app in the dist folder.
 + PyobjC
 + py2app
 + Apple developer tools
-
 
 
 
