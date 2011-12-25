@@ -38,6 +38,14 @@ Will build the app in the dist folder.
 + Apple developer tools
 
 
+## Recent versions ##
+v0.2.0 Initial release.
+
+v0.2.1 Node movements
+v0.2.2 Ro height option
+v0.2.3 Corrected a bug introduced with node movements and preventig nodes to be manually created at the end of a level.
+
+
 
 
 ## Things that work: ##
