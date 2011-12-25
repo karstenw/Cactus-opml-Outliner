@@ -1,11 +1,16 @@
 ## This is the Cactus-opml outliner/editor. ##
 
 
+It is an outline editor based on the PythonBrowser example from PyObjC.
 
-#### It is an outline editor based on the PythonBrowser example from PyObjC. ####
+Developed on OSX 10.4, Xcode 2.5, pyobjc 1.4, py2app 0.53
 
+It's flakey, buggy and a lot of fun.
 
-#### Developed on OSX 10.4, Xcode 2.5, pyobjc 1.4, py2app 0.53 ####
+Don't use it to save your current OPML files. I've seen no errors so far but there is the possibility of attribute omission.
+
+Use it to explore an OPML file.
+
 
 
 #### To build you need a 32-bit python.  ####
@@ -13,27 +18,20 @@
     python setup.py py2app
 
 
-This will build the app in the dist folder.
+Will build the app in the dist folder.
 
 
-## A universal binary is in the download section. ##
+#### A universal binary is in the download section. ####
 
 
 
-Prerequisites fro compiling:
+#### Prerequisites fro compiling: ####
 
 + python 2.7 - older versions may work
 + PyobjC
 + py2app
 + Apple developer tools
 
-
-
-It's flakey, buggy and a lot of fun.
-
-Don't use it to save your current OPML files. I've seen no errors so far but there is the possibility of attribute omission.
-
-Use it to explore an OPML file.
 
 
 
