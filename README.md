@@ -50,6 +50,7 @@ v0.2.2 Row height option
 
 v0.2.3 Corrected a bug introduced with node movements and preventing nodes to be manually created at the end of a level.
 
+v0.2.4 Table rows can be moved up/down; Table/Outlineview styles now apply directly from the checkboxes. Deleted "Apply" button.
 
 
 
