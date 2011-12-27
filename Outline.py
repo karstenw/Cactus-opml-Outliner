@@ -152,7 +152,7 @@ class KWOutlineView(AutoBaseClass):
 
     def textDidEndEditing_(self, aNotification):
         """Notification."""
-
+        # pdb.set_trace()
         if kwdbg:
             print "Edit END"
         userInfo = aNotification.userInfo()
@@ -163,6 +163,9 @@ class KWOutlineView(AutoBaseClass):
         #textMovement = userInfo.valueForKey_( str("NSTextMovement") ).intValue()
 
         cancelled = False
+
+        # hm, i want to continue editing with a new node if a return is pressed
+        # it looks like the cell editor handles return and enter as the same.
 
         # check for table/outline editing modes here
         if userInfo.valueForKey_( u"NSTextMovement" ).intValue() == NSReturnTextMovement:
@@ -482,7 +485,7 @@ class KWOutlineView(AutoBaseClass):
             if eventModifiers & NSControlKeyMask:
                 # pdb.set_trace()
                 # get selected rows
-                if delg.typ in hierarchicalTypes:
+                if 1: #delg.typ in hierarchicalTypes:
                     items = self.getSelectionItems()
                     moveSelectionUp(self, items)
                     # 
@@ -503,7 +506,7 @@ class KWOutlineView(AutoBaseClass):
             if eventModifiers & NSControlKeyMask:
                 # pdb.set_trace()
                 # get selected rows
-                if delg.typ in hierarchicalTypes:
+                if 1: #delg.typ in hierarchicalTypes:
                     items = self.getSelectionItems()
                     moveSelectionDown(self, items)
                     # 
@@ -1260,6 +1263,7 @@ def deleteNodes(ov, nodes=(), selection=False):
 
 
 def createNode(ov, selection, startEditing=True):
+    #pdb.set_trace()
     # create node at selection and start editing
     
     # open new line and start editing

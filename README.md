@@ -28,9 +28,12 @@ URLs are now cleaned up so a lot more nodes can be opened in a browser.
 
 Will build the app in the dist folder.
 
+
 #### A universal binary is in the download section. ####
 
+
 #### Prerequisites for compiling: ####
+
 
 + python 2.7 - older versions may work
 + PyobjC

@@ -149,7 +149,13 @@ class OpenURLWindowController(AutoBaseClass):
         self.close()
 
 
+def boilerplateOPML( rootNode ):
+    head = OutlineNode("head", "", rootNode, typeOutline)
+    body = OutlineNode("body", "", rootNode, typeOutline)
+
+
 class Document(object):
+    # this should be replaced by NSDocument.
     def __init__(self, fileorurl, rootNode, parentNode=None):
         self.fileorurl = fileorurl
         if not rootNode:
@@ -277,47 +283,45 @@ class PythonBrowserWindowController(AutoBaseClass):
             
 
     def applySettings_(self, sender):
+        # pdb.set_trace()
         """target of the apply button. sets some tableview settings.
         """
-        alterLines = self.optAlterLines.state()
-        hLines = self.optHLines.state()
-        vLines = self.optVLines.state()
-        nameVisible = self.optNameVisible.state()
-        typeVisible = self.optTypeVisible.state()
-        valueVisible = self.optValueVisible.state()
-        commentVisible = self.optCommentVisible.state()
-
+        # rowHeight
         self.variableRowHeight = self.optVariableRow.state()
-        
+
+        # menus - NOT YET USED
         formatChoice = self.menFormat.state()
         behaviourChoice = self.menBehaviour.state()
 
-        self.outlineView.setUsesAlternatingRowBackgroundColors_(alterLines)
+        # alterLines
+        alterLines = self.optAlterLines.state()
+        self.outlineView.setUsesAlternatingRowBackgroundColors_( alterLines )
 
         # columns
         tableColumns = self.outlineView.tableColumns()
-        if nameVisible:
+        
+        if self.optNameVisible.state():
             if not self.nameColumn in tableColumns:
                 self.outlineView.addTableColumn_(self.nameColumn)
         else:
             if self.nameColumn in tableColumns:
                 self.outlineView.removeTableColumn_(self.nameColumn)
 
-        if typeVisible:
+        if self.optTypeVisible.state():
             if not self.typeColumn in tableColumns:
                 self.outlineView.addTableColumn_(self.typeColumn)
         else:
             if self.typeColumn in tableColumns:
                 self.outlineView.removeTableColumn_(self.typeColumn)
 
-        if valueVisible:
+        if self.optValueVisible.state():
             if not self.valueColumn in tableColumns:
                 self.outlineView.addTableColumn_(self.valueColumn)
         else:
             if self.valueColumn in tableColumns:
                 self.outlineView.removeTableColumn_(self.valueColumn)
 
-        if commentVisible:
+        if self.optCommentVisible.state():
             if not self.commentColumn in tableColumns:
                 self.outlineView.addTableColumn_(self.commentColumn)
         else:
@@ -327,14 +331,13 @@ class PythonBrowserWindowController(AutoBaseClass):
         # grid style
         gridStyleMask = self.outlineView.gridStyleMask()
         newStyle = NSTableViewGridNone
-        if vLines:
+        if self.optVLines.state():
             newStyle |= NSTableViewSolidVerticalGridLineMask
-        if hLines:
+        if self.optHLines.state():
             newStyle |= NSTableViewSolidHorizontalGridLineMask
         self.outlineView.setGridStyleMask_(newStyle)
 
         #
-        self.outlineView.setUsesAlternatingRowBackgroundColors_(alterLines)
         self.outlineView.reloadData()
         self.outlineView.setNeedsDisplay_( True )
 
