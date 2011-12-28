@@ -11,6 +11,7 @@ Don't use it to save your current OPML files. I've seen no errors so far but the
 
 Use it to explore an OPML file.
 
+Mailing list: http://groups.google.com/group/cactus-outliner-dev
 
 
 ## Lates changes ##
