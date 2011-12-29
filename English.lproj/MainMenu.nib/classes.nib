@@ -6,6 +6,8 @@
                 newOutline = id; 
                 newTable = id; 
                 openFile = id; 
+                openGithubPage = id; 
+                openMailingList = id; 
                 openOPML = id; 
                 openURL = id; 
                 saveAs = id; 
