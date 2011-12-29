@@ -61,6 +61,7 @@ v0.2.5 RSS nodes can be openend now, new outline adds basic structure to outline
 ### files, outlines and tables ###
 - open file (opml)
 - open url (opml)
+- open outline from outline node (opml & rss)
 - new outline
 - new table
 - node movements up & down
@@ -72,7 +73,6 @@ v0.2.5 RSS nodes can be openend now, new outline adds basic structure to outline
 ## Things that don't work: ##
 
 - open document via open event or the dock
-- rss
 - save (only save as)
 - saving when outline structure does not conform to opml (head & body element)
 - cut, copy & paste
