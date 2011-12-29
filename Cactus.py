@@ -8,6 +8,7 @@
 import sys
 import os
 
+import datetime
 import urllib
 
 import xml.etree.cElementTree
@@ -16,17 +17,23 @@ etree = xml.etree.cElementTree
 import pprint
 pp = pprint.pprint
 
+import feedparser
 import pdb
 
 
 
 import Foundation
 NSObject = Foundation.NSObject
+NSURL = Foundation.NSURL
 
 
 import AppKit
 NSOpenPanel = AppKit.NSOpenPanel
 NSApplication = AppKit.NSApplication
+NSDocument = AppKit.NSDocument
+NSDocumentController = AppKit.NSDocumentController
+NSWorkspace = AppKit.NSWorkspace
+
 
 NSSavePanel = AppKit.NSSavePanel
 NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton 
@@ -140,7 +147,7 @@ class OpenURLWindowController(AutoBaseClass):
         app = NSApplication.sharedApplication()
         delg = app.delegate()
         url = self.textfield.stringValue()
-        delg.newOutlineFromURL_( url )
+        delg.newOutlineFromOPMLURL_( url )
         self.close()        
 
 
@@ -150,8 +157,27 @@ class OpenURLWindowController(AutoBaseClass):
 
 
 def boilerplateOPML( rootNode ):
+    # created & modified
+    now = datetime.datetime.now()
+    s = now.strftime("%a, %d %b %Y %H:%M:%S %Z")
     head = OutlineNode("head", "", rootNode, typeOutline)
+    rootNode.addChild_( head )
+
+    head.addChild_(OutlineNode("dateCreated", s, head, typeOutline))
+    head.addChild_(OutlineNode("dateModified", s, head, typeOutline))
+    head.addChild_(OutlineNode("ownerName", "", head, typeOutline))
+    head.addChild_(OutlineNode("ownerEmail", "", head, typeOutline))
+    head.addChild_(OutlineNode("expansionState", "", head, typeOutline))
+    head.addChild_(OutlineNode("vertScrollState", "", head, typeOutline))
+    head.addChild_(OutlineNode("windowTop", "", head, typeOutline))
+    head.addChild_(OutlineNode("windowLeft", "", head, typeOutline))
+    head.addChild_(OutlineNode("windowBottom", "", head, typeOutline))
+    head.addChild_(OutlineNode("windowRight", "", head, typeOutline))
+
     body = OutlineNode("body", "", rootNode, typeOutline)
+    rootNode.addChild_( body )
+
+    body.addChild_( OutlineNode("", "", body, typeOutline) )
 
 
 class Document(object):
@@ -373,7 +399,9 @@ class PythonBrowserAppDelegate(NSObject):
 
     # menu "New Outline"
     def newOutline_(self, sender):
+        # pdb.set_trace()
         doc = Document("Untitled Outline", None)
+        boilerplateOPML( doc.root )
         PythonBrowserWindowController.alloc().initWithObject_type_(doc, typeOutline)
 
     # UNUSED
@@ -384,16 +412,49 @@ class PythonBrowserAppDelegate(NSObject):
     def openURL_(self, sender):
         OpenURLWindowController().init()
 
-    # used by OpenURL delegate OK_ action
-    def newOutlineFromURL_(self, url):
+    def openMailingList_(sender):
+        workspace= NSWorkspace.sharedWorkspace()
+        url = NSURL.URLWithString_( u"http://groups.google.com/group/cactus-outliner-dev" )
+        workspace.openURL_( url )
+
+
+    def openGithubPage_(sender):
+        workspace= NSWorkspace.sharedWorkspace()
+        url = NSURL.URLWithString_( u"https://github.com/karstenw/Cactus-opml-Outliner" )
+        workspace.openURL_( url )
+
+
+    def newOutlineFromRSSURL_(self, url):
+        root = self.openRSS_( url )
+        doc = Document(url, root)
+        PythonBrowserWindowController.alloc().initWithObject_type_(doc, typeOutline)
+
+
+    
+
+    def readURL_(self, url):
+        # probably shouldn't be here. For now it is
         f = urllib.FancyURLopener()
         fob = f.open(url)
         s = fob.read()
         fob.close()
+        return s        
+
+
+    # used by OpenURL delegate OK_ action
+    def newOutlineFromOPMLURL_(self, url):
+        s = self.readURL_(url)
         base, path = urllib.splithost( url )
         basepath, filename = os.path.split( path )
+        #
         d = opml.from_string(s)
-        self.openOPML_( d, url )
+        del s
+        if d:
+            root = self.openOPML_( d )
+            doc = Document(url, root)
+            PythonBrowserWindowController.alloc().initWithObject_type_(doc, typeOutline)
+
+
 
 
     # UNUSED but defined in class
@@ -415,11 +476,17 @@ class PythonBrowserAppDelegate(NSObject):
                 s = fob.read()
                 fob.close()
                 d = opml.from_string(s)
-                self.openOPML_( d, opmlFile )
-                print "Reading OPML '%s' Done." % (opmlFile.encode("utf-8"),)
+                if d:
+                    root = self.openOPML_( d )
+                    doc = Document(opmlFile, root)
+                    PythonBrowserWindowController.alloc().initWithObject_type_(doc, typeOutline)
 
+                    print "Reading OPML '%s' Done." % (opmlFile.encode("utf-8"),)
+                else:
+                    print "Reading OPML '%s' FAILED." % (opmlFile.encode("utf-8"),)
+                
 
-    def openOPML_(self, rootOPML, filepath):
+    def openOPML_(self, rootOPML):
         """This builds the node tree and opens a window."""
         #
         #  Split this up.
@@ -503,8 +570,99 @@ class PythonBrowserAppDelegate(NSObject):
                         pp(children)
                         pp(item)
         #title = os
-        doc = Document(filepath, root)
-        PythonBrowserWindowController.alloc().initWithObject_type_(doc, typeOutline)
+        return root
+
+
+    def openRSS_(self, url):
+        d = feedparser.parse( url )
+
+        # make basic nodes
+        root = OutlineNode("__ROOT__", "", None, typeOutline)
+
+        head = OutlineNode("head", "", root, typeOutline)
+        root.addChild_( head )
+
+        body = OutlineNode("body", "", root, typeOutline)
+        root.addChild_( body )
+
+        #
+        # head
+        #
+        
+        # feed = docs, generator, language, link, microblog_archive,
+        # microblog_endday, microblog_filename, microblog_startday, microblog_url,
+        # published, subtitle, title, updated, cloud
+        if d.feed:
+            keys = """docs generator language link microblog_archive
+                      microblog_endday microblog_filename microblog_startday
+                      microblog_url published subtitle title
+                      updated cloud""".split()
+            for k in keys:
+                if k in d.feed:
+                    node = OutlineNode(k, d.feed[k], head, typeOutline)
+                    head.addChild_( node )
+        # encoding
+        if d.encoding:
+            node = OutlineNode('encoding', d.encoding, head, typeOutline)
+            head.addChild_( node )
+
+        # bozo
+        if d.bozo:
+            node = OutlineNode('bozo', str(d.bozo), head, typeOutline)
+            head.addChild_( node )
+
+        # headers dict
+        if d.headers:
+            node = OutlineNode('headers', d.headers, head, typeOutline)
+            head.addChild_( node )
+
+        # etag
+        if d.etag:
+            node = OutlineNode('etag', d.etag, head, typeOutline)
+            head.addChild_( node )
+
+        # href
+        if d.href:
+            node = OutlineNode('href', d.href, head, typeOutline)
+            head.addChild_( node )
+        
+        # version
+        if d.version:
+            node = OutlineNode('version', d.version, head, typeOutline)
+            head.addChild_( node )
+        
+        # namespaces
+        if d.namespaces:
+            node = OutlineNode('namespaces', d.namespaces, head, typeOutline)
+            head.addChild_( node )
+        
+        #
+        # body
+        #
+        for entry in d.entries:
+            name = ""
+            if 'title' in entry:
+                name = entry.title + "\n\n"
+            if 'summary' in entry:
+                name = name + entry.summary
+            value = entry
+            killkeys = ['links']
+            value['type'] = "rssentry"
+            #
+            # killing items which have a dictionary as value
+            #
+            # too much detail for now
+            for k, v in value.items():
+                if isinstance(v, dict):
+                    killkeys.append(k)
+                if k.endswith('_parsed'):
+                    killkeys.append(k)
+            for k in killkeys:
+                value.pop( k, None )
+            node = OutlineNode(name, value, body, typeOutline)
+            body.addChild_( node )
+        return root
+
 
     def saveAs_(self, sender):
         print "Save As..."

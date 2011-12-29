@@ -172,7 +172,14 @@ def createSubNodes(OPnode, ETnode, level):
     return ETnode
     
 def generateOPML( rootNode, filepath, indent=2 ):
-
+    """Generate an OPML/XML tree from OutlineNode rotoNode.
+    
+    parameters:
+     filepath - unused since file writing has been factored out
+     indent   - if > 0 indent with indent spaces per level
+    return
+     etree.Element of rootNode
+    """
     # pdb.set_trace()
 
     rootOPML = etree.Element("opml")
@@ -222,7 +229,7 @@ def generateOPML( rootNode, filepath, indent=2 ):
 
     return rootOPML
 
-
+# UNUSED
 opmplnodetypes = {
     'blogpost': ('url', ),
     'code': (),
