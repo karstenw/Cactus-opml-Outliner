@@ -19,7 +19,6 @@ Fixed a bug. Added license.
 
 
 ## Build ##
-#### To build you need a 32-bit python.  ####
 
     python setup.py py2app
 
