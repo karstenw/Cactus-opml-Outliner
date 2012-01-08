@@ -15,10 +15,7 @@ Mailing list: http://groups.google.com/group/cactus-outliner-dev
 
 
 ## Lates changes ##
-Moved the Apply button close to those options it "applies" to. Placement was misleading.
-
-URLs are now cleaned up so a lot more nodes can be opened in a browser.
-
+Fixed a bug. Added license.
 
 
 ## Build ##
@@ -54,6 +51,8 @@ v0.2.3 Corrected a bug introduced with node movements and preventing nodes to be
 v0.2.4 Table rows can be moved up/down; Table/Outlineview styles now apply directly from the checkboxes. Deleted "Apply" button.
 
 v0.2.5 RSS nodes can be openend now, new outline adds basic structure to outline, help menu opens github/mailing list
+
+v0.2.6 Corrected a bug in method naming. License added
 
 
 ## Things that work: ##
