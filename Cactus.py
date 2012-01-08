@@ -191,7 +191,13 @@ class Document(object):
         self.parentNode = parentNode
 
 
-class PythonBrowserWindowController(AutoBaseClass):
+
+class CactusDocumentController(AutoBaseClass):
+    pass
+
+
+
+class CactusWindowController(AutoBaseClass):
 
     #
     # Can this be made for dual-use? outlines and tables?
@@ -247,7 +253,7 @@ class PythonBrowserWindowController(AutoBaseClass):
 
         self.window().setTitle_( title )
 
-        self.model = OutlineDocumentModel.alloc().initWithObject_parentNode_( self.root, typ, self.parentNode )
+        self.model = OutlineDocumentModel.alloc().initWithObject_type_parentNode_( self.root, typ, self.parentNode )
 
         # this is evil
         self.root.model = self.model
@@ -368,7 +374,7 @@ class PythonBrowserWindowController(AutoBaseClass):
         self.outlineView.setNeedsDisplay_( True )
 
 
-class PythonBrowserAppDelegate(NSObject):
+class CactusAppDelegate(NSObject):
     # defined in mainmenu
     def applicationDidFinishLaunching_(self, notification):
         pass
@@ -381,20 +387,20 @@ class PythonBrowserAppDelegate(NSObject):
         if not title:
             title = u"Table Editor"
         doc = Document(title, root)
-        PythonBrowserWindowController.alloc().initWithObject_type_(doc, typeTable)
+        CactusWindowController.alloc().initWithObject_type_(doc, typeTable)
 
     def newTableWithRoot_fromNode_(self, root, parentNode):
         title = "Unnamed"
         if parentNode:
             title = parentNode.name
         doc = Document(title, root, parentNode)
-        PythonBrowserWindowController.alloc().initWithObject_type_(doc, typeTable)
+        CactusWindowController.alloc().initWithObject_type_(doc, typeTable)
 
 
     # menu "New Table"
     def newTable_(self, sender):
         doc = Document("Untitled Table", None)
-        PythonBrowserWindowController.alloc().initWithObject_type_(doc, typeTable)
+        CactusWindowController.alloc().initWithObject_type_(doc, typeTable)
 
 
     # menu "New Outline"
@@ -402,7 +408,7 @@ class PythonBrowserAppDelegate(NSObject):
         # pdb.set_trace()
         doc = Document("Untitled Outline", None)
         boilerplateOPML( doc.root )
-        PythonBrowserWindowController.alloc().initWithObject_type_(doc, typeOutline)
+        CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
 
     # UNUSED
     def newRoot_(self, sender):
@@ -427,7 +433,7 @@ class PythonBrowserAppDelegate(NSObject):
     def newOutlineFromRSSURL_(self, url):
         root = self.openRSS_( url )
         doc = Document(url, root)
-        PythonBrowserWindowController.alloc().initWithObject_type_(doc, typeOutline)
+        CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
 
 
     
@@ -452,17 +458,17 @@ class PythonBrowserAppDelegate(NSObject):
         if d:
             root = self.openOPML_( d )
             doc = Document(url, root)
-            PythonBrowserWindowController.alloc().initWithObject_type_(doc, typeOutline)
+            CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
 
 
 
 
     # UNUSED but defined in class
     def newBrowser_(self, sender):
-        # The PythonBrowserWindowController instance will retain itself,
+        # The CactusWindowController instance will retain itself,
         # so we don't (have to) keep track of all instances here.
         doc = Document("Untitled Outline", None)
-        PythonBrowserWindowController.alloc().initWithObject_type_(doc, typeOutline)
+        CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
 
 
     def openFile_(self, sender):
@@ -479,7 +485,7 @@ class PythonBrowserAppDelegate(NSObject):
                 if d:
                     root = self.openOPML_( d )
                     doc = Document(opmlFile, root)
-                    PythonBrowserWindowController.alloc().initWithObject_type_(doc, typeOutline)
+                    CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
 
                     print "Reading OPML '%s' Done." % (opmlFile.encode("utf-8"),)
                 else:
@@ -566,7 +572,7 @@ class PythonBrowserAppDelegate(NSObject):
                         getChildrenforNode( node, children )
                     except Exception, err:
                         print err
-                        pdb.set_trace()
+                        # pdb.set_trace()
                         pp(children)
                         pp(item)
         #title = os

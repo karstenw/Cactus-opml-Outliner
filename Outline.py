@@ -30,6 +30,7 @@ counter = itertools.count()
 
 import outlinetypes
 
+import objc
 
 import Foundation
 NSObject = Foundation.NSObject
@@ -160,6 +161,9 @@ class KWOutlineView(AutoBaseClass):
 
     def textDidChange_(self, aNotification):
         """Notification."""
+        userInfo = aNotification.userInfo()
+
+        pp(userInfo)
         super( KWOutlineView, self).textDidChange_(aNotification)
         #self.window().makeFirstResponder_(self)
         
@@ -170,10 +174,9 @@ class KWOutlineView(AutoBaseClass):
         if kwdbg:
             print "Edit END"
         userInfo = aNotification.userInfo()
-
-        #pp(userInfo)
-
-        #pdb.set_trace()
+        if kwdbg:
+            pp(userInfo)
+            pdb.set_trace()
         #textMovement = userInfo.valueForKey_( str("NSTextMovement") ).intValue()
 
         cancelled = False
@@ -363,8 +366,11 @@ class KWOutlineView(AutoBaseClass):
                                     appdelg.newOutlineFromOPMLURL_( url )
 
                                 elif typ == "link":
-                                    url = NSURL.URLWithString_( url )
-                                    workspace.openURL_( url )
+                                    if url.endswith(".opml"):
+                                        appdelg.newOutlineFromOPMLURL_( url )
+                                    else:
+                                        url = NSURL.URLWithString_( url )
+                                        workspace.openURL_( url )
 
                                 elif typ == "outline":
                                     appdelg.newOutlineFromOPMLURL_( url )
@@ -433,9 +439,14 @@ class KWOutlineView(AutoBaseClass):
                                 if item.typ != outlinetypes.typeOutline:
                                     continue
 
+                                # build a new document from current attributes
                                 root = OutlineNode(u"__root__", u"", None, outlinetypes.typeOutline)
                                 for t in item.value:
-                                    name, value = t
+                                    if isinstance(t, tuple):
+                                        name, value = t
+                                    elif isinstance(t, str):
+                                        name = u"value"
+                                        value = t
                                     node = OutlineNode(name, value, root, outlinetypes.typeTable)
                                     root.addChild_(node)
 
@@ -687,7 +698,7 @@ class OutlineDocumentModel(NSObject):
     #
     # no bindings
 
-    def initWithObject_parentNode_(self, obj, typ, parentNode):
+    def initWithObject_type_parentNode_(self, obj, typ, parentNode):
         self = self.init()
         self.typ = typ
         self.parentNode = parentNode
@@ -828,6 +839,7 @@ class OutlineDocumentModel(NSObject):
     #    pass
 
 
+    # interresting delegate methods:
     # Delegate
     # outlineView:dataCellForTableColumn:item:
     # outlineView:didClickTableColumn:
@@ -872,7 +884,7 @@ class NodeValue(object):
     def __init__(self, value):
         # pdb.set_trace()
         if type(value) != list:
-            if type(value) in (str, unicode, NSString, NSMutableString):
+            if type(value) in (str, unicode, NSString, NSMutableString, objc.pyobjc_unicode):
                 value = self.listFromDisplayValue( value )
             elif isinstance(value, dict):
                 # pdb.set_trace()
@@ -888,8 +900,8 @@ class NodeValue(object):
     def displayValue(self):
         # maxlen = max([len(k) for k in self.value.keys()])
         l = []
-        if type(self.value) != list:
-            pdb.set_trace()
+        if not isinstance(self.value, list):
+            # pdb.set_trace()
             print "VALUE is not list"
         for t in self.value:
             k, v = t

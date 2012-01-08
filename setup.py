@@ -9,8 +9,8 @@ import os
 from distutils.core import setup
 import py2app
 
-version = "0.2.5"
-infostr = 'Cactus OPML-Reader ' + version + ' Copyright 2011 Karsten Wolf'
+version = "0.2.6"
+infostr = 'Cactus OPML-Reader ' + version + ' Copyright 2011-2012 Karsten Wolf'
 
 
 setup(
