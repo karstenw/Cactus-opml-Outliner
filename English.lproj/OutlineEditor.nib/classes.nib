@@ -1,10 +1,8 @@
 {
     IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = KWOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
         {
             ACTIONS = {applySettings = id; loadFile = id; }; 
-            CLASS = PythonBrowserWindowController; 
+            CLASS = CactusWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 butApplySettings = id; 
@@ -21,7 +19,9 @@
                 outlineView = id; 
             }; 
             SUPERCLASS = NSWindowController; 
-        }
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = KWOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }
     ); 
     IBVersion = 1; 
 }

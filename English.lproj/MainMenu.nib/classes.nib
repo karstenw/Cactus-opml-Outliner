@@ -1,6 +1,5 @@
 {
     IBClasses = (
-        {CLASS = KWOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
         {
             ACTIONS = {
                 newOutline = id; 
@@ -12,10 +11,16 @@
                 openURL = id; 
                 saveAs = id; 
             }; 
-            CLASS = PythonBrowserAppDelegate; 
+            CLASS = CactusAppDelegate; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSObject; 
         }, 
+        {
+            CLASS = CactusDocumentController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSDocumentController; 
+        }, 
+        {CLASS = KWOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
         {CLASS = PythonBrowserModel; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 
