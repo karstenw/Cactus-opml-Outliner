@@ -15,7 +15,16 @@ Mailing list: http://groups.google.com/group/cactus-outliner-dev
 
 
 ## Lates changes ##
-Fixed a bug. Added license.
+
+Take a look at the updated shortcuts section. The ctrl-up/down keys were previously undocumented.
+
+mp4a/mov links/urls in rss items now open in Quicktime-Player
+
+rss parser should be toleranter now.
+
+Internal stuff. Preparing for the NSDocument refactoring.
+
+Updated feedparser to V5.1.1.
 
 
 ## Build ##
@@ -39,19 +48,23 @@ Will build the app in the dist folder.
 
 
 ## Recent versions ##
-v0.2.0 Initial release.
 
-v0.2.1 Node movements
+v0.2.7 m4a & mov files & urls now open in movieplayer. feedparser at v5.1.1.
 
-v0.2.2 Row height option
-
-v0.2.3 Corrected a bug introduced with node movements and preventing nodes to be manually created at the end of a level.
-
-v0.2.4 Table rows can be moved up/down; Table/Outlineview styles now apply directly from the checkboxes. Deleted "Apply" button.
+v0.2.6 Corrected a bug in method naming. License added
 
 v0.2.5 RSS nodes can be openend now, new outline adds basic structure to outline, help menu opens github/mailing list
 
-v0.2.6 Corrected a bug in method naming. License added
+v0.2.4 Table rows can be moved up/down; Table/Outlineview styles now apply directly from the checkboxes. Deleted "Apply" button.
+
+v0.2.3 Corrected a bug introduced with node movements and preventing nodes to be manually created at the end of a level.
+
+v0.2.2 Row height option
+
+v0.2.1 Node movements
+
+v0.2.0 Initial release.
+
 
 
 ## Things that work: ##
@@ -95,6 +108,11 @@ v0.2.6 Corrected a bug in method naming. License added
 
 <tr><td>tab</td><td>indent selection</td></tr>
 <tr><td>shift-tab</td><td>outdent selection</td></tr>
+
+<tr><td>ctrl-up</td><td>move selection up</td></tr>
+<tr><td>ctrl-down</td><td>move selection down</td></tr>
+
+
 </table>
 
 ### deleting ###
@@ -109,6 +127,14 @@ v0.2.6 Corrected a bug in method naming. License added
 <tr><td>control-enter</td><td>open node in a table view (usefull if node has attributes)</td></tr>
 
 <tr><td>control-alt-enter</td>
-<td>open node selection in new opml document or browser.</td></tr>
+<td>open node selection in new opml document, browser or movieplayer.</td></tr>
 
 </table>
+
+### debugging ###
+<table>
+<tr><td>shift-enter</td><td>Dumps current document to Terminal. Cactus needs to be started via Terminal (./Cactus.app/Contents/MacOS/Cactus )</td></tr>
+
+</table>
+
+
