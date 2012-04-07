@@ -9,6 +9,8 @@
 import sys
 import os
 
+import time
+
 import urllib
 import urlparse
 
@@ -137,6 +139,7 @@ AutoBaseClass = PyObjCTools.NibClassBuilder.AutoBaseClass
 extractClasses("OutlineEditor")
 extractClasses("TableEditor")
 extractClasses("NodeEditor")
+
 
 
 
@@ -384,8 +387,12 @@ class KWOutlineView(AutoBaseClass):
                                 elif typ == "rssentry":
                                     url = v.get("link", "")
                                     url = cleanupURL( url )
+                                    surl = url[-4:]
                                     url = NSURL.URLWithString_( url )
-                                    workspace.openURL_( url )
+                                    if surl.lower() in ('.mov', '.m4a'):
+                                        workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_( [ url ], u'com.apple.quicktimeplayer', 0, None )
+                                    else:
+                                        workspace.openURL_( url )
 
                                 elif typ == "river":
                                     opmlUrl = v.get("opmlUrl", "")
@@ -429,6 +436,7 @@ class KWOutlineView(AutoBaseClass):
                     #
                     # Control Enter
                     else:
+                        # pdb.set_trace()
                         # ctrl enter
                         items = self.getSelectionItems()
                         for item in items:
@@ -879,7 +887,10 @@ class OutlineDocumentModel(NSObject):
 
 class NodeValue(object):
     """NodeValue is a helper with the value column which in some cases has
-    a dual existence as a string or as a table."""
+    a dual existence as a string or as a table.
+    
+    
+    """
 
     def __init__(self, value):
         # pdb.set_trace()
@@ -903,6 +914,7 @@ class NodeValue(object):
         if not isinstance(self.value, list):
             # pdb.set_trace()
             print "VALUE is not list"
+            print repr(self.value)
         for t in self.value:
             k, v = t
             if k != "":
@@ -916,7 +928,7 @@ class NodeValue(object):
         lines = displayValue.split('\n')
         l = []
         for line in lines:
-            if line.count(':\t') != 1:
+            if line.count(':\t') == 0:
                 k = u""
                 v = line
             else:
@@ -939,10 +951,49 @@ class NodeValue(object):
     def isMultiValue(self):
         return not self.isSingleValue()
 
-
 #
 # Outline
 #
+
+class NodeAttributes(object):
+    """Hold the attributes associated with an outline node.
+    
+    Will replace Nodevalue
+    """
+    def __init__(self):
+        self.attributes = {}
+
+    def fromNameValues(self, nameValueList):
+        for t in nameValueList:
+            k, v = t
+            self.attributes[k] = v
+
+    def asstring(self):
+        """Return the attributes as a string.
+        
+        key:\tvalue\n
+        """
+        l = []
+        keys = self.attributes.keys()
+        keys.sort()
+        for key in keys:
+            k, v = key, self.attributes[key]
+            l.append(u"%s:\t%s" % (k, v) )
+        s = u'\n'.join( l )
+        return s
+
+    def astuplelist(self):
+        """Return the attributes as a list of tuples.
+        
+        [ (k,v), (k,v), ...]
+        """
+        l = []
+        keys = self.attributes.keys()
+        keys.sort()
+        for key in keys:
+            k, v = key, self.attributes[key]
+            l.append( (k,v) )
+        return l
 
 
 class OutlineNode(NSObject):
@@ -955,6 +1006,25 @@ class OutlineNode(NSObject):
     # garbage collected, the app will crash. For the same reason this
     # class _must_ derive from NSObject, since otherwise autoreleased
     # proxies will be fed to NSOutlineView, which will go away too soon.
+
+    # attributes of OutlineNode:
+    # name
+    # value
+    # comment
+    # type
+    # parent
+    # children
+    #
+    # displayName
+    # displayValue
+    # displayComment
+    # displayType
+    # 
+    
+    #
+    # to be added
+    #    
+    # nodeAttributes 
 
     def __new__(cls, *args, **kwargs):
         # "Pythonic" constructor
@@ -986,15 +1056,19 @@ class OutlineNode(NSObject):
         self.setName_( name )
         self.setValue_( obj )
         self.setComment_( "" )        
+        self.setNodeAttributes( obj )
 
         self.children = NSMutableArray.arrayWithCapacity_( 10 )
         self.editable = True
 
+
     def setParent_(self, parent):
         self.parent = parent
+
     
     def releaseParent(self):
         pass
+
     
     #
     def setName_(self, value):
@@ -1004,6 +1078,7 @@ class OutlineNode(NSObject):
             self.displayName = u"(%i)  - %s" % (self.nodenr, s)
         else:
             self.displayName = u"%s" % (s,)
+
     
     def setValue_(self, value):
         if value in (u"", {}, [], None, False):
@@ -1020,6 +1095,14 @@ class OutlineNode(NSObject):
                 self.type = u"String"
             self.displayValue = nv.displayValue()
         self.displayType = self.type
+
+
+    def setNodeAttributes(self, nameValueList):
+        """Create new node attributes from [ (k,v), ]
+        """
+        self.nodeAttributes = NodeAttributes()
+        if type(nameValueList) in (list,):
+            self.nodeAttributes.fromNameValues( nameValueList )
 
 
     def addValue_(self, nameValue):
