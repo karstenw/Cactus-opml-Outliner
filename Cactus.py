@@ -8,7 +8,9 @@
 import sys
 import os
 
+import time
 import datetime
+
 import urllib
 
 import xml.etree.cElementTree
@@ -20,7 +22,7 @@ pp = pprint.pprint
 import feedparser
 import pdb
 
-
+import objc
 
 import Foundation
 NSObject = Foundation.NSObject
@@ -33,6 +35,9 @@ NSApplication = AppKit.NSApplication
 NSDocument = AppKit.NSDocument
 NSDocumentController = AppKit.NSDocumentController
 NSWorkspace = AppKit.NSWorkspace
+
+NSString = AppKit.NSString
+NSMutableString = AppKit.NSMutableString
 
 
 NSSavePanel = AppKit.NSSavePanel
@@ -149,7 +154,6 @@ class OpenURLWindowController(AutoBaseClass):
         url = self.textfield.stringValue()
         delg.newOutlineFromOPMLURL_( url )
         self.close()        
-
 
     def Cancel_(self, sender):
         #pdb.set_trace()
@@ -554,6 +558,8 @@ class CactusAppDelegate(NSObject):
                 name = item['name']
                 children = item['children']
 
+
+                # make table here
                 content = item.get('attributes', "")
                 content.pop('text', None)
                 if content:
@@ -599,48 +605,107 @@ class CactusAppDelegate(NSObject):
         # microblog_endday, microblog_filename, microblog_startday, microblog_url,
         # published, subtitle, title, updated, cloud
         if d.feed:
-            keys = """docs generator language link microblog_archive
-                      microblog_endday microblog_filename microblog_startday
-                      microblog_url published subtitle title
-                      updated cloud""".split()
-            for k in keys:
-                if k in d.feed:
-                    node = OutlineNode(k, d.feed[k], head, typeOutline)
-                    head.addChild_( node )
-        # encoding
-        if d.encoding:
-            node = OutlineNode('encoding', d.encoding, head, typeOutline)
-            head.addChild_( node )
+            keys = """cloud docs generator generator_detail image language link links
+                      microblog_archive microblog_endday microblog_filename
+                      microblog_startday microblog_url published subtitle
+                      subtitle_detail sy_updatefrequency sy_updateperiod title
+                      title_detail updated updated_parsed""".split()
+            #for k in keys:
+            #    if k in d.feed:
 
-        # bozo
-        if d.bozo:
-            node = OutlineNode('bozo', str(d.bozo), head, typeOutline)
-            head.addChild_( node )
+            feedkeys = d.feed.keys()
+            feedkeys.sort()
+            # pdb.set_trace()
+            #print
+            #pp(feedkeys)
+            #print
+            for k in feedkeys:
+                if k in ('links', 'tags', 'updated_parsed', 'authors'):
+                    continue
 
-        # headers dict
-        if d.headers:
-            node = OutlineNode('headers', d.headers, head, typeOutline)
-            head.addChild_( node )
+                v = d.feed[k]
+                if type(v) in (list,):
+                    if len(v) > 1:
+                        print "Large header list"
+                        print k
+                        print repr(v)
+                    elif len(v) == 1:
+                        v = v[0]
 
-        # etag
-        if d.etag:
-            node = OutlineNode('etag', d.etag, head, typeOutline)
-            head.addChild_( node )
+                if type(v) not in (str, unicode, NSString, NSMutableString, objc.pyobjc_unicode):
+                    if isinstance(v, dict):
+                        # pdb.set_trace()
+                        l = []
+                        for key, val in v.items():
+                            l.append( (key,val) )
+                        v = l
+                    elif type(v) == time.struct_time:
+                        v = time.asctime(v)
+                    else:
+                        # pdb.set_trace()
+                        # if k in ('',)
+                        if 0:
+                            print "ATTENTION RSS Head values"
+                            print "KEY:", k
+                            print "TYPE:", type(v)
+                            print "REPR:", repr(v)
+                            print
+                        v = repr(v)
+                node = OutlineNode(k, v, head, typeOutline)
+                head.addChild_( node )
 
-        # href
-        if d.href:
-            node = OutlineNode('href', d.href, head, typeOutline)
+        otherkeys = d.keys()
+        if 'feed' in otherkeys:
+            otherkeys.remove("feed")
+        if 'entries' in otherkeys:
+            otherkeys.remove("entries")
+
+        otherkeys.sort()
+        for k in otherkeys:
+            v = d[k]
+            if type(v) not in (str, unicode, NSString, NSMutableString,
+                               objc.pyobjc_unicode,
+                               dict, feedparser.FeedParserDict):
+                v = repr(v)
+            node = OutlineNode(k, v, head, typeOutline)
             head.addChild_( node )
-        
-        # version
-        if d.version:
-            node = OutlineNode('version', d.version, head, typeOutline)
-            head.addChild_( node )
-        
-        # namespaces
-        if d.namespaces:
-            node = OutlineNode('namespaces', d.namespaces, head, typeOutline)
-            head.addChild_( node )
+            
+        if 0:
+            # encoding
+            if 'encoding' in d:
+                node = OutlineNode('encoding', d.encoding, head, typeOutline)
+                head.addChild_( node )
+    
+            # bozo
+            if 'bozo' in d:
+                node = OutlineNode('bozo', str(d.bozo), head, typeOutline)
+                head.addChild_( node )
+    
+            # etag
+            if 'etag' in d:
+                node = OutlineNode('etag', d.etag, head, typeOutline)
+                head.addChild_( node )
+    
+            # headers dict
+            if 'headers' in d:
+                node = OutlineNode('headers', d.headers, head, typeOutline)
+                head.addChild_( node )
+    
+            # href
+            if 'href' in d:
+                node = OutlineNode('href', d.href, head, typeOutline)
+                head.addChild_( node )
+            
+            # namespaces
+            if 'namespaces' in d:
+                # pdb.set_trace()
+                node = OutlineNode('namespaces', d.namespaces, head, typeOutline)
+                head.addChild_( node )
+            
+            # version
+            if 'version' in d:
+                node = OutlineNode('version', d.version, head, typeOutline)
+                head.addChild_( node )
         
         #
         # body
@@ -652,14 +717,14 @@ class CactusAppDelegate(NSObject):
             if 'summary' in entry:
                 name = name + entry.summary
             value = entry
-            killkeys = ['links']
+            killkeys = ['links', 'authors', 'tags']
             value['type'] = "rssentry"
             #
             # killing items which have a dictionary as value
             #
             # too much detail for now
             for k, v in value.items():
-                if isinstance(v, dict):
+                if isinstance(v, dict) or isinstance(v, list) :
                     killkeys.append(k)
                 if k.endswith('_parsed'):
                     killkeys.append(k)
