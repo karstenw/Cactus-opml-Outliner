@@ -20,7 +20,7 @@ nodeTypes = {}
 urls = {}
 
 
-def getfolder(node):
+def getOutlineNodes(node):
     global keyTypes, opmlTags, nodeTypes, urls
     result = []
     for n in list(node):
@@ -51,7 +51,7 @@ def getfolder(node):
             b['attributes'][k] = n.attrib.get(k, "")
         subs = list(n)
         if subs:
-            s = getfolder(n)
+            s = getOutlineNodes(n)
             b['children'] = s
         result.append(b)
     return result
@@ -75,36 +75,7 @@ def getOPML( rootnode ):
             d['head'].append( (item.tag, item.text) )
 
     if body:
-        for item in list(body):
-            tag = item.tag
-            name = item.attrib.get('text', '')
-            keys = item.attrib.keys()
-    
-            if 'children' in keys:
-                print "CHILDREN ATTRIBUTE"
-                # pdb.set_trace()
-                print "CHILDREN ATTRIBUTE"
-    
-            if kwdbg:
-                keys.sort()
-                keys = tuple(keys)
-                if not keys in keyTypes:
-                    keyTypes[ keys ] = 1
-                else:
-                    keyTypes[ keys ] += 1
-                for key in keys:
-                    if not key in opmlTags:
-                        opmlTags[ key ] = 1
-                    else:
-                        opmlTags[ key ] += 1
-            nchild = len(item)
-            b = {'name': name, 'children': [], 'noofchildren': nchild, 'attributes': {}}
-            for k in keys:
-                b['attributes'][k] = item.attrib.get(k, "")
-    
-            #print "Item:", item.attrib['text'], nchild
-            b['children'] = getfolder(item)
-            d['body'].append( b )
+        d['body'] = getOutlineNodes(body)
 
     if kwdbg:
         print
