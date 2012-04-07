@@ -9,9 +9,9 @@ Required: Python 2.4 or later
 Recommended: iconv_codec <http://cjkpython.i18n.org/>
 """
 
-__version__ = "5.1"
+__version__ = "5.1.1"
 __license__ = """
-Copyright (c) 2010-2011 Kurt McKee <contactme@kurtmckee.org>
+Copyright (c) 2010-2012 Kurt McKee <contactme@kurtmckee.org>
 Copyright (c) 2002-2008 Mark Pilgrim
 All rights reserved.
 
@@ -49,7 +49,9 @@ __contributors__ = ["Jason Diamond <http://injektilo.org/>",
 # HTTP "User-Agent" header to send to servers when downloading feeds.
 # If you are embedding feedparser in a larger application, you should
 # change this to your application name and URL.
-USER_AGENT = "Cactus OPML Editor/%s +https://github.com/karstenw/Cactus-opml-Outliner" % ("0.2.5", )
+USER_AGENT = "UniversalFeedParser/%s +https://code.google.com/p/feedparser/" % __version__
+import CactusVersion
+USER_AGENT = CactusVersion.user_agent
 
 # HTTP "Accept" header to send to servers when downloading feeds.  If you don't
 # want to send an Accept header, set this to None.
@@ -152,6 +154,7 @@ import types
 import urllib
 import urllib2
 import urlparse
+import warnings
 
 from htmlentitydefs import name2codepoint, codepoint2name, entitydefs
 
@@ -323,6 +326,7 @@ class FeedParserDict(dict):
               'date': 'updated',
               'date_parsed': 'updated_parsed',
               'description': ['summary', 'subtitle'],
+              'description_detail': ['summary_detail', 'subtitle_detail'],
               'url': ['href'],
               'modified': 'updated',
               'modified_parsed': 'updated_parsed',
@@ -345,6 +349,30 @@ class FeedParserDict(dict):
             for link in dict.__getitem__(self, 'links'):
                 if link['rel']==u'license' and 'href' in link:
                     return link['href']
+        elif key == 'updated':
+            # Temporarily help developers out by keeping the old
+            # broken behavior that was reported in issue 310.
+            # This fix was proposed in issue 328.
+            if not dict.__contains__(self, 'updated') and \
+                dict.__contains__(self, 'published'):
+                warnings.warn("To avoid breaking existing software while "
+                    "fixing issue 310, a temporary mapping has been created "
+                    "from `updated` to `published` if `updated` doesn't "
+                    "exist. This fallback will be removed in a future version "
+                    "of feedparser.", DeprecationWarning)
+                return dict.__getitem__(self, 'published')
+            return dict.__getitem__(self, 'updated')
+        elif key == 'updated_parsed':
+            if not dict.__contains__(self, 'updated_parsed') and \
+                dict.__contains__(self, 'published_parsed'):
+                warnings.warn("To avoid breaking existing software while "
+                    "fixing issue 310, a temporary mapping has been created "
+                    "from `updated_parsed` to `published_parsed` if "
+                    "`updated_parsed` doesn't exist. This fallback will be "
+                    "removed in a future version of feedparser.",
+                    DeprecationWarning)
+                return dict.__getitem__(self, 'published_parsed')
+            return dict.__getitem__(self, 'updated_parsed')
         else:
             realkey = self.keymap.get(key, key)
             if isinstance(realkey, list):
@@ -356,6 +384,11 @@ class FeedParserDict(dict):
         return dict.__getitem__(self, key)
 
     def __contains__(self, key):
+        if key in ('updated', 'updated_parsed'):
+            # Temporarily help developers out by keeping the old
+            # broken behavior that was reported in issue 310.
+            # This fix was proposed in issue 328.
+            return dict.__contains__(self, key)
         try:
             self.__getitem__(key)
         except KeyError:
@@ -2061,15 +2094,8 @@ class _MicroformatsParser:
     NODE = 4
     EMAIL = 5
 
-    known_xfn_relationships = set( ['contact', 'acquaintance', 'friend', 'met',
-            'co-worker', 'coworker', 'colleague', 'co-resident', 'coresident',
-            'neighbor', 'child', 'parent', 'sibling', 'brother', 'sister', 'spouse',
-            'wife', 'husband', 'kin', 'relative', 'muse', 'crush', 'date',
-            'sweetheart', 'me'])
-    known_binary_extensions =  set(['zip','rar','exe','gz','tar','tgz','tbz2','bz2',
-            'z','7z','dmg','img','sit','sitx','hqx','deb','rpm','bz2','jar','rar',
-            'iso','bin','msi','mp2','mp3','ogg','ogm','mp4','m4v','m4a','avi',
-            'wma','wmv'])
+    known_xfn_relationships = set(['contact', 'acquaintance', 'friend', 'met', 'co-worker', 'coworker', 'colleague', 'co-resident', 'coresident', 'neighbor', 'child', 'parent', 'sibling', 'brother', 'sister', 'spouse', 'wife', 'husband', 'kin', 'relative', 'muse', 'crush', 'date', 'sweetheart', 'me'])
+    known_binary_extensions =  set(['zip','rar','exe','gz','tar','tgz','tbz2','bz2','z','7z','dmg','img','sit','sitx','hqx','deb','rpm','bz2','jar','rar','iso','bin','msi','mp2','mp3','ogg','ogm','mp4','m4v','m4a','avi','wma','wmv'])
 
     def __init__(self, data, baseuri, encoding):
         self.document = BeautifulSoup.BeautifulSoup(data)
@@ -2548,15 +2574,24 @@ def _resolveRelativeURIs(htmlSource, baseURI, encoding, _type):
 def _makeSafeAbsoluteURI(base, rel=None):
     # bail if ACCEPTABLE_URI_SCHEMES is empty
     if not ACCEPTABLE_URI_SCHEMES:
-        return _urljoin(base, rel or u'')
+        try:
+            return _urljoin(base, rel or u'')
+        except ValueError:
+            return u''
     if not base:
         return rel or u''
     if not rel:
-        scheme = urlparse.urlparse(base)[0]
+        try:
+            scheme = urlparse.urlparse(base)[0]
+        except ValueError:
+            return u''
         if not scheme or scheme in ACCEPTABLE_URI_SCHEMES:
             return base
         return u''
-    uri = _urljoin(base, rel)
+    try:
+        uri = _urljoin(base, rel)
+    except ValueError:
+        return u''
     if uri.strip().split(':', 1)[0] not in ACCEPTABLE_URI_SCHEMES:
         return u''
     return uri
@@ -2976,7 +3011,11 @@ def _open_resource(url_file_stream_or_string, etag, modified, agent, referrer, h
     # try to open with native open function (if url_file_stream_or_string is a filename)
     try:
         return open(url_file_stream_or_string, 'rb')
-    except IOError:
+    except (IOError, UnicodeEncodeError):
+        # if url_file_stream_or_string is a unicode object that
+        # cannot be converted to the encoding returned by
+        # sys.getfilesystemencoding(), a UnicodeEncodeError
+        # will be thrown
         pass
 
     # treat url_file_stream_or_string as string
@@ -3405,40 +3444,90 @@ def _parse_date_w3dtf(dateString):
     return time.gmtime(time.mktime(gmt) + __extract_tzd(m) - time.timezone)
 registerDateHandler(_parse_date_w3dtf)
 
-def _parse_date_rfc822(dateString):
-    '''Parse an RFC822, RFC1123, RFC2822, or asctime-style date'''
-    data = dateString.split()
-    if not data:
+# Define the strings used by the RFC822 datetime parser
+_rfc822_months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun',
+          'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+_rfc822_daynames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+
+# Only the first three letters of the month name matter
+_rfc822_month = "(?P<month>%s)(?:[a-z]*,?)" % ('|'.join(_rfc822_months))
+# The year may be 2 or 4 digits; capture the century if it exists
+_rfc822_year = "(?P<year>(?:\d{2})?\d{2})"
+_rfc822_day = "(?P<day>\d{2})"
+_rfc822_date = "%s %s %s" % (_rfc822_day, _rfc822_month, _rfc822_year)
+
+_rfc822_hour = "(?P<hour>\d{2}):(?P<minute>\d{2})(?::(?P<second>\d{2}))?"
+_rfc822_tz = "(?P<tz>ut|gmt(?:[+-]\d{2}:\d{2})?|[aecmp][sd]?t|[zamny]|[+-]\d{4})"
+_rfc822_tznames = {
+    'ut': 0, 'gmt': 0, 'z': 0,
+    'adt': -3, 'ast': -4, 'at': -4,
+    'edt': -4, 'est': -5, 'et': -5,
+    'cdt': -5, 'cst': -6, 'ct': -6,
+    'mdt': -6, 'mst': -7, 'mt': -7,
+    'pdt': -7, 'pst': -8, 'pt': -8,
+    'a': -1, 'n': 1,
+    'm': -12, 'y': 12,
+ }
+# The timezone may be prefixed by 'Etc/'
+_rfc822_time = "%s (?:etc/)?%s" % (_rfc822_hour, _rfc822_tz)
+
+_rfc822_dayname = "(?P<dayname>%s)" % ('|'.join(_rfc822_daynames))
+_rfc822_match = re.compile(
+    "(?:%s, )?%s(?: %s)?" % (_rfc822_dayname, _rfc822_date, _rfc822_time)
+).match
+
+def _parse_date_rfc822(dt):
+    """Parse RFC 822 dates and times, with one minor
+    difference: years may be 4DIGIT or 2DIGIT.
+    http://tools.ietf.org/html/rfc822#section-5"""
+    try:
+        m = _rfc822_match(dt.lower()).groupdict(0)
+    except AttributeError:
         return None
-    if data[0][-1] in (',', '.') or data[0].lower() in rfc822._daynames:
-        del data[0]
-    if len(data) == 4:
-        s = data[3]
-        i = s.find('+')
-        if i > 0:
-            data[3:] = [s[:i], s[i+1:]]
-        else:
-            data.append('')
-        dateString = " ".join(data)
-    # Account for the Etc/GMT timezone by stripping 'Etc/'
-    elif len(data) == 5 and data[4].lower().startswith('etc/'):
-        data[4] = data[4][4:]
-        dateString = " ".join(data)
-    if len(data) < 5:
-        dateString += ' 00:00:00 GMT'
-    tm = rfc822.parsedate_tz(dateString)
-    if tm:
-        # Jython doesn't adjust for 2-digit years like CPython does,
-        # so account for it by shifting the year so that it's in the
-        # range 1970-2069 (1970 being the year of the Unix epoch).
-        if tm[0] < 100:
-            tm = (tm[0] + (1900, 2000)[tm[0] < 70],) + tm[1:]
-        return time.gmtime(rfc822.mktime_tz(tm))
-# rfc822.py defines several time zones, but we define some extra ones.
-# 'ET' is equivalent to 'EST', etc.
-_additional_timezones = {'AT': -400, 'ET': -500, 'CT': -600, 'MT': -700, 'PT': -800}
-rfc822._timezones.update(_additional_timezones)
+
+    # Calculate a date and timestamp
+    for k in ('year', 'day', 'hour', 'minute', 'second'):
+        m[k] = int(m[k])
+    m['month'] = _rfc822_months.index(m['month']) + 1
+    # If the year is 2 digits, assume everything in the 90's is the 1990's
+    if m['year'] < 100:
+        m['year'] += (1900, 2000)[m['year'] < 90]
+    stamp = datetime.datetime(*[m[i] for i in 
+                ('year', 'month', 'day', 'hour', 'minute', 'second')])
+
+    # Use the timezone information to calculate the difference between
+    # the given date and timestamp and Universal Coordinated Time
+    tzhour = 0
+    tzmin = 0
+    if m['tz'] and m['tz'].startswith('gmt'):
+        # Handle GMT and GMT+hh:mm timezone syntax (the trailing
+        # timezone info will be handled by the next `if` block)
+        m['tz'] = ''.join(m['tz'][3:].split(':')) or 'gmt'
+    if not m['tz']:
+        pass
+    elif m['tz'].startswith('+'):
+        tzhour = int(m['tz'][1:3])
+        tzmin = int(m['tz'][3:])
+    elif m['tz'].startswith('-'):
+        tzhour = int(m['tz'][1:3]) * -1
+        tzmin = int(m['tz'][3:]) * -1
+    else:
+        tzhour = _rfc822_tznames[m['tz']]
+    delta = datetime.timedelta(0, 0, 0, 0, tzmin, tzhour)
+
+    # Return the date and timestamp in UTC
+    return (stamp - delta).utctimetuple()
 registerDateHandler(_parse_date_rfc822)
+
+def _parse_date_asctime(dt):
+    """Parse asctime-style dates"""
+    dayname, month, day, remainder = dt.split(None, 3)
+    # Convert month and day into zero-padded integers
+    month = '%02i ' % (_rfc822_months.index(month.lower()) + 1)
+    day = '%02i ' % (int(day),)
+    dt = month + day + remainder
+    return time.strptime(dt, '%m %d %H:%M:%S %Y')[:-1] + (0, )
+registerDateHandler(_parse_date_asctime)
 
 def _parse_date_perforce(aDateString):
     """parse a date in yyyy/mm/dd hh:mm:ss TTT format"""
@@ -3806,7 +3895,7 @@ def parse(url_file_stream_or_string, etag=None, modified=None, agent=None, refer
         baselang = baselang.decode('utf-8', 'ignore')
 
     # if server sent 304, we're done
-    if result.get('status', 0) == 304:
+    if getattr(f, 'code', 0) == 304:
         result['version'] = u''
         result['debug_message'] = 'The feed has not changed since you last checked, ' + \
             'so the server sent no data.  This is a feature, not a bug!'
@@ -3836,7 +3925,7 @@ def parse(url_file_stream_or_string, etag=None, modified=None, agent=None, refer
             break
     # if no luck and we have auto-detection library, try that
     if (not known_encoding) and chardet:
-        proposed_encoding = chardet.detect(data)['encoding']
+        proposed_encoding = unicode(chardet.detect(data)['encoding'], 'ascii', 'ignore')
         if proposed_encoding and (proposed_encoding not in tried_encodings):
             tried_encodings.append(proposed_encoding)
             try:
