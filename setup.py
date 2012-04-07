@@ -9,27 +9,43 @@ import os
 from distutils.core import setup
 import py2app
 
-version = "0.2.6"
-infostr = 'Cactus OPML-Reader ' + version + ' Copyright 2011-2012 Karsten Wolf'
+import CactusVersion
+
+appname = CactusVersion.appname
+appnameshort = CactusVersion.appnameshort
+
+copyright = CactusVersion.copyright
+
+version = CactusVersion.version
+
+
+infostr = appname + ' ' + version + ' ' + copyright
 
 
 setup(
     app=[{
-        'script': "Cactus.py",
+
+        # 'script': "Cactus.py",
+        'script': "CactusMain.py",
+
         'plist':{
             'CFBundleGetInfoString': infostr,
             'CFBundleIdentifier': 'org.kw.Cactus',
             'CFBundleShortVersionString': version,
+            'CFBundleDisplayName': appnameshort,
+            'CFBundleName': appnameshort,
             'CFBundleSignature': 'KWCs',
             'LSHasLocalizedDisplayName': False,
             'NSAppleScriptEnabled': False,
-            'NSHumanReadableCopyright': 'Copyright 2011 Karsten Wolf'}}],
+            'NSHumanReadableCopyright': copyright}}],
+
     data_files=["English.lproj/MainMenu.nib",
                 "English.lproj/OutlineEditor.nib",
                 "English.lproj/TableEditor.nib",
                 "English.lproj/NodeEditor.nib",
                 "English.lproj/OpenURL.nib",
                 ],
+
     options={
         'py2app':{
             'iconfile': './+icon/Cowskull.icns'}}
