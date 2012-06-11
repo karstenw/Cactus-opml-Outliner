@@ -5,13 +5,17 @@ It is an outline editor based on the PythonBrowser example from PyObjC.
 
 Developed on OSX 10.4, Xcode 2.5, pyobjc 1.4, py2app 0.53
 
-It's flakey, buggy and a lot of fun.
+It's flakey, much less buggy and a lot of fun.
 
 Don't use it to save your current OPML files. I've seen no errors so far but there is the possibility of attribute omission.
 
 Use it to explore an OPML file.
 
 Mailing list: http://groups.google.com/group/cactus-outliner-dev
+
+
+## Quickstart ##
+
 
 
 ## Lates changes ##
@@ -71,6 +75,7 @@ v0.2.0 Initial release.
 
 ### files, outlines and tables ###
 - open file (opml)
+- open document via open event or by dragging files to the dock icon
 - open url (opml)
 - open outline from outline node (opml & rss)
 - new outline
@@ -83,13 +88,13 @@ v0.2.0 Initial release.
 
 ## Things that don't work: ##
 
-- open document via open event or the dock
+- error messages can currently only be seen if Cactus is started from the command line: ```./Cactus.app/Contents/MacOS/Cactus```
 - save (only save as)
 - saving when outline structure does not conform to opml (head & body element)
 - cut, copy & paste
 - nodetypes
 - header nodes are saved untouched, no automatic data update
-- honoring expansionstate, windowstate
+- honoring expansionstate, windowstate (I don't intend to)
 - freeing memory (take anything you get, give nothing back ;-)
 
 
