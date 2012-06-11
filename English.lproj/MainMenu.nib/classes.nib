@@ -8,6 +8,8 @@
                 openGithubPage = id; 
                 openMailingList = id; 
                 openOPML = id; 
+                openOutlineDocument = id; 
+                openRSS = id; 
                 openURL = id; 
                 saveAs = id; 
             }; 
@@ -15,13 +17,13 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = NSObject; 
         }, 
+        {CLASS = CactusApplication; LANGUAGE = ObjC; SUPERCLASS = NSApplication; }, 
         {
             CLASS = CactusDocumentController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSDocumentController; 
         }, 
-        {CLASS = KWOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
-        {CLASS = PythonBrowserModel; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = KWOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }
     ); 
     IBVersion = 1; 
 }
