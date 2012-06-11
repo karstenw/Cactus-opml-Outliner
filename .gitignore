@@ -2,4 +2,7 @@
 *.pyc
 build
 dist
+README.html
+CHANGES
+
 
