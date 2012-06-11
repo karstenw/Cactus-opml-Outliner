@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 
-
 """A collection of outline related stuff
 """
 
@@ -14,11 +13,13 @@ import time
 import urllib
 import urlparse
 
+
+kwdbg = False
+kwlog = True
+
 import pdb
 import pprint
 pp = pprint.pprint
-
-kwdbg = False
 
 # i prefer manual aliasing
 import operator
@@ -29,6 +30,8 @@ setitem = operator.setitem
 # debugging; gives nodes a serialnr
 import itertools
 counter = itertools.count()
+
+import opml
 
 import outlinetypes
 
@@ -59,6 +62,7 @@ import AppKit
 NSUserDefaults = AppKit.NSUserDefaults
 NSApplication = AppKit.NSApplication
 NSOpenPanel = AppKit.NSOpenPanel
+NSDocumentController = AppKit.NSDocumentController
 
 #NSAlert = AppKit.NSAlert
 #NSPopUpButtonWillPopUpNotification = AppKit.NSPopUpButtonWillPopUpNotification
@@ -141,7 +145,105 @@ extractClasses("TableEditor")
 extractClasses("NodeEditor")
 
 
+# simple dict for opening outline nodes
 
+# to be used, not now
+g_opmplnodetypes = {
+    # typename: (urlname, openfunction)
+    'blogpost': ('url', ),
+    'code': (),
+    'howto': (),
+    'html': (),
+    'include': (),
+    'link': (),
+    'outline': (),
+    'photo': (),
+    'redirect': (),
+    'river': (),
+    'rss': (),
+    'scripting2Post': (),
+    'thumbList':()
+    }
+
+g_preview_extensions = ("pdf ai ps epi eps epsf epsi "
+                        "tiff tif "
+                         "crw cr2 nef raf orf mrw srf dcr arw pef raw mos"
+                         "dng xbm exr bmp gif ico jpg jpeg jpe thm pict pct "
+                         "png qtif tga targa sgi psd pntg fpx fax jfx jfax icns jp2 "
+                         "pic hdr ")
+g_preview_extensions = g_preview_extensions.split()
+
+g_qtplayer_extensions = ("aac aifc aiff aif au ulw snd caf gsm kar mid smf midi "
+                         "mp3 swa wav 3gp 3g2 amc avi vfw dif dv fli mp2 m1s m75 "
+                         "m15 m2p mpg mpeg mp4 mpg4 mqv qtz mov qt qtl rtsp sd2 "
+                         "sdp sml m1a mpa mpm m1v m2v m4a m4p m4b m4v amr cdda "
+                         "dvd atr sdv pls qmed ")
+g_qtplayer_extensions = g_qtplayer_extensions.split()
+
+
+def open_photo( url ):
+    f = urllib.FancyURLopener()
+    fob = f.open(url)
+    s = fob.read()
+    fob.close()
+    d = opml.photo_from_string( s )
+    l = []
+    isFile = False
+    for k, v in d.items():
+        if k.startswith("large"):
+            nsurl = NSURL.URLWithString_( v )
+            isFile = nsurl.isFileURL()
+            l.append( nsurl )
+            break
+
+    if l:
+        workspace= NSWorkspace.sharedWorkspace()
+        target = u'com.apple.Preview'
+        if not isFile:
+            target = u'com.apple.Safari'
+        workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
+            l,
+            target,
+            0,
+            None )
+
+
+def open_node( url ):
+
+    appl = NSApplication.sharedApplication()
+    appdelg = appl.delegate()
+    workspace= NSWorkspace.sharedWorkspace()
+
+    url = cleanupURL( url )
+    surl = os.path.splitext( url )[1]
+    surl = surl.replace( '.', '', 1)
+    surl = surl.lower()
+
+    nsurl = NSURL.URLWithString_( url )
+
+    if url.endswith(".opml"):
+        appdelg.newOutlineFromOPMLURL_( url )
+
+    elif surl in g_qtplayer_extensions:
+        # qtplayer can do http:
+        workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
+            [ nsurl ],
+            u'com.apple.quicktimeplayer',
+            0,
+            None )
+
+    elif surl in g_preview_extensions:
+        # preview can't do http:
+        if nsurl.isFileURL():
+            workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
+                [ nsurl ],
+                u'com.apple.Preview',
+                0,
+                None )
+        else:
+            workspace.openURL_( nsurl )
+    else:
+        workspace.openURL_( nsurl )
 
 
 class KWOutlineView(AutoBaseClass):
@@ -166,7 +268,7 @@ class KWOutlineView(AutoBaseClass):
         """Notification."""
         userInfo = aNotification.userInfo()
 
-        pp(userInfo)
+        # pp(userInfo)
         super( KWOutlineView, self).textDidChange_(aNotification)
         #self.window().makeFirstResponder_(self)
         
@@ -174,10 +276,10 @@ class KWOutlineView(AutoBaseClass):
     def textDidEndEditing_(self, aNotification):
         """Notification."""
         # pdb.set_trace()
-        if kwdbg:
+        if kwlog and kwdbg:
             print "Edit END"
         userInfo = aNotification.userInfo()
-        if kwdbg:
+        if kwlog and kwdbg:
             pp(userInfo)
             pdb.set_trace()
         #textMovement = userInfo.valueForKey_( str("NSTextMovement") ).intValue()
@@ -200,7 +302,6 @@ class KWOutlineView(AutoBaseClass):
         if cancelled:
             self.window().makeFirstResponder_(self)
 
-
     #
     # event capture
     #
@@ -211,9 +312,15 @@ class KWOutlineView(AutoBaseClass):
         eventModifiers = int(theEvent.modifierFlags())
         eventCharNum = ord(eventCharacters)
 
-        mykeys = (NSBackspaceCharacter, NSDeleteCharacter,
-                  NSCarriageReturnCharacter, NSEnterCharacter,
-                  NSTabCharacter, NSBackTabCharacter,
+        mykeys = (NSBackspaceCharacter,
+                  NSDeleteCharacter,
+
+                  NSCarriageReturnCharacter,
+                  NSEnterCharacter,
+
+                  NSTabCharacter,
+                  NSBackTabCharacter,
+
                   ord(NSUpArrowFunctionKey),
                   ord(NSDownArrowFunctionKey) )
 
@@ -238,11 +345,8 @@ class KWOutlineView(AutoBaseClass):
         # NSRightTextMovement
         # NSTabTextMovement
         # NSUpTextMovement
-        # 
-        
 
-        # pdb.set_trace()
-        if kwdbg:
+        if kwlog and kwdbg:
             print "Key: ", hex(eventCharNum), hex(eventModifiers)
 
         if eventCharNum not in mykeys:
@@ -250,8 +354,11 @@ class KWOutlineView(AutoBaseClass):
             return None
 
         delg = self.delegate()
+
+        # did we swallow the event or does it need propagation?
         consumed = False
 
+        #
         cmdShiftAlt = NSCommandKeyMask | NSShiftKeyMask | NSAlternateKeyMask
 
         # filter out other stuff
@@ -261,8 +368,8 @@ class KWOutlineView(AutoBaseClass):
         #
         # Deleting
         if eventCharNum in (NSBackspaceCharacter, NSDeleteCharacter):
-            if 1: #kwdbg:
-                print "DELETE"
+            if kwlog and kwdbg:
+                print "DELETE KEY HANDLED"
             # while editing, will be handled elsewhere
             # outline: delete selection (saving to a pasteboard stack)
             # table: delete selection (saving to a pasteboard stack)
@@ -276,7 +383,7 @@ class KWOutlineView(AutoBaseClass):
         elif eventCharNum == NSCarriageReturnCharacter:
             #pdb.set_trace()
             if eventModifiers & NSShiftKeyMask:
-                if kwdbg:
+                if kwlog and kwdbg:
                     print "SHIFT Return"
             else:
                 # open new line and start editing
@@ -299,7 +406,9 @@ class KWOutlineView(AutoBaseClass):
 
             # pdb.set_trace()
 
+            mediafileextensions = ('.mov', '.m4a', '.mp3', '.wav', '.mp4')
             if eventModifiers & (cmdShiftAlt | NSControlKeyMask):
+
                 # dive down or up
                 appl = NSApplication.sharedApplication()
                 appdelg = appl.delegate()
@@ -331,77 +440,51 @@ class KWOutlineView(AutoBaseClass):
                             #
                             
                             # in a table
-                            if name in (u"url", u"htmlUrl", u"xmlUrl", u"xmlurl"):
+                            if name in ('url', 'htmlUrl', 'xmlUrl', 'xmlurl', 'link'):
                                 #
                                 # FIXING HACK
                                 # url = item.value
                                 # pdb.set_trace()
                                 url = item.displayValue
                                 url = cleanupURL( url )
-                                if url.endswith(".opml"):
-                                    appdelg.newOutlineFromOPMLURL_( url )
-                                else:
-                                    url = NSURL.URLWithString_( url )
-                                    workspace.openURL_( url )
+                                open_node( url )
 
                             # in an outline
                             else:
                                 #
                                 v = item.getValueDict()
-                                typ = v.get("type", "")
+                                theType = v.get("type", "")
                                 url = v.get("url", "")
                                 url = cleanupURL( url )
-                                if typ == "blogpost":
+
+                                if theType == "blogpost":
                                     if not url:
-                                        urlTemplate = v.get("urlTemplate", "")
-                                        urlTemplate = cleanupURL( urlTemplate )
-                                        if urlTemplate:
-                                            appdelg.newOutlineFromOPMLURL_( urlTemplate )
-                                            
-                                elif typ == "howto":
-                                    pass
+                                        url = v.get("urlTemplate", "")
+                                        url = cleanupURL( urlTemplate )
+                                    if url:
+                                        open_node( url )
 
-                                elif typ == "html":
-                                    url = NSURL.URLWithString_( url )
-                                    workspace.openURL_( url )
+                                elif theType in ( 'howto', 'html', 'include', 'outline',
+                                                  'redirect', 'thumbList',
+                                                  'thumbListVarCol', 'link'):
+                                    open_node( url )
 
-                                elif typ == "include":
-                                    appdelg.newOutlineFromOPMLURL_( url )
+                                elif theType == "photo":
+                                    url = v.get("xmlUrl", "")
+                                    open_photo( url )
 
-                                elif typ == "link":
-                                    if url.endswith(".opml"):
-                                        appdelg.newOutlineFromOPMLURL_( url )
-                                    else:
-                                        url = NSURL.URLWithString_( url )
-                                        workspace.openURL_( url )
-
-                                elif typ == "outline":
-                                    appdelg.newOutlineFromOPMLURL_( url )
-
-                                elif typ == "photo":
-                                    pass
-                                elif typ == "redirect":
-                                    url = NSURL.URLWithString_( url )
-                                    workspace.openURL_( url )
-
-                                elif typ == "rssentry":
+                                elif theType == "rssentry":
                                     url = v.get("link", "")
                                     url = cleanupURL( url )
-                                    surl = url[-4:]
-                                    url = NSURL.URLWithString_( url )
-                                    if surl.lower() in ('.mov', '.m4a'):
-                                        workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_( [ url ], u'com.apple.quicktimeplayer', 0, None )
-                                    else:
-                                        workspace.openURL_( url )
+                                    open_node( url )
 
-                                elif typ == "river":
+                                elif theType == "river":
                                     opmlUrl = v.get("opmlUrl", "")
                                     if opmlUrl:
                                         opmlUrl = cleanupURL( opmlUrl )
                                         appdelg.newOutlineFromOPMLURL_( opmlUrl )
 
-                                elif typ == "rss":
-                                    
+                                elif theType == "rss":
                                     # open website
                                     htmlUrl = v.get("htmlUrl", "")
                                     htmlUrl = cleanupURL( htmlUrl )
@@ -412,24 +495,16 @@ class KWOutlineView(AutoBaseClass):
                                     xmlUrl = v.get("xmlUrl", "")
                                     xmlUrl = cleanupURL( xmlUrl )
                                     if xmlUrl:
-                                        appdelg.newOutlineFromRSSURL_( xmlUrl )
+                                        xmlUrl = NSURL.URLWithString_( xmlUrl )
 
-                                elif typ == "scripting2Post":
+                                        docctrl = NSDocumentController.sharedDocumentController()
+                                        err = docctrl.openDocumentWithContentsOfURL_display_error_(
+                                                        xmlUrl, True)
+
+                                elif theType == "scripting2Post":
                                     url = NSURL.URLWithString_( url )
                                     workspace.openURL_( url )
 
-                                elif typ == "thumbList":
-                                    appdelg.newOutlineFromOPMLURL_( url )
-                                
-                                if False:
-                                    url = v.get("url", "")
-    
-                                    url = cleanupURL( url )
-                                    if url.endswith(".opml"):
-                                        appdelg.newOutlineFromOPMLURL_( url )
-                                    else:
-                                        url = NSURL.URLWithString_( url )
-                                        workspace.openURL_( url )
                             consumed = True
 
                     ###############################################################
@@ -472,10 +547,10 @@ class KWOutlineView(AutoBaseClass):
                 #
                 if eventModifiers & NSShiftKeyMask:
                     if eventModifiers & NSAlternateKeyMask:
-                        if kwdbg:
+                        if kwlog and kwdbg:
                             print "SHIFT ALT Enter"
                     else:
-                        if kwdbg:
+                        if kwlog and kwdbg:
                             print "SHIFT Enter"
                         
                         nodes = visitOutline(delg.root)
@@ -598,11 +673,10 @@ class KWOutlineView(AutoBaseClass):
                 
                     self.setNeedsDisplay_( True )
                     consumed = True
-                    
-
 
         if not consumed:
             super(KWOutlineView, self).keyDown_( theEvent )
+
 
     #
     # utilities
@@ -681,6 +755,7 @@ def visitOutline(startnode, startlevel=0, depthFirst=False, action=stdAction):
             visitOutline(p, startlevel+1, depthFirst, action)
     return 
 
+# UNUSED
 def dfid(T,children,callback=stdAction):
     # some ActiveState snippet
     def visit(node,i):
@@ -698,30 +773,59 @@ def dfid(T,children,callback=stdAction):
 #
 # Outline Document Model
 #
-class OutlineDocumentModel(NSObject):
+class OutlineViewDelegateDatasource(NSObject):
 
     """This is a delegate as well as a data source for NSOutlineViews."""
     # 
     # instantiated from AppDelegate
     #
     # no bindings
+    #
+    # ivars
+    #
+    #   typ
+    #   parentNode
+    #   root
+    #   controller
+    #   dirty
+    #   restricted
+
+
+    def init(self):
+        self = super(OutlineViewDelegateDatasource, self).init()
+        if not self:
+            return None
+        self.typ = None
+        self.parentNode = None
+        self.root = None
+        self.controller = None
+        self.dirty = 0
+        self.restricted = False
+        return self        
+
 
     def initWithObject_type_parentNode_(self, obj, typ, parentNode):
+
         self = self.init()
+
+        if not self:
+            return None
+
         self.typ = typ
         self.parentNode = parentNode
+
         if not isinstance(obj, OutlineNode):
             obj = OutlineNode(unicode(obj), "", None, outlinetypes.typeOutline)
         self.root = obj
-        self.controller = None
-        self.dirty = False
         return self
+
 
     def release():
         if kwdbg:
             print "MODEL_release"
         self.root.release()
-        super(OutlineDocumentModel, self).release()
+        super(OutlineViewDelegateDatasource, self).release()
+
 
     def setController_(self, controller):
         self.controller = controller
@@ -764,7 +868,8 @@ class OutlineDocumentModel(NSObject):
         column = userInfo.valueForKey_( u"NSTableColumn" )
         oldWidth = userInfo.valueForKey_( u"NSOldWidth" ).intValue()
         newWidth = column.width()
-        # print "COL: '%s' changed from: %i  to  %i" % (column.identifier(), oldWidth, newWidth)
+        # print "COL: '%s' changed from: %i  to  %i" % (column.identifier(),
+        #                                               oldWidth, newWidth)
 
     def tableViewColumnDidResize_(self, aNotification):
         # for some reaon only th outlineView delegate is called. Even for tables
@@ -778,16 +883,13 @@ class OutlineDocumentModel(NSObject):
         n = item.noOfChildren()
         return n
 
-
     def outlineView_child_ofItem_(self, view, child, item):
         if not item:
             item = self.root
         return item.childAtIndex_( child )
 
-
     def outlineView_isItemExpandable_(self, view, item):
         return item.noOfChildren() > 0
-
 
     def outlineView_objectValueForTableColumn_byItem_(self, view, col, item):
         c = col.identifier()
@@ -802,7 +904,6 @@ class OutlineDocumentModel(NSObject):
         elif c == u"comment":
             return item.displayComment
 
-
     def outlineView_setObjectValue_forTableColumn_byItem_(self, view, value, col, item):
         # pdb.set_trace()
         c = col.identifier()
@@ -816,16 +917,17 @@ class OutlineDocumentModel(NSObject):
                 self.parentNode.updateValue_( (name, unicode(value)) )
                 
             item.setValue_( value )
+            self.dirty += 1
         elif c == u"name":
             item.setName_(value)
+            self.dirty += 1
         elif c == u"comment":
             item.setComment_(value)
-
+            self.dirty += 1
 
     # delegate method
     def outlineView_shouldEditTableColumn_item_(self, view, col, item):
         return item.editable
-
 
     def outlineView_heightOfRowByItem_(self, ov, item):
         # where to store this
@@ -845,7 +947,6 @@ class OutlineDocumentModel(NSObject):
 
     #def outlineView_didClickTableColumn_(self, view, tablecolumn):
     #    pass
-
 
     # interresting delegate methods:
     # Delegate
@@ -882,14 +983,10 @@ class OutlineDocumentModel(NSObject):
     # NSOutlineViewItemWillExpandNotification
     # NSOutlineViewSelectionDidChangeNotification
     # NSOutlineViewSelectionIsChangingNotification
-    # 
-
 
 class NodeValue(object):
     """NodeValue is a helper with the value column which in some cases has
     a dual existence as a string or as a table.
-    
-    
     """
 
     def __init__(self, value):
@@ -922,7 +1019,6 @@ class NodeValue(object):
             else:
                 l.append(u"%s" % (v,))
         return '\n'. join(l)
-
 
     def listFromDisplayValue(self, displayValue):
         lines = displayValue.split('\n')
@@ -995,7 +1091,6 @@ class NodeAttributes(object):
             l.append( (k,v) )
         return l
 
-
 class OutlineNode(NSObject):
 
     """Wrapper class for items to be displayed in the outline view."""
@@ -1045,8 +1140,11 @@ class OutlineNode(NSObject):
         #super( OutlineNode, self).release()
         #self.release()
         
+
     def __init__(self, name, obj, parent, typ):
         # pdb.set_trace()
+
+        # this is outlinetype, not valueType
         self.typ = typ
         self.setParent_(parent)
 
@@ -1060,16 +1158,14 @@ class OutlineNode(NSObject):
 
         self.children = NSMutableArray.arrayWithCapacity_( 10 )
         self.editable = True
-
+        self.retain()
 
     def setParent_(self, parent):
         self.parent = parent
 
-    
     def releaseParent(self):
         pass
 
-    
     #
     def setName_(self, value):
         self.name = value
@@ -1079,7 +1175,6 @@ class OutlineNode(NSObject):
         else:
             self.displayName = u"%s" % (s,)
 
-    
     def setValue_(self, value):
         if value in (u"", {}, [], None, False):
             self.value = [(u"",u"")]
@@ -1096,7 +1191,6 @@ class OutlineNode(NSObject):
             self.displayValue = nv.displayValue()
         self.displayType = self.type
 
-
     def setNodeAttributes(self, nameValueList):
         """Create new node attributes from [ (k,v), ]
         """
@@ -1104,14 +1198,12 @@ class OutlineNode(NSObject):
         if type(nameValueList) in (list,):
             self.nodeAttributes.fromNameValues( nameValueList )
 
-
     def addValue_(self, nameValue):
         self.value.append( nameValue )
         self.setValue_( self.value )
         r = self.findRoot()
         m = r.model
         m.reloadData_(self)
-
 
     def removeValue_(self, nameValue):
         # repeated myself; copied from updateValue_ ...
@@ -1133,7 +1225,6 @@ class OutlineNode(NSObject):
             m = r.model
             m.reloadData_(self)
         return updated
-
 
     def updateValue_(self, nameValue):
         # pdb.set_trace()
@@ -1158,7 +1249,6 @@ class OutlineNode(NSObject):
         m = r.model
         m.reloadData_(self)
 
-
     def getValueDict(self):
         """Create a dictionary from the value."""
         if len(self.value) == 0:
@@ -1175,14 +1265,12 @@ class OutlineNode(NSObject):
                 d[k] = v
             return d
 
-
     def setComment_(self, comment):
         self.comment = comment
         self.displayComment = unicode( self.comment )
 
-
     def compare_(self, other):
-        return cmp(self.name, other.name)        
+        return cmp(self.name, other.name)
     #
     def noOfChildren(self):
         return self.children.count()
@@ -1195,7 +1283,6 @@ class OutlineNode(NSObject):
             child.setParent_(self)
             self.children.addObject_( child )
 
-
     def addChild_atIndex_(self, child, index):
         # child.retain()
         self.children.insertObject_atIndex_( child, index)
@@ -1203,13 +1290,11 @@ class OutlineNode(NSObject):
             print "addChild_atIndex_setParent", child
         child.setParent_(self)
 
-
     def childAtIndex_( self, index ):
         # delegeate child getter
         if index <= self.children.count():
             return self.children.objectAtIndex_( index )
         return None
-
 
     def removeChild_(self, child):
         # perhaps this should return the orphan
@@ -1263,7 +1348,6 @@ class OutlineNode(NSObject):
         # should work for tables too since root node is outline type
         l = p.children.count()
         return l
-        
 
     def siblingIndex(self):
         """What is my index in this sibling group?"""
@@ -1290,7 +1374,6 @@ class OutlineNode(NSObject):
         # no parent
         return -1
 
-
     def nextIndex(self):
         """The index of the sibling after me."""
         n = self.siblingIndex()
@@ -1305,19 +1388,16 @@ class OutlineNode(NSObject):
         # no parent
         return n
 
-
     def isFirst(self):
         """Am I the first sibling."""
         n = self.siblingIndex()
         return n == 0
-
 
     def isLast(self):
         """Am I the last sibling."""
         n = self.siblingIndex()
         l = self.siblingCount()
         return n == (l - 1)
-
 
     def next(self):
         """Return my immediate next sibling or -1."""
@@ -1333,7 +1413,6 @@ class OutlineNode(NSObject):
             return self.parent.children.objectAtIndex_(n)
         return -1
 
-
     def isChildOf_(self, other):
         p = self
         i = 0
@@ -1343,7 +1422,6 @@ class OutlineNode(NSObject):
             if p == other:
                 return i
         return -1
-            
 
     def findFirstChildWithName_(self, name):
         for child in self.children:
@@ -1354,7 +1432,7 @@ class OutlineNode(NSObject):
     # node movements
     #
     def makeChildOf_(self, other):
-        """Move self to be latest child of other."""
+        """Move self to be last child of other."""
 
         # parent needs to be saved since it's lost in addChild_
         parent = self.parent
@@ -1362,7 +1440,6 @@ class OutlineNode(NSObject):
             return -1
         other.addChild_(self)
         parent.removeChild_(self)
-
 
     def moveLeft(self):
         # noveAfterParent
@@ -1393,8 +1470,7 @@ class OutlineNode(NSObject):
 
         previous = self.previous()
         if previous != -1:
-            self.makeChildOf_(previous)        
-
+            self.makeChildOf_(previous)
 
 #
 # node editing
@@ -1416,8 +1492,8 @@ def deleteNodes(ov, nodes=(), selection=False):
             deleted = parentNode.removeValue_( (item.name, item.value) )
         if deleted:
             p.removeChild_( item )
+            delg.dirty += 1
     ov.reloadData()
-
 
 def createNode(ov, selection, startEditing=True):
     #pdb.set_trace()
@@ -1425,7 +1501,8 @@ def createNode(ov, selection, startEditing=True):
     
     # open new line and start editing
     # if already editing, start new line, continue editing
-    typ = ov.delegate().typ
+    delg = ov.delegate()
+    typ = delg.typ
     if selection == -1:
         rowIndex = ov.delegate().appendToRoot_Value_(u"", u"")
     else:
@@ -1447,9 +1524,10 @@ def createNode(ov, selection, startEditing=True):
         ov.selectRowIndexes_byExtendingSelection_(s, False)
         ov.reloadData()
         ov.editColumn_row_withEvent_select_(0, rowIndex, None, True)
-
+    delg.dirty += 1
 
 def moveSelectionUp(ov, items):
+    delg = ov.delegate()
     for item in items:
         # move item before previous
         #  get grandparent
@@ -1463,7 +1541,7 @@ def moveSelectionUp(ov, items):
         previousIndex = previous.siblingIndex()
         parent.removeChild_( item )
         parent.addChild_atIndex_(item, previousIndex)
-
+        delg.dirty += 1
 
 def moveSelectionDown(ov, items):
     #
@@ -1471,6 +1549,7 @@ def moveSelectionDown(ov, items):
     # this really needs to be sorted down; use indices
     # otherwise there will be overlapping moves destroying
     # sortorder
+    delg = ov.delegate()
     items.reverse()
     # pdb.set_trace()
     for item in items:
@@ -1489,6 +1568,7 @@ def moveSelectionDown(ov, items):
             parent.addChild_( item )
         else:
             parent.addChild_atIndex_(item, nextIndex)
+        delg.dirty += 1
 
 def moveSelectionLeft(ov, selection):
     pass
@@ -1496,20 +1576,21 @@ def moveSelectionLeft(ov, selection):
 def moveSelectionRight(ov, selection):
     pass
 
-
 def cleanupURL( url ):
     # lots of URLs contain spaces, &, '
+    pdb.set_trace()
     purl = urlparse.urlparse( url )
     purl = list(purl)
     path = purl[2]
     path = urllib.unquote( 'http://' + path )
-    path = urllib.quote( path )
+    try:
+        path = urllib.quote( path )
+    except KeyError, err:
+        print "ERROR"
+        print repr(path)
+        print err
     path = path[9:]
     purl[2] = path
     purl = urlparse.urlunparse( purl )
     purl = unicode(purl)
     return purl
-        
-
-
-
