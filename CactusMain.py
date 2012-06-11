@@ -19,7 +19,7 @@ extractClasses("OutlineEditor")
 extractClasses("NodeEditor")
 
 
-import CactusOPMLDocument
+import CactusOutlineDoc
 import CactusTableDocument
 
 
