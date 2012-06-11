@@ -8,6 +8,10 @@
 import sys
 import os
 
+import pdb
+kwdbg = True
+kwlog = True
+
 import time
 import datetime
 
@@ -20,13 +24,15 @@ import pprint
 pp = pprint.pprint
 
 import feedparser
-import pdb
 
 import objc
 
 import Foundation
 NSObject = Foundation.NSObject
 NSURL = Foundation.NSURL
+NSMutableDictionary = Foundation.NSMutableDictionary
+
+NSUserDefaults = Foundation.NSUserDefaults
 
 
 import AppKit
@@ -38,7 +44,6 @@ NSWorkspace = AppKit.NSWorkspace
 
 NSString = AppKit.NSString
 NSMutableString = AppKit.NSMutableString
-
 
 NSSavePanel = AppKit.NSSavePanel
 NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton 
@@ -63,13 +68,20 @@ typeBrowser = outlinetypes.typeBrowser
 
 
 import Outline
-OutlineDocumentModel = Outline.OutlineDocumentModel
+OutlineViewDelegateDatasource = Outline.OutlineViewDelegateDatasource
 OutlineNode = Outline.OutlineNode
+
+
+import CactusOutlineDoc
+boilerplateOPML = CactusOutlineDoc.boilerplateOPML
+CactusOutlineDocument = CactusOutlineDoc.CactusOutlineDocument
 
 import opml
 
 extractClasses("MainMenu")
 extractClasses("OpenURL")
+extractClasses("OutlineEditor")
+
 
 
 #
@@ -130,8 +142,14 @@ class OpenURLWindowController(AutoBaseClass):
         self = self.initWithWindowNibName_("OpenURL")
         window = self.window()
         window.setTitle_( u"Open URL…" )
-        self.label.setStringValue_(u"URL:")
+        # self.label.setStringValue_(u"URL:")
         window.makeFirstResponder_(self.textfield)
+        app = NSApplication.sharedApplication()
+        delg = app.delegate()
+        self.visitedURLs = delg.visitedURLs[:]
+        self.menuLastVisited.removeAllItems()
+        for url in self.visitedURLs:
+            self.menuLastVisited.addItemWithTitle_( url )
         self.showWindow_(self)
 
         # The window controller doesn't need to be retained (referenced)
@@ -141,47 +159,51 @@ class OpenURLWindowController(AutoBaseClass):
         self.retain()
         return self
 
+    def clearMenu_(self, sender):
+        self.visitedURLs = []
+        app = NSApplication.sharedApplication()
+        delg = app.delegate()
+        delg.visitedURLs = self.visitedURLs
+        self.menuLastVisited.removeAllItems()
+
+    def lastVisitedMenuSelection_(self, sender):
+        urlSelected = self.menuLastVisited.title()
+        self.textfield.setStringValue_( urlSelected )
+
 
     def windowWillClose_(self, notification):
         #pdb.set_trace()
         # see comment in self.initWithObject_()
         self.autorelease()
 
+
     def OK_(self, sender):
         #pdb.set_trace()
         app = NSApplication.sharedApplication()
         delg = app.delegate()
         url = self.textfield.stringValue()
-        delg.newOutlineFromOPMLURL_( url )
+        if url not in self.visitedURLs:
+            self.visitedURLs.append( url )
+            n = len(self.visitedURLs)
+            if n > 20:
+                start = n - 20
+                self.visitedURLs = self.visitedURLs[start:]
+            delg.visitedURLs = self.visitedURLs[:]
+
+        url = NSURL.URLWithString_( url )
+        # delg.newOutlineFromOPMLURL_( url )
+        
+        #
+        # determine type here
+        #
+        docc = NSDocumentController.sharedDocumentController()
+        if not docc.documentForURL_( url ):
+            err = docc.makeDocumentWithContentsOfURL_ofType_error_(url, 'Cactus Outline')
         self.close()        
 
     def Cancel_(self, sender):
         #pdb.set_trace()
         self.close()
-
-
-def boilerplateOPML( rootNode ):
-    # created & modified
-    now = datetime.datetime.now()
-    s = now.strftime("%a, %d %b %Y %H:%M:%S %Z")
-    head = OutlineNode("head", "", rootNode, typeOutline)
-    rootNode.addChild_( head )
-
-    head.addChild_(OutlineNode("dateCreated", s, head, typeOutline))
-    head.addChild_(OutlineNode("dateModified", s, head, typeOutline))
-    head.addChild_(OutlineNode("ownerName", "", head, typeOutline))
-    head.addChild_(OutlineNode("ownerEmail", "", head, typeOutline))
-    head.addChild_(OutlineNode("expansionState", "", head, typeOutline))
-    head.addChild_(OutlineNode("vertScrollState", "", head, typeOutline))
-    head.addChild_(OutlineNode("windowTop", "", head, typeOutline))
-    head.addChild_(OutlineNode("windowLeft", "", head, typeOutline))
-    head.addChild_(OutlineNode("windowBottom", "", head, typeOutline))
-    head.addChild_(OutlineNode("windowRight", "", head, typeOutline))
-
-    body = OutlineNode("body", "", rootNode, typeOutline)
-    rootNode.addChild_( body )
-
-    body.addChild_( OutlineNode("", "", body, typeOutline) )
 
 
 class Document(object):
@@ -195,9 +217,6 @@ class Document(object):
         self.parentNode = parentNode
 
 
-
-class CactusDocumentController(AutoBaseClass):
-    pass
 
 
 
@@ -213,21 +232,25 @@ class CactusWindowController(AutoBaseClass):
     def init(self):
         # outline or table here
         # tables are outlines with no children
+        if kwlog:
+            print "CactusWindowController.init()"
         doc = Document("Untitled", None)
         return self.initWithObject_type_(doc, typeOutline)
 
 
-    def initWithObject_type_(self, obj, typ):
+    def initWithObject_type_(self, obj, theType):
+        if kwlog:
+            print "CactusWindowController.initWithObject_type_()"
         """This controller is used for outline and table windows."""
 
-        if typ == typeOutline:
+        if theType == typeOutline:
             self = self.initWithWindowNibName_("OutlineEditor")
             title = u"Unnamed Outline"
-        elif typ == typeTable:
+        elif theType == typeTable:
             # pdb.set_trace()
             self = self.initWithWindowNibName_("TableEditor")
             title = u"Unnamed Table"
-        elif typ == typeBrowser:
+        elif theType == typeBrowser:
             pass #title = u"Browser"
         else:
             pass
@@ -257,7 +280,7 @@ class CactusWindowController(AutoBaseClass):
 
         self.window().setTitle_( title )
 
-        self.model = OutlineDocumentModel.alloc().initWithObject_type_parentNode_( self.root, typ, self.parentNode )
+        self.model = OutlineViewDelegateDatasource.alloc().initWithObject_type_parentNode_( self.root, theType, self.parentNode )
 
         # this is evil
         self.root.model = self.model
@@ -297,6 +320,8 @@ class CactusWindowController(AutoBaseClass):
 
 
     def windowWillClose_(self, notification):
+        if kwlog:
+            print "CactusWindowController.windowWillClose_()"
         # see comment in self.initWithObject_()
         #
         # check model.dirty
@@ -326,8 +351,8 @@ class CactusWindowController(AutoBaseClass):
         self.variableRowHeight = self.optVariableRow.state()
 
         # menus - NOT YET USED
-        formatChoice = self.menFormat.state()
-        behaviourChoice = self.menBehaviour.state()
+        # formatChoice = self.menFormat.state()
+        # behaviourChoice = self.menBehaviour.state()
 
         # alterLines
         alterLines = self.optAlterLines.state()
@@ -380,13 +405,66 @@ class CactusWindowController(AutoBaseClass):
 
 class CactusAppDelegate(NSObject):
     # defined in mainmenu
-    def applicationDidFinishLaunching_(self, notification):
-        pass
+
+    def initialize(self):
+        if kwlog:
+            print "CactusAppDelegate.initialize()"
+        self.visitedURLs = []
+        # default settings for preferences
+        userdefaults = NSMutableDictionary.dictionary()
+
+        userdefaults.setObject_forKey_([],   u'lastURLsVisited')
+
+        NSUserDefaults.standardUserDefaults().registerDefaults_(userdefaults)
+
+
+    def awakeFromNib(self):
+        defaults = NSUserDefaults.standardUserDefaults()
+        self.visitedURLs = defaults.arrayForKey_( u"lastURLsVisited" )
         
+
+    def applicationDidFinishLaunching_(self, notification):
+        if kwlog:
+            print "CactusAppDelegate.applicationDidFinishLaunching_()"
+
+        app = NSApplication.sharedApplication()
+        app.activateIgnoringOtherApps_(True)
+
+
+    def applicationShouldOpenUntitledFile_( self, sender ):
+        if kwlog:
+            print "CactusAppDelegate.applicationShouldOpenUntitledFile_()"
+        # this is neede to prevent creating an untitled document at startup
+        #
+        # should really be in the (not yet existent) preferences
+        return False
+
+
+    def applicationShouldHandleReopen_hasVisibleWindows_( self, theApplication, flag ):
+        if kwlog:
+            print "CactusAppDelegate.applicationShouldHandleReopen_hasVisibleWindows_()"
+        # this is neede to prevent creating an untitled document when clicking the dock
+        #
+        # should really be in the (not yet existent) preferences
+        return False
+
+    def applicationShouldTerminate_(self, aNotification):
+        defaults = NSUserDefaults.standardUserDefaults()
+
+        defaults.setObject_forKey_(self.visitedURLs ,
+                                   u'lastURLsVisited')
+        return True
+
+
     def newTableWithRoot_(self, root):
+        if kwlog:
+            print "CactusAppDelegate.newTableWithRoot_()"
         self.newTableWithRoot_title_(root, None)
 
+
     def newTableWithRoot_title_(self, root, title):
+        if kwlog:
+            print "DEPRECATED CactusAppDelegate.newTableWithRoot_title_()"
         # find owning controller here and pass on
         if not title:
             title = u"Table Editor"
@@ -394,6 +472,8 @@ class CactusAppDelegate(NSObject):
         CactusWindowController.alloc().initWithObject_type_(doc, typeTable)
 
     def newTableWithRoot_fromNode_(self, root, parentNode):
+        if kwlog:
+            print "DEPRECATED CactusAppDelegate.newTableWithRoot_fromNode_()"
         title = "Unnamed"
         if parentNode:
             title = parentNode.name
@@ -403,16 +483,23 @@ class CactusAppDelegate(NSObject):
 
     # menu "New Table"
     def newTable_(self, sender):
+        if kwlog:
+            print "DEPRECATED CactusAppDelegate.newTable_()"
         doc = Document("Untitled Table", None)
         CactusWindowController.alloc().initWithObject_type_(doc, typeTable)
 
 
     # menu "New Outline"
     def newOutline_(self, sender):
+        if kwlog:
+            print "DEPRECATED CactusAppDelegate.newOutline_()"
         # pdb.set_trace()
-        doc = Document("Untitled Outline", None)
-        boilerplateOPML( doc.root )
-        CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
+        #doc = Document("Untitled Outline", None)
+        #boilerplateOPML( doc.root )
+        #CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
+        # docc = NSDocumentController.sharedDocumentController()
+        # docc.newDocument_(sender)
+
 
     # UNUSED
     def newRoot_(self, sender):
@@ -440,8 +527,6 @@ class CactusAppDelegate(NSObject):
         CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
 
 
-    
-
     def readURL_(self, url):
         # probably shouldn't be here. For now it is
         f = urllib.FancyURLopener()
@@ -457,7 +542,7 @@ class CactusAppDelegate(NSObject):
         base, path = urllib.splithost( url )
         basepath, filename = os.path.split( path )
         #
-        d = opml.from_string(s)
+        d = opml.opml_from_string(s)
         del s
         if d:
             root = self.openOPML_( d )
@@ -465,17 +550,27 @@ class CactusAppDelegate(NSObject):
             CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
 
 
-
-
     # UNUSED but defined in class
     def newBrowser_(self, sender):
+        if kwlog:
+            print "CactusAppDelegate.newBrowser_()"
         # The CactusWindowController instance will retain itself,
         # so we don't (have to) keep track of all instances here.
         doc = Document("Untitled Outline", None)
         CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
 
+    def openOutlineDocument_(self, sender):
+        if kwlog:
+            print "CactusAppDelegate.openOutlineDocument_()"
+
+        # docctrl = CactusDocumentController.sharedDocumentController()
+        docctrl = NSDocumentController.sharedDocumentController()
+        docctrl.openDocument_(sender)
+
 
     def openFile_(self, sender):
+        if kwlog:
+            print "CactusAppDelegate.openFile_()"
         # this is ugly
         f = getFileDialog(multiple=True)
         if f:
@@ -485,7 +580,7 @@ class CactusAppDelegate(NSObject):
                 folder, filename = os.path.split(opmlFile)
                 s = fob.read()
                 fob.close()
-                d = opml.from_string(s)
+                d = opml.opml_from_string(s)
                 if d:
                     root = self.openOPML_( d )
                     doc = Document(opmlFile, root)
@@ -494,9 +589,11 @@ class CactusAppDelegate(NSObject):
                     print "Reading OPML '%s' Done." % (opmlFile.encode("utf-8"),)
                 else:
                     print "Reading OPML '%s' FAILED." % (opmlFile.encode("utf-8"),)
-                
+
 
     def openOPML_(self, rootOPML):
+        if kwlog:
+            print "CactusAppDelegate.openOPML_()"
         """This builds the node tree and opens a window."""
         #
         #  Split this up.
@@ -586,6 +683,8 @@ class CactusAppDelegate(NSObject):
 
 
     def openRSS_(self, url):
+        if kwlog:
+            print "CactusAppDelegate.openRSS_()"
         d = feedparser.parse( url )
 
         # make basic nodes
@@ -655,8 +754,10 @@ class CactusAppDelegate(NSObject):
                 head.addChild_( node )
 
         otherkeys = d.keys()
+
         if 'feed' in otherkeys:
             otherkeys.remove("feed")
+
         if 'entries' in otherkeys:
             otherkeys.remove("entries")
 
@@ -713,9 +814,13 @@ class CactusAppDelegate(NSObject):
         for entry in d.entries:
             name = ""
             if 'title' in entry:
-                name = entry.title + "\n\n"
-            if 'summary' in entry:
-                name = name + entry.summary
+                # name = entry.title + "\n\n"
+                name = entry.title
+            elif 'summary' in entry:
+                name = entry.summary
+
+            #if 'summary' in entry:
+            #    name = name + entry.summary
             value = entry
             killkeys = ['links', 'authors', 'tags']
             value['type'] = "rssentry"
@@ -736,6 +841,8 @@ class CactusAppDelegate(NSObject):
 
 
     def saveAs_(self, sender):
+        if kwlog:
+            print "CactusAppDelegate.saveAs_()"
         print "Save As..."
         app = NSApplication.sharedApplication()
         win = app.keyWindow()
@@ -750,13 +857,14 @@ class CactusAppDelegate(NSObject):
     
                 f = saveAsDialog( path )
                 if f:
-                    rootOPML = opml.generateOPML( root, f, indent=1 )
+                    rootOPML = opml.generateOPML( root, indent=1 )
+                    # pdb.set_trace()
                     e = etree.ElementTree( rootOPML )
                     fob = open(f, 'w')
                     e.write(fob, encoding="utf-8", xml_declaration=True, method="xml" )
                     fob.close()
 
 
-if __name__ == "__main__":
+if __name__ == "XX__main__":
     from PyObjCTools import AppHelper
     AppHelper.runEventLoop()
