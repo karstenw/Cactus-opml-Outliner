@@ -38,7 +38,7 @@ AutoBaseClass = PyObjCTools.NibClassBuilder.AutoBaseClass
 
 
 import Outline
-OutlineDocumentModel = Outline.OutlineDocumentModel
+OutlineViewDelegateDatasource = Outline.OutlineViewDelegateDatasource
 OutlineNode = Outline.OutlineNode
 
 
@@ -59,17 +59,17 @@ class TableWindowController(AutoBaseClass):
         return self.initWithObject_type_(doc, typeOutline)
 
 
-    def initWithObject_type_(self, obj, typ):
+    def initWithObject_type_(self, obj, theType):
         """This controller is used for outline and table windows."""
 
-        if typ == typeOutline:
+        if theType == typeOutline:
             self = self.initWithWindowNibName_("OutlineEditor")
             title = u"Unnamed Outline"
-        elif typ == typeTable:
+        elif theType == typeTable:
             # pdb.set_trace()
             self = self.initWithWindowNibName_("TableEditor")
             title = u"Unnamed Table"
-        elif typ == typeBrowser:
+        elif theType == typeBrowser:
             pass #title = u"Browser"
         else:
             pass
@@ -99,7 +99,7 @@ class TableWindowController(AutoBaseClass):
 
         self.window().setTitle_( title )
 
-        self.model = OutlineDocumentModel.alloc().initWithObject_type_parentNode_( self.root, typ, self.parentNode )
+        self.model = OutlineViewDelegateDatasource.alloc().initWithObject_type_parentNode_( self.root, theType, self.parentNode )
 
         # this is evil
         self.root.model = self.model
