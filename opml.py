@@ -12,6 +12,7 @@ import pprint
 pp = pprint.pprint
 
 kwdbg = True
+kwlog = True
 import pdb
 
 keyTypes = {}
@@ -26,7 +27,7 @@ def getOutlineNodes(node):
     for n in list(node):
         keys = n.attrib.keys()
 
-        if kwdbg:
+        if kwlog:
             keys.sort()
             keys = tuple(keys)
             if not keys in keyTypes:
@@ -39,11 +40,11 @@ def getOutlineNodes(node):
                 else:
                     opmlTags[ key ] += 1
             if 'type' in keys:
-                typ = n.attrib['type']
-                if typ not in nodeTypes:
-                    nodeTypes[typ] = 1
+                theType = n.attrib['type']
+                if theType not in nodeTypes:
+                    nodeTypes[theType] = 1
                 else:
-                    nodeTypes[typ] += 1
+                    nodeTypes[theType] += 1
         name = n.attrib.get('text', '')
         nchild = len(n)
         b = {'name': name, 'children': [], 'noofchildren': nchild, 'attributes': {}}
@@ -57,16 +58,16 @@ def getOutlineNodes(node):
     return result
 
 
-def getOPML( rootnode ):
+def getOPML( etRootnode ):
     global keyTypes, opmlTags, nodeTypes, urls
     
     d = {'head': [], 'body':[]}
 
     # get head
-    head = rootnode.find("head")
+    head = etRootnode.find("head")
 
     # get body
-    body = rootnode.find("body")
+    body = etRootnode.find("body")
     
 
     if head:
@@ -77,7 +78,7 @@ def getOPML( rootnode ):
     if body:
         d['body'] = getOutlineNodes(body)
 
-    if kwdbg:
+    if kwlog:
         print
         print "KeyTypes", len(keyTypes)
         pp(keyTypes)
@@ -91,7 +92,7 @@ def getOPML( rootnode ):
     return  d
 
 
-def from_string(opml_text):
+def opml_from_string(opml_text):
     return getOPML(etree.fromstring(opml_text))
 
 def parse(opml_url):
@@ -118,6 +119,9 @@ def createSubNodes(OPnode, ETnode, level):
     # do attributes
     name = OPnode.name
     value = OPnode.getValueDict()
+    for k, v in value.items():
+        if type(v) not in (str, unicode):
+            value[k] = unicode(v)
     comment = OPnode.comment
 
     # update attributes
@@ -142,8 +146,8 @@ def createSubNodes(OPnode, ETnode, level):
             s = createSubNodes( child, ETSub, level+1 )
     return ETnode
     
-def generateOPML( rootNode, filepath, indent=2 ):
-    """Generate an OPML/XML tree from OutlineNode rotoNode.
+def generateOPML( rootNode, indent=2 ):
+    """Generate an OPML/XML tree from OutlineNode rootNode.
     
     parameters:
      filepath - unused since file writing has been factored out
@@ -176,7 +180,7 @@ def generateOPML( rootNode, filepath, indent=2 ):
             node = etree.SubElement( head, name)
             if value: # != "":
                 # node.text = value
-                node.text = value['value']
+                node.text = unicode(value.get('value', ''))
             if comment != "":
                 node.attrib["comment"] = comment
             print "HEAD: ", name
@@ -200,20 +204,32 @@ def generateOPML( rootNode, filepath, indent=2 ):
 
     return rootOPML
 
-# UNUSED
-opmplnodetypes = {
-    'blogpost': ('url', ),
-    'code': (),
-    'howto': (),
-    'html': (),
-    'include': (),
-    'link': (),
-    'outline': (),
-    'photo': (),
-    'redirect': (),
-    'river': (),
-    'rss': (),
-    'scripting2Post': (),
-    'thumbList':()
-    }
 
+def photo_from_string( photo_text ):
+    return getPhotoXML( etree.fromstring(photo_text) )
+
+def getPhotoXML( rootNode ):
+    # pdb.set_trace()
+    title = rootNode.find("title")
+    title = title.text
+
+    description = rootNode.find("description")
+    description = description.text
+
+    whenUploaded = rootNode.find("whenUploaded")
+    whenArchived = rootNode.find("whenArchived")
+    license = rootNode.find("license")
+
+    urlFolder = rootNode.find("urlFolder")
+    urlFolder = urlFolder.text
+
+    sizes = rootNode.find("sizes")
+    picts = {}
+    if urlFolder:
+        for size in list(sizes):
+            attr = size.attrib.keys()
+            if 'fname' in attr:
+                name = size.attrib['fname']
+                url = urlFolder + name
+                picts[ name ] = url
+    return picts
