@@ -4,5 +4,7 @@ build
 dist
 README.html
 CHANGES
-
++sqlite
+edit_all.sh
++Cocoa Browser.app
 
