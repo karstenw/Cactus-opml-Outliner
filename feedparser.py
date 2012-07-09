@@ -9,7 +9,7 @@ Required: Python 2.4 or later
 Recommended: iconv_codec <http://cjkpython.i18n.org/>
 """
 
-__version__ = "5.1.1"
+__version__ = "5.1.2"
 __license__ = """
 Copyright (c) 2010-2012 Kurt McKee <contactme@kurtmckee.org>
 Copyright (c) 2002-2008 Mark Pilgrim
@@ -133,9 +133,10 @@ else:
 #   https://secure.wikimedia.org/wikipedia/en/wiki/URI_scheme
 # Many more will likely need to be added!
 ACCEPTABLE_URI_SCHEMES = (
-    'file', 'ftp', 'gopher', 'h323', 'hdl', 'http', 'https', 'imap', 'mailto',
-    'mms', 'news', 'nntp', 'prospero', 'rsync', 'rtsp', 'rtspu', 'sftp',
-    'shttp', 'sip', 'sips', 'snews', 'svn', 'svn+ssh', 'telnet', 'wais',
+    'file', 'ftp', 'gopher', 'h323', 'hdl', 'http', 'https', 'imap', 'magnet',
+    'mailto', 'mms', 'news', 'nntp', 'prospero', 'rsync', 'rtsp', 'rtspu',
+    'sftp', 'shttp', 'sip', 'sips', 'snews', 'svn', 'svn+ssh', 'telnet',
+    'wais',
     # Additional common-but-unofficial schemes
     'aim', 'callto', 'cvs', 'facetime', 'feed', 'git', 'gtalk', 'irc', 'ircs',
     'irc6', 'itms', 'mms', 'msnim', 'skype', 'ssh', 'smb', 'svn', 'ymsg',
@@ -1723,6 +1724,8 @@ class _FeedParserMixin:
         self.push('itunes_image', 0)
         if attrsD.get('href'):
             self._getContext()['image'] = FeedParserDict({'href': attrsD.get('href')})
+        elif attrsD.get('url'):
+            self._getContext()['image'] = FeedParserDict({'href': attrsD.get('url')})
     _start_itunes_link = _start_itunes_image
 
     def _end_itunes_block(self):
@@ -2556,7 +2559,7 @@ class _RelativeURIResolver(_BaseHTMLProcessor):
         self.baseuri = baseuri
 
     def resolveURI(self, uri):
-        return _makeSafeAbsoluteURI(_urljoin(self.baseuri, uri.strip()))
+        return _makeSafeAbsoluteURI(self.baseuri, uri.strip())
 
     def unknown_starttag(self, tag, attrs):
         attrs = self.normalize_attrs(attrs)
@@ -3011,11 +3014,14 @@ def _open_resource(url_file_stream_or_string, etag, modified, agent, referrer, h
     # try to open with native open function (if url_file_stream_or_string is a filename)
     try:
         return open(url_file_stream_or_string, 'rb')
-    except (IOError, UnicodeEncodeError):
+    except (IOError, UnicodeEncodeError, TypeError):
         # if url_file_stream_or_string is a unicode object that
         # cannot be converted to the encoding returned by
         # sys.getfilesystemencoding(), a UnicodeEncodeError
         # will be thrown
+        # If url_file_stream_or_string is a string that contains NULL
+        # (such as an XML document encoded in UTF-32), TypeError will
+        # be thrown.
         pass
 
     # treat url_file_stream_or_string as string
@@ -3453,7 +3459,7 @@ _rfc822_daynames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 _rfc822_month = "(?P<month>%s)(?:[a-z]*,?)" % ('|'.join(_rfc822_months))
 # The year may be 2 or 4 digits; capture the century if it exists
 _rfc822_year = "(?P<year>(?:\d{2})?\d{2})"
-_rfc822_day = "(?P<day>\d{2})"
+_rfc822_day = "(?P<day> *\d{1,2})"
 _rfc822_date = "%s %s %s" % (_rfc822_day, _rfc822_month, _rfc822_year)
 
 _rfc822_hour = "(?P<hour>\d{2}):(?P<minute>\d{2})(?::(?P<second>\d{2}))?"
@@ -3823,22 +3829,25 @@ def parse(url_file_stream_or_string, etag=None, modified=None, agent=None, refer
             try:
                 data = gzip.GzipFile(fileobj=_StringIO(data)).read()
             except (IOError, struct.error), e:
-                # IOError can occur if the gzip header is bad
-                # struct.error can occur if the data is damaged
-                # Some feeds claim to be gzipped but they're not, so
-                # we get garbage.  Ideally, we should re-request the
-                # feed without the 'Accept-encoding: gzip' header,
-                # but we don't.
+                # IOError can occur if the gzip header is bad.
+                # struct.error can occur if the data is damaged.
                 result['bozo'] = 1
                 result['bozo_exception'] = e
-                data = None
+                if isinstance(e, struct.error):
+                    # A gzip header was found but the data is corrupt.
+                    # Ideally, we should re-request the feed without the
+                    # 'Accept-encoding: gzip' header, but we don't.
+                    data = None
         elif zlib and 'deflate' in http_headers.get('content-encoding', ''):
             try:
                 data = zlib.decompress(data)
             except zlib.error, e:
-                result['bozo'] = 1
-                result['bozo_exception'] = e
-                data = None
+                try:
+                    # The data may have no headers and no checksum.
+                    data = zlib.decompress(data, -15)
+                except zlib.error, e:
+                    result['bozo'] = 1
+                    result['bozo_exception'] = e
 
     # save HTTP headers
     if http_headers:
@@ -3881,9 +3890,6 @@ def parse(url_file_stream_or_string, etag=None, modified=None, agent=None, refer
             bozo_message = 'no Content-type specified'
         result['bozo'] = 1
         result['bozo_exception'] = NonXMLContentType(bozo_message)
-
-    if data is not None:
-        result['version'], data, entities = _stripDoctype(data)
 
     # ensure that baseuri is an absolute uri using an acceptable URI scheme
     contentloc = http_headers.get('content-location', u'')
@@ -3978,6 +3984,8 @@ def parse(url_file_stream_or_string, etag=None, modified=None, agent=None, refer
             'document declared as %s, but parsed as %s' % \
             (result['encoding'], proposed_encoding))
         result['encoding'] = proposed_encoding
+
+    result['version'], data, entities = _stripDoctype(data)
 
     if not _XML_AVAILABLE:
         use_strict_parser = 0
