@@ -67,7 +67,8 @@ extractClasses("OutlineEditor")
 
 
 def boilerplateOPML( rootNode ):
-    # created & modified
+    """Delievers the minimal outline nodes for the OPML structure.
+    """
     now = datetime.datetime.now()
     s = now.strftime("%a, %d %b %Y %H:%M:%S %Z")
     head = OutlineNode("head", "", rootNode, typeOutline)
@@ -108,14 +109,22 @@ class CactusOutlineDocument(AutoBaseClass):
         self = super( CactusOutlineDocument, self).init()
 
         # outline specific
+        # parentNode is used to determine if only an aspect of the outline is edited
         self.parentNode = None
+
+        # outline root node; invisible and not editable
         self.rootNode = None
+
+        #
         self.url = ""
+
+        #
         self.title = "Untitled Outline"
 
         # one of OPML, RSS
         self.type = None
         return self
+
 
     def readFromURL_ofType_error_(self, url, theType):
         if kwlog:
@@ -167,7 +176,8 @@ class CactusOutlineDocument(AutoBaseClass):
         if not self:
             return( None, None)
         if kwlog:
-            print "\nCactusOutlineDocument.initWithContentsOfURL_ofType_error_( %s )" % (repr(theType),)
+            print "\nCactusOutlineDocument.initWithContentsOfURL_ofType_error_( %s )" % (
+                                                                        repr(theType),)
             print repr(url); print
 
         OK, err = self.readFromURL_ofType_error_( url, theType )
@@ -507,7 +517,8 @@ class CactusOutlineDocument(AutoBaseClass):
                     elif len(v) == 1:
                         v = v[0]
 
-                if type(v) not in (str, unicode, NSString, NSMutableString, objc.pyobjc_unicode):
+                if type(v) not in (str, unicode, NSString,
+                                   NSMutableString, objc.pyobjc_unicode):
                     if isinstance(v, dict):
                         # pdb.set_trace()
                         l = []
@@ -656,7 +667,8 @@ class CactusOutlineWindowController(AutoBaseClass):
         self.window().setTitle_( title )
 
         theType = typeOutline
-        self.model = OutlineViewDelegateDatasource.alloc().initWithObject_type_parentNode_( self.rootNode, theType, self.parentNode )
+        self.model = OutlineViewDelegateDatasource.alloc().initWithObject_type_parentNode_(
+                                                self.rootNode, theType, self.parentNode )
 
         # this is evil
         self.rootNode.model = self.model
