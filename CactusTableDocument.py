@@ -17,7 +17,6 @@ etree = xml.etree.cElementTree
 import pprint
 pp = pprint.pprint
 
-import feedparser
 import pdb
 
 
@@ -99,7 +98,8 @@ class TableWindowController(AutoBaseClass):
 
         self.window().setTitle_( title )
 
-        self.model = OutlineViewDelegateDatasource.alloc().initWithObject_type_parentNode_( self.root, theType, self.parentNode )
+        self.model = OutlineViewDelegateDatasource.alloc().initWithObject_type_parentNode_(
+                                            self.root, theType, self.parentNode )
 
         # this is evil
         self.root.model = self.model
