@@ -280,7 +280,8 @@ class CactusWindowController(AutoBaseClass):
 
         self.window().setTitle_( title )
 
-        self.model = OutlineViewDelegateDatasource.alloc().initWithObject_type_parentNode_( self.root, theType, self.parentNode )
+        self.model = OutlineViewDelegateDatasource.alloc().initWithObject_type_parentNode_(
+                                                self.root, theType, self.parentNode )
 
         # this is evil
         self.root.model = self.model
@@ -719,6 +720,8 @@ class CactusAppDelegate(NSObject):
             #pp(feedkeys)
             #print
             for k in feedkeys:
+
+                # keys to ignore
                 if k in ('links', 'tags', 'updated_parsed', 'authors'):
                     continue
 
@@ -731,7 +734,8 @@ class CactusAppDelegate(NSObject):
                     elif len(v) == 1:
                         v = v[0]
 
-                if type(v) not in (str, unicode, NSString, NSMutableString, objc.pyobjc_unicode):
+                if type(v) not in (str, unicode, NSString,
+                                   NSMutableString, objc.pyobjc_unicode):
                     if isinstance(v, dict):
                         # pdb.set_trace()
                         l = []
@@ -770,7 +774,8 @@ class CactusAppDelegate(NSObject):
                 v = repr(v)
             node = OutlineNode(k, v, head, typeOutline)
             head.addChild_( node )
-            
+
+        # deactivated 
         if 0:
             # encoding
             if 'encoding' in d:
