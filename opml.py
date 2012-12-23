@@ -12,9 +12,11 @@ import pprint
 pp = pprint.pprint
 
 kwdbg = True
-kwlog = True
+kwlog = False
 import pdb
 
+
+# some globals for opml analyzing
 keyTypes = {}
 opmlTags = {}
 nodeTypes = {}
@@ -22,12 +24,15 @@ urls = {}
 
 
 def getOutlineNodes(node):
+    """Read the outline nodes in OPML/body
+    """
     global keyTypes, opmlTags, nodeTypes, urls
     result = []
     for n in list(node):
         keys = n.attrib.keys()
 
         if kwlog:
+            # gather some stuff for debugging and opml analyzing
             keys.sort()
             keys = tuple(keys)
             if not keys in keyTypes:
@@ -47,7 +52,12 @@ def getOutlineNodes(node):
                     nodeTypes[theType] += 1
         name = n.attrib.get('text', '')
         nchild = len(n)
-        b = {'name': name, 'children': [], 'noofchildren': nchild, 'attributes': {}}
+        b = {
+            'name': name,
+            'children': [],
+            'noofchildren': nchild,
+            'attributes': {}}
+
         for k in keys:
             b['attributes'][k] = n.attrib.get(k, "")
         subs = list(n)
@@ -61,7 +71,10 @@ def getOutlineNodes(node):
 def getOPML( etRootnode ):
     global keyTypes, opmlTags, nodeTypes, urls
     
-    d = {'head': [], 'body':[]}
+    d = {
+        'head': [],
+        'body':[]
+        }
 
     # get head
     head = etRootnode.find("head")
@@ -95,6 +108,7 @@ def getOPML( etRootnode ):
 def opml_from_string(opml_text):
     return getOPML(etree.fromstring(opml_text))
 
+
 def parse(opml_url):
     return getOPML(etree.parse(opml_url))
 
@@ -102,12 +116,16 @@ def parse(opml_url):
 def indentXML(elem, level=0, width=2):
     i = "\n" + level * (" " * width)
     if len(elem):
+
         if not elem.text or not elem.text.strip():
             elem.text = i + "  "
+
         if not elem.tail or not elem.tail.strip():
             elem.tail = i
+
         for elem in elem:
             indentXML(elem, level+1)
+
         if not elem.tail or not elem.tail.strip():
             elem.tail = i
     else:
@@ -145,7 +163,8 @@ def createSubNodes(OPnode, ETnode, level):
             ETSub = etree.SubElement( ETnode, "outline")
             s = createSubNodes( child, ETSub, level+1 )
     return ETnode
-    
+
+
 def generateOPML( rootNode, indent=2 ):
     """Generate an OPML/XML tree from OutlineNode rootNode.
     
@@ -198,7 +217,6 @@ def generateOPML( rootNode, indent=2 ):
         # pdb.set_trace()
         nodes = createSubNodes(rootNode, body, 1)
 
-
     if indent:
         indentXML(rootOPML, 0, indent)
 
@@ -207,6 +225,7 @@ def generateOPML( rootNode, indent=2 ):
 
 def photo_from_string( photo_text ):
     return getPhotoXML( etree.fromstring(photo_text) )
+
 
 def getPhotoXML( rootNode ):
     # pdb.set_trace()
