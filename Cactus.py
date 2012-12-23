@@ -46,7 +46,7 @@ NSString = AppKit.NSString
 NSMutableString = AppKit.NSMutableString
 
 NSSavePanel = AppKit.NSSavePanel
-NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton 
+NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 
 
 # grid styles
@@ -127,6 +127,42 @@ def saveAsDialog(path):
 
 
 #
+# tools
+#
+def readURL( url ):
+    f = urllib.FancyURLopener()
+    fob = f.open(url)
+    s = fob.read()
+    fob.close()
+    return s
+
+
+
+def classifyAndReadUrl( url ):
+    """TBD
+    
+    Read in an URL and try to classify it as opml, rss, xml.
+    """
+
+    s = readURL( url )
+    
+    # the type should be determinable within the first 250 bytes
+    checkpart = s[:250]
+
+    xmlre = re.compile( "^<?xml\W+version" )
+    rspre = re.compile( "<reallySimplePhoto" )
+    opmlre = re.compile( "<opml version" )
+    
+    
+    if checkpart.startswith( "<?xml version" ):
+        pass
+        # we have a xml based document
+        
+        # check for opml
+        # check for rss
+        
+
+#
 # Open URL Delegate
 #
 class OpenURLWindowController(AutoBaseClass):
@@ -197,9 +233,10 @@ class OpenURLWindowController(AutoBaseClass):
         # determine type here
         #
         docc = NSDocumentController.sharedDocumentController()
-        if not docc.documentForURL_( url ):
-            err = docc.makeDocumentWithContentsOfURL_ofType_error_(url, 'Cactus Outline')
-        self.close()        
+        if 1: #not docc.documentForURL_( url ):
+            err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
+                                                                   'Cactus Outline')
+        self.close()
 
     def Cancel_(self, sender):
         #pdb.set_trace()
@@ -215,9 +252,6 @@ class Document(object):
         else:
             self.root = rootNode
         self.parentNode = parentNode
-
-
-
 
 
 class CactusWindowController(AutoBaseClass):
@@ -239,9 +273,10 @@ class CactusWindowController(AutoBaseClass):
 
 
     def initWithObject_type_(self, obj, theType):
+        """This controller is used for outline and table windows."""
+
         if kwlog:
             print "CactusWindowController.initWithObject_type_()"
-        """This controller is used for outline and table windows."""
 
         if theType == typeOutline:
             self = self.initWithWindowNibName_("OutlineEditor")
@@ -326,7 +361,7 @@ class CactusWindowController(AutoBaseClass):
         # see comment in self.initWithObject_()
         #
         # check model.dirty
-        # 
+        #
         self.autorelease()
 
 
@@ -341,7 +376,7 @@ class CactusWindowController(AutoBaseClass):
             self.outlineView.reloadItem_reloadChildren_( item, children )
 
     def loadFile_(self, sender):
-        pass        
+        pass
             
 
     def applySettings_(self, sender):
@@ -449,7 +484,11 @@ class CactusAppDelegate(NSObject):
         # should really be in the (not yet existent) preferences
         return False
 
+
     def applicationShouldTerminate_(self, aNotification):
+        """Store preferences before quitting
+        """
+
         defaults = NSUserDefaults.standardUserDefaults()
 
         defaults.setObject_forKey_(self.visitedURLs ,
@@ -506,9 +545,13 @@ class CactusAppDelegate(NSObject):
     def newRoot_(self, sender):
         pass
 
-    # menu "Open URL"    
+
+    # menu "Open URL"
     def openURL_(self, sender):
+        """Open new "URL opener". Currently no measures against opening multiple of those...
+        """
         OpenURLWindowController().init()
+
 
     def openMailingList_(sender):
         workspace= NSWorkspace.sharedWorkspace()
@@ -528,27 +571,63 @@ class CactusAppDelegate(NSObject):
         CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
 
 
-    def readURL_(self, url):
-        # probably shouldn't be here. For now it is
-        f = urllib.FancyURLopener()
-        fob = f.open(url)
-        s = fob.read()
-        fob.close()
-        return s        
-
-
     # used by OpenURL delegate OK_ action
     def newOutlineFromOPMLURL_(self, url):
-        s = self.readURL_(url)
-        base, path = urllib.splithost( url )
-        basepath, filename = os.path.split( path )
-        #
-        d = opml.opml_from_string(s)
-        del s
-        if d:
-            root = self.openOPML_( d )
-            doc = Document(url, root)
-            CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
+        if 0:
+            s = readURL(url)
+            base, path = urllib.splithost( url )
+            basepath, filename = os.path.split( path )
+            #
+            d = opml.opml_from_string(s)
+            del s
+            if d:
+                root = self.openOPML_( d )
+                doc = Document(url, root)
+                CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
+        else:
+            #
+            # replicated from OpenURLWindowController.OK_
+            #
+            url = NSURL.URLWithString_( url )
+            # url.retain()
+            # delg.newOutlineFromOPMLURL_( url )
+            
+            #
+            # determine type here
+            #
+            
+            #
+            # HERE BE DRAGONS
+            #
+            # currently cactus crashes when more than 2 docs are opened @ documentForURL_
+            #
+            # pdb.set_trace()
+
+            docc = NSDocumentController.sharedDocumentController()
+            docc.setAutosavingDelay_( 0 )
+
+            print "OPEN URL: '%s'" % url
+
+            loaded = False
+
+            try:
+                # loaded = docc.documentForURL_( url )
+                pass
+            except Exception, err:
+                # this is never called if documentForURL_ fails.
+                print "documentForURL_ CRASHED"
+                loaded = False
+
+            print "OPEN URL: '%s' CHECKED %s" % (repr(url), repr(loaded))
+
+            if not loaded:
+                err = docc.makeDocumentWithContentsOfURL_ofType_error_(url, 'Cactus Outline')
+                if err:
+                    print "ERROR open:", repr(err)
+            else:
+                # what to do here?
+                pass
+            url.release()
 
 
     # UNUSED but defined in class
@@ -641,7 +720,7 @@ class CactusAppDelegate(NSObject):
 
         # fill in missing opml attributes here
         # created, modified
-        # 
+        #
         # how to propagate expansionstate, windowState?
         # make a document object and pass that to docdelegate?
         #
@@ -775,7 +854,7 @@ class CactusAppDelegate(NSObject):
             node = OutlineNode(k, v, head, typeOutline)
             head.addChild_( node )
 
-        # deactivated 
+        # deactivated
         if 0:
             # encoding
             if 'encoding' in d:

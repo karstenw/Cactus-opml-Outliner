@@ -142,7 +142,7 @@ class TableWindowController(AutoBaseClass):
         # see comment in self.initWithObject_()
         #
         # check model.dirty
-        # 
+        #
         self.autorelease()
 
 
@@ -157,7 +157,7 @@ class TableWindowController(AutoBaseClass):
             self.outlineView.reloadItem_reloadChildren_( item, children )
 
     def loadFile_(self, sender):
-        pass        
+        pass
             
 
     def applySettings_(self, sender):

@@ -67,7 +67,10 @@ extractClasses("OutlineEditor")
 
 
 def boilerplateOPML( rootNode ):
-    """Delievers the minimal outline nodes for the OPML structure.
+    """Creates the minimal outline nodes for the OPML structure.
+
+    rootNode - the node under which the structure will be created
+
     """
     now = datetime.datetime.now()
     s = now.strftime("%a, %d %b %Y %H:%M:%S %Z")
@@ -91,6 +94,7 @@ def boilerplateOPML( rootNode ):
     body.addChild_( OutlineNode("", "", body, typeOutline) )
 
 
+# a cocoa NSDocument subclass
 class CactusOutlineDocument(AutoBaseClass):
     #
     # outlets:
@@ -126,12 +130,23 @@ class CactusOutlineDocument(AutoBaseClass):
         return self
 
 
+    def autosavingFileType(self):
+        """2012-12-12 KW created to disable autosaving. No 1 suspect in crashes.
+
+        1   com.apple.AppKit  	0x939fe32c -[NSDocument _isLocatedByURL:withCache:] + 392
+        2   com.apple.AppKit  	0x939fd4c8 -[NSDocumentController _documentForURL:] + 128
+
+        """
+        return None
+
+
     def readFromURL_ofType_error_(self, url, theType):
         if kwlog:
-            print "CactusOutlineDocument.readFromURL_ofType_error_( %s )" % (repr(theType),)
-            print repr(url); print
+            print ("CactusOutlineDocument.readFromURL_ofType_error_( %s, %s )"
+                   % (repr(url), repr(theType),))
+            # print repr(url)
+            print
 
-        # move to readFromURL_ofType_error_
         OK = True
         s = None
         if url.isFileURL():
@@ -142,9 +157,9 @@ class CactusOutlineDocument(AutoBaseClass):
             s = fob.read()
             fob.close()
         else:
-            purl = str( url.absoluteString() )
+            self.url = str( url.absoluteString() )
             f = urllib.FancyURLopener()
-            fob = f.open(purl)
+            fob = f.open(self.url)
             s = fob.read()
             fob.close()
 
@@ -154,6 +169,11 @@ class CactusOutlineDocument(AutoBaseClass):
                 d = opml.opml_from_string(s)
             elif theType == CactusDocumentTypes.CactusRSSType:
                 d = None
+                # TBD? Or Not? Is this a dead end? Is this ever called
+                print "\n"
+                print "X" * 80
+                print "RSS type open via Outline open!!"
+                print
 
             if d:
                 root = self.openOPML_( d )
@@ -169,8 +189,8 @@ class CactusOutlineDocument(AutoBaseClass):
             self.setFileType_( theType )
         print "OK CactusOutlineDocument.readFromURL_ofType_error_()"
         return (OK, None)
-
-
+    
+    
     def initWithContentsOfURL_ofType_error_(self, url, theType):
         self, err = self.initWithType_error_( theType )
         if not self:
@@ -179,7 +199,7 @@ class CactusOutlineDocument(AutoBaseClass):
             print "\nCactusOutlineDocument.initWithContentsOfURL_ofType_error_( %s )" % (
                                                                         repr(theType),)
             print repr(url); print
-
+        
         OK, err = self.readFromURL_ofType_error_( url, theType )
         if OK:
             if not url.isFileURL():
@@ -258,6 +278,22 @@ class CactusOutlineDocument(AutoBaseClass):
         return u"OutlineEditor"
 
 
+    def fileURL( self ):
+        # do nothing the superclass wouldn't do
+        if kwlog:
+            print "SUPER CactusOutlineDocument.fileURL()", 
+        s = super( CactusOutlineDocument, self).fileURL()
+        print repr(s), s.retainCount()
+        return s
+
+    def setFileURL_( self, theURL ):
+        # pdb.set_trace()
+        print "URLType:", type(theURL)
+        # do nothing the superclass wouldn't do
+        if kwlog:
+            print "SUPER CactusOutlineDocument.fileURL()"
+        super( CactusOutlineDocument, self).setFileURL_( theURL )
+
     def windowControllerWillLoadNib_( self, aController):
         # do nothing the superclass wouldn't do
         if kwlog:
@@ -271,11 +307,13 @@ class CactusOutlineDocument(AutoBaseClass):
             print "SUPER CactusOutlineDocument.windowControllerDidLoadNib_()"
         super( CactusOutlineDocument, self).windowControllerDidLoadNib_(aController)
 
+
     def dataRepresentationOfType_( self, theType ):
         if kwlog:
             print "CactusOutlineDocument.dataRepresentationOfType_( %s )" % repr(theType)
 
-        if theType == CactusDocumentTypes.CactusOPMLType:
+        # future scaffolding
+        if 1: #theType == CactusDocumentTypes.CactusOPMLType:
 
             rootOPML = opml.generateOPML( self.rootNode, indent=1 )
 
@@ -302,7 +340,7 @@ class CactusOutlineDocument(AutoBaseClass):
         elif theType == CactusDocumentTypes.CactusTABLEType:
             pass
 
-        # Insert code here to write your document from the given data.  
+        # Insert code here to write your document from the given data.
         # You can also choose to override -fileWrapperRepresentationOfType:
         # or -writeToFile:ofType: instead.
         
@@ -312,11 +350,14 @@ class CactusOutlineDocument(AutoBaseClass):
         # -fileWrapperOfType:error:,
         # or -writeToURL:ofType:forSaveOperation:originalContentsURL:error:
         # instead.
+        if kwlog:
+            print "CactusOutlineDocument.dataRepresentationOfType_( %s ) RETURNED NONE" % repr(theType)
         return None
+
 
     def loadDataRepresentation_ofType_(data, aType):
         if kwlog:
-            print 
+            print
             print "CactusOutlineDocument.loadDataRepresentation_ofType_()"
             print "EMPTY"
         # Insert code here to read your document from the given data.  You can
@@ -377,6 +418,7 @@ class CactusOutlineDocument(AutoBaseClass):
         wc = CactusOutlineWindowController.alloc().initWithObject_( self )
         self.addWindowController_( wc )
 
+
     def openOPML_(self, rootOPML):
         if kwlog:
             print "CactusOutlineDocument.openOPML_()"
@@ -426,7 +468,7 @@ class CactusOutlineDocument(AutoBaseClass):
 
         # fill in missing opml attributes here
         # created, modified
-        # 
+        #
         # how to propagate expansionstate, windowState?
         # make a document object and pass that to docdelegate?
         #
@@ -713,7 +755,7 @@ class CactusOutlineWindowController(AutoBaseClass):
         # see comment in self.initWithObject_()
         #
         # TBD: check model.dirty
-        # 
+        #
         self.autorelease()
 
     def doubleClick_(self, sender):
