@@ -233,7 +233,6 @@ def open_node( url ):
             None )
 
     elif surl in g_preview_extensions:
-        # preview can't do http:
         if nsurl.isFileURL():
             workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
                 [ nsurl ],
@@ -241,6 +240,7 @@ def open_node( url ):
                 0,
                 None )
         else:
+            # preview can't do http so open it in the std browser:
             workspace.openURL_( nsurl )
     else:
         workspace.openURL_( nsurl )
@@ -281,7 +281,7 @@ class KWOutlineView(AutoBaseClass):
         userInfo = aNotification.userInfo()
         if kwlog and kwdbg:
             pp(userInfo)
-            pdb.set_trace()
+            # pdb.set_trace()
         #textMovement = userInfo.valueForKey_( str("NSTextMovement") ).intValue()
 
         cancelled = False
@@ -295,9 +295,10 @@ class KWOutlineView(AutoBaseClass):
             newInfo = NSMutableDictionary.dictionaryWithDictionary_(userInfo)
             newTextActionCode = NSNumber.numberWithInt_(NSCancelTextMovement)
             newInfo.setObject_forKey_( newTextActionCode, str("NSTextMovement"))
-            aNotification = NSNotification.notificationWithName_object_userInfo_(aNotification.name(),
-                                                                                aNotification.object(),
-                                                                                newInfo)
+            aNotification = NSNotification.notificationWithName_object_userInfo_(
+                        aNotification.name(),
+                        aNotification.object(),
+                        newInfo)
         super( KWOutlineView, self).textDidEndEditing_(aNotification)
         if cancelled:
             self.window().makeFirstResponder_(self)
@@ -334,7 +335,7 @@ class KWOutlineView(AutoBaseClass):
         # NSRightArrowFunctionKey
         # NSUpArrowFunctionKey
         # NSUpTextMovement
-        # 
+        #
         # NSBacktabTextMovement
         # NSCancelTextMovement
         # NSDownTextMovement
@@ -370,10 +371,12 @@ class KWOutlineView(AutoBaseClass):
         if eventCharNum in (NSBackspaceCharacter, NSDeleteCharacter):
             if kwlog and kwdbg:
                 print "DELETE KEY HANDLED"
+
             # while editing, will be handled elsewhere
-            # outline: delete selection (saving to a pasteboard stack)
-            # table: delete selection (saving to a pasteboard stack)
+            # outline: delete selection (saving to a pasteboard stack) TBD
+            # table: delete selection (saving to a pasteboard stack) Tables will be deleted in the future
             deleteNodes(self, selection=True)
+
             # deselect all or find a good way to select the next item
             self.deselectAll_( None )
 
@@ -390,7 +393,7 @@ class KWOutlineView(AutoBaseClass):
 
                 # TODO: if already editing, start new line, continue editing
 
-                # 
+                #
                 sel = self.getSelectedRow()
                 createNode(self, sel)
                 consumed = True
@@ -406,7 +409,6 @@ class KWOutlineView(AutoBaseClass):
 
             # pdb.set_trace()
 
-            mediafileextensions = ('.mov', '.m4a', '.mp3', '.wav', '.mp4')
             if eventModifiers & (cmdShiftAlt | NSControlKeyMask):
 
                 # dive down or up
@@ -423,19 +425,25 @@ class KWOutlineView(AutoBaseClass):
                     ###############################################################
                     #
                     # Control Alt Enter
+                    #
+                    # open a node
+                    #
                     if eventModifiers & NSAlternateKeyMask:
-                        # ctrl alt enter
+
+                        # get node selection
                         items = self.getSelectionItems()
+
+                        # do the selection
                         for item in items:
                             name = item.name
+
                             url = u""
-                            # pdb.set_trace()
 
                             #
                             # make a handler here
                             #
                             # opml, html, rss, js, xml(generic)
-                            # 
+                            #
                             # for generic xml make getOPML a getXML with params
                             #
                             
@@ -466,7 +474,7 @@ class KWOutlineView(AutoBaseClass):
 
                                 elif theType in ( 'howto', 'html', 'include', 'outline',
                                                   'redirect', 'thumbList',
-                                                  'thumbListVarCol', 'link'):
+                                                  'thumbListVarCol', 'link', 'code'):
                                     open_node( url )
 
                                 elif theType == "photo":
@@ -491,6 +499,8 @@ class KWOutlineView(AutoBaseClass):
                                     htmlUrl = NSURL.URLWithString_( htmlUrl )
                                     # workspace.openURL_( htmlUrl )
 
+                                    # pdb.set_trace()
+
                                     # open rss
                                     xmlUrl = v.get("xmlUrl", "")
                                     xmlUrl = cleanupURL( xmlUrl )
@@ -504,6 +514,8 @@ class KWOutlineView(AutoBaseClass):
                                 elif theType == "scripting2Post":
                                     url = NSURL.URLWithString_( url )
                                     workspace.openURL_( url )
+                                else:
+                                    print "Unhandled Node open\ntype: '%s'\nurl: '%s'" %(repr(theType), repr(url))
 
                             consumed = True
 
@@ -523,7 +535,8 @@ class KWOutlineView(AutoBaseClass):
                                     continue
 
                                 # build a new document from current attributes
-                                root = OutlineNode(u"__root__", u"", None, outlinetypes.typeOutline)
+                                root = OutlineNode(u"__root__", u"", None,
+                                                   outlinetypes.typeOutline)
                                 for t in item.value:
                                     if isinstance(t, tuple):
                                         name, value = t
@@ -565,7 +578,7 @@ class KWOutlineView(AutoBaseClass):
                 # current row
                 index = self.getSelectedRowIndex()
 
-                # 
+                #
                 edited = self.editedRow()
                 if edited == -1:
                     if index != -1:
@@ -643,7 +656,7 @@ class KWOutlineView(AutoBaseClass):
                 if 1: #delg.typ in outlinetypes.hierarchicalTypes:
                     items = self.getSelectionItems()
                     moveSelectionUp(self, items)
-                    # 
+                    #
                     self.reloadData()
 
                     selection = [self.rowForItem_(i) for i in items]
@@ -664,7 +677,7 @@ class KWOutlineView(AutoBaseClass):
                 if 1: #delg.typ in outlinetypes.hierarchicalTypes:
                     items = self.getSelectionItems()
                     moveSelectionDown(self, items)
-                    # 
+                    #
                     self.reloadData()
                     
                     selection = [self.rowForItem_(i) for i in items]
@@ -753,7 +766,7 @@ def visitOutline(startnode, startlevel=0, depthFirst=False, action=stdAction):
     if len(startnode.children) > 0:
         for p in startnode.children:
             visitOutline(p, startlevel+1, depthFirst, action)
-    return 
+    return
 
 # UNUSED
 def dfid(T,children,callback=stdAction):
@@ -776,7 +789,7 @@ def dfid(T,children,callback=stdAction):
 class OutlineViewDelegateDatasource(NSObject):
 
     """This is a delegate as well as a data source for NSOutlineViews."""
-    # 
+    #
     # instantiated from AppDelegate
     #
     # no bindings
@@ -800,8 +813,10 @@ class OutlineViewDelegateDatasource(NSObject):
         self.root = None
         self.controller = None
         self.dirty = 0
+
+        # not yet used; it's an idea for rss documents to constrain node movements.
         self.restricted = False
-        return self        
+        return self
 
 
     def initWithObject_type_parentNode_(self, obj, typ, parentNode):
@@ -860,8 +875,10 @@ class OutlineViewDelegateDatasource(NSObject):
         elif c == u"comment":
             return item.displayComment
 
+
     def numberOfRowsInTableView_(self, tv):
         return self.root.children.count()
+
 
     def outlineViewColumnDidResize_(self, aNotification):
         userInfo = aNotification.userInfo()
@@ -871,9 +888,11 @@ class OutlineViewDelegateDatasource(NSObject):
         # print "COL: '%s' changed from: %i  to  %i" % (column.identifier(),
         #                                               oldWidth, newWidth)
 
+
     def tableViewColumnDidResize_(self, aNotification):
         # for some reaon only th outlineView delegate is called. Even for tables
         pass
+
     #
     # NSOutlineViewDataSource  methods
     #
@@ -883,13 +902,16 @@ class OutlineViewDelegateDatasource(NSObject):
         n = item.noOfChildren()
         return n
 
+
     def outlineView_child_ofItem_(self, view, child, item):
         if not item:
             item = self.root
         return item.childAtIndex_( child )
 
+
     def outlineView_isItemExpandable_(self, view, item):
         return item.noOfChildren() > 0
+
 
     def outlineView_objectValueForTableColumn_byItem_(self, view, col, item):
         c = col.identifier()
@@ -903,6 +925,7 @@ class OutlineViewDelegateDatasource(NSObject):
             return item.displayName
         elif c == u"comment":
             return item.displayComment
+
 
     def outlineView_setObjectValue_forTableColumn_byItem_(self, view, value, col, item):
         # pdb.set_trace()
@@ -925,9 +948,11 @@ class OutlineViewDelegateDatasource(NSObject):
             item.setComment_(value)
             self.dirty += 1
 
+
     # delegate method
     def outlineView_shouldEditTableColumn_item_(self, view, col, item):
         return item.editable
+
 
     def outlineView_heightOfRowByItem_(self, ov, item):
         # where to store this
@@ -952,7 +977,7 @@ class OutlineViewDelegateDatasource(NSObject):
     # Delegate
     # outlineView:dataCellForTableColumn:item:
     # outlineView:didClickTableColumn:
-    # outlineView:heightOfRowByItem: 
+    # outlineView:heightOfRowByItem:
     # outlineView:isGroupItem: 10.5
     # outlineView:shouldCollapseItem:
     # outlineView:shouldEditTableColumn:item:
@@ -992,7 +1017,8 @@ class NodeValue(object):
     def __init__(self, value):
         # pdb.set_trace()
         if type(value) != list:
-            if type(value) in (str, unicode, NSString, NSMutableString, objc.pyobjc_unicode):
+            if type(value) in (str, unicode, NSString,
+                               NSMutableString, objc.pyobjc_unicode):
                 value = self.listFromDisplayValue( value )
             elif isinstance(value, dict):
                 # pdb.set_trace()
@@ -1114,12 +1140,12 @@ class OutlineNode(NSObject):
     # displayValue
     # displayComment
     # displayType
-    # 
+    #
     
     #
     # to be added
-    #    
-    # nodeAttributes 
+    #
+    # nodeAttributes
 
     def __new__(cls, *args, **kwargs):
         # "Pythonic" constructor
@@ -1153,7 +1179,7 @@ class OutlineNode(NSObject):
 
         self.setName_( name )
         self.setValue_( obj )
-        self.setComment_( "" )        
+        self.setComment_( "" )
         self.setNodeAttributes( obj )
 
         self.children = NSMutableArray.arrayWithCapacity_( 10 )
@@ -1179,7 +1205,7 @@ class OutlineNode(NSObject):
         if value in (u"", {}, [], None, False):
             self.value = [(u"",u"")]
             self.displayValue = u""
-            self.type = u"String"            
+            self.type = u"String"
         else:
             nv = NodeValue( value )
             self.value = nv.value
@@ -1578,7 +1604,9 @@ def moveSelectionRight(ov, selection):
 
 def cleanupURL( url ):
     # lots of URLs contain spaces, &, '
-    pdb.set_trace()
+
+    # pdb.set_trace()
+
     purl = urlparse.urlparse( url )
     purl = list(purl)
     path = purl[2]
