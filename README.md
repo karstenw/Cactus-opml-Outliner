@@ -24,7 +24,9 @@ Document icons for local files.
 
 Added a recent URLs menu to the open URL dialog. Holds the last 30 visited URLs.
 
-Cactus now tries to correct errorneous opml files. Corrections applied are:
+Cactus now tries to correct some common errors in opml files.
+
+Corrections applied are:
 + wrong xml declarations ( "<?xml encoding...?>" instead of "<?xml version...?>"
 + illegal characters (chrs 0-8,11,12,14-31) are replaced with "???"
 + some opml files had a <directiveCache> tag instead of </outline> at the top level
