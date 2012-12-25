@@ -4,6 +4,7 @@
             ACTIONS = {
                 newOutline = id; 
                 newTable = id; 
+                openDownloadsPage = id; 
                 openFile = id; 
                 openGithubPage = id; 
                 openMailingList = id; 
