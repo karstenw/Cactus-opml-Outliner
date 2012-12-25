@@ -505,18 +505,10 @@ class CactusAppDelegate(NSObject):
     def newOutline_(self, sender):
         if kwlog:
             print "DEPRECATED CactusAppDelegate.newOutline_()"
-        # pdb.set_trace()
-        #doc = Document("Untitled Outline", None)
-        #boilerplateOPML( doc.root )
-        #CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
-        # docc = NSDocumentController.sharedDocumentController()
-        # docc.newDocument_(sender)
-
 
     # UNUSED
     def newRoot_(self, sender):
         pass
-
 
     # menu "Open URL"
     def openURL_(self, sender):
@@ -524,18 +516,21 @@ class CactusAppDelegate(NSObject):
         """
         OpenURLWindowController().init()
 
-
     def openMailingList_(sender):
         workspace= NSWorkspace.sharedWorkspace()
         url = NSURL.URLWithString_( u"http://groups.google.com/group/cactus-outliner-dev" )
         workspace.openURL_( url )
-
 
     def openGithubPage_(sender):
         workspace= NSWorkspace.sharedWorkspace()
         url = NSURL.URLWithString_( u"https://github.com/karstenw/Cactus-opml-Outliner" )
         workspace.openURL_( url )
 
+    def openDownloadsPage_(sender):
+        workspace= NSWorkspace.sharedWorkspace()
+        url = NSURL.URLWithString_( u"http://goo.gl/EALQi" )
+        workspace.openURL_( url )
+    
 
     def newOutlineFromRSSURL_(self, url):
         #root = self.openRSS_( url )
