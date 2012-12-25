@@ -8,6 +8,7 @@
 import sys
 import os
 
+import time
 import datetime
 import urllib
 
@@ -22,7 +23,6 @@ pp = pprint.pprint
 kwdbg = True
 kwlog = True
 
-
 import feedparser
 
 import opml
@@ -30,6 +30,8 @@ import opml
 import CactusTools
 readURL = CactusTools.readURL
 
+
+import objc
 
 import Foundation
 NSObject = Foundation.NSObject
@@ -41,6 +43,7 @@ NSDocument = AppKit.NSDocument
 NSDocumentController = AppKit.NSDocumentController
 NSWorkspace = AppKit.NSWorkspace
 NSString = AppKit.NSString
+NSMutableString = AppKit.NSMutableString
 
 # grid styles
 NSTableViewGridNone = AppKit.NSTableViewGridNone
@@ -150,6 +153,7 @@ class CactusOutlineDocument(AutoBaseClass):
         s = None
 
         self.url = url
+        
         s = readURL( url )
 
         # pdb.set_trace()
@@ -157,22 +161,23 @@ class CactusOutlineDocument(AutoBaseClass):
         if s:
             if theType == CactusDocumentTypes.CactusOPMLType:
                 d = opml.opml_from_string(s)
+                if d:
+                    root = self.openOPML_( d )
+                    if not root:
+                        if kwlog:
+                            print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                        return (False, None)
+                    else:
+                        self.rootNode = root
+                    
             elif theType == CactusDocumentTypes.CactusRSSType:
-                d = None
-                # TBD? Or Not? Is this a dead end? Is this ever called
-                print "\n"
-                print "X" * 80
-                print "RSS type open via Outline open!!"
-                print
-
-            if d:
-                root = self.openOPML_( d )
-                if not root:
-                    OK = False
+                root = self.openRSS_( s )
+                if root:
+                    self.rootNode = root
+                else:
                     if kwlog:
                         print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
-                else:
-                    self.rootNode = root
+                    return (False, None)
 
             del s
             self.setFileURL_( url )
@@ -183,7 +188,7 @@ class CactusOutlineDocument(AutoBaseClass):
     
     def initWithContentsOfURL_ofType_error_(self, url, theType):
         """Main entry point for opening documents."""
-        
+
         self, err = self.initWithType_error_( theType )
 
         if not self:
@@ -511,10 +516,13 @@ class CactusOutlineDocument(AutoBaseClass):
         return root
 
 
-    def openRSS_(self, data):
+    def openRSS_(self, url):
         if kwlog:
-            print "CactusOutlineDocument.openRSS_( %s )" % repr(url)
-        d = data
+            s = url
+            if len(url) > 31:
+                s = url[:32]
+            print "CactusOutlineDocument.openRSS_( %s )" % repr(s)
+        d = feedparser.parse( url )
 
         # make basic nodes
         root = OutlineNode("__ROOT__", "", None, typeOutline)

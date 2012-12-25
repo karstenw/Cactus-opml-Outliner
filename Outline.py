@@ -208,7 +208,7 @@ def open_photo( url ):
             None )
 
 
-def open_node( url ):
+def open_node( url, nodeType=None ):
 
     appl = NSApplication.sharedApplication()
     appdelg = appl.delegate()
@@ -221,7 +221,10 @@ def open_node( url ):
 
     nsurl = NSURL.URLWithString_( url )
 
-    if url.endswith(".opml"):
+    if nodeType == "RSS":
+        appdelg.newOutlineFromRSSURL_( url )
+        
+    elif url.endswith(".opml"):
         appdelg.newOutlineFromOPMLURL_( url )
 
     elif surl in g_qtplayer_extensions:
@@ -506,10 +509,7 @@ class KWOutlineView(AutoBaseClass):
                                     xmlUrl = cleanupURL( xmlUrl )
                                     if xmlUrl:
                                         xmlUrl = NSURL.URLWithString_( xmlUrl )
-
-                                        docctrl = NSDocumentController.sharedDocumentController()
-                                        err = docctrl.openDocumentWithContentsOfURL_display_error_(
-                                                        xmlUrl, True)
+                                        open_node( xmlUrl, nodeType="RSS")
 
                                 elif theType == "scripting2Post":
                                     url = NSURL.URLWithString_( url )
@@ -1606,6 +1606,8 @@ def cleanupURL( url ):
     # lots of URLs contain spaces, &, '
 
     # pdb.set_trace()
+    if isinstance(url, NSURL):
+        url = str(url.absoluteString())
 
     purl = urlparse.urlparse( url )
     purl = list(purl)
