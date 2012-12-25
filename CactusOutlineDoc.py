@@ -27,6 +27,10 @@ import feedparser
 
 import opml
 
+import CactusTools
+readURL = CactusTools.readURL
+
+
 import Foundation
 NSObject = Foundation.NSObject
 NSURL = Foundation.NSURL
@@ -149,19 +153,22 @@ class CactusOutlineDocument(AutoBaseClass):
 
         OK = True
         s = None
-        if url.isFileURL():
-            self.url = url.path()
 
-            fob = open(self.url, 'r')
-            folder, filename = os.path.split( self.url )
-            s = fob.read()
-            fob.close()
+        # old
+        if 0:
+            if url.isFileURL():
+                self.url = url.path()
+                
+                fob = open(self.url, 'r')
+                folder, filename = os.path.split( self.url )
+                s = fob.read()
+                fob.close()
+            else:
+                self.url = str( url.absoluteString() )
+                s = readURL( self.url )
         else:
             self.url = str( url.absoluteString() )
-            f = urllib.FancyURLopener()
-            fob = f.open(self.url)
-            s = fob.read()
-            fob.close()
+            s = readURL( self.url )
 
         # pdb.set_trace()
         if s:
