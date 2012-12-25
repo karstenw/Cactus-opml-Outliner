@@ -6,7 +6,9 @@ import datetime
 import xml.etree.cElementTree
 etree = xml.etree.cElementTree
 
-import StringIO
+import cStringIO
+
+import PyRSS2Gen
 
 import pprint
 pp = pprint.pprint
@@ -15,6 +17,9 @@ kwdbg = True
 kwlog = False
 import pdb
 
+
+
+import CactusVersion
 
 # some globals for opml analyzing
 keyTypes = {}
@@ -164,6 +169,108 @@ def createSubNodes(OPnode, ETnode, level):
             s = createSubNodes( child, ETSub, level+1 )
     return ETnode
 
+def generateRSS( rootNode, indent=2 ):
+    """Generate an OPML/XML tree from OutlineNode rootNode.
+    
+    parameters:
+     filepath - unused since file writing has been factored out
+     indent   - if > 0 indent with indent spaces per level
+    return
+     etree.Element of rootNode
+    """
+
+    valid_RSSChannel = ( "title", "link", "description", "language",
+            "copyright", "managingEditor", "webMaster", "pubDate",
+            "lastBuildDate", "categories", "generator", "docs",
+            "cloud", "ttl", "image", "rating", "textInput",
+            "skipHours", "skipDays", "items")
+
+    valid_RSSItems = ( "title", "link", "description", "author",
+            "categories", "comments", "enclosure", "guid",
+            "pubDate", "source" )
+
+    backTranslator = {
+        'summary': 'description',
+        'title': 'title',
+        'published': 'pubDate',
+        'id': 'guid'
+    }
+
+    now = str(datetime.datetime.now())
+    now = now[:19]
+    now = now.replace(" ", "_")
+
+    creator = "Created by Cactus v0.2.0 on %s." % (now,)
+
+    head_d = {
+        'title': "No Channel Title",
+        'description': "No Channel description.",
+        'link':  ""}
+
+
+    headOP = rootNode.findFirstChildWithName_( "head" )
+
+    if headOP:
+        for headsub in headOP.children:
+            name = headsub.name
+            if name in valid_RSSChannel:
+                value = headsub.getValueDict()
+                if name == 'cloud':
+                    cloud = PyRSS2Gen.Cloud(
+                            value.get('domain', ""),
+                            value.get('port', ""),
+                            value.get('path', ""),
+                            value.get('registerProcedure', ""),
+                            value.get('protocol', ""))
+                    head_d[ 'cloud' ] = cloud
+                else:
+                    if len(value) == 1:
+                        head_d[name] = value.values()[0]
+                    else:
+                        head_d[name] = value
+        print "HEAD:"
+        pp(head_d)
+    body_l = []
+    bodyOP = rootNode.findFirstChildWithName_( "body" )
+
+    # pdb.set_trace()
+
+    if bodyOP:
+        # pdb.set_trace()
+        for bodysub in bodyOP.children:
+            name = bodysub.name
+            value = bodysub.getValueDict()
+            d = {
+                'title': "No Item Title",
+                'description': "No Item description."}
+
+            for key in value:
+                k = backTranslator.get(key, key)
+                if k in valid_RSSItems:
+
+                    if k == 'enclosure':
+                        url, rest = value[key].split('<<<')
+                        length, type_ = rest.split(';', 1)
+                        length = int(length)
+                        enc = PyRSS2Gen.Enclosure( url, length, type_)
+                        d[k] = enc
+                    else:
+                        d[ k ] = value[key]
+            print "ITEM:"
+            pp( d )
+            body_l.append( PyRSS2Gen.RSSItem( **d ) )
+
+    head_d[ 'items' ] = body_l
+
+    # pdb.set_trace()
+
+    rss = PyRSS2Gen.RSS2( **head_d )
+    f = cStringIO.StringIO()
+    rss.write_xml( f, encoding='utf-8')
+    s = f.getvalue()
+    f.close()
+    return s
+
 
 def generateOPML( rootNode, indent=2 ):
     """Generate an OPML/XML tree from OutlineNode rootNode.
@@ -183,7 +290,7 @@ def generateOPML( rootNode, indent=2 ):
     now = now[:19]
     now = now.replace(" ", "_")
 
-    c = etree.Comment("Created by Cactus v0.2.0 on %s." % (now,))
+    c = etree.Comment( CactusVersion.document_creator + " on %s." % (now,))
     rootOPML.append(c)
 
     headOP = rootNode.findFirstChildWithName_( "head" )
