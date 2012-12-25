@@ -135,12 +135,7 @@ class CactusOutlineDocument(AutoBaseClass):
 
 
     def autosavingFileType(self):
-        """2012-12-12 KW created to disable autosaving. No 1 suspect in crashes.
-
-        1   com.apple.AppKit  	0x939fe32c -[NSDocument _isLocatedByURL:withCache:] + 392
-        2   com.apple.AppKit  	0x939fd4c8 -[NSDocumentController _documentForURL:] + 128
-
-        """
+        """2012-12-12 KW created to disable autosaving."""
         return None
 
 
@@ -154,23 +149,11 @@ class CactusOutlineDocument(AutoBaseClass):
         OK = True
         s = None
 
-        # old
-        if 0:
-            if url.isFileURL():
-                self.url = url.path()
-                
-                fob = open(self.url, 'r')
-                folder, filename = os.path.split( self.url )
-                s = fob.read()
-                fob.close()
-            else:
-                self.url = str( url.absoluteString() )
-                s = readURL( self.url )
-        else:
-            self.url = str( url.absoluteString() )
-            s = readURL( self.url )
+        self.url = url
+        s = readURL( url )
 
         # pdb.set_trace()
+
         if s:
             if theType == CactusDocumentTypes.CactusOPMLType:
                 d = opml.opml_from_string(s)
@@ -199,28 +182,33 @@ class CactusOutlineDocument(AutoBaseClass):
     
     
     def initWithContentsOfURL_ofType_error_(self, url, theType):
+        """Main entry point for opening documents."""
+        
         self, err = self.initWithType_error_( theType )
+
         if not self:
             return( None, None)
+
         if kwlog:
             print "\nCactusOutlineDocument.initWithContentsOfURL_ofType_error_( %s )" % (
                                                                         repr(theType),)
             print repr(url); print
         
         OK, err = self.readFromURL_ofType_error_( url, theType )
+
         if OK:
             if not url.isFileURL():
                 #
-                # evil hack, because NSDocumentController doesn't open if loaded from http: url
+                # evil hack, because NSDocumentController doesn't open window if
+                # document is loaded with http: scheme
                 #
                 docc = NSDocumentController.sharedDocumentController()
                 added = docc.addDocument_(self)
                 
                 self.makeWindowControllers()
                 self.showWindows()
-                return (None, err)
-            # file based seem OK
             return (self, err)
+
         # could not create document
         return (None, err)
 
@@ -238,13 +226,17 @@ class CactusOutlineDocument(AutoBaseClass):
         # pdb.set_trace()
 
         self.rootNode = OutlineNode("__ROOT__", "", None, typeOutline)
-        boilerplateOPML( self.rootNode )
+        # boilerplateOPML( self.rootNode )
 
         self.variableRowHeight = True
         return (self, None)
 
 
     def displayName(self):
+        
+        if kwlog:
+            print "CactusOutlineDocument.displayName() ->",
+
         title = self.title
         fullpath = self.fileURL()
         if fullpath:
@@ -268,7 +260,7 @@ class CactusOutlineDocument(AutoBaseClass):
             pass
 
         if kwlog:
-            print "CactusOutlineDocument.displayName( %s )" % repr(title)
+            print repr(title)
         self.title = title
         return self.title
 
@@ -288,18 +280,20 @@ class CactusOutlineDocument(AutoBaseClass):
     def fileURL( self ):
         # do nothing the superclass wouldn't do
         if kwlog:
-            print "SUPER CactusOutlineDocument.fileURL()", 
-        s = super( CactusOutlineDocument, self).fileURL()
-        print repr(s), s.retainCount()
-        return s
+            print "SUPER CactusOutlineDocument.fileURL()"
+        return super( CactusOutlineDocument, self).fileURL()
+
 
     def setFileURL_( self, theURL ):
         # pdb.set_trace()
-        print "URLType:", type(theURL)
+        # print "URLType:", type(theURL)
+        if not isinstance( theURL, NSURL ):
+            theURL = NSURL.URLWithString_( theURL )
         # do nothing the superclass wouldn't do
         if kwlog:
-            print "SUPER CactusOutlineDocument.fileURL()"
+            print "SUPER CactusOutlineDocument.setFileURL()"
         super( CactusOutlineDocument, self).setFileURL_( theURL )
+
 
     def windowControllerWillLoadNib_( self, aController):
         # do nothing the superclass wouldn't do
@@ -697,7 +691,10 @@ class CactusOutlineWindowController(AutoBaseClass):
         self.variableRowHeight = True
 
         if isinstance(document, CactusOutlineDocument):
-            self.path = document.url
+            if isinstance(document.url, NSURL):
+                self.path = str(document.url.absoluteString())
+            else:
+                self.path = document.url
             self.rootNode = document.rootNode
             self.parentNode = document.parentNode
             title = document.title

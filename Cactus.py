@@ -194,28 +194,21 @@ class OpenURLWindowController(AutoBaseClass):
 
 
     def OK_(self, sender):
-        #pdb.set_trace()
+        "User pressed OK button. Get data and try to open that stuff."
+
         app = NSApplication.sharedApplication()
         delg = app.delegate()
-        url = self.textfield.stringValue()
-        if url not in self.visitedURLs:
-            self.visitedURLs.append( url )
+        t_url = self.textfield.stringValue()
+        url = NSURL.URLWithString_( t_url )
+        if t_url not in self.visitedURLs:
+            self.visitedURLs.append( t_url )
             n = len(self.visitedURLs)
-            if n > 20:
-                start = n - 20
+            if n > 30:
+                start = n - 30
                 self.visitedURLs = self.visitedURLs[start:]
             delg.visitedURLs = self.visitedURLs[:]
 
-        url = NSURL.URLWithString_( url )
-        # delg.newOutlineFromOPMLURL_( url )
-        
-        #
-        # determine type here
-        #
-        docc = NSDocumentController.sharedDocumentController()
-        if 1: #not docc.documentForURL_( url ):
-            err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
-                                                                   'Cactus Outline')
+        delg.newOutlineFromOPMLURL_( url )
         self.close()
 
     def Cancel_(self, sender):
@@ -553,62 +546,14 @@ class CactusAppDelegate(NSObject):
 
     # used by OpenURL delegate OK_ action
     def newOutlineFromOPMLURL_(self, url):
-        if 0:
-            # s = readURL(url)
-            base, path = urllib.splithost( url )
-            basepath, filename = os.path.split( path )
-            #
-            d = opml.opml_from_string(s)
-            del s
-            if d:
-                root = self.openOPML_( d )
-                doc = Document(url, root)
-                CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
-        else:
-            #
-            # replicated from OpenURLWindowController.OK_
-            #
+        """
+        """
+        if not isinstance(url, NSURL):
             url = NSURL.URLWithString_( url )
-            # url.retain()
-            # delg.newOutlineFromOPMLURL_( url )
+        docc = NSDocumentController.sharedDocumentController()
+        err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
+                                                           'Cactus Outline')
             
-            #
-            # determine type here
-            #
-            
-            #
-            # HERE BE DRAGONS
-            #
-            # currently cactus crashes when more than 2 docs are opened @ documentForURL_
-            #
-            # pdb.set_trace()
-
-            docc = NSDocumentController.sharedDocumentController()
-            docc.setAutosavingDelay_( 0 )
-
-            print "OPEN URL: '%s'" % url
-
-            loaded = False
-
-            try:
-                # loaded = docc.documentForURL_( url )
-                pass
-            except Exception, err:
-                # this is never called if documentForURL_ fails.
-                print "documentForURL_ CRASHED"
-                loaded = False
-
-            print "OPEN URL: '%s' CHECKED %s" % (repr(url), repr(loaded))
-
-            if not loaded:
-                err = docc.makeDocumentWithContentsOfURL_ofType_error_(url, 'Cactus Outline')
-                if err:
-                    print "ERROR open:", repr(err)
-            else:
-                # what to do here?
-                pass
-            url.release()
-
 
     # UNUSED but defined in class
     def newBrowser_(self, sender):

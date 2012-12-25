@@ -16,10 +16,11 @@ import urllib
 #
 # tools
 #
-def readURL( url ):
+def readURL( nsurl ):
     """Read a file. May be local, may be http"""
 
-    print "CactusTools.readURL( '%s' )" % repr(url)
+    url = str(nsurl.absoluteString())
+    print "CactusTools.readURL( '%s' )" % url
     f = urllib.FancyURLopener()
     fob = f.open(url)
     s = fob.read()
