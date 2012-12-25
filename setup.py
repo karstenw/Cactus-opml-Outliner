@@ -71,7 +71,8 @@ setup(
                 "English.lproj/TableEditor.nib",
                 "English.lproj/NodeEditor.nib",
                 "English.lproj/OpenURL.nib",
-                "+icon/OPMLDocument.icns"
+                "+icon/OPMLDocument.icns",
+                "+icon/RSSDocument.icns"
                 ],
 
     options={
