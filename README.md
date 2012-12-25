@@ -1,4 +1,4 @@
-## This is the Cactus-opml outliner/editor. ##
+## This is the Cactus-opml outline editor. ##
 
 
 It is an outline editor based on the PythonBrowser example from PyObjC.
@@ -19,6 +19,8 @@ Mailing list: http://groups.google.com/group/cactus-outliner-dev
 
 
 ## Lates changes ##
+
+RSS is now a document type
 
 Document icons for local files.
 
@@ -55,7 +57,8 @@ Updated feedparser to V5.1.1.
 Will build the app in the dist folder.
 
 
-#### A universal binary is in the download section. ####
+#### A compiled universal binary can be downloaded from my dropbox. ####
+http://goo.gl/EALQi
 
 
 #### Prerequisites for compiling: ####
@@ -69,7 +72,9 @@ Will build the app in the dist folder.
 
 ## Recent versions ##
 
-v0.3.1 rss opens as rss document. Still in an opml flavour...
+v0.3.2a RSS save as. Enclosures are now included in RSS documents.
+
+v0.3.1 rss opens as rss document. Included PyRSS2Gen for RSS write.
 
 v0.3.0 document icons, recent URLs menu
 
