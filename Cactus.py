@@ -76,6 +76,7 @@ import CactusOutlineDoc
 boilerplateOPML = CactusOutlineDoc.boilerplateOPML
 CactusOutlineDocument = CactusOutlineDoc.CactusOutlineDocument
 
+
 import opml
 
 extractClasses("MainMenu")
@@ -127,49 +128,28 @@ def saveAsDialog(path):
 
 
 #
-# tools
-#
-def readURL( url ):
-    f = urllib.FancyURLopener()
-    fob = f.open(url)
-    s = fob.read()
-    fob.close()
-    return s
-
-
-
-def classifyAndReadUrl( url ):
-    """TBD
-    
-    Read in an URL and try to classify it as opml, rss, xml.
-    """
-
-    s = readURL( url )
-    
-    # the type should be determinable within the first 250 bytes
-    checkpart = s[:250]
-
-    xmlre = re.compile( "^<?xml\W+version" )
-    rspre = re.compile( "<reallySimplePhoto" )
-    opmlre = re.compile( "<opml version" )
-    
-    
-    if checkpart.startswith( "<?xml version" ):
-        pass
-        # we have a xml based document
-        
-        # check for opml
-        # check for rss
-        
-
-#
 # Open URL Delegate
 #
 class OpenURLWindowController(AutoBaseClass):
+    """Present a dialog for entering a URL for http document retrieval."""
+
+    # class defined in OpenURL.nib
+    # OpenURLWindowController(NSWindowController)
+    #
+    #
+    # actions
+    #
     # OK:
     # Cancel:
+    # clearMenu:
+    # lastVisitedMenuSelection:
+    #
     # label
     # textfield
+    #
+    #
+    # visitedURLs
+    # menuLastVisited
     def __new__(cls):
         return cls.alloc()
 
@@ -574,7 +554,7 @@ class CactusAppDelegate(NSObject):
     # used by OpenURL delegate OK_ action
     def newOutlineFromOPMLURL_(self, url):
         if 0:
-            s = readURL(url)
+            # s = readURL(url)
             base, path = urllib.splithost( url )
             basepath, filename = os.path.split( path )
             #
