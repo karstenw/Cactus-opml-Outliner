@@ -319,7 +319,7 @@ class CactusOutlineDocument(AutoBaseClass):
             print "CactusOutlineDocument.dataRepresentationOfType_( %s )" % repr(theType)
 
         # future scaffolding
-        if 1: #theType == CactusDocumentTypes.CactusOPMLType:
+        if theType == CactusDocumentTypes.CactusOPMLType:
 
             rootOPML = opml.generateOPML( self.rootNode, indent=1 )
 
@@ -332,7 +332,9 @@ class CactusOutlineDocument(AutoBaseClass):
             return NSData.dataWithBytes_length_(t, len(t))
 
         elif theType == CactusDocumentTypes.CactusRSSType:
-            pass
+            t = opml.generateRSS( self.rootNode, indent=1 )
+            return NSData.dataWithBytes_length_(t, len(t))
+
         elif theType == CactusDocumentTypes.CactusTEXTType:
             pass
         elif theType == CactusDocumentTypes.CactusSQLITEType:
@@ -346,6 +348,11 @@ class CactusOutlineDocument(AutoBaseClass):
         elif theType == CactusDocumentTypes.CactusTABLEType:
             pass
 
+        else:
+            print
+            print "ERROR! Bogus filetype for writing: '%s'" % repr(theType)
+            print
+
         # Insert code here to write your document from the given data.
         # You can also choose to override -fileWrapperRepresentationOfType:
         # or -writeToFile:ofType: instead.
@@ -356,6 +363,7 @@ class CactusOutlineDocument(AutoBaseClass):
         # -fileWrapperOfType:error:,
         # or -writeToURL:ofType:forSaveOperation:originalContentsURL:error:
         # instead.
+
         if kwlog:
             print "CactusOutlineDocument.dataRepresentationOfType_( %s ) RETURNED NONE" % repr(theType)
         return None
@@ -541,21 +549,18 @@ class CactusOutlineDocument(AutoBaseClass):
         # microblog_endday, microblog_filename, microblog_startday, microblog_url,
         # published, subtitle, title, updated, cloud
         if d.feed:
-            keys = """cloud docs generator generator_detail image language link links
-                      microblog_archive microblog_endday microblog_filename
-                      microblog_startday microblog_url published subtitle
-                      subtitle_detail sy_updatefrequency sy_updateperiod title
-                      title_detail updated updated_parsed""".split()
-            #for k in keys:
-            #    if k in d.feed:
+            keys = """author authors category comments cloud description docs enclosure generator
+                      generator_detail guid image language link links microblog_archive
+                      microblog_endday microblog_filename microblog_startday
+                      microblog_url published pubDate source subtitle subtitle_detail
+                      sy_updatefrequency sy_updateperiod title title_detail updated
+                      updated_parsed""".split()
 
             feedkeys = d.feed.keys()
             feedkeys.sort()
-            # pdb.set_trace()
-            #print
-            #pp(feedkeys)
-            #print
+
             for k in feedkeys:
+
                 if k in ('links', 'tags', 'updated_parsed', 'authors'):
                     continue
 
@@ -581,7 +586,7 @@ class CactusOutlineDocument(AutoBaseClass):
                     else:
                         # pdb.set_trace()
                         # if k in ('',)
-                        if 0:
+                        if 1:
                             print "ATTENTION RSS Head values"
                             print "KEY:", k
                             print "TYPE:", type(v)
@@ -671,8 +676,18 @@ class CactusOutlineDocument(AutoBaseClass):
                     killkeys.append(k)
                 if k.endswith('_parsed'):
                     killkeys.append(k)
+
+            # extract enclosure
+            if 'links' in value:
+                links = value['links']
+                for link in links:
+                    rel = link.get('rel', False)
+                    if rel == 'enclosure':
+                        s = "%s<<<%s;%s" % (link['url'], str(link['length']), link['type'])
+                    value['enclosure'] = s
             for k in killkeys:
                 value.pop( k, None )
+
             node = OutlineNode(name, value, body, typeOutline)
             body.addChild_( node )
         return root
