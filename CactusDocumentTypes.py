@@ -22,19 +22,20 @@ CactusTEXTFileExtensions = [ 'txt', ]
 CactusTEXTOSTypes = [ 'TEXT', 'utxt' ]
 
 
-# a want have
+# I want to have...
 CactusSQLITEType = u'Cactus Sqlite'
 CactusSQLITEFileExtensions = [ 'sqlite', ]
 CactusSQLITEOSTypes = [ '****' ]
 
 
-# a want have
+# I want to have...
 CactusXOXOType = u'Cactus XOXO'
 CactusXOXOFileExtensions = [ 'xoxo', 'xml', 'html']
 CactusXOXOOSTypes = [ '****' ]
 
 
-# a want have; an outliner as a general xml editor
+# I want to have...
+# an outliner as a general xml editor
 CactusXMLType = u'XML File'
 CactusXMLFileExtensions = [ 'xml', ]
 CactusXMLOSTypes = [ '****' ]
