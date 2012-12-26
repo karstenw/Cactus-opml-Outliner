@@ -375,13 +375,23 @@ class CactusOutlineDocument(AutoBaseClass):
             t = opml.generateRSS( self.rootNode, indent=1 )
             return NSData.dataWithBytes_length_(t, len(t))
 
+        elif theType == CactusDocumentTypes.CactusXMLType:
+            pdb.set_trace()
+            rootXML = opml.generateXML( self.rootNode, indent=1 )
+
+            e = etree.ElementTree( rootXML )
+
+            fob = cStringIO.StringIO()
+            e.write(fob, encoding="utf-8", xml_declaration=True, method="xml" )
+            t = fob.getvalue()
+            fob.close()
+            return NSData.dataWithBytes_length_(t, len(t))
+
         elif theType == CactusDocumentTypes.CactusTEXTType:
             pass
         elif theType == CactusDocumentTypes.CactusSQLITEType:
             pass
         elif theType == CactusDocumentTypes.CactusXOXOType:
-            pass
-        elif theType == CactusDocumentTypes.CactusXMLType:
             pass
         elif theType == CactusDocumentTypes.CactusEMACSORGType:
             pass
@@ -606,35 +616,32 @@ class CactusOutlineDocument(AutoBaseClass):
         # always outline type (even for tables)
         root = OutlineNode("__ROOT__", "", None, typeOutline)
 
-        # pdb.set_trace()
+        rootXML = rootXML
+        name = rootXML['name']
+        children = rootXML['children']
+        content = rootXML.get('attributes', "")
+        txt = rootXML.get('text', "")
 
-        for n in rootXML[0]:
+        if content:
+            l = []
+            for k, v in content.items():
+                l.append( (k, v) )
+            content = l
+        else:
+            content = u""
 
-            name = n['name']
-            children = n['children']
-            content = n.get('attributes', "")
-            txt = n.get('text', "")
+        node = OutlineNode(name, content, root, typeOutline)
+        if txt:
+            node.setComment_( txt )
 
-            if content:
-                l = []
-                for k, v in content.items():
-                    l.append( (k, v) )
-                content = l
-            else:
-                content = u""
-
-            node = OutlineNode(name, content, root, typeOutline)
-            if txt:
-                node.setComment_( txt )
-
-            root.addChild_( node )
-            if len(children) > 0:
-                try:
-                    getChildrenforNode( node, children )
-                except Exception, err:
-                    print err
-                    # pdb.set_trace()
-                    pp(children)
+        root.addChild_( node )
+        if len(children) > 0:
+            try:
+                getChildrenforNode( node, children )
+            except Exception, err:
+                print err
+                # pdb.set_trace()
+                pp(children)
         #title = os
         return root
     

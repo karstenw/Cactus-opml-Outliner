@@ -147,7 +147,7 @@ def indentXML(elem, level=0, width=2):
             elem.tail = i
 
 
-def createSubNodes(OPnode, ETnode, level):
+def createSubNodesOPML(OPnode, ETnode, level):
     # do attributes
     name = OPnode.name
     value = OPnode.getValueDict()
@@ -175,7 +175,7 @@ def createSubNodes(OPnode, ETnode, level):
         # do children
         for child in OPnode.children:
             ETSub = etree.SubElement( ETnode, "outline")
-            s = createSubNodes( child, ETSub, level+1 )
+            s = createSubNodesOPML( child, ETSub, level+1 )
     return ETnode
 
 
@@ -184,9 +184,6 @@ def createSubNodes(OPnode, ETnode, level):
 def getXMLNodes( node ):
     """Read the outline nodes in XML
     """
-
-    # pdb.set_trace()
-
     result = []
     for n in list(node):
 
@@ -213,10 +210,28 @@ def getXMLNodes( node ):
 
 def getXML_( etRootnode ):
     d = []
-    for node in list(etRootnode):
-        subs = getXMLNodes( node )
-        d.append( subs )
-    return d
+
+    keys = etRootnode.attrib.keys()
+
+    name = etRootnode.tag
+    txt = etRootnode.text
+    nchild = len(etRootnode)
+    b = {
+        'name': name,
+        'children': [],
+        
+        'attributes': {}}
+    if txt:
+        b['text'] = txt.strip(u" \t\r\n")
+    for k in keys:
+        b['attributes'][k] = etRootnode.attrib.get(k, "")
+    subs = list(etRootnode)
+    if subs:
+        s = getXMLNodes(etRootnode)
+        b['children'] = s
+    d.append(b)
+    return b
+    
 
 # these should be unified
 def xml_from_string(xml_text):
@@ -225,6 +240,80 @@ def xml_from_string(xml_text):
     except StandardError, v:
         raise XMLParseErrorException, "The XML file could not be parsed."
     return getXML_( s )
+
+
+def createSubNodesXML(OPnode, ETnode, level):
+    # do attributes
+    name = OPnode.name
+    value = OPnode.getValueDict()
+
+    for k, v in value.items():
+        if type(v) not in (str, unicode):
+            value[k] = unicode(v)
+
+    comment = OPnode.comment
+
+    # ETnode.attrib = value
+    ETnode.attrib.update( value )
+    ETnode.text = comment        
+    # don't have an empty value: tag
+#     if len(value) == 1:
+#         if 'value' in value:
+#             value.pop('value')
+
+    if len(OPnode.children) > 0:
+        
+        # do children
+        for child in OPnode.children:
+            ETSub = etree.SubElement( ETnode, child.name)
+            s = createSubNodesXML( child, ETSub, level+1 )
+    return ETnode
+
+
+def generateXML( rootNode, indent=2 ):
+    """Generate an OPML/XML tree from OutlineNode rootNode.
+    
+    parameters:
+     indent   - if > 0 indent with indent spaces per level
+    return
+     etree.Element of rootNode
+    """
+    pdb.set_trace()
+
+    #
+    # WARNING: This dereference needs to be removed if the OPML code is ever cleaned
+    #          up. Currently the rootNode is invisible and attached to the document.
+    #          That needs to change but not for now.
+    #
+    #   In the case of XML there are 2 chained roots
+    #
+    #   Cactus OPML files ommit the <opml> tag!
+    #
+    baseOP = rootNode.children[0]
+
+
+    rootXML = etree.Element( baseOP.name )
+
+    now = str(datetime.datetime.now())
+    now = now[:19]
+    now = now.replace(" ", "_")
+
+    c = etree.Comment( CactusVersion.document_creator + " on %s." % (now,))
+    rootXML.append(c)
+
+    value = baseOP.getValueDict()
+    if value:
+        rootXML.attrib = value
+    comment = baseOP.comment
+    if comment:
+        baseOP.text = comment
+    
+    nodes = createSubNodesXML(baseOP, rootXML, 1)
+
+    if indent:
+        indentXML(rootXML, 0, indent)
+
+    return rootXML
 
 
 # -----------------------------------------------
@@ -384,11 +473,11 @@ def generateOPML( rootNode, indent=2 ):
     bodyOP = rootNode.findFirstChildWithName_( "body" )
 
     if bodyOP:
-        nodes = createSubNodes(bodyOP, body, 1)
+        nodes = createSubNodesOPML(bodyOP, body, 1)
     else:
         # an outline without body
         # pdb.set_trace()
-        nodes = createSubNodes(rootNode, body, 1)
+        nodes = createSubNodesOPML(rootNode, body, 1)
 
     if indent:
         indentXML(rootOPML, 0, indent)
