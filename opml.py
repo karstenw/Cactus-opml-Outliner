@@ -258,7 +258,12 @@ def generateRSS( rootNode, indent=2 ):
                     if k == 'enclosure':
                         url, rest = value[key].split('<<<')
                         length, type_ = rest.split(';', 1)
-                        length = int(length)
+                        try:
+                            length = int(length)
+                        except ValueError, err:
+                            if kwlog:
+                                print "BOGUS ENCLOSURE LENGTH: %s" % repr(length)
+                            length = 0
                         enc = PyRSS2Gen.Enclosure( url, length, type_)
                         d[k] = enc
                     else:

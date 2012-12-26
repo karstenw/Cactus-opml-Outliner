@@ -158,45 +158,42 @@ class CactusOutlineDocument(AutoBaseClass):
         err = None
         self.url = url
         
-        s = readURL( url )
+        # pdb.set_trace()
 
-        pdb.set_trace()
+        if theType == CactusDocumentTypes.CactusOPMLType:
 
-        if s:
-            if theType == CactusDocumentTypes.CactusOPMLType:
-                d = None
-                try:
-                    d = opml.opml_from_string(s)
-                except OPMLParseErrorException, v:
-                    tb = unicode(traceback.format_exc())
-                    v = unicode( repr(v) )
-                    err = tb
-                    errorDialog( message=v, title=tb )
-                    return (False, None)
+            d = None
+            try:
+                d = opml.opml_from_string( readURL( url ) )
+            except OPMLParseErrorException, v:
+                tb = unicode(traceback.format_exc())
+                v = unicode( repr(v) )
+                err = tb
+                errorDialog( message=v, title=tb )
+                return (False, None)
 
-                if d:
-                    root = self.openOPML_( d )
-                    if not root:
-                        if kwlog:
-                            print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
-                        return (False, "Error creating the outline.")
-                    else:
-                        self.rootNode = root
-                else:
+            if d:
+                root = self.openOPML_( d )
+                if not root:
                     if kwlog:
                         print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
-                    return (False, None)
-                    
-            elif theType == CactusDocumentTypes.CactusRSSType:
-                root = self.openRSS_( s )
-                if root:
+                    return (False, "Error creating the outline.")
+                else:
                     self.rootNode = root
-                else:
-                    if kwlog:
-                        print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
-                    return (False, None)
+            else:
+                if kwlog:
+                    print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                return (False, None)
 
-            del s
+        elif theType == CactusDocumentTypes.CactusRSSType:
+            root = self.openRSS_( url )
+            if root:
+                self.rootNode = root
+            else:
+                if kwlog:
+                    print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                return (False, None)
+
             self.setFileURL_( url )
             self.setFileType_( theType )
         print "OK CactusOutlineDocument.readFromURL_ofType_error_()"
@@ -542,10 +539,12 @@ class CactusOutlineDocument(AutoBaseClass):
 
 
     def openRSS_(self, url):
+        if isinstance(url, NSURL):
+            url = str(url.absoluteString())
         if kwlog:
-            s = url
-            if len(url) > 31:
-                s = url[:32]
+            s = repr(url)
+            if len(s) > 90:
+                s = s[:91]
             print "CactusOutlineDocument.openRSS_( %s )" % repr(s)
         d = feedparser.parse( url )
 
