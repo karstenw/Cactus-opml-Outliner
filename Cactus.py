@@ -219,6 +219,7 @@ class CactusWindowController(AutoBaseClass):
         if theType == typeOutline:
             self = self.initWithWindowNibName_("OutlineEditor")
             title = u"Unnamed Outline"
+
         elif theType == typeTable:
             # pdb.set_trace()
             self = self.initWithWindowNibName_("TableEditor")

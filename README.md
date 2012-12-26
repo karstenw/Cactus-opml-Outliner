@@ -8,7 +8,7 @@ Developed on OSX 10.4 with Python 2.7, Xcode 2.5, pyobjc 1.4 and py2app 0.53
 It's still in development but gets better and better.
 
 
-RSS files are new and still in the make so please be cautious with Cactus generated RSS. Cactus doesn't know about namespaces in RSS. They sure get lost. 
+RSS files are new and still in the make so please be cautious with Cactus generated RSS. Cactus doesn't know about namespaces in RSS. They sure get lost if you save a RSS file in Cactus.
 
 
 Use it to explore an OPML and RSS files. Nodes can be opened in the browser or in Quicktime Player. See the shortcuts section at the end.
