@@ -66,7 +66,6 @@ def getOutlineNodes(node):
         b = {
             'name': name,
             'children': [],
-            'noofchildren': nchild,
             'attributes': {}}
 
         for k in keys:
@@ -194,15 +193,15 @@ def getXMLNodes( node ):
         keys = n.attrib.keys()
 
         name = n.tag
-        text = node.text
+        txt = n.text
         nchild = len(n)
         b = {
             'name': name,
             'children': [],
-            'text': text.strip('\r\n\t '),
-            'noofchildren': nchild,
+            
             'attributes': {}}
-
+        if txt:
+            b['text'] = txt.strip(u" \t\r\n")
         for k in keys:
             b['attributes'][k] = n.attrib.get(k, "")
         subs = list(n)

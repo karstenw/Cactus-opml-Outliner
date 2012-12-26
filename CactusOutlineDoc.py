@@ -580,6 +580,7 @@ class CactusOutlineDocument(AutoBaseClass):
                 name = c.get('name', '')
                 childs = c.get('children', [])
                 content = c.get('attributes', "")
+                txt = c.get('text', "")
                 if content == "":
                     content = {u'value': ""}
                 # content.pop('text', None)
@@ -592,6 +593,9 @@ class CactusOutlineDocument(AutoBaseClass):
                     content = u""
 
                 newnode = OutlineNode(name, content, node, typeOutline)
+                if txt:
+                    newnode.setComment_( txt )
+
                 node.addChild_( newnode )
                 if len(childs) > 0:
                     getChildrenforNode(newnode, childs)
@@ -609,6 +613,7 @@ class CactusOutlineDocument(AutoBaseClass):
             name = n['name']
             children = n['children']
             content = n.get('attributes', "")
+            txt = n.get('text', "")
 
             if content:
                 l = []
@@ -619,6 +624,8 @@ class CactusOutlineDocument(AutoBaseClass):
                 content = u""
 
             node = OutlineNode(name, content, root, typeOutline)
+            if txt:
+                node.setComment_( txt )
 
             root.addChild_( node )
             if len(children) > 0:
@@ -628,7 +635,6 @@ class CactusOutlineDocument(AutoBaseClass):
                     print err
                     # pdb.set_trace()
                     pp(children)
-                    pp(item)
         #title = os
         return root
     
