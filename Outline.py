@@ -222,10 +222,10 @@ def open_node( url, nodeType=None ):
     nsurl = NSURL.URLWithString_( url )
 
     if nodeType == "RSS":
-        appdelg.newOutlineFromRSSURL_( url )
+        appdelg.newOutlineFromRSSURL_( nsurl )
         
     elif url.endswith(".opml"):
-        appdelg.newOutlineFromOPMLURL_( url )
+        appdelg.newOutlineFromOPMLURL_( nsurl )
 
     elif surl in g_qtplayer_extensions:
         # qtplayer can do http:
@@ -1153,19 +1153,6 @@ class OutlineNode(NSObject):
 
     def __repr__(self):
         return "<OutlineNode(%i, name='%s')" % (self.nodenr, self.name)
-
-    def XXdealloc(self):
-        if kwdbg:
-            print "SELF_RELEASE:", self
-        if self.children:
-            for c in self.children:
-                if kwdbg:
-                    print "FAKE CHILDREN_RELEASE", c
-                # c.release()
-            self.children.dealloc()
-        #super( OutlineNode, self).release()
-        #self.release()
-        
 
     def __init__(self, name, obj, parent, typ):
         # pdb.set_trace()
