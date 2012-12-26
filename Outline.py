@@ -207,7 +207,7 @@ def open_photo( url ):
             0,
             None )
 
-
+# TODO: change parameter to node!
 def open_node( url, nodeType=None ):
 
     appl = NSApplication.sharedApplication()
@@ -485,7 +485,11 @@ class KWOutlineView(AutoBaseClass):
                                     open_photo( url )
 
                                 elif theType == "rssentry":
-                                    url = v.get("link", "")
+                                    enc = v.get("enclosure", "")
+                                    if enc:
+                                        url, rest = enc.split('<<<')
+                                    else:
+                                        url = v.get("link", "")
                                     url = cleanupURL( url )
                                     open_node( url )
 
