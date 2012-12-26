@@ -2,10 +2,16 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {Cancel = id; OK = id; clearMenu = id; lastVisitedMenuSelection = id; }; 
+            ACTIONS = {
+                Cancel = id; 
+                OK = id; 
+                clearMenu = id; 
+                lastVisitedMenuSelection = id; 
+                openAsMenuSelection = id; 
+            }; 
             CLASS = OpenURLWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {label = id; menuLastVisited = id; textfield = id; }; 
+            OUTLETS = {label = id; menuLastVisited = id; menuOpenAs = id; textfield = id; }; 
             SUPERCLASS = NSWindowController; 
         }
     ); 
