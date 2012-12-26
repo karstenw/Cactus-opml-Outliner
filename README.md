@@ -7,20 +7,20 @@ Developed on OSX 10.4 with Python 2.7, Xcode 2.5, pyobjc 1.4 and py2app 0.53
 
 It's still in development but gets better and better.
 
-Don't use it to save your current OPML files. I've seen no errors so far but there is the possibility of attribute omission.
 
-Use it to explore an OPML file.
+RSS files are new and still in the make so please be cautious with Cactus generated RSS. Cactus doesn't know about namespaces in RSS. They sure get lost. 
+
+
+Use it to explore an OPML and RSS files. Nodes can be opened in the browser or in Quicktime Player. See the shortcuts section at the end.
 
 Mailing list: http://groups.google.com/group/cactus-outliner-dev
 
-
-## Quickstart ##
-
+Downloads: http://goo.gl/EALQi
 
 
 ## Lates changes ##
 
-RSS is now a document type
+RSS and OPML are now a document types.
 
 Document icons for local files.
 
@@ -29,9 +29,9 @@ Added a recent URLs menu to the open URL dialog. Holds the last 30 visited URLs.
 Cactus now tries to correct some common errors in opml files.
 
 Corrections applied are:
-+ wrong xml declarations ( "<?xml encoding...?>" instead of "<?xml version...?>"
++ wrong xml declarations ( "&lt;?xml encoding...?&gt;" instead of "&lt;?xml version...?>"
 + illegal characters (chrs 0-8,11,12,14-31) are replaced with "???"
-+ some opml files had a <directiveCache> tag instead of </outline> at the top level
++ some opml files had a &lt;directiveCache&gt; tag instead of &lt;/outline&gt; at the top level
 
 
 Take a look at the updated shortcuts section. The ctrl-up/down keys were previously undocumented.
