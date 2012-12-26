@@ -15,8 +15,9 @@ Use it to explore an OPML and RSS files. Nodes can be opened in the browser or i
 
 Mailing list: http://groups.google.com/group/cactus-outliner-dev
 
-Downloads: http://goo.gl/EALQi
+Downloads page: http://goo.gl/EALQi
 
+Latest binary: http://goo.gl/9Kv6z
 
 ## Lates changes ##
 
