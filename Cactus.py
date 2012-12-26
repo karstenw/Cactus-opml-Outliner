@@ -161,6 +161,7 @@ class OpenURLWindowController(AutoBaseClass):
         window.makeFirstResponder_(self.textfield)
         app = NSApplication.sharedApplication()
         delg = app.delegate()
+        self.readAsType = None
         self.visitedURLs = delg.visitedURLs[:]
         self.menuLastVisited.removeAllItems()
         for url in self.visitedURLs:
@@ -185,6 +186,9 @@ class OpenURLWindowController(AutoBaseClass):
         urlSelected = self.menuLastVisited.title()
         self.textfield.setStringValue_( urlSelected )
 
+    def openAsMenuSelection_(self, sender):
+        readType = self.menuOpenAs.title()
+        self.readAsType = readType
 
     def windowWillClose_(self, notification):
         #pdb.set_trace()
@@ -207,7 +211,12 @@ class OpenURLWindowController(AutoBaseClass):
                 self.visitedURLs = self.visitedURLs[start:]
             delg.visitedURLs = self.visitedURLs[:]
 
-        delg.newOutlineFromOPMLURL_( url )
+        # quick hack to open RSS
+        if self.readAsType == u"RSS":
+            delg.newOutlineFromRSSURL_( url )
+        else:
+            delg.newOutlineFromOPMLURL_( url )
+        
         self.close()
 
     def Cancel_(self, sender):
@@ -533,9 +542,6 @@ class CactusAppDelegate(NSObject):
     
 
     def newOutlineFromRSSURL_(self, url):
-        #root = self.openRSS_( url )
-        #doc = Document(url, root)
-        #CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
         if not isinstance(url, NSURL):
             url = NSURL.URLWithString_( url )
         docc = NSDocumentController.sharedDocumentController()
@@ -545,8 +551,6 @@ class CactusAppDelegate(NSObject):
 
     # used by OpenURL delegate OK_ action
     def newOutlineFromOPMLURL_(self, url):
-        """
-        """
         if not isinstance(url, NSURL):
             url = NSURL.URLWithString_( url )
         docc = NSDocumentController.sharedDocumentController()
