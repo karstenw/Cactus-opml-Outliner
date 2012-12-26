@@ -683,8 +683,10 @@ class CactusOutlineDocument(AutoBaseClass):
                 for link in links:
                     rel = link.get('rel', False)
                     if rel == 'enclosure':
-                        s = "%s<<<%s;%s" % (link['url'], str(link['length']), link['type'])
-                    value['enclosure'] = s
+                        s = "%s<<<%s;%s" % (link.get('url',''),
+                                            str(link.get('length','')),
+                                            link.get('type', ""))
+                        value['enclosure'] = s
             for k in killkeys:
                 value.pop( k, None )
 
