@@ -626,7 +626,7 @@ class KWOutlineView(AutoBaseClass):
         # Indenting
         elif eventCharNum == NSTabCharacter:
             # indent selection
-            
+
             # get selected rows
             if delg.typ in outlinetypes.hierarchicalTypes:
                 sel = self.getSelectionItems()
@@ -635,9 +635,9 @@ class KWOutlineView(AutoBaseClass):
                 for item in sel:
                     parent = item.parent
                     previous = item.previous()
+
+                    # ignore command if item is first Child
                     if previous != -1:
-                        # ignore command if item is first Child
-    
                         previous.addChild_( item )
                         parent.removeChild_(item)
                         postselect.add(item)

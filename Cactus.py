@@ -35,7 +35,6 @@ NSUserDefaults = Foundation.NSUserDefaults
 
 
 import AppKit
-NSOpenPanel = AppKit.NSOpenPanel
 NSApplication = AppKit.NSApplication
 NSDocument = AppKit.NSDocument
 NSDocumentController = AppKit.NSDocumentController
@@ -43,9 +42,6 @@ NSWorkspace = AppKit.NSWorkspace
 
 NSString = AppKit.NSString
 NSMutableString = AppKit.NSMutableString
-
-NSSavePanel = AppKit.NSSavePanel
-NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 
 
 # grid styles
@@ -82,48 +78,9 @@ extractClasses("MainMenu")
 extractClasses("OpenURL")
 extractClasses("OutlineEditor")
 
+import CactusExceptions
+OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
 
-
-#
-# Open File
-#
-def getFileDialog(multiple=False):
-    panel = NSOpenPanel.openPanel()
-    panel.setCanChooseFiles_(True)
-    panel.setCanChooseDirectories_(False)
-    panel.setAllowsMultipleSelection_(multiple)
-    rval = panel.runModalForTypes_( None )
-    if rval:
-        return [t for t in panel.filenames()]
-    return []
-
-
-#
-# File save dialog
-#
-def saveAsDialog(path):
-    panel = NSSavePanel.savePanel()
-
-    if path:
-        panel.setDirectory_( path )
-
-    panel.setMessage_( u"Save as OPML" )
-    panel.setExtensionHidden_( False )
-    panel.setCanSelectHiddenExtension_(True)
-    panel.setRequiredFileType_( u"opml" )
-    if path:
-        if not os.path.isdir( path ):
-            folder, fle = os.path.split(path)
-        else:
-            folder = path
-            fle = "Untitled.opml"
-        rval = panel.runModalForDirectory_file_(folder, fle)
-    else:
-        rval = panel.runModal()
-
-    if rval == NSFileHandlingPanelOKButton:
-        return panel.filename()
-    return False
 
 
 #
@@ -545,8 +502,8 @@ class CactusAppDelegate(NSObject):
         if not isinstance(url, NSURL):
             url = NSURL.URLWithString_( url )
         docc = NSDocumentController.sharedDocumentController()
-        err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
-                                                           'Cactus RSS')
+        doc, err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
+                                                                   'Cactus RSS')
 
 
     # used by OpenURL delegate OK_ action
@@ -554,9 +511,9 @@ class CactusAppDelegate(NSObject):
         if not isinstance(url, NSURL):
             url = NSURL.URLWithString_( url )
         docc = NSDocumentController.sharedDocumentController()
-        err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
-                                                           'Cactus Outline')
-            
+        doc, err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
+                                                                   'Cactus Outline')
+
 
     # UNUSED but defined in class
     def newBrowser_(self, sender):
@@ -578,7 +535,7 @@ class CactusAppDelegate(NSObject):
 
     def openFile_(self, sender):
         if kwlog:
-            print "CactusAppDelegate.openFile_()"
+            print "DEPRECATED CactusAppDelegate.openFile_()"
         # this is ugly
         f = getFileDialog(multiple=True)
         if f:

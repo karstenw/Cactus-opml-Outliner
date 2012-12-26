@@ -12,6 +12,13 @@ import re
 
 import urllib
 
+import AppKit
+NSOpenPanel = AppKit.NSOpenPanel
+NSAlert = AppKit.NSAlert
+NSSavePanel = AppKit.NSSavePanel
+NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
+
+
 
 #
 # tools
@@ -78,3 +85,77 @@ def classifyAndReadUrl( url ):
         # check for opml
         # check for rss
         
+#
+# dialogs
+#
+def cancelContinueAlert(title, message, butt1="OK", butt2=False):
+    """Run a generic Alert with buttons "Weiter" & "Abbrechen".
+    
+       Returns True if "Weiter"; False otherwise
+    """
+    alert = NSAlert.alloc().init()
+    alert.setAlertStyle_( 0 )
+    alert.setInformativeText_( title )
+    alert.setMessageText_( message )
+    alert.setShowsHelp_( False )
+    alert.addButtonWithTitle_( butt1 )
+
+    if butt2:
+        # button 2 has keyboard equivalent "Escape"
+        button2 = alert.addButtonWithTitle_( butt2 )
+        button2.setKeyEquivalent_( unichr(27) )
+
+    f = alert.runModal()
+    return f == AppKit.NSAlertFirstButtonReturn
+
+
+def errorDialog( message="Error", title="Some error occured..."):
+    return cancelContinueAlert(title, message)
+
+
+
+#
+# should be obsolete
+#
+
+#
+# Open File
+#
+def getFileDialog(multiple=False):
+    panel = NSOpenPanel.openPanel()
+    panel.setCanChooseFiles_(True)
+    panel.setCanChooseDirectories_(False)
+    panel.setAllowsMultipleSelection_(multiple)
+    rval = panel.runModalForTypes_( None )
+    if rval:
+        return [t for t in panel.filenames()]
+    return []
+
+
+#
+# File save dialog
+#
+# SHOULD NOT BE USED ANYMORE (NSDocument handling)
+def saveAsDialog(path):
+    panel = NSSavePanel.savePanel()
+
+    if path:
+        panel.setDirectory_( path )
+
+    panel.setMessage_( u"Save as OPML" )
+    panel.setExtensionHidden_( False )
+    panel.setCanSelectHiddenExtension_(True)
+    panel.setRequiredFileType_( u"opml" )
+    if path:
+        if not os.path.isdir( path ):
+            folder, fle = os.path.split(path)
+        else:
+            folder = path
+            fle = "Untitled.opml"
+        rval = panel.runModalForDirectory_file_(folder, fle)
+    else:
+        rval = panel.runModal()
+
+    if rval == NSFileHandlingPanelOKButton:
+        return panel.filename()
+    return False

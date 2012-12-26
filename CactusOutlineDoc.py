@@ -7,6 +7,7 @@
 
 import sys
 import os
+import traceback
 
 import time
 import datetime
@@ -29,7 +30,10 @@ import opml
 
 import CactusTools
 readURL = CactusTools.readURL
+errorDialog = CactusTools.errorDialog
 
+import CactusExceptions
+OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
 
 import objc
 
@@ -151,24 +155,37 @@ class CactusOutlineDocument(AutoBaseClass):
 
         OK = True
         s = None
-
+        err = None
         self.url = url
         
         s = readURL( url )
 
-        # pdb.set_trace()
+        pdb.set_trace()
 
         if s:
             if theType == CactusDocumentTypes.CactusOPMLType:
-                d = opml.opml_from_string(s)
+                d = None
+                try:
+                    d = opml.opml_from_string(s)
+                except OPMLParseErrorException, v:
+                    tb = unicode(traceback.format_exc())
+                    v = unicode( repr(v) )
+                    err = tb
+                    errorDialog( message=v, title=tb )
+                    return (False, None)
+
                 if d:
                     root = self.openOPML_( d )
                     if not root:
                         if kwlog:
                             print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
-                        return (False, None)
+                        return (False, "Error creating the outline.")
                     else:
                         self.rootNode = root
+                else:
+                    if kwlog:
+                        print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                    return (False, None)
                     
             elif theType == CactusDocumentTypes.CactusRSSType:
                 root = self.openRSS_( s )

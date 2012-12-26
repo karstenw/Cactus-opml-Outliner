@@ -21,6 +21,9 @@ import pdb
 
 import CactusVersion
 
+import CactusExceptions
+OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
+
 # some globals for opml analyzing
 keyTypes = {}
 opmlTags = {}
@@ -111,7 +114,11 @@ def getOPML( etRootnode ):
 
 
 def opml_from_string(opml_text):
-    return getOPML(etree.fromstring(opml_text))
+    try:
+        s = etree.fromstring(opml_text)
+    except StandardError, v:
+        raise OPMLParseErrorException, "The OPML file could not be parsed."
+    return getOPML( s )
 
 
 def parse(opml_url):
