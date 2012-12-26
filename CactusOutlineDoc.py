@@ -34,6 +34,7 @@ errorDialog = CactusTools.errorDialog
 
 import CactusExceptions
 OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
+XMLParseErrorException = CactusExceptions.XMLParseErrorException
 
 import objc
 
@@ -196,6 +197,31 @@ class CactusOutlineDocument(AutoBaseClass):
 
             self.setFileURL_( url )
             self.setFileType_( theType )
+
+        elif theType == CactusDocumentTypes.CactusXMLType:
+            d = None
+            try:
+                d = opml.xml_from_string( readURL( url ) )
+            except XMLParseErrorException, v:
+                tb = unicode(traceback.format_exc())
+                v = unicode( repr(v) )
+                err = tb
+                errorDialog( message=v, title=tb )
+                return (False, None)
+
+            root = self.openXML_( d )
+
+            if root:
+                self.rootNode = root
+            else:
+                if kwlog:
+                    print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                return (False, None)
+
+            self.setFileURL_( url )
+            self.setFileType_( theType )
+
+                
         print "OK CactusOutlineDocument.readFromURL_ofType_error_()"
         return (OK, None)
     
@@ -537,7 +563,75 @@ class CactusOutlineDocument(AutoBaseClass):
         #title = os
         return root
 
+    def openXML_( self, rootXML):
 
+        if kwlog:
+            s = repr(rootXML)
+            if len(s) > 90:
+                s = s[:91]
+            print "CactusOutlineDocument.openXML_( %s )" % repr(s)
+
+        """This builds the node tree and returns the root node."""
+
+        #
+        #  Split this up.
+        def getChildrenforNode(node, children):
+            for c in children:
+                name = c.get('name', '')
+                childs = c.get('children', [])
+                content = c.get('attributes', "")
+                if content == "":
+                    content = {u'value': ""}
+                # content.pop('text', None)
+                if content:
+                    l = []
+                    for k, v in content.items():
+                        l.append( (k, v) )
+                    content = l
+                else:
+                    content = u""
+
+                newnode = OutlineNode(name, content, node, typeOutline)
+                node.addChild_( newnode )
+                if len(childs) > 0:
+                    getChildrenforNode(newnode, childs)
+
+        ######
+
+        # root node for document; never visible,
+        # always outline type (even for tables)
+        root = OutlineNode("__ROOT__", "", None, typeOutline)
+
+        # pdb.set_trace()
+
+        for n in rootXML[0]:
+
+            name = n['name']
+            children = n['children']
+            content = n.get('attributes', "")
+
+            if content:
+                l = []
+                for k, v in content.items():
+                    l.append( (k, v) )
+                content = l
+            else:
+                content = u""
+
+            node = OutlineNode(name, content, root, typeOutline)
+
+            root.addChild_( node )
+            if len(children) > 0:
+                try:
+                    getChildrenforNode( node, children )
+                except Exception, err:
+                    print err
+                    # pdb.set_trace()
+                    pp(children)
+                    pp(item)
+        #title = os
+        return root
+    
     def openRSS_(self, url):
         if isinstance(url, NSURL):
             url = str(url.absoluteString())

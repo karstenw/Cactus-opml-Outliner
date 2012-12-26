@@ -15,11 +15,15 @@ class CactusBaseException(StandardError):
 # parsing documents
 
 class OPMLParseErrorException(CactusBaseException):
-    """An OPML source could not be parsed"""
+    """An OPML source could not be parsed."""
     pass
 
 class RSSParseErrorException(CactusBaseException):
-    """An RSS source could not be parsed"""
+    """A RSS source could not be parsed."""
+    pass
+
+class XMLParseErrorException(CactusBaseException):
+    """A XML source could not be parsed."""
     pass
 
 

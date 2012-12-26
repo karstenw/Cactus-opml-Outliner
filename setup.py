@@ -55,11 +55,12 @@ setup(
                     'NSDocumentClass': u'CactusOutlineDocument',
                 },
                 {
-                    'CFBundleTypeExtensions': [ 'rss', 'xml', 'php' ],
-                    'CFBundleTypeIconFile': 'OPMLDocument.icns',
-                    'CFBundleTypeName': 'Cactus RSS',
+                    'CFBundleTypeExtensions': CactusDocumentTypes.CactusXMLFileExtensions,
+                    'CFBundleTypeIconFile': 'XMLDocument.icns',
+                    'CFBundleTypeName': CactusDocumentTypes.CactusXMLType,
+                    'CFBundleTypeOSTypes': CactusDocumentTypes.CactusXMLOSTypes,
                     'CFBundleTypeRole': 'Editor',
-                    'NSDocumentClass': 'CactusOutlineDocument'
+                    'NSDocumentClass': u'CactusOutlineDocument',
                 }
             ],
             'LSHasLocalizedDisplayName': False,
@@ -72,6 +73,7 @@ setup(
                 "English.lproj/NodeEditor.nib",
                 "English.lproj/OpenURL.nib",
                 "+icon/OPMLDocument.icns",
+                "+icon/XMLDocument.icns",
                 "+icon/RSSDocument.icns"
                 ],
 

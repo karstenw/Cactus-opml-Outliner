@@ -9,11 +9,22 @@ CactusOPMLFileExtensions = [ 'opml' ]
 CactusOPMLOSTypes = [ 'OPML', '****' ]
 
 
-# can currently only be opened when linked from an opml file
+# works --- so far
 CactusRSSType = u'Cactus RSS'
 # CactusRSSFileExtensions = [ 'rss', 'xml']
 CactusRSSFileExtensions = [ 'rss' ]
 CactusRSSOSTypes = [ '****' ]
+
+
+# an outliner as a general xml editor
+CactusXMLType = u'XML File'
+CactusXMLFileExtensions = [ 'xml', ]
+CactusXMLOSTypes = [ '****' ]
+
+
+#
+# from here on it's wishful thinking
+#
 
 
 # don't know yet, if this is useful
@@ -32,13 +43,6 @@ CactusSQLITEOSTypes = [ '****' ]
 CactusXOXOType = u'Cactus XOXO'
 CactusXOXOFileExtensions = [ 'xoxo', 'xml', 'html']
 CactusXOXOOSTypes = [ '****' ]
-
-
-# I want to have...
-# an outliner as a general xml editor
-CactusXMLType = u'XML File'
-CactusXMLFileExtensions = [ 'xml', ]
-CactusXMLOSTypes = [ '****' ]
 
 
 # haven't looked into it yet

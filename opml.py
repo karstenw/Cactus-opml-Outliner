@@ -23,6 +23,7 @@ import CactusVersion
 
 import CactusExceptions
 OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
+XMLParseErrorException = CactusExceptions.XMLParseErrorException
 
 # some globals for opml analyzing
 keyTypes = {}
@@ -30,6 +31,8 @@ opmlTags = {}
 nodeTypes = {}
 urls = {}
 
+
+# -----------------------------------------------
 
 def getOutlineNodes(node):
     """Read the outline nodes in OPML/body
@@ -175,6 +178,58 @@ def createSubNodes(OPnode, ETnode, level):
             ETSub = etree.SubElement( ETnode, "outline")
             s = createSubNodes( child, ETSub, level+1 )
     return ETnode
+
+
+# -----------------------------------------------
+
+def getXMLNodes( node ):
+    """Read the outline nodes in XML
+    """
+
+    # pdb.set_trace()
+
+    result = []
+    for n in list(node):
+
+        keys = n.attrib.keys()
+
+        name = n.tag
+        text = node.text
+        nchild = len(n)
+        b = {
+            'name': name,
+            'children': [],
+            'text': text.strip('\r\n\t '),
+            'noofchildren': nchild,
+            'attributes': {}}
+
+        for k in keys:
+            b['attributes'][k] = n.attrib.get(k, "")
+        subs = list(n)
+        if subs:
+            s = getXMLNodes(n)
+            b['children'] = s
+        result.append(b)
+    return result
+
+def getXML_( etRootnode ):
+    d = []
+    for node in list(etRootnode):
+        subs = getXMLNodes( node )
+        d.append( subs )
+    return d
+
+# these should be unified
+def xml_from_string(xml_text):
+    try:
+        s = etree.fromstring(xml_text)
+    except StandardError, v:
+        raise XMLParseErrorException, "The XML file could not be parsed."
+    return getXML_( s )
+
+
+# -----------------------------------------------
+
 
 def generateRSS( rootNode, indent=2 ):
     """Generate an OPML/XML tree from OutlineNode rootNode.
