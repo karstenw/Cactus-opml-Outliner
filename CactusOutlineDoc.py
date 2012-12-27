@@ -28,6 +28,8 @@ import feedparser
 
 import opml
 
+import CactusVersion
+
 import CactusTools
 readURL = CactusTools.readURL
 errorDialog = CactusTools.errorDialog
@@ -149,6 +151,7 @@ class CactusOutlineDocument(AutoBaseClass):
 
     def readFromURL_ofType_error_(self, url, theType):
         if kwlog:
+            # pdb.set_trace()
             print ("CactusOutlineDocument.readFromURL_ofType_error_( %s, %s )"
                    % (repr(url), repr(theType),))
             # print repr(url)
@@ -165,7 +168,7 @@ class CactusOutlineDocument(AutoBaseClass):
 
             d = None
             try:
-                d = opml.opml_from_string( readURL( url ) )
+                d = opml.opml_from_string( readURL( url, "OPML" ) )
             except OPMLParseErrorException, v:
                 tb = unicode(traceback.format_exc())
                 v = unicode( repr(v) )
@@ -201,7 +204,7 @@ class CactusOutlineDocument(AutoBaseClass):
         elif theType == CactusDocumentTypes.CactusXMLType:
             d = None
             try:
-                d = opml.xml_from_string( readURL( url ) )
+                d = opml.xml_from_string( readURL( url, "XML" ) )
             except XMLParseErrorException, v:
                 tb = unicode(traceback.format_exc())
                 v = unicode( repr(v) )
@@ -457,7 +460,7 @@ class CactusOutlineDocument(AutoBaseClass):
                 self.rootNode = root
                 readSuccess = True
         elif theType == CactusDocumentTypes.CactusRSSType:
-            d = feedparser.parse( s )
+            d = feedparser.parse( s, agent=CactusVersion.user_agent )
             if d:
                 root = self.openRSS_( d )
                 if self.rootNode:
@@ -653,7 +656,7 @@ class CactusOutlineDocument(AutoBaseClass):
             if len(s) > 90:
                 s = s[:91]
             print "CactusOutlineDocument.openRSS_( %s )" % repr(s)
-        d = feedparser.parse( url )
+        d = feedparser.parse( url, agent=CactusVersion.user_agent )
 
         # make basic nodes
         root = OutlineNode("__ROOT__", "", None, typeOutline)

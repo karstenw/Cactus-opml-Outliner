@@ -2,15 +2,21 @@
 
 # the different document types
 
+#
+# ATTENTIOON: changing the string here (CactusOPMLType = u'OPML File') needs to 
+# change the string in "OpenURL.nib" window too!
+#
+
+
 # works
-CactusOPMLType = u'Cactus Outline'
+CactusOPMLType = u'OPML File'
 # CactusOPMLFileExtensions = [ 'opml', 'xml']
 CactusOPMLFileExtensions = [ 'opml' ]
 CactusOPMLOSTypes = [ 'OPML', '****' ]
 
 
 # works --- so far
-CactusRSSType = u'Cactus RSS'
+CactusRSSType = u'RSS File'
 # CactusRSSFileExtensions = [ 'rss', 'xml']
 CactusRSSFileExtensions = [ 'rss' ]
 CactusRSSOSTypes = [ '****' ]

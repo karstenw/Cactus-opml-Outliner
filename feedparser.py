@@ -50,8 +50,6 @@ __contributors__ = ["Jason Diamond <http://injektilo.org/>",
 # If you are embedding feedparser in a larger application, you should
 # change this to your application name and URL.
 USER_AGENT = "UniversalFeedParser/%s +https://code.google.com/p/feedparser/" % __version__
-import CactusVersion
-#USER_AGENT = CactusVersion.user_agent
 
 # HTTP "Accept" header to send to servers when downloading feeds.  If you don't
 # want to send an Accept header, set this to None.

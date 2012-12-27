@@ -8,9 +8,15 @@
 import sys
 import os
 
+import pdb
+
 import re
 
 import urllib
+
+import CactusVersion
+
+import feedparser
 
 import AppKit
 NSOpenPanel = AppKit.NSOpenPanel
@@ -23,28 +29,34 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 #
 # tools
 #
-def readURL( nsurl ):
+def readURL( nsurl, type_="OPML" ):
     """Read a file. May be local, may be http"""
 
+    # pdb.set_trace()
     url = str(nsurl.absoluteString())
-    print "CactusTools.readURL( '%s' )" % url
-    f = urllib.FancyURLopener()
-    fob = f.open(url)
+    print "CactusTools.readURL( '%s', '%s' )" % (url, type_)
+    # f = urllib.FancyURLopener()
+    # f.addheader('User-Agent', CactusVersion.user_agent)
+    fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
+
+    # fob = f.open(url)
     s = fob.read()
     fob.close()
 
-    # clear bogative opmleditor opml
-    if s.startswith("""<?xml encoding="ISO-8859-1" version="1.0"?>"""):
-        s = s.replace("""<?xml encoding="ISO-8859-1" version="1.0"?>""",
-                      """<?xml version="1.0" encoding="ISO-8859-1"?>""")
+    if type_ == "OPML":
+        # clear bogative opmleditor opml
+        if s.startswith("""<?xml encoding="ISO-8859-1" version="1.0"?>"""):
+            s = s.replace("""<?xml encoding="ISO-8859-1" version="1.0"?>""",
+                          """<?xml version="1.0" encoding="ISO-8859-1"?>""")
+    
+            # this error occurs up until now only combined with the previous one
+            #
+            # this is a quick & dirty approach and should be applied much more carefully than
+            # it is now...
+            if "<directiveCache>" in s:
+                s = s.replace( "<directiveCache>", "</outline>")
 
-        # this error occurs up until now only combined with the previous one
-        #
-        # this is a q&d approach and should be applied much more carefully than
-        # it is now...
-        if "<directiveCache>" in s:
-            s = s.replace( "<directiveCache>", "</outline>")
-
+    # this apllies to all since cactus currently only reads xml files
     if s.startswith("<?xml ") or s.startswith("<opml "):
         re_bogusCharacters = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f]')
         t = re.sub( re_bogusCharacters, "???", s)

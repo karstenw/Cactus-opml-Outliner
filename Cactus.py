@@ -71,6 +71,10 @@ import CactusOutlineDoc
 boilerplateOPML = CactusOutlineDoc.boilerplateOPML
 CactusOutlineDocument = CactusOutlineDoc.CactusOutlineDocument
 
+import CactusDocumentTypes
+CactusOPMLType = CactusDocumentTypes.CactusOPMLType
+CactusRSSType = CactusDocumentTypes.CactusRSSType
+CactusXMLType = CactusDocumentTypes.CactusXMLType
 
 import opml
 
@@ -144,8 +148,7 @@ class OpenURLWindowController(AutoBaseClass):
         self.textfield.setStringValue_( urlSelected )
 
     def openAsMenuSelection_(self, sender):
-        readType = self.menuOpenAs.title()
-        self.readAsType = readType
+        self.readAsType = self.menuOpenAs.title()
 
     def windowWillClose_(self, notification):
         #pdb.set_trace()
@@ -160,6 +163,7 @@ class OpenURLWindowController(AutoBaseClass):
         delg = app.delegate()
         t_url = self.textfield.stringValue()
         url = NSURL.URLWithString_( t_url )
+        self.readAsType = self.menuOpenAs.title()
         if t_url not in self.visitedURLs:
             self.visitedURLs.append( t_url )
             n = len(self.visitedURLs)
@@ -167,13 +171,8 @@ class OpenURLWindowController(AutoBaseClass):
                 start = n - 30
                 self.visitedURLs = self.visitedURLs[start:]
             delg.visitedURLs = self.visitedURLs[:]
-
-        # quick hack to open RSS
-        if self.readAsType == u"RSS":
-            delg.newOutlineFromRSSURL_( url )
-        else:
-            delg.newOutlineFromOPMLURL_( url )
-        
+        # pdb.set_trace()
+        delg.newOutlineFromURL_Type_( url, str(self.readAsType) )
         self.close()
 
     def Cancel_(self, sender):
@@ -499,22 +498,17 @@ class CactusAppDelegate(NSObject):
         workspace.openURL_( url )
     
 
-    def newOutlineFromRSSURL_(self, url):
+    def newOutlineFromURL_Type_(self, url, type_):
         if not isinstance(url, NSURL):
             url = NSURL.URLWithString_( url )
+        # pdb.set_trace()
+        # just check for local files
         docc = NSDocumentController.sharedDocumentController()
-        doc, err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
-                                                                   'Cactus RSS')
-
-
-    # used by OpenURL delegate OK_ action
-    def newOutlineFromOPMLURL_(self, url):
-        if not isinstance(url, NSURL):
-            url = NSURL.URLWithString_( url )
-        docc = NSDocumentController.sharedDocumentController()
-        doc, err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
-                                                                   'Cactus Outline')
-
+        localurl = url.isFileURL()
+        loaded = docc.documentForURL_( url )
+        if not localurl or not loaded:
+            doc, err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
+                                                                   type_)
 
     # UNUSED but defined in class
     def newBrowser_(self, sender):

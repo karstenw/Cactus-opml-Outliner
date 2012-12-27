@@ -373,6 +373,16 @@ def generateRSS( rootNode, indent=2 ):
                             value.get('registerProcedure', ""),
                             value.get('protocol', ""))
                     head_d[ 'cloud' ] = cloud
+                elif name == 'image':
+                    image = PyRSS2Gen.Image(
+                            value.get('href', ""),
+                            value.get('title', ""),
+                            value.get('link', ""),
+                            value.get('width', None),
+                            value.get('height', None),
+                            value.get('description', None))
+                    head_d[ 'image' ] = image
+
                 else:
                     if len(value) == 1:
                         head_d[name] = value.values()[0]
@@ -390,9 +400,8 @@ def generateRSS( rootNode, indent=2 ):
         for bodysub in bodyOP.children:
             name = bodysub.name
             value = bodysub.getValueDict()
-            d = {
-                'title': "No Item Title",
-                'description': "No Item description."}
+            d = {'title': "No Item Title",
+                 'description': "No Item description."}
 
             for key in value:
                 k = backTranslator.get(key, key)
@@ -410,14 +419,20 @@ def generateRSS( rootNode, indent=2 ):
                         enc = PyRSS2Gen.Enclosure( url, length, type_)
                         d[k] = enc
                     else:
+                        # TODO: check for type here; dicts and lists may be bad
                         d[ k ] = value[key]
-            print "ITEM:"
-            pp( d )
+                        if type(d[ k ]) in (list, dict, tuple):
+                            print
+                            pdb.set_trace()
+                            print "type error."
+                        
+            #print "ITEM:"
+            #pp( d )
             body_l.append( PyRSS2Gen.RSSItem( **d ) )
 
     head_d[ 'items' ] = body_l
 
-    # pdb.set_trace()
+    pdb.set_trace()
 
     rss = PyRSS2Gen.RSS2( **head_d )
     f = cStringIO.StringIO()

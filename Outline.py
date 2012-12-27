@@ -37,6 +37,11 @@ import outlinetypes
 
 import objc
 
+import CactusDocumentTypes
+CactusOPMLType = CactusDocumentTypes.CactusOPMLType
+CactusRSSType = CactusDocumentTypes.CactusRSSType
+CactusXMLType = CactusDocumentTypes.CactusXMLType
+
 import Foundation
 NSObject = Foundation.NSObject
 NSAutoreleasePool = Foundation.NSAutoreleasePool
@@ -221,11 +226,12 @@ def open_node( url, nodeType=None ):
 
     nsurl = NSURL.URLWithString_( url )
 
-    if nodeType == "RSS":
-        appdelg.newOutlineFromRSSURL_( nsurl )
-        
-    elif url.endswith(".opml"):
-        appdelg.newOutlineFromOPMLURL_( nsurl )
+    if nodeType == "OPML" or url.endswith(".opml"):
+        return appdelg.newOutlineFromURL_Type_( nsurl, CactusOPMLType )
+    elif nodeType == "RSS" or url.endswith(".rss"):
+        return appdelg.newOutlineFromURL_Type_( nsurl, CactusRSSType )
+    elif nodeType == "XML" or url.endswith(".xml"):
+        return appdelg.newOutlineFromURL_Type_( nsurl, CactusXMLType )
 
     elif surl in g_qtplayer_extensions:
         # qtplayer can do http:
@@ -497,7 +503,8 @@ class KWOutlineView(AutoBaseClass):
                                     opmlUrl = v.get("opmlUrl", "")
                                     if opmlUrl:
                                         opmlUrl = cleanupURL( opmlUrl )
-                                        appdelg.newOutlineFromOPMLURL_( opmlUrl )
+                                        appdelg.newOutlineFromURL_Type_( opmlUrl,
+                                                                         CactusOPMLType )
 
                                 elif theType == "rss":
                                     # open website
