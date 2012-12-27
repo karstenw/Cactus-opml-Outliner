@@ -295,6 +295,9 @@ class CactusOutlineDocument(AutoBaseClass):
         else:
             self.url = fullpath
 
+        if isinstance(fullpath, NSURL):
+            fullpath = str(fullpath.absoluteString())
+
         try:
             t = os.path.split( fullpath )[1]
             if t:
