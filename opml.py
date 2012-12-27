@@ -423,7 +423,7 @@ def generateRSS( rootNode, indent=2 ):
                         d[ k ] = value[key]
                         if type(d[ k ]) in (list, dict, tuple):
                             print
-                            pdb.set_trace()
+                            # pdb.set_trace()
                             print "type error."
                         
             #print "ITEM:"
@@ -432,7 +432,7 @@ def generateRSS( rootNode, indent=2 ):
 
     head_d[ 'items' ] = body_l
 
-    pdb.set_trace()
+    # pdb.set_trace()
 
     rss = PyRSS2Gen.RSS2( **head_d )
     f = cStringIO.StringIO()

@@ -44,7 +44,7 @@ Mailing list: http://groups.google.com/group/cactus-outliner-dev
 
 Downloads page: http://goo.gl/EALQi
 
-Latest binary: http://goo.gl/hiixB
+Latest binary: http://goo.gl/nyCna
 
 ## Latest changes ##
 
