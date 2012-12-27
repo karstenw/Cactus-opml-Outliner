@@ -42,9 +42,8 @@ All three document types can be saved but currently I would advise against using
 
 Mailing list: http://groups.google.com/group/cactus-outliner-dev
 
-Downloads page: http://goo.gl/EALQi
-
-Latest binary: http://goo.gl/nyCna
+Downloads page: http://goo.gl/EALQi (dropbox)
+Latest binary: http://goo.gl/nyCna (dropbox)
 
 ## Latest changes ##
 
