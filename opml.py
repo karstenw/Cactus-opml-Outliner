@@ -278,7 +278,7 @@ def generateXML( rootNode, indent=2 ):
     return
      etree.Element of rootNode
     """
-    pdb.set_trace()
+    # pdb.set_trace()
 
     #
     # WARNING: This dereference needs to be removed if the OPML code is ever cleaned

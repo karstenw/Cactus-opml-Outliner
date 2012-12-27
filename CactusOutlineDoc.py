@@ -376,7 +376,7 @@ class CactusOutlineDocument(AutoBaseClass):
             return NSData.dataWithBytes_length_(t, len(t))
 
         elif theType == CactusDocumentTypes.CactusXMLType:
-            pdb.set_trace()
+            # pdb.set_trace()
             rootXML = opml.generateXML( self.rootNode, indent=1 )
 
             e = etree.ElementTree( rootXML )

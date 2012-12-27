@@ -7,19 +7,48 @@ Developed on OSX 10.4 with Python 2.7, Xcode 2.5, pyobjc 1.4 and py2app 0.53
 
 It's still in development but gets better and better.
 
+Use it to explore OPML, RSS and XML files. Nodes can be opened in the browser or in Quicktime Player. See the shortcuts section at the end.
 
-RSS files are new and still in the make so please be cautious with Cactus generated RSS. Cactus doesn't know about namespaces in RSS. They sure get lost if you save a RSS file in Cactus.
+
+## A Warning ##
+
+RSS and XML files are new and still in the make so please be cautious with Cactus generated files of these kinds. For example Cactus doesn't know about namespaces in RSS. They sure get lost if you save a RSS file in Cactus.
+
+For XML display I had to "misuse" the Comment column. XML Text is stored there in a stripped format.
 
 
-Use it to explore an OPML and RSS files. Nodes can be opened in the browser or in Quicktime Player. See the shortcuts section at the end.
+## Quickstart ##
+
+Do a google search for "filetype:opml"
+
+Copy a search result link, switch to Cactus, select menu "open URL...", paste into the text field and click OK.
+
+Play with the outline and the appearance checkboxes in the upper right corner.
+
+Indent and Outdent selected nodes with TAB and SHIFT-TAB.
+
+Move selections up and down with ctrl-up and ctrl-down.
+
+Delete rows with delete. No undo. No row copying.
+
+The menus are mostly not operable. You can use the "File", "Window" and "Help" menu. Selected text can be copied and pasted. The standard simple undo works for text editing.
+
+Look for nodes with content in the Value column, select one or more and try ctrl-alt-enter (NOT the Return key, the one on the numeric keypad). Depending on the data in those rows, new windows might open in Cactus (for linked OPML and RSS), your standard browser (for websites and pictures) or the Quicktime Player (for movies and sounds).
+
+All three document types can be saved but currently I would advise against using RSS and XML for anything serious. OPML should be stable. If you find a bug, please report it on the mailing list.
+
+
+## Pointers ##
 
 Mailing list: http://groups.google.com/group/cactus-outliner-dev
 
 Downloads page: http://goo.gl/EALQi
 
-Latest binary: http://goo.gl/9Kv6z
+Latest binary: http://goo.gl/hiixB
 
-## Lates changes ##
+## Latest changes ##
+
+XML is now a document type.
 
 RSS and OPML are now a document types.
 
@@ -43,7 +72,7 @@ gsm,kar,mid,smf,midi,mp3,swa,wav,3gp,3g2,amc,avi,vfw,dif,dv,fli,mp2,m1s,m75,
 m15,m2p,mpg,mpeg,mp4,mpg4,mqv,qtz,mov,qt,qtl,rtsp,sd2,sdp,sml,m1a,mpa,mpm,
 m1v,m2v,m4a,m4p,m4b,m4v,amr,cdda,dvd,atr,sdv,pls,qmed) are now open in Quicktime-Player
 
-rss parser should be toleranter now.
+rss parser should be more tolerant now.
 
 Internal stuff. Preparing for the NSDocument refactoring.
 
@@ -72,6 +101,8 @@ http://goo.gl/EALQi
 
 
 ## Recent versions ##
+
+c0.3.3a XML is now a document type.
 
 v0.3.2a RSS save as. Enclosures are now included in RSS documents.
 
