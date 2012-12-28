@@ -72,6 +72,7 @@ setup(
                 "English.lproj/TableEditor.nib",
                 "English.lproj/NodeEditor.nib",
                 "English.lproj/OpenURL.nib",
+                "English.lproj/OpenAsAccessoryView.nib",
                 "+icon/OPMLDocument.icns",
                 "+icon/XMLDocument.icns",
                 "+icon/RSSDocument.icns"

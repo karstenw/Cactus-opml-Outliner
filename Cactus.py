@@ -33,6 +33,8 @@ NSMutableDictionary = Foundation.NSMutableDictionary
 
 NSUserDefaults = Foundation.NSUserDefaults
 
+NSBundle = Foundation.NSBundle
+
 
 import AppKit
 NSApplication = AppKit.NSApplication
@@ -76,11 +78,17 @@ CactusOPMLType = CactusDocumentTypes.CactusOPMLType
 CactusRSSType = CactusDocumentTypes.CactusRSSType
 CactusXMLType = CactusDocumentTypes.CactusXMLType
 
+import CactusTools
+NSURL2str = CactusTools.NSURL2str
+
+
 import opml
 
 extractClasses("MainMenu")
 extractClasses("OpenURL")
 extractClasses("OutlineEditor")
+extractClasses("OpenAsAccessoryView")
+
 
 import CactusExceptions
 OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
@@ -122,17 +130,13 @@ class OpenURLWindowController(AutoBaseClass):
         window.makeFirstResponder_(self.textfield)
         app = NSApplication.sharedApplication()
         delg = app.delegate()
-        self.readAsType = None
+        self.readAsType = u"OPML File"
         self.visitedURLs = delg.visitedURLs[:]
         self.menuLastVisited.removeAllItems()
         for url in self.visitedURLs:
             self.menuLastVisited.addItemWithTitle_( url )
         self.showWindow_(self)
 
-        # The window controller doesn't need to be retained (referenced)
-        # anywhere, so we pretend to have a reference to ourselves to avoid
-        # being garbage collected before the window is closed. The extra
-        # reference will be released in self.windowWillClose_()
         self.retain()
         return self
 
@@ -192,6 +196,29 @@ class Document(object):
 
 
 class CactusWindowController(AutoBaseClass):
+    def init(self):
+        if kwlog:
+            print "XXXXXXXXXXXXXXXXXXXX               CactusWindowController.init()"
+        self = self.initWithWindowNibName_("OpenAsAccessoryView")
+        window = self.window()
+        window.setTitle_( u"Open URL…" )
+        # self.label.setStringValue_(u"URL:")
+        window.makeFirstResponder_(self.textfield)
+        app = NSApplication.sharedApplication()
+        delg = app.delegate()
+        self.readAsType = None
+        self.visitedURLs = delg.visitedURLs[:]
+        self.menuLastVisited.removeAllItems()
+        for url in self.visitedURLs:
+            self.menuLastVisited.addItemWithTitle_( url )
+        self.showWindow_(self)
+
+        # The window controller doesn't need to be retained (referenced)
+        # anywhere, so we pretend to have a reference to ourselves to avoid
+        # being garbage collected before the window is closed. The extra
+        # reference will be released in self.windowWillClose_()
+        self.retain()
+        return self
 
     #
     # Can this be made for dual-use? outlines and tables?
@@ -204,7 +231,7 @@ class CactusWindowController(AutoBaseClass):
         # outline or table here
         # tables are outlines with no children
         if kwlog:
-            print "CactusWindowController.init()"
+            print "XXXXXXXXXXXXXXXXXXXX               CactusWindowController.init()"
         doc = Document("Untitled", None)
         return self.initWithObject_type_(doc, typeOutline)
 
@@ -377,6 +404,79 @@ class CactusWindowController(AutoBaseClass):
         self.outlineView.setNeedsDisplay_( True )
 
 
+class CactusOpenAsAccessoryController(AutoBaseClass):
+    def __new__(cls):
+        return cls.alloc()
+
+    def init(self):
+        # pdb.set_trace()
+        """
+        - (IBAction)openFileWithOptions:(id)sender {
+   NSOpenPanel*    panel = [NSOpenPanel openPanel];
+   NSWindow*       window = [[[self windowControllers] objectAtIndex:0] window];
+ 
+   // Load the nib file with the accessory view and attach it to the panel.
+   if ([NSBundle loadNibNamed:@"MyAccessoryView" owner:self])
+      [panel setAccessoryView:self.accessoryView];
+ 
+   // Show the open panel and process the results.
+   [panel beginSheetModalForWindow:window completionHandler:^(NSInteger result){
+      if (result == NSFileHandlingPanelOKButton) {
+         BOOL option1 = ([self.optionCheckbox state] == NSOnState);
+ 
+         // Open the selected file using the specified option...
+      }
+   }];
+}       """
+        #self.menuOpenAs = None
+        panel = NSBundle.loadNibNamed_owner_( u"OpenAsAccessoryView", self)
+        #if panel:
+        #    self.menuOpenAs = panel
+
+        return self
+
+    def menuOpenAsType_( self, sender ):
+        return self.menuOpenAs.title()
+
+
+
+# instantiated in NIB
+class CactusDocumentController(NSDocumentController):
+    def init(self):
+        self = super( CactusDocumentController, self).init()
+        self.selectedType = u"automatic"
+        self.urllist = []
+        return self
+
+    def runModalOpenPanel_forTypes_( self, panel, types ):
+
+        # [[[NSOpenPanel]] openPanel]; [lPanel setAccessoryView:accessoryView];
+
+        self.selectedType = "automatic"
+        extensionCtrl = CactusOpenAsAccessoryController.alloc().init()
+
+        if extensionCtrl.menuOpenAs != None:
+            panel.setAccessoryView_( extensionCtrl.menuOpenAs )
+        result = super( CactusDocumentController, self).runModalOpenPanel_forTypes_( panel, None)
+
+        # pdb.set_trace()
+        if result:
+            self.selectedType = extensionCtrl.menuOpenAs.title()
+            self.urllist = set([NSURL2str(t) for t in panel.URLs()])
+        return result
+
+    def makeDocumentWithContentsOfURL_ofType_error_(self, url, theType):
+        # pdb.set_trace()
+        if self.selectedType != "automatic" and len(self.urllist) > 0:
+            u = NSURL2str( url )
+            if u in self.urllist:
+                self.urllist.discard( u )
+                theType = self.selectedType
+        result, error = super( CactusDocumentController, self).makeDocumentWithContentsOfURL_ofType_error_( url, theType)
+        # self.selectedType = "automatic"
+        return (result, error)
+        
+
 class CactusAppDelegate(NSObject):
     # defined in mainmenu
 
@@ -384,6 +484,7 @@ class CactusAppDelegate(NSObject):
         if kwlog:
             print "CactusAppDelegate.initialize()"
         self.visitedURLs = []
+        self.appcontroller = None
         # default settings for preferences
         userdefaults = NSMutableDictionary.dictionary()
 
@@ -400,6 +501,8 @@ class CactusAppDelegate(NSObject):
     def applicationDidFinishLaunching_(self, notification):
         if kwlog:
             print "CactusAppDelegate.applicationDidFinishLaunching_()"
+
+        self.appcontroller = CactusDocumentController.alloc().init()
 
         app = NSApplication.sharedApplication()
         app.activateIgnoringOtherApps_(True)

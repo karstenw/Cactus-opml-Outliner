@@ -18,6 +18,9 @@ import CactusVersion
 
 import feedparser
 
+import Foundation
+NSURL = Foundation.NSURL
+
 import AppKit
 NSOpenPanel = AppKit.NSOpenPanel
 NSAlert = AppKit.NSAlert
@@ -143,6 +146,11 @@ def getFileDialog(multiple=False):
         return [t for t in panel.filenames()]
     return []
 
+
+def NSURL2str( nsurl ):
+    if isinstance(nsurl, NSURL):
+        return str(nsurl.absoluteString())
+    return nsurl
 
 #
 # File save dialog

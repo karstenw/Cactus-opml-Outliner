@@ -37,6 +37,11 @@ import outlinetypes
 
 import objc
 
+
+import CactusTools
+NSURL2str = CactusTools.NSURL2str
+
+
 import CactusDocumentTypes
 CactusOPMLType = CactusDocumentTypes.CactusOPMLType
 CactusRSSType = CactusDocumentTypes.CactusRSSType
@@ -1604,8 +1609,7 @@ def cleanupURL( url ):
     # lots of URLs contain spaces, &, '
 
     # pdb.set_trace()
-    if isinstance(url, NSURL):
-        url = str(url.absoluteString())
+    url = NSURL2str(url)
 
     purl = urlparse.urlparse( url )
     purl = list(purl)

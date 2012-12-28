@@ -33,6 +33,7 @@ import CactusVersion
 import CactusTools
 readURL = CactusTools.readURL
 errorDialog = CactusTools.errorDialog
+NSURL2str = CactusTools.NSURL2str
 
 import CactusExceptions
 OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
@@ -139,7 +140,7 @@ class CactusOutlineDocument(AutoBaseClass):
         #
         self.title = "Untitled Outline"
 
-        # one of OPML, RSS
+        # one of OPML, RSS, XML; NOT YET USED
         self.type = None
         return self
 
@@ -157,13 +158,12 @@ class CactusOutlineDocument(AutoBaseClass):
             # print repr(url)
             print
 
-        OK = True
+        OK = False
         s = None
         err = None
         self.url = url
-        
-        # pdb.set_trace()
 
+        # read opml content
         if theType == CactusDocumentTypes.CactusOPMLType:
 
             d = None
@@ -189,6 +189,7 @@ class CactusOutlineDocument(AutoBaseClass):
                     print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
                 return (False, None)
 
+        # read rss content
         elif theType == CactusDocumentTypes.CactusRSSType:
             root = self.openRSS_( url )
             if root:
@@ -198,9 +199,7 @@ class CactusOutlineDocument(AutoBaseClass):
                     print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
                 return (False, None)
 
-            self.setFileURL_( url )
-            self.setFileType_( theType )
-
+        # read xml content
         elif theType == CactusDocumentTypes.CactusXMLType:
             d = None
             try:
@@ -220,11 +219,13 @@ class CactusOutlineDocument(AutoBaseClass):
                 if kwlog:
                     print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
                 return (False, None)
+        else:
+            OK = False
 
+        if OK:
             self.setFileURL_( url )
             self.setFileType_( theType )
 
-                
         print "OK CactusOutlineDocument.readFromURL_ofType_error_()"
         return (OK, None)
     
@@ -295,8 +296,7 @@ class CactusOutlineDocument(AutoBaseClass):
         else:
             self.url = fullpath
 
-        if isinstance(fullpath, NSURL):
-            fullpath = str(fullpath.absoluteString())
+        fullpath = NSURL2str(fullpath)
 
         try:
             t = os.path.split( fullpath )[1]
@@ -652,8 +652,9 @@ class CactusOutlineDocument(AutoBaseClass):
         return root
     
     def openRSS_(self, url):
-        if isinstance(url, NSURL):
-            url = str(url.absoluteString())
+
+        url = NSURL2str(url)
+
         if kwlog:
             s = repr(url)
             if len(s) > 90:
@@ -845,10 +846,8 @@ class CactusOutlineWindowController(AutoBaseClass):
         self.variableRowHeight = True
 
         if isinstance(document, CactusOutlineDocument):
-            if isinstance(document.url, NSURL):
-                self.path = str(document.url.absoluteString())
-            else:
-                self.path = document.url
+            self.path = NSURL2str(document.url)
+
             self.rootNode = document.rootNode
             self.parentNode = document.parentNode
             title = document.title

@@ -17,7 +17,7 @@ extractClasses("OpenURL")
 extractClasses("TableEditor")
 extractClasses("OutlineEditor")
 extractClasses("NodeEditor")
-
+extractClasses("OpenAsAccessoryView")
 
 import CactusOutlineDoc
 import CactusTableDocument
