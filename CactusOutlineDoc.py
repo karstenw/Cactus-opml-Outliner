@@ -158,14 +158,13 @@ class CactusOutlineDocument(AutoBaseClass):
             # print repr(url)
             print
 
-        OK = False
+        OK = True
         s = None
         err = None
         self.url = url
 
         # read opml content
         if theType == CactusDocumentTypes.CactusOPMLType:
-
             d = None
             try:
                 d = opml.opml_from_string( readURL( url, "OPML" ) )
