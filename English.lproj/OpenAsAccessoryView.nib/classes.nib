@@ -1,0 +1,13 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {menuOpenAsType = id; }; 
+            CLASS = CactusOpenAsAccessoryController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {menuOpenAs = id; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
