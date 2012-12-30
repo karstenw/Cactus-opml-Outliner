@@ -25,7 +25,12 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = KWOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }
+        {
+            ACTIONS = {expandAllSelection = id; expandSelection = id; }; 
+            CLASS = KWOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSOutlineView; 
+        }
     ); 
     IBVersion = 1; 
 }

@@ -191,7 +191,7 @@ g_qtplayer_extensions = ("aac aifc aiff aif au ulw snd caf gsm kar mid smf midi 
 g_qtplayer_extensions = g_qtplayer_extensions.split()
 
 
-def open_photo( url ):
+def open_photo( url, open_=True, download=False ):
     f = urllib.FancyURLopener()
     fob = f.open(url)
     s = fob.read()
@@ -218,7 +218,7 @@ def open_photo( url ):
             None )
 
 # TODO: change parameter to node!
-def open_node( url, nodeType=None ):
+def open_node( url, nodeType=None, open_=True, download=False ):
 
     appl = NSApplication.sharedApplication()
     appdelg = appl.delegate()
@@ -740,13 +740,45 @@ class KWOutlineView(AutoBaseClass):
     def selectItemRows_( self, itemIndices ):
         s = NSMutableIndexSet.indexSet()
         for i in itemIndices:
-            s.addIndex_( i )
+            if i >= 0:
+                s.addIndex_( i )
         self.selectRowIndexes_byExtendingSelection_(s, False)
 
     def selectRowItem_(self, item):
         index = self.rowForItem_( item )
         s = NSIndexSet.indexSetWithIndex_( index )
         self.selectRowIndexes_byExtendingSelection_(s, False)
+
+    def expandSelection_(self, sender):
+        items = self.getSelectionItems()
+        for item in items:
+            self.expandItem_(item)
+
+    def expandAllSelection_(self, sender):
+        items = self.getSelectionItems()
+        for item in items:
+            self.expandItem_expandChildren_(item, True)
+
+    def collapseSelection_(self, sender):
+        items = self.getSelectionItems()
+        for item in items:
+            self.collapse_(item)
+
+    def collapseAllSelection_(self, sender):
+        items = self.getSelectionItems()
+        for item in items:
+            self.collapseItem_collapseChildren_(item, True)
+
+    def collapseToParent_(self, sender):
+        items = self.getSelectionItems()
+        parents = []
+        for item in items:
+            parents.append( item.parent )
+            self.collapseItem_collapseChildren_(item, True)
+        for parent in parents:
+            self.collapseItem_collapseChildren_(parent, True)
+        postselect = [self.rowForItem_(item) for item in parents]
+        self.selectItemRows_( postselect )
 
 
 class NiceError:

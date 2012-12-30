@@ -12,6 +12,12 @@
                 openOutlineDocument = id; 
                 openRSS = id; 
                 openURL = id; 
+                outlineMenuCollapse = id; 
+                outlineMenuCollapseAll = id; 
+                outlineMenuCollapseToParent = id; 
+                outlineMenuExpand = id; 
+                outlineMenuExpandAll = id; 
+                outlineMenuExpandEverything = id; 
                 saveAs = id; 
             }; 
             CLASS = CactusAppDelegate; 

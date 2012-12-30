@@ -231,7 +231,7 @@ class CactusWindowController(AutoBaseClass):
         # outline or table here
         # tables are outlines with no children
         if kwlog:
-            print "XXXXXXXXXXXXXXXXXXXX               CactusWindowController.init()"
+            print "DEPRECATED CactusWindowController.init()"
         doc = Document("Untitled", None)
         return self.initWithObject_type_(doc, typeOutline)
 
@@ -240,7 +240,7 @@ class CactusWindowController(AutoBaseClass):
         """This controller is used for outline and table windows."""
 
         if kwlog:
-            print "CactusWindowController.initWithObject_type_()"
+            print "DEPRECATED CactusWindowController.initWithObject_type_()"
 
         if theType == typeOutline:
             self = self.initWithWindowNibName_("OutlineEditor")
@@ -322,7 +322,7 @@ class CactusWindowController(AutoBaseClass):
 
     def windowWillClose_(self, notification):
         if kwlog:
-            print "CactusWindowController.windowWillClose_()"
+            print "DEPRECATED CactusWindowController.windowWillClose_()"
         # see comment in self.initWithObject_()
         #
         # check model.dirty
@@ -332,7 +332,7 @@ class CactusWindowController(AutoBaseClass):
 
     def doubleClick_(self, sender):
         # Open a new browser window for each selected expandable item
-        print "doubleClick_()"
+        print "DEPRECATED doubleClick_()"
 
     def reloadData_(self, item=None, children=False):
         if item == None:
@@ -724,7 +724,7 @@ class CactusAppDelegate(NSObject):
 
     def saveAs_(self, sender):
         if kwlog:
-            print "CactusAppDelegate.saveAs_()"
+            print "DEPRECATED CactusAppDelegate.saveAs_()"
         print "Save As..."
         app = NSApplication.sharedApplication()
         win = app.keyWindow()
@@ -746,6 +746,65 @@ class CactusAppDelegate(NSObject):
                     e.write(fob, encoding="utf-8", xml_declaration=True, method="xml" )
                     fob.close()
 
+    def getCurrentAppWindow(self):
+        if kwlog:
+            print "CactusAppDelegate.getCurrentAppWindow()"
+        return NSApplication.sharedApplication().keyWindow()
+
+    def getCurrentDocument(self):
+        if kwlog:
+            print "CactusAppDelegate.getCurrentDocument()"
+        return NSDocumentController.sharedDocumentController().currentDocument()
+
+    def getCurrentOutlineView(self):
+        if kwlog:
+            print "CactusAppDelegate.getCurrentOutlineView()"
+        doc = self.getCurrentDocument()
+        if isinstance(doc, CactusOutlineDocument):
+            win = self.getCurrentAppWindow()
+            controllers = doc.windowControllers()
+            for controller in controllers:
+                if win == controller.window():
+                    return controller.outlineView
+        return False
+
+    def outlineMenuExpand_(self, sender):
+        if kwlog:
+            print "CactusAppDelegate.outlineMenuExpand_()"
+        ov = self.getCurrentOutlineView()
+        if ov:
+            ov.expandSelection_(sender)
+
+
+    def outlineMenuExpandAll_(self, sender):
+        if kwlog:
+            print "CactusAppDelegate.outlineMenuExpandAll_()"
+        ov = self.getCurrentOutlineView()
+        if ov:
+            ov.expandAllSelection_(sender)
+
+    def outlineMenuCollapse_(self, sender):
+        if kwlog:
+            print "CactusAppDelegate.outlineMenuCollapse_()"
+        ov = self.getCurrentOutlineView()
+        if ov:
+            ov.collapseSelection_(sender)
+
+    def outlineMenuCollapseAll_(self, sender):
+        if kwlog:
+            print "CactusAppDelegate.outlineMenuCollapseAll_()"
+        ov = self.getCurrentOutlineView()
+        if ov:
+            ov.collapseAllSelection_(sender)
+
+    def outlineMenuCollapseToParent_(self, sender):
+        if kwlog:
+            print "CactusAppDelegate.outlineMenuCollapseToParent_()"
+        ov = self.getCurrentOutlineView()
+        if ov:
+            ov.collapseToParent_(sender)
+
+    
 
 if __name__ == "XX__main__":
     from PyObjCTools import AppHelper

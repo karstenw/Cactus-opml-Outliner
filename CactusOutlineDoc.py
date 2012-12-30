@@ -142,6 +142,8 @@ class CactusOutlineDocument(AutoBaseClass):
 
         #
         self.title = "Untitled Outline"
+
+        self.outlineView = None
         return self
 
 
@@ -892,6 +894,10 @@ class CactusOutlineWindowController(AutoBaseClass):
         self.rootNode.model = self.model
 
         self.model.setController_( self )
+
+        # this will become very dangerous when a document gets more than 1 window
+        self.document.outlineView = self.outlineView
+
         self.outlineView.setDataSource_(self.model)
         self.outlineView.setDelegate_(self.model)
 
