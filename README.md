@@ -112,7 +112,9 @@ http://goo.gl/EALQi
 
 ## Recent versions ##
 
-c0.3.3a XML is now a document type.
+v0.3.5b New document icons. "Open As..." with type select shortcuts. Five items of the "Outline" menu now working.
+
+v0.3.3a XML is now a document type.
 
 v0.3.2a RSS save as. Enclosures are now included in RSS documents.
 
