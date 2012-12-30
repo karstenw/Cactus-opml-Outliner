@@ -138,7 +138,7 @@ def indentXML(elem, level=0, width=2):
             elem.tail = i
 
         for elem in elem:
-            indentXML(elem, level+1)
+            indentXML(elem, level+1, width)
 
         if not elem.tail or not elem.tail.strip():
             elem.tail = i
@@ -187,18 +187,15 @@ def getXMLNodes( node ):
     result = []
     for n in list(node):
 
-        keys = n.attrib.keys()
-
-        name = n.tag
-        txt = n.text
-        nchild = len(n)
         b = {
-            'name': name,
+            'name': n.tag,
+            'text': n.text,
             'children': [],
             
             'attributes': {}}
-        if txt:
-            b['text'] = txt.strip(u" \t\r\n")
+
+        keys = n.attrib.keys()
+
         for k in keys:
             b['attributes'][k] = n.attrib.get(k, "")
         subs = list(n)
@@ -213,16 +210,13 @@ def getXML_( etRootnode ):
 
     keys = etRootnode.attrib.keys()
 
-    name = etRootnode.tag
-    txt = etRootnode.text
-    nchild = len(etRootnode)
     b = {
-        'name': name,
+        'name': etRootnode.tag,
+        'text': etRootnode.text,
         'children': [],
         
         'attributes': {}}
-    if txt:
-        b['text'] = txt.strip(u" \t\r\n")
+
     for k in keys:
         b['attributes'][k] = etRootnode.attrib.get(k, "")
     subs = list(etRootnode)
@@ -245,16 +239,18 @@ def xml_from_string(xml_text):
 def createSubNodesXML(OPnode, ETnode, level):
     # do attributes
     name = OPnode.name
-    value = OPnode.getValueDict()
 
-    for k, v in value.items():
-        if type(v) not in (str, unicode):
-            value[k] = unicode(v)
+    ETnode.attrib = OPnode.getValueDict()
+
+    if 0:
+        for k, v in value.items():
+            if type(v) not in (str, unicode):
+                value[k] = unicode(v)
 
     comment = OPnode.comment
 
     # ETnode.attrib = value
-    ETnode.attrib.update( value )
+    # ETnode.attrib.update( value )
     ETnode.text = comment        
     # don't have an empty value: tag
 #     if len(value) == 1:
@@ -270,7 +266,7 @@ def createSubNodesXML(OPnode, ETnode, level):
     return ETnode
 
 
-def generateXML( rootNode, indent=2 ):
+def generateXML( rootNode, indent=False ):
     """Generate an OPML/XML tree from OutlineNode rootNode.
     
     parameters:
@@ -301,17 +297,24 @@ def generateXML( rootNode, indent=2 ):
     c = etree.Comment( CactusVersion.document_creator + " on %s." % (now,))
     rootXML.append(c)
 
-    value = baseOP.getValueDict()
-    if value:
-        rootXML.attrib = value
+    rootXML.attrib = baseOP.getValueDict()
+
+    # value = baseOP.getValueDict()
+    if 0: #value:
+        # filter out empty {'value':""} items
+        if len(value)>1:
+            rootXML.attrib = value
+        elif len(value) == 1:
+            if value.keys()[0] == u"value" and value[ u"value" ] != u"":
+                rootXML.attrib = value
+
     comment = baseOP.comment
     if comment:
         baseOP.text = comment
     
     nodes = createSubNodesXML(baseOP, rootXML, 1)
 
-    if indent:
-        indentXML(rootXML, 0, indent)
+    indentXML(rootXML)
 
     return rootXML
 

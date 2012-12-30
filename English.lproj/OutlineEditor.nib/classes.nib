@@ -20,6 +20,7 @@
                 optValueVisible = id; 
                 optVariableRow = id; 
                 outlineView = id; 
+                txtOutlineType = id; 
             }; 
             SUPERCLASS = NSWindowController; 
         }, 

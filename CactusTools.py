@@ -14,7 +14,11 @@ import re
 
 import urllib
 
+import CactusDocumentTypes
+CactusOPMLType = CactusDocumentTypes.CactusOPMLType
+
 import CactusVersion
+
 
 import feedparser
 
@@ -32,21 +36,20 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 #
 # tools
 #
-def readURL( nsurl, type_="OPML" ):
+def readURL( nsurl, type_=CactusOPMLType ):
     """Read a file. May be local, may be http"""
 
-    # pdb.set_trace()
-    url = str(nsurl.absoluteString())
+    url = NSURL2str(nsurl)
+
     print "CactusTools.readURL( '%s', '%s' )" % (url, type_)
-    # f = urllib.FancyURLopener()
-    # f.addheader('User-Agent', CactusVersion.user_agent)
+
     fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
 
     # fob = f.open(url)
     s = fob.read()
     fob.close()
 
-    if type_ == "OPML":
+    if type_ == CactusOPMLType:
         # clear bogative opmleditor opml
         if s.startswith("""<?xml encoding="ISO-8859-1" version="1.0"?>"""):
             s = s.replace("""<?xml encoding="ISO-8859-1" version="1.0"?>""",
@@ -60,7 +63,7 @@ def readURL( nsurl, type_="OPML" ):
                 s = s.replace( "<directiveCache>", "</outline>")
 
     # this apllies to all since cactus currently only reads xml files
-    if s.startswith("<?xml ") or s.startswith("<opml "):
+    if s.startswith("<?xml ") or s.startswith("<opml") or s.startswith("<rss"):
         re_bogusCharacters = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f]')
         t = re.sub( re_bogusCharacters, "???", s)
         if s != t:
@@ -68,7 +71,7 @@ def readURL( nsurl, type_="OPML" ):
         s = t
     return s
 
-
+# UNUSED
 def classifyAndReadUrl( url ):
     """TBD
     

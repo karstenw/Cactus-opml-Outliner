@@ -50,6 +50,8 @@ Latest binary: http://goo.gl/nyCna (dropbox)
 
 ## Latest changes ##
 
+The Open and OpenURL dialogs now have an extension to force the filetype; i.e. Open As...
+
 XML is now a document type.
 
 RSS and OPML are now a document types.

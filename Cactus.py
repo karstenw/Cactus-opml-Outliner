@@ -130,7 +130,7 @@ class OpenURLWindowController(AutoBaseClass):
         window.makeFirstResponder_(self.textfield)
         app = NSApplication.sharedApplication()
         delg = app.delegate()
-        self.readAsType = u"OPML File"
+        self.readAsType = CactusOPMLType
         self.visitedURLs = delg.visitedURLs[:]
         self.menuLastVisited.removeAllItems()
         for url in self.visitedURLs:
@@ -405,39 +405,17 @@ class CactusWindowController(AutoBaseClass):
 
 
 class CactusOpenAsAccessoryController(AutoBaseClass):
+    """Just a holder for some values and an action for a open panel accessory."""
+
     def __new__(cls):
         return cls.alloc()
 
     def init(self):
-        # pdb.set_trace()
-        """
-        - (IBAction)openFileWithOptions:(id)sender {
-   NSOpenPanel*    panel = [NSOpenPanel openPanel];
-   NSWindow*       window = [[[self windowControllers] objectAtIndex:0] window];
- 
-   // Load the nib file with the accessory view and attach it to the panel.
-   if ([NSBundle loadNibNamed:@"MyAccessoryView" owner:self])
-      [panel setAccessoryView:self.accessoryView];
- 
-   // Show the open panel and process the results.
-   [panel beginSheetModalForWindow:window completionHandler:^(NSInteger result){
-      if (result == NSFileHandlingPanelOKButton) {
-         BOOL option1 = ([self.optionCheckbox state] == NSOnState);
- 
-         // Open the selected file using the specified option...
-      }
-   }];
-}       """
-        #self.menuOpenAs = None
         panel = NSBundle.loadNibNamed_owner_( u"OpenAsAccessoryView", self)
-        #if panel:
-        #    self.menuOpenAs = panel
-
         return self
 
     def menuOpenAsType_( self, sender ):
         return self.menuOpenAs.title()
-
 
 
 # instantiated in NIB
@@ -450,8 +428,6 @@ class CactusDocumentController(NSDocumentController):
 
     def runModalOpenPanel_forTypes_( self, panel, types ):
 
-        # [[[NSOpenPanel]] openPanel]; [lPanel setAccessoryView:accessoryView];
-
         self.selectedType = "automatic"
         extensionCtrl = CactusOpenAsAccessoryController.alloc().init()
 
@@ -459,7 +435,6 @@ class CactusDocumentController(NSDocumentController):
             panel.setAccessoryView_( extensionCtrl.menuOpenAs )
         result = super( CactusDocumentController, self).runModalOpenPanel_forTypes_( panel, None)
 
-        # pdb.set_trace()
         if result:
             self.selectedType = extensionCtrl.menuOpenAs.title()
             self.urllist = set([NSURL2str(t) for t in panel.URLs()])
@@ -608,10 +583,12 @@ class CactusAppDelegate(NSObject):
         # just check for local files
         docc = NSDocumentController.sharedDocumentController()
         localurl = url.isFileURL()
-        loaded = docc.documentForURL_( url )
-        if not localurl or not loaded:
+        loaded = True
+        if localurl:
+            loaded = docc.documentForURL_( url )
+        if not loaded or not localurl:
             doc, err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
-                                                                   type_)
+                                                                       type_)
 
     # UNUSED but defined in class
     def newBrowser_(self, sender):

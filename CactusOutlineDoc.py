@@ -76,6 +76,9 @@ OutlineViewDelegateDatasource = Outline.OutlineViewDelegateDatasource
 OutlineNode = Outline.OutlineNode
 
 import CactusDocumentTypes
+CactusOPMLType = CactusDocumentTypes.CactusOPMLType
+CactusRSSType = CactusDocumentTypes.CactusRSSType
+CactusXMLType = CactusDocumentTypes.CactusXMLType
 
 
 extractClasses("OutlineEditor")
@@ -139,9 +142,6 @@ class CactusOutlineDocument(AutoBaseClass):
 
         #
         self.title = "Untitled Outline"
-
-        # one of OPML, RSS, XML; NOT YET USED
-        self.type = None
         return self
 
 
@@ -164,10 +164,10 @@ class CactusOutlineDocument(AutoBaseClass):
         self.url = url
 
         # read opml content
-        if theType == CactusDocumentTypes.CactusOPMLType:
+        if theType == CactusOPMLType:
             d = None
             try:
-                d = opml.opml_from_string( readURL( url, "OPML" ) )
+                d = opml.opml_from_string( readURL( url, CactusOPMLType ) )
             except OPMLParseErrorException, v:
                 tb = unicode(traceback.format_exc())
                 v = unicode( repr(v) )
@@ -189,7 +189,7 @@ class CactusOutlineDocument(AutoBaseClass):
                 return (False, None)
 
         # read rss content
-        elif theType == CactusDocumentTypes.CactusRSSType:
+        elif theType == CactusRSSType:
             root = self.openRSS_( url )
             if root:
                 self.rootNode = root
@@ -199,10 +199,10 @@ class CactusOutlineDocument(AutoBaseClass):
                 return (False, None)
 
         # read xml content
-        elif theType == CactusDocumentTypes.CactusXMLType:
+        elif theType == CactusXMLType:
             d = None
             try:
-                d = opml.xml_from_string( readURL( url, "XML" ) )
+                d = opml.xml_from_string( readURL( url, CactusXMLType ) )
             except XMLParseErrorException, v:
                 tb = unicode(traceback.format_exc())
                 v = unicode( repr(v) )
@@ -364,7 +364,7 @@ class CactusOutlineDocument(AutoBaseClass):
             print "CactusOutlineDocument.dataRepresentationOfType_( %s )" % repr(theType)
 
         # future scaffolding
-        if theType == CactusDocumentTypes.CactusOPMLType:
+        if theType == CactusOPMLType:
 
             rootOPML = opml.generateOPML( self.rootNode, indent=1 )
 
@@ -376,22 +376,24 @@ class CactusOutlineDocument(AutoBaseClass):
             fob.close()
             return NSData.dataWithBytes_length_(t, len(t))
 
-        elif theType == CactusDocumentTypes.CactusRSSType:
+        elif theType == CactusRSSType:
             t = opml.generateRSS( self.rootNode, indent=1 )
             return NSData.dataWithBytes_length_(t, len(t))
 
-        elif theType == CactusDocumentTypes.CactusXMLType:
+        elif theType == CactusXMLType:
             # pdb.set_trace()
-            rootXML = opml.generateXML( self.rootNode, indent=1 )
+            rootXML = opml.generateXML( self.rootNode) #, indent=1 )
 
             e = etree.ElementTree( rootXML )
 
             fob = cStringIO.StringIO()
+            # e.write(fob, pretty_print=True, encoding="utf-8", xml_declaration=True, method="xml" )
             e.write(fob, encoding="utf-8", xml_declaration=True, method="xml" )
             t = fob.getvalue()
             fob.close()
             return NSData.dataWithBytes_length_(t, len(t))
 
+        # these are just ideas
         elif theType == CactusDocumentTypes.CactusTEXTType:
             pass
         elif theType == CactusDocumentTypes.CactusSQLITEType:
@@ -427,8 +429,8 @@ class CactusOutlineDocument(AutoBaseClass):
     def loadDataRepresentation_ofType_(data, aType):
         if kwlog:
             print
-            print "CactusOutlineDocument.loadDataRepresentation_ofType_()"
-            print "EMPTY"
+            print "------ TBD ----- CactusOutlineDocument.loadDataRepresentation_ofType_()"
+            print
         # Insert code here to read your document from the given data.  You can
         # also choose to override -loadFileWrapperRepresentation:ofType: or
         # -readFromFile:ofType: instead.
@@ -443,16 +445,15 @@ class CactusOutlineDocument(AutoBaseClass):
 
     def readFromData_ofType_error_(self, data, typeName):
         if kwlog:
+            print "X" * 80
             print "CactusOutlineDocument.readFromData_ofType_error_()"
-        # pdb.set_trace()
+            print "X" * 80
+
         outError = None
         readSuccess = False
 
-        #
-        # open outline here
-        #
         s = str(data.bytes())
-        if typeName == CactusDocumentTypes.CactusOPMLType:
+        if typeName == CactusOPMLType:
             d = opml.opml_from_string( s )
             if d:
                 root = self.openOPML_( d )
@@ -461,6 +462,7 @@ class CactusOutlineDocument(AutoBaseClass):
                     # release here
                 self.rootNode = root
                 readSuccess = True
+
         elif theType == CactusDocumentTypes.CactusRSSType:
             d = feedparser.parse( s, agent=CactusVersion.user_agent )
             if d:
@@ -584,7 +586,7 @@ class CactusOutlineDocument(AutoBaseClass):
             s = repr(rootXML)
             if len(s) > 90:
                 s = s[:91]
-            print "CactusOutlineDocument.openXML_( %s )" % repr(s)
+            print "CactusOutlineDocument.openXML_( %s )" % s
 
         """This builds the node tree and returns the root node."""
 
@@ -825,12 +827,27 @@ class CactusOutlineDocument(AutoBaseClass):
 
 
 class CactusOutlineWindowController(AutoBaseClass):
+    """the actual base class is NSWindowController
 
-    # the actual base class is NSWindowController
-    # outlineView
+    outlineView
+    optAlterLines
+    optCommentVisible
+    optHLines
+    optNameVisible
+    optTypeVisible
+    optValueVisible
+    optVariableRow
+    optVLines
+    txtOutlineType
+    window
+    """
 
     def initWithObject_(self, document):
-        """This controller is used for outline and table windows."""
+        """This controller is used for outline and table windows.
+        
+        document is a CactusOutlineDocument
+        
+        """
         if kwlog:
             print "CactusOutlineWindowController.initWithObject_()"
 
@@ -843,6 +860,9 @@ class CactusOutlineWindowController(AutoBaseClass):
         self.rootNode = None
         self.parentNode = None
         self.variableRowHeight = True
+        
+        # check if needed
+        self.document = document
 
         if isinstance(document, CactusOutlineDocument):
             self.path = NSURL2str(document.url)
@@ -977,6 +997,9 @@ class CactusOutlineWindowController(AutoBaseClass):
         else:
             if self.commentColumn in tableColumns:
                 self.outlineView.removeTableColumn_(self.commentColumn)
+
+        if self.txtOutlineType:
+            self.txtOutlineType.setStringValue_( unicode( self.document.fileType() ) )
 
         # grid style
         gridStyleMask = self.outlineView.gridStyleMask()

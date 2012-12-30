@@ -1284,7 +1284,10 @@ class OutlineNode(NSObject):
             return {}
         elif len(self.value) == 1:
             if self.value[0][0] == "":
-                return {'value': self.value[0][1] }
+                if self.value[0][1] != "":
+                    return {'value': self.value[0][1] }
+                else:
+                    return {}
             else:
                 return {self.value[0][0]: self.value[0][1] }
         else:
