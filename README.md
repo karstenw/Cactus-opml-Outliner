@@ -14,7 +14,8 @@ Use it to explore OPML, RSS and XML files. Nodes can be opened in the browser or
 
 RSS and XML files are new and still in the make so please be cautious with Cactus generated files of these kinds. For example Cactus doesn't know about namespaces in RSS. They sure get lost if you save a RSS file in Cactus.
 
-For XML display I had to "misuse" the Comment column. XML Text is stored there in a stripped format.
+
+XML Text is stored currently in the "Comment" column. This is a temporary solution.
 
 
 ## Quickstart ##
@@ -31,7 +32,9 @@ Move selections up and down with ctrl-up and ctrl-down.
 
 Delete rows with delete. No undo. No row copying.
 
-The menus are mostly not operable. You can use the "File", "Window" and "Help" menu. Selected text can be copied and pasted. The standard simple undo works for text editing.
+The menus are mostly not operable. You can use the "File", "Window" and "Help" menu. Some items of the "Outline" menu have been activated.
+
+Selected text can be copied and pasted. The standard simple undo works for text editing.
 
 Look for nodes with content in the Value column, select one or more and try ctrl-alt-enter (NOT the Return key, the one on the numeric keypad). Depending on the data in those rows, new windows might open in Cactus (for linked OPML and RSS), your standard browser (for websites and pictures) or the Quicktime Player (for movies and sounds).
 
@@ -42,13 +45,16 @@ All three document types can be saved but currently I would advise against using
 
 Mailing list: http://groups.google.com/group/cactus-outliner-dev
 
-Downloads page: http://goo.gl/EALQi (dropbox)
+Downloads page: https://www.dropbox.com/sh/azysrf5pokzp26a/h2mFhfeM6M
 
-Latest binary: http://goo.gl/nyCna (dropbox)
+Latest binary: https://www.dropbox.com/s/t6jkriu4khly47u/Cactus_v035b.zip
 
 
 
 ## Latest changes ##
+The Outline window now shows which file type was loaded. I.e. one of "OPML File", "RSS File" or "XML File".
+
+The "Expand", "Expand All Subheads", "Collapse", "Collapse Everything", "Collapse To Parent" items of the "Outline" menu have been activated.
 
 The Open and OpenURL dialogs now have an extension to force the filetype; i.e. Open As...
 
