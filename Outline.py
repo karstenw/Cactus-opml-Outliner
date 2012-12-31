@@ -9,9 +9,12 @@ import sys
 import os
 
 import time
+import datetime
 
 import urllib
 import urlparse
+
+import feedparser
 
 
 kwdbg = False
@@ -40,12 +43,20 @@ import objc
 
 import CactusTools
 NSURL2str = CactusTools.NSURL2str
+readURL = CactusTools.readURL
+getFileProperties = CactusTools.getFileProperties
+setFileProperties = CactusTools.setFileProperties
+datestring_nsdate = CactusTools.datestring_nsdate
+
+import CactusVersion
 
 
 import CactusDocumentTypes
 CactusOPMLType = CactusDocumentTypes.CactusOPMLType
 CactusRSSType = CactusDocumentTypes.CactusRSSType
 CactusXMLType = CactusDocumentTypes.CactusXMLType
+CactusDocumentTypesSet = CactusDocumentTypes.CactusDocumentTypesSet
+
 
 import Foundation
 NSObject = Foundation.NSObject
@@ -191,34 +202,45 @@ g_qtplayer_extensions = ("aac aifc aiff aif au ulw snd caf gsm kar mid smf midi 
 g_qtplayer_extensions = g_qtplayer_extensions.split()
 
 
-def open_photo( url, open_=True, download=False ):
+def open_photo( url, open_=True, cache=False ):
     f = urllib.FancyURLopener()
     fob = f.open(url)
     s = fob.read()
     fob.close()
     d = opml.photo_from_string( s )
-    l = []
+    photolist = []
+    fulllist = [ NSURL.URLWithString_( url ) ]
+    dl = []
     isFile = False
-    for k, v in d.items():
-        if k.startswith("large"):
-            nsurl = NSURL.URLWithString_( v )
-            isFile = nsurl.isFileURL()
-            l.append( nsurl )
-            break
 
-    if l:
+    for k, v in d.items():
+        nsurl = NSURL.URLWithString_( v )
+        isFile = nsurl.isFileURL()
+
+        if k.startswith("large"):
+            photolist.append( nsurl )
+            #if not k.startswith("original"):
+            fulllist.append( nsurl )
+
+    if photolist:
         workspace= NSWorkspace.sharedWorkspace()
-        target = u'com.apple.Preview'
-        if not isFile:
-            target = u'com.apple.Safari'
-        workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
-            l,
-            target,
-            0,
-            None )
+        # target = u'com.apple.Preview'
+        # if 1: #not isFile:
+        target = u'com.apple.Safari'
+        if open_:
+            workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
+                photolist,
+                target,
+                0,
+                None )
+
+    if fulllist and cache:
+        for nsurl in fulllist:
+            CactusTools.cache_url( nsurl )
+
 
 # TODO: change parameter to node!
-def open_node( url, nodeType=None, open_=True, download=False ):
+def open_node( url, nodeType=None, open_=True, cache=False ):
 
     appl = NSApplication.sharedApplication()
     appdelg = appl.delegate()
@@ -232,32 +254,41 @@ def open_node( url, nodeType=None, open_=True, download=False ):
     nsurl = NSURL.URLWithString_( url )
 
     if nodeType == "OPML" or url.endswith(".opml"):
-        return appdelg.newOutlineFromURL_Type_( nsurl, CactusOPMLType )
+        if open_:
+            appdelg.newOutlineFromURL_Type_( nsurl, CactusOPMLType )
     elif nodeType == "RSS" or url.endswith(".rss"):
-        return appdelg.newOutlineFromURL_Type_( nsurl, CactusRSSType )
+        if open_:
+            appdelg.newOutlineFromURL_Type_( nsurl, CactusRSSType )
     elif nodeType == "XML" or url.endswith(".xml"):
-        return appdelg.newOutlineFromURL_Type_( nsurl, CactusXMLType )
+        if open_:
+            appdelg.newOutlineFromURL_Type_( nsurl, CactusXMLType )
 
     elif surl in g_qtplayer_extensions:
         # qtplayer can do http:
-        workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
-            [ nsurl ],
-            u'com.apple.quicktimeplayer',
-            0,
-            None )
+        if open_:
+            workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
+                [ nsurl ],
+                u'com.apple.quicktimeplayer',
+                0,
+                None )
 
     elif surl in g_preview_extensions:
         if nsurl.isFileURL():
-            workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
-                [ nsurl ],
-                u'com.apple.Preview',
-                0,
-                None )
+            if open_:
+                workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
+                    [ nsurl ],
+                    u'com.apple.Preview',
+                    0,
+                    None )
         else:
             # preview can't do http so open it in the std browser:
-            workspace.openURL_( nsurl )
+            if open_:
+                workspace.openURL_( nsurl )
     else:
-        workspace.openURL_( nsurl )
+        if open_:
+            workspace.openURL_( nsurl )
+    if cache:
+        CactusTools.cache_url( nsurl )
 
 
 class KWOutlineView(AutoBaseClass):

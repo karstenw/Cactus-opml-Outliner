@@ -421,13 +421,16 @@ class CactusOpenAsAccessoryController(AutoBaseClass):
 # instantiated in NIB
 class CactusDocumentController(NSDocumentController):
     def init(self):
+        if kwlog:
+            print "CactusDocumentController.init()"
         self = super( CactusDocumentController, self).init()
         self.selectedType = u"automatic"
         self.urllist = []
         return self
 
     def runModalOpenPanel_forTypes_( self, panel, types ):
-
+        if kwlog:
+            print "CactusDocumentController.runModalOpenPanel_forTypes_()"
         self.selectedType = "automatic"
         extensionCtrl = CactusOpenAsAccessoryController.alloc().init()
 
@@ -441,6 +444,8 @@ class CactusDocumentController(NSDocumentController):
         return result
 
     def makeDocumentWithContentsOfURL_ofType_error_(self, url, theType):
+        if kwlog:
+            print "CactusDocumentController.makeDocumentWithContentsOfURL_ofType_error_()"
         # pdb.set_trace()
         if self.selectedType != "automatic" and len(self.urllist) > 0:
             u = NSURL2str( url )

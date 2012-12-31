@@ -28,6 +28,9 @@ CactusXMLFileExtensions = [ 'xml', ]
 CactusXMLOSTypes = [ '****' ]
 
 
+CactusDocumentTypesSet = set( (CactusOPMLType, CactusRSSType, CactusXMLType) )
+
+
 #
 # from here on it's wishful thinking
 #

@@ -8,6 +8,7 @@
 import sys
 import os
 
+import datetime
 import pdb
 
 import re
@@ -16,14 +17,16 @@ import urllib
 
 import CactusDocumentTypes
 CactusOPMLType = CactusDocumentTypes.CactusOPMLType
+CactusDocumentTypesSet = CactusDocumentTypes.CactusDocumentTypesSet
 
 import CactusVersion
-
 
 import feedparser
 
 import Foundation
 NSURL = Foundation.NSURL
+NSFileManager = Foundation.NSFileManager
+
 
 import AppKit
 NSOpenPanel = AppKit.NSOpenPanel
@@ -36,16 +39,18 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 #
 # tools
 #
-def readURL( nsurl, type_=CactusOPMLType ):
+def readURL( nsurl, type_=CactusOPMLType, cache=False ):
     """Read a file. May be local, may be http"""
 
     url = NSURL2str(nsurl)
-
+    # pdb.set_trace()
     print "CactusTools.readURL( '%s', '%s' )" % (url, type_)
 
-    fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
-
-    # fob = f.open(url)
+    if not cache:
+        fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
+    else:
+        localpath = cache_url(nsurl)
+        fob = open(localpath, 'r')
     s = fob.read()
     fob.close()
 
@@ -62,13 +67,14 @@ def readURL( nsurl, type_=CactusOPMLType ):
             if "<directiveCache>" in s:
                 s = s.replace( "<directiveCache>", "</outline>")
 
-    # this apllies to all since cactus currently only reads xml files
-    if s.startswith("<?xml ") or s.startswith("<opml") or s.startswith("<rss"):
-        re_bogusCharacters = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f]')
-        t = re.sub( re_bogusCharacters, "???", s)
-        if s != t:
-            print "Bogus characters in XML..."
-        s = t
+    if type_ in CactusDocumentTypesSet:
+        # this apllies to all since cactus currently only reads xml files
+        if s.startswith("<?xml ") or s.startswith("<opml") or s.startswith("<rss"):
+            re_bogusCharacters = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f]')
+            t = re.sub( re_bogusCharacters, "???", s)
+            if s != t:
+                print "Bogus characters in XML..."
+            s = t
     return s
 
 # UNUSED
@@ -92,8 +98,7 @@ def classifyAndReadUrl( url ):
     xmlre = re.compile( "^<?xml\W+version" )
     rspre = re.compile( "<reallySimplePhoto" )
     opmlre = re.compile( "<opml version" )
-    
-    
+
     if checkpart.startswith( "<?xml version" ):
         pass
         # we have a xml based document
@@ -182,3 +187,119 @@ def saveAsDialog(path):
     if rval == NSFileHandlingPanelOKButton:
         return panel.filename()
     return False
+
+
+def getFileProperties( theFile ):
+    sfm = NSFileManager.defaultManager()
+    props = sfm.fileAttributesAtPath_traverseLink_( theFile, True )
+
+    # pdb.set_trace()
+
+    mtprops = props.mutableCopy()
+    mtprops.removeObjectsForKeys_( [
+        u"NSFileExtensionHidden",
+        u"NSFileGroupOwnerAccountID",
+        u"NSFileGroupOwnerAccountName",
+        u"NSFileOwnerAccountID",
+        u"NSFileOwnerAccountName",
+        u"NSFilePosixPermissions",
+        u"NSFileReferenceCount",
+        u"NSFileSize",
+        u"NSFileSystemFileNumber",
+        u"NSFileSystemNumber",
+        u"NSFileType",
+        u"NSFileHFSCreatorCode",
+        u"NSFileHFSTypeCode",
+        #u"NSFileCreationDate"
+        ] )
+    return mtprops
+
+def setFileProperties( theFile, props ):
+    sfm = NSFileManager.defaultManager()
+    return sfm.changeFileAttributes_atPath_( props, theFile )
+
+def datestring_nsdate( dt=datetime.datetime.now() ):
+    now = str(dt)
+    now = now[:19]
+    now = now + " +0000"
+    return now
+
+
+def getDownloadFolder( nsurl, cachefolder=CactusVersion.cachefolder):
+
+    if not os.path.exists(cachefolder):
+        os.makedirs( cachefolder )
+
+    localpath = str( nsurl.relativePath() )
+    if localpath.startswith('/'):
+        localpath = localpath[1:]
+    localpath = os.path.join( str(nsurl.host()), localpath)
+    if localpath:
+        localpath = os.path.join( cachefolder, localpath )
+        return localpath
+    return False
+
+
+def getRemotefilemodificationDate( url ):
+    try:
+        f = urllib.urlopen( url )
+    except IOError, err:
+        print "ERROR: Could not open url (%s) for date reading." % url
+        return False
+
+    rinfo = f.info()
+    f.close()
+
+    rmodfdate = datetime.datetime( *rinfo.getdate('last-modified')[:6] )
+    return rmodfdate
+
+def setFileModificationDate( filepath, modfdt ):
+    l = getFileProperties( filepath )
+    date = Foundation.NSDate.dateWithString_( datestring_nsdate( modfdt ) )
+    l['NSFileModificationDate'] = date
+    setFileProperties( filepath, l)
+    folder, filename = os.path.split( filepath )
+    print "Setting file(%s) modification date to %s" % (filename, repr(modfdt))
+
+def cache_url( nsurl ):
+    # pdb.set_trace()
+    localpath = getDownloadFolder(nsurl)
+
+    folder, filename = os.path.split( localpath )
+    if not os.path.exists(folder):
+        os.makedirs( folder )
+
+    # pdb.set_trace()
+
+    url = NSURL2str( nsurl )
+
+    dodownload = False
+    if os.path.exists( localpath ):
+        # file already downloaded; perhaps set file modification date
+        lmodfdate = os.stat( localpath ).st_mtime
+        lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
+        rmodfdate = getRemotefilemodificationDate( url )
+
+        if (rmodfdate + datetime.timedelta(seconds=60)) > lmodfdate:
+            setFileModificationDate( localpath, rmodfdate )
+        else:
+            dodownload = True
+    else:
+        dodownload = True
+
+    if dodownload:
+        #
+        print "LOAD: %s..." % url,
+        fname, info = urllib.urlretrieve(url, localpath)
+        print "done"
+        
+        # get file date
+        lmodfdate = os.stat( localpath ).st_mtime
+        lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
+        try:
+            rmodfdate = datetime.datetime( *info.getdate('last-modified')[:6] )
+            setFileModificationDate( localpath, rmodfdate )
+            print "Setting dowloaded file(%s) modification date to %s" % (fname, repr(rmodfdate))
+        except TypeError, err:
+            print "Could not get remote file(%s) modification date." % fname
+    return localpath
