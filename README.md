@@ -20,9 +20,13 @@ XML Text is stored currently in the "Comment" column. This is a temporary soluti
 
 ## Quickstart ##
 
+Download a universal binary from
+https://www.dropbox.com/sh/azysrf5pokzp26a/h2mFhfeM6M
+unzip and launch.
+
 Do a google search for "filetype:opml"
 
-Copy a search result link, switch to Cactus, select menu "open URL...", paste into the text field and click OK.
+Copy a search result link, switch to Cactus, select file menu "open URL...", paste into the text field and click OK.
 
 Play with the outline and the appearance checkboxes in the upper right corner.
 
@@ -40,6 +44,7 @@ Look for nodes with content in the Value column, select one or more and try ctrl
 
 All three document types can be saved but currently I would advise against using RSS and XML for anything serious. OPML should be stable. If you find a bug, please report it on the mailing list.
 
+With the new "Open As..." option in the file dialogs, it is now possible to load an opml or rss file as xml. opml as rss and vice versa makes no sense but try to see why. Some files can only be openened as opmlbecause they are buggy and opening as opml does some repairs. Opening as xml needs a clean xml file.
 
 ## Pointers ##
 
@@ -47,7 +52,6 @@ Mailing list: http://groups.google.com/group/cactus-outliner-dev
 
 Downloads page: https://www.dropbox.com/sh/azysrf5pokzp26a/h2mFhfeM6M
 
-Latest binary: https://www.dropbox.com/s/t6jkriu4khly47u/Cactus_v035b.zip
 
 
 
@@ -212,5 +216,3 @@ v0.2.0 Initial release.
 <tr><td>shift-enter</td><td>Dumps current document to Terminal. Cactus needs to be started via Terminal (./Cactus.app/Contents/MacOS/Cactus )</td></tr>
 
 </table>
-
-

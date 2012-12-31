@@ -39,7 +39,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 #
 # tools
 #
-def readURL( nsurl, type_=CactusOPMLType, cache=False ):
+def readURL( nsurl, type_=CactusOPMLType, cache=True ):
     """Read a file. May be local, may be http"""
 
     url = NSURL2str(nsurl)
@@ -250,7 +250,11 @@ def getRemotefilemodificationDate( url ):
     rinfo = f.info()
     f.close()
 
-    rmodfdate = datetime.datetime( *rinfo.getdate('last-modified')[:6] )
+    try:
+        rmodfdate = datetime.datetime( *rinfo.getdate('last-modified')[:6] )
+    except TypeError, err:
+        print "Could not get remote file(%s) modification date." % url
+        return False
     return rmodfdate
 
 def setFileModificationDate( filepath, modfdt ):
@@ -279,8 +283,8 @@ def cache_url( nsurl ):
         lmodfdate = os.stat( localpath ).st_mtime
         lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
         rmodfdate = getRemotefilemodificationDate( url )
-
-        if (rmodfdate + datetime.timedelta(seconds=60)) > lmodfdate:
+        
+        if rmodfdate and (rmodfdate + datetime.timedelta(seconds=60)) > lmodfdate:
             setFileModificationDate( localpath, rmodfdate )
         else:
             dodownload = True
@@ -289,6 +293,8 @@ def cache_url( nsurl ):
 
     if dodownload:
         #
+        if os.path.isdir( localpath ):
+            localpath = os.path.join( localpath, "file.xml" )
         print "LOAD: %s..." % url,
         fname, info = urllib.urlretrieve(url, localpath)
         print "done"
