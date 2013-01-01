@@ -90,8 +90,24 @@ def boilerplateOPML( rootNode ):
     rootNode - the node under which the structure will be created
 
     """
-    now = datetime.datetime.now()
+
+    ZERO = datetime.timedelta(0)
+    HOUR = datetime.timedelta(hours=1)
+    class UTC(datetime.tzinfo):
+        """UTC - from python library examples."""
+    
+        def utcoffset(self, dt):
+            return ZERO
+    
+        def tzname(self, dt):
+            return "UTC"
+    
+        def dst(self, dt):
+            return ZERO
+        
+    now = datetime.datetime.now( UTC() )
     s = now.strftime("%a, %d %b %Y %H:%M:%S %Z")
+
     head = OutlineNode("head", "", rootNode, typeOutline)
     rootNode.addChild_( head )
 
@@ -276,7 +292,7 @@ class CactusOutlineDocument(AutoBaseClass):
         # pdb.set_trace()
 
         self.rootNode = OutlineNode("__ROOT__", "", None, typeOutline)
-        # boilerplateOPML( self.rootNode )
+        boilerplateOPML( self.rootNode )
 
         self.variableRowHeight = True
         return (self, None)
