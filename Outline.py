@@ -262,6 +262,8 @@ def open_node( url, nodeType=None, open_=True, cache=False ):
     elif nodeType == "XML" or url.endswith(".xml"):
         if open_:
             appdelg.newOutlineFromURL_Type_( nsurl, CactusXMLType )
+    elif nodeType == "HTML" or url.endswith(".html"):
+        workspace.openURL_( nsurl )
 
     elif surl in g_qtplayer_extensions:
         # qtplayer can do http:
@@ -528,12 +530,16 @@ class KWOutlineView(AutoBaseClass):
 
                                 elif theType == "rssentry":
                                     enc = v.get("enclosure", "")
+                                    url1 = ""
                                     if enc:
-                                        url, rest = enc.split('<<<')
-                                    else:
-                                        url = v.get("link", "")
-                                    url = cleanupURL( url )
-                                    open_node( url )
+                                        url1, rest = enc.split('<<<')
+
+                                    url2 = v.get("link", "")
+                                    url2 = cleanupURL( url2 )
+                                    if url1:
+                                        open_node( url1 )
+                                    if url2:
+                                        open_node( url2 )
 
                                 elif theType == "river":
                                     opmlUrl = v.get("opmlUrl", "")
@@ -546,21 +552,17 @@ class KWOutlineView(AutoBaseClass):
                                     # open website
                                     htmlUrl = v.get("htmlUrl", "")
                                     htmlUrl = cleanupURL( htmlUrl )
-                                    htmlUrl = NSURL.URLWithString_( htmlUrl )
-                                    # workspace.openURL_( htmlUrl )
-
-                                    # pdb.set_trace()
+                                    if htmlUrl:
+                                        open_node( htmlUrl, nodeType="HTML")
 
                                     # open rss
                                     xmlUrl = v.get("xmlUrl", "")
                                     xmlUrl = cleanupURL( xmlUrl )
                                     if xmlUrl:
-                                        xmlUrl = NSURL.URLWithString_( xmlUrl )
                                         open_node( xmlUrl, nodeType="RSS")
 
                                 elif theType == "scripting2Post":
-                                    url = NSURL.URLWithString_( url )
-                                    workspace.openURL_( url )
+                                    open_node( url, nodeType="HTML")
                                 else:
                                     print "Unhandled Node open\ntype: '%s'\nurl: '%s'" %(repr(theType), repr(url))
 
