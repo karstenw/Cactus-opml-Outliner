@@ -46,7 +46,7 @@ def readURL( nsurl, type_=CactusOPMLType, cache=True ):
     # pdb.set_trace()
     print "CactusTools.readURL( '%s', '%s' )" % (url, type_)
 
-    if not cache:
+    if 1: #not cache:
         fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
     else:
         localpath = cache_url(nsurl)
