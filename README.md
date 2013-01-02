@@ -14,8 +14,11 @@ Use it to explore OPML, RSS and XML files. Nodes can be opened in the browser or
 
 RSS and XML files are new and still in the make so please be cautious with Cactus generated files of these kinds. For example Cactus doesn't know about namespaces in RSS. They sure get lost if you save a RSS file in Cactus.
 
+XML Text for XML files is stored currently in the "Comment" column. This is a temporary solution that will be fixed with the refactoring of the outline node attribute system.
 
-XML Text is stored currently in the "Comment" column. This is a temporary solution.
+OPML files seem stable. In fact Cactus repairs some of them.
+
+RSS files can be as sloppy as feedparser lets them. When writing them they should be propper XML.
 
 
 ## Quickstart ##
@@ -52,10 +55,13 @@ Mailing list: http://groups.google.com/group/cactus-outliner-dev
 
 Downloads page: https://www.dropbox.com/sh/azysrf5pokzp26a/h2mFhfeM6M
 
-
+Latest binary: https://www.dropbox.com/s/vgjym30hgxduoah/Cactus_v038.zip
 
 
 ## Latest changes ##
+
+There is now a context menu. Only item is "Include" which will include linked opml files of the types 'include', 'outline', 'thumbList', 'code', 'thumbListVarCol' and 'thumbList'.
+
 The Outline window now shows which file type was loaded. I.e. one of "OPML File", "RSS File" or "XML File".
 
 The "Expand", "Expand All Subheads", "Collapse", "Collapse Everything", "Collapse To Parent" items of the "Outline" menu have been activated.
@@ -115,6 +121,8 @@ http://goo.gl/EALQi
 
 
 ## Recent versions ##
+
+v0.3.8 Context menu
 
 v0.3.7 Fixed a crashing bug.
 
