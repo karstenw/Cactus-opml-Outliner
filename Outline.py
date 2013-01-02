@@ -249,7 +249,7 @@ def open_photo( url, open_=True, cache=False ):
 
 
 # TODO: change parameter to node!
-def open_node( url, nodeType=None, open_=True, cache=True ):
+def open_node( url, nodeType=None, open_=True, cache=False ):
 
     appl = NSApplication.sharedApplication()
     appdelg = appl.delegate()
@@ -276,7 +276,7 @@ def open_node( url, nodeType=None, open_=True, cache=True ):
 
     elif surl in g_qtplayer_extensions:
         # qtplayer can do http:
-        if 0: #open_:
+        if open_:
             workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
                 [ nsurl ],
                 u'com.apple.quicktimeplayer',
@@ -295,12 +295,12 @@ def open_node( url, nodeType=None, open_=True, cache=True ):
                     None )
         else:
             # preview can't do http so open it in the std browser:
-            if 0: #open_:
+            if open_:
                 workspace.openURL_( nsurl )
             if cache:
                 CactusTools.cache_url( nsurl )
     else:
-        if 0: #open_:
+        if open_:
             workspace.openURL_( nsurl )
         if cache:
             CactusTools.cache_url( nsurl )
@@ -317,44 +317,17 @@ class KWOutlineView(AutoBaseClass):
         self.menu.addItemWithTitle_action_keyEquivalent_( u"Include", "contextMenuInclude:", u"")
         self.menu.setAutoenablesItems_(False)
         self.setMenu_(self.menu)
-
         
-    def contextMenuInclude_(self, sender):
-        print "Contextaction"
-        # pdb.set_trace()
-        item = self.getSelectedRow()
-        if item.noOfChildren < 1:
-            return
-        attributes = item.getValueDict()
-        theType = attributes.get("type", "")
-        url = attributes.get("url", "")
-        url = cleanupURL( url )
-        if theType in ( 'include', 'outline', 'thumbList', 'code', 'thumbListVarCol',
-                         'thumbList'):
-
-            d = None
-            try:
-                d = opml.opml_from_string( readURL( NSURL.URLWithString_( url ), CactusOPMLType ) )
-            except OPMLParseErrorException, err:
-                print traceback.format_exc()
-                print err
-
-            if d:
-                root = CactusOutlineDoc.openOPML_( d )
-                for node in root.children:
-                    if node.name == u"body":
-                        for i in node.children:
-                            item.addChild_(i)
-                            node.removeChild_(i)
-                        break
-                del d
-        self.reloadData()
-        self.setNeedsDisplay_( True )
-        
-
     #
     # context menu
     #
+    def menuForEvent_(self, theEvent):
+        """This makes the selection include the right-click row"""
+        row = self.rowAtPoint_( self.convertPoint_fromView_(theEvent.locationInWindow(), None ))
+        if row != -1:
+            self.selectRow_byExtendingSelection_(row, True)
+        return super( KWOutlineView, self).menuForEvent_(theEvent)
+
     def validateMenuItem_(self, sender):
         row = self.selectedRow()
         print "contextrow:", row        
@@ -362,6 +335,56 @@ class KWOutlineView(AutoBaseClass):
 
     def menuNeedsUpdate_(self, sender):
         print "Menu(%s) needs update." % repr(sender)
+
+    def contextMenuInclude_(self, sender):
+        print "Contextaction"
+
+        # check selection; if right-click in selectio: use selection
+        # else use clicked row only
+        row = self.clickedRow()
+        #print "CLICKED ROW:", repr(row)
+        #return
+        #if row >=0 and not self.isRowSelected_(row):
+        #    selection = [ self.itemAtRow_(row) ]
+        #else:
+        selection = self.getSelectionItems()
+
+        # pdb.set_trace()
+
+        for contextItem in selection:
+
+            if not contextItem:
+                continue
+
+            if contextItem.noOfChildren < 1:
+                continue
+
+            attributes = contextItem.getValueDict()
+            theType = attributes.get("type", "")
+            url = attributes.get("url", "")
+            url = cleanupURL( url )
+            if theType in ( 'include', 'outline', 'thumbList', 'code', 'thumbListVarCol',
+                            'thumbList'):
+    
+                d = None
+                try:
+                    d = opml.opml_from_string( readURL( NSURL.URLWithString_( url ), CactusOPMLType ) )
+                except OPMLParseErrorException, err:
+                    print traceback.format_exc()
+                    print err
+    
+                if d:
+                    root = CactusOutlineDoc.openOPML_( d )
+                    for node in root.children:
+                        if node.name == u"body":
+                            for i in node.children:
+                                contextItem.addChild_(i)
+                                node.removeChild_(i)
+                            break
+                    del d
+        self.reloadData()
+        self.setNeedsDisplay_( True )
+
 
     #
     # cell editor notifications

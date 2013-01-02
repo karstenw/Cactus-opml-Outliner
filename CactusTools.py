@@ -43,7 +43,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 #
 # tools
 #
-def readURL( nsurl, type_=CactusOPMLType, cache=True ):
+def readURL( nsurl, type_=CactusOPMLType, cache=False ):
     """Read a file. May be local, may be http"""
 
     url = NSURL2str(nsurl)
