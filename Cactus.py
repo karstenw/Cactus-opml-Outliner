@@ -627,7 +627,7 @@ class CactusAppDelegate(NSObject):
                 fob.close()
                 d = opml.opml_from_string(s)
                 if d:
-                    root = self.openOPML_( d )
+                    root = CactusOutlineDoc.openOPML_( d )
                     doc = Document(opmlFile, root)
                     CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
 

@@ -194,7 +194,7 @@ class CactusOutlineDocument(AutoBaseClass):
                 return (False, None)
 
             if d:
-                root = self.openOPML_( d )
+                root = openOPML_( d )
                 if not root:
                     if kwlog:
                         print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
@@ -208,7 +208,7 @@ class CactusOutlineDocument(AutoBaseClass):
 
         # read rss content
         elif theType == CactusRSSType:
-            root = self.openRSS_( url )
+            root = openRSS_( url )
             if root:
                 self.rootNode = root
             else:
@@ -228,7 +228,7 @@ class CactusOutlineDocument(AutoBaseClass):
                 errorDialog( message=v, title=tb )
                 return (False, None)
 
-            root = self.openXML_( d )
+            root = openXML_( d )
 
             if root:
                 self.rootNode = root
@@ -474,7 +474,7 @@ class CactusOutlineDocument(AutoBaseClass):
         if typeName == CactusOPMLType:
             d = opml.opml_from_string( s )
             if d:
-                root = self.openOPML_( d )
+                root = openOPML_( d )
                 if self.rootNode:
                     pass
                     # release here
@@ -484,7 +484,7 @@ class CactusOutlineDocument(AutoBaseClass):
         elif theType == CactusDocumentTypes.CactusRSSType:
             d = feedparser.parse( s, agent=CactusVersion.user_agent )
             if d:
-                root = self.openRSS_( d )
+                root = openRSS_( d )
                 if self.rootNode:
                     pass
                     # release here
@@ -508,340 +508,6 @@ class CactusOutlineDocument(AutoBaseClass):
         self.addWindowController_( wc )
 
 
-    def openOPML_(self, rootOPML):
-        if kwlog:
-            print "CactusOutlineDocument.openOPML_()"
-        """This builds the node tree and returns the root node."""
-        #
-        #  Split this up.
-        def getChildrenforNode(node, children):
-            for c in children:
-                name = c.get('name', '')
-                childs = c.get('children', [])
-                content = c.get('attributes', "")
-                if content == "":
-                    content = {u'value': ""}
-                content.pop('text', None)
-                if content:
-                    l = []
-                    for k, v in content.items():
-                        l.append( (k, v) )
-                    content = l
-                else:
-                    content = u""
-
-                newnode = OutlineNode(name, content, node, typeOutline)
-                node.addChild_( newnode )
-                if len(childs) > 0:
-                    getChildrenforNode(newnode, childs)
-
-        ######
-
-        # root node for document; never visible,
-        # always outline type (even for tables)
-        root = OutlineNode("__ROOT__", "", None, typeOutline)
-        
-        # get opml head section
-        if rootOPML['head']:
-            
-            # the outline head node
-            head = OutlineNode("head", "", root, typeOutline)
-            root.addChild_( head )
-            for headnode in rootOPML['head']:
-                k, v = headnode
-                #v = {'value': v}
-                
-                node = OutlineNode(k, v, head, typeOutline)
-                #print "HEAD:", node.name
-                head.addChild_( node )
-
-        # fill in missing opml attributes here
-        # created, modified
-        #
-        # how to propagate expansionstate, windowState?
-        # make a document object and pass that to docdelegate?
-        #
-        # get opml body section
-        if rootOPML['body']:
-
-            # the outline body node
-            body = OutlineNode("body", "", root, typeOutline)
-            root.addChild_( body )
-
-            for item in rootOPML['body']:
-                name = item['name']
-                children = item['children']
-
-
-                # make table here
-                content = item.get('attributes', "")
-                content.pop('text', None)
-                if content:
-                    l = []
-                    for k, v in content.items():
-                        l.append( (k, v) )
-                    content = l
-                else:
-                    content = u""
-
-                node = OutlineNode(name, content, body, typeOutline)
-                # node.setValue_(content)
-                body.addChild_( node )
-                if len(children) > 0:
-                    try:
-                        getChildrenforNode( node, children )
-                    except Exception, err:
-                        print err
-                        # pdb.set_trace()
-                        pp(children)
-                        pp(item)
-        #title = os
-        return root
-
-    def openXML_( self, rootXML):
-
-        if kwlog:
-            s = repr(rootXML)
-            if len(s) > 90:
-                s = s[:91]
-            print "CactusOutlineDocument.openXML_( %s )" % s
-
-        """This builds the node tree and returns the root node."""
-
-        #
-        #  Split this up.
-        def getChildrenforNode(node, children):
-            for c in children:
-                name = c.get('name', '')
-                childs = c.get('children', [])
-                content = c.get('attributes', "")
-                txt = c.get('text', "")
-                if content == "":
-                    content = {u'value': ""}
-                # content.pop('text', None)
-                if content:
-                    l = []
-                    for k, v in content.items():
-                        l.append( (k, v) )
-                    content = l
-                else:
-                    content = u""
-
-                newnode = OutlineNode(name, content, node, typeOutline)
-                if txt:
-                    newnode.setComment_( txt )
-
-                node.addChild_( newnode )
-                if len(childs) > 0:
-                    getChildrenforNode(newnode, childs)
-
-        ######
-
-        # root node for document; never visible,
-        # always outline type (even for tables)
-        root = OutlineNode("__ROOT__", "", None, typeOutline)
-
-        rootXML = rootXML
-        name = rootXML['name']
-        children = rootXML['children']
-        content = rootXML.get('attributes', "")
-        txt = rootXML.get('text', "")
-
-        if content:
-            l = []
-            for k, v in content.items():
-                l.append( (k, v) )
-            content = l
-        else:
-            content = u""
-
-        node = OutlineNode(name, content, root, typeOutline)
-        if txt:
-            node.setComment_( txt )
-
-        root.addChild_( node )
-        if len(children) > 0:
-            try:
-                getChildrenforNode( node, children )
-            except Exception, err:
-                print err
-                # pdb.set_trace()
-                pp(children)
-        #title = os
-        return root
-    
-    def openRSS_(self, url):
-
-        url = NSURL2str(url)
-
-        if kwlog:
-            s = repr(url)
-            if len(s) > 90:
-                s = s[:91]
-            print "CactusOutlineDocument.openRSS_( %s )" % repr(s)
-        d = feedparser.parse( url, agent=CactusVersion.user_agent )
-
-        # make basic nodes
-        root = OutlineNode("__ROOT__", "", None, typeOutline)
-
-        head = OutlineNode("head", "", root, typeOutline)
-        root.addChild_( head )
-
-        body = OutlineNode("body", "", root, typeOutline)
-        root.addChild_( body )
-
-        #
-        # head
-        #
-        
-        # feed = docs, generator, language, link, microblog_archive,
-        # microblog_endday, microblog_filename, microblog_startday, microblog_url,
-        # published, subtitle, title, updated, cloud
-        if d.feed:
-            keys = """author authors category comments cloud description docs enclosure generator
-                      generator_detail guid image language link links microblog_archive
-                      microblog_endday microblog_filename microblog_startday
-                      microblog_url published pubDate source subtitle subtitle_detail
-                      sy_updatefrequency sy_updateperiod title title_detail updated
-                      updated_parsed""".split()
-
-            feedkeys = d.feed.keys()
-            feedkeys.sort()
-
-            for k in feedkeys:
-
-                if k in ('links', 'tags', 'updated_parsed', 'authors'):
-                    continue
-
-                v = d.feed[k]
-                if type(v) in (list,):
-                    if len(v) > 1:
-                        print "Large header list"
-                        print k
-                        print repr(v)
-                    elif len(v) == 1:
-                        v = v[0]
-
-                if type(v) not in (str, unicode, NSString,
-                                   NSMutableString, objc.pyobjc_unicode):
-                    if isinstance(v, dict):
-                        # pdb.set_trace()
-                        l = []
-                        for key, val in v.items():
-                            l.append( (key,val) )
-                        v = l
-                    elif type(v) == time.struct_time:
-                        v = time.asctime(v)
-                    else:
-                        # pdb.set_trace()
-                        # if k in ('',)
-                        if 1:
-                            print "ATTENTION RSS Head values"
-                            print "KEY:", k
-                            print "TYPE:", type(v)
-                            print "REPR:", repr(v)
-                            print
-                        v = repr(v)
-                node = OutlineNode(k, v, head, typeOutline)
-                head.addChild_( node )
-
-        otherkeys = d.keys()
-
-        if 'feed' in otherkeys:
-            otherkeys.remove("feed")
-
-        if 'entries' in otherkeys:
-            otherkeys.remove("entries")
-
-        otherkeys.sort()
-        for k in otherkeys:
-            v = d[k]
-            if type(v) not in (str, unicode, NSString, NSMutableString,
-                               objc.pyobjc_unicode,
-                               dict, feedparser.FeedParserDict):
-                v = repr(v)
-            node = OutlineNode(k, v, head, typeOutline)
-            head.addChild_( node )
-            
-        if 0:
-            # encoding
-            if 'encoding' in d:
-                node = OutlineNode('encoding', d.encoding, head, typeOutline)
-                head.addChild_( node )
-    
-            # bozo
-            if 'bozo' in d:
-                node = OutlineNode('bozo', str(d.bozo), head, typeOutline)
-                head.addChild_( node )
-    
-            # etag
-            if 'etag' in d:
-                node = OutlineNode('etag', d.etag, head, typeOutline)
-                head.addChild_( node )
-    
-            # headers dict
-            if 'headers' in d:
-                node = OutlineNode('headers', d.headers, head, typeOutline)
-                head.addChild_( node )
-    
-            # href
-            if 'href' in d:
-                node = OutlineNode('href', d.href, head, typeOutline)
-                head.addChild_( node )
-            
-            # namespaces
-            if 'namespaces' in d:
-                # pdb.set_trace()
-                node = OutlineNode('namespaces', d.namespaces, head, typeOutline)
-                head.addChild_( node )
-            
-            # version
-            if 'version' in d:
-                node = OutlineNode('version', d.version, head, typeOutline)
-                head.addChild_( node )
-        
-        #
-        # body
-        #
-        for entry in d.entries:
-            name = ""
-            if 'title' in entry:
-                # name = entry.title + "\n\n"
-                name = entry.title
-            elif 'summary' in entry:
-                name = entry.summary
-
-            #if 'summary' in entry:
-            #    name = name + entry.summary
-            value = entry
-            killkeys = ['links', 'authors', 'tags']
-            value['type'] = "rssentry"
-            #
-            # killing items which have a dictionary as value
-            #
-            # too much detail for now
-            for k, v in value.items():
-                if isinstance(v, dict) or isinstance(v, list) :
-                    killkeys.append(k)
-                if k.endswith('_parsed'):
-                    killkeys.append(k)
-
-            # extract enclosure
-            if 'links' in value:
-                links = value['links']
-                for link in links:
-                    rel = link.get('rel', False)
-                    if rel == 'enclosure':
-                        s = "%s<<<%s;%s" % (link.get('url',''),
-                                            str(link.get('length','')),
-                                            link.get('type', ""))
-                        value['enclosure'] = s
-            for k in killkeys:
-                value.pop( k, None )
-
-            node = OutlineNode(name, value, body, typeOutline)
-            body.addChild_( node )
-        return root
 
 
 class CactusOutlineWindowController(AutoBaseClass):
@@ -1035,3 +701,339 @@ class CactusOutlineWindowController(AutoBaseClass):
         #
         self.outlineView.reloadData()
         self.outlineView.setNeedsDisplay_( True )
+
+
+def openOPML_(rootOPML):
+    if kwlog:
+        print "openOPML_()"
+    """This builds the node tree and returns the root node."""
+    #
+    #  Split this up.
+    def getChildrenforNode(node, children):
+        for c in children:
+            name = c.get('name', '')
+            childs = c.get('children', [])
+            content = c.get('attributes', "")
+            if content == "":
+                content = {u'value': ""}
+            content.pop('text', None)
+            if content:
+                l = []
+                for k, v in content.items():
+                    l.append( (k, v) )
+                content = l
+            else:
+                content = u""
+
+            newnode = OutlineNode(name, content, node, typeOutline)
+            node.addChild_( newnode )
+            if len(childs) > 0:
+                getChildrenforNode(newnode, childs)
+
+    ######
+
+    # root node for document; never visible,
+    # always outline type (even for tables)
+    root = OutlineNode("__ROOT__", "", None, typeOutline)
+    
+    # get opml head section
+    if rootOPML['head']:
+        
+        # the outline head node
+        head = OutlineNode("head", "", root, typeOutline)
+        root.addChild_( head )
+        for headnode in rootOPML['head']:
+            k, v = headnode
+            #v = {'value': v}
+            
+            node = OutlineNode(k, v, head, typeOutline)
+            #print "HEAD:", node.name
+            head.addChild_( node )
+
+    # fill in missing opml attributes here
+    # created, modified
+    #
+    # how to propagate expansionstate, windowState?
+    # make a document object and pass that to docdelegate?
+    #
+    # get opml body section
+    if rootOPML['body']:
+
+        # the outline body node
+        body = OutlineNode("body", "", root, typeOutline)
+        root.addChild_( body )
+
+        for item in rootOPML['body']:
+            name = item['name']
+            children = item['children']
+
+
+            # make table here
+            content = item.get('attributes', "")
+            content.pop('text', None)
+            if content:
+                l = []
+                for k, v in content.items():
+                    l.append( (k, v) )
+                content = l
+            else:
+                content = u""
+
+            node = OutlineNode(name, content, body, typeOutline)
+            # node.setValue_(content)
+            body.addChild_( node )
+            if len(children) > 0:
+                try:
+                    getChildrenforNode( node, children )
+                except Exception, err:
+                    print err
+                    # pdb.set_trace()
+                    pp(children)
+                    pp(item)
+    #title = os
+    return root
+
+def openXML_( rootXML):
+
+    if kwlog:
+        s = repr(rootXML)
+        if len(s) > 90:
+            s = s[:91]
+        print "openXML_( %s )" % s
+
+    """This builds the node tree and returns the root node."""
+
+    #
+    #  Split this up.
+    def getChildrenforNode(node, children):
+        for c in children:
+            name = c.get('name', '')
+            childs = c.get('children', [])
+            content = c.get('attributes', "")
+            txt = c.get('text', "")
+            if content == "":
+                content = {u'value': ""}
+            # content.pop('text', None)
+            if content:
+                l = []
+                for k, v in content.items():
+                    l.append( (k, v) )
+                content = l
+            else:
+                content = u""
+
+            newnode = OutlineNode(name, content, node, typeOutline)
+            if txt:
+                newnode.setComment_( txt )
+
+            node.addChild_( newnode )
+            if len(childs) > 0:
+                getChildrenforNode(newnode, childs)
+
+    ######
+
+    # root node for document; never visible,
+    # always outline type (even for tables)
+    root = OutlineNode("__ROOT__", "", None, typeOutline)
+
+    rootXML = rootXML
+    name = rootXML['name']
+    children = rootXML['children']
+    content = rootXML.get('attributes', "")
+    txt = rootXML.get('text', "")
+
+    if content:
+        l = []
+        for k, v in content.items():
+            l.append( (k, v) )
+        content = l
+    else:
+        content = u""
+
+    node = OutlineNode(name, content, root, typeOutline)
+    if txt:
+        node.setComment_( txt )
+
+    root.addChild_( node )
+    if len(children) > 0:
+        try:
+            getChildrenforNode( node, children )
+        except Exception, err:
+            print err
+            # pdb.set_trace()
+            pp(children)
+    #title = os
+    return root
+
+def openRSS_(url):
+
+    url = NSURL2str(url)
+
+    if kwlog:
+        s = repr(url)
+        if len(s) > 90:
+            s = s[:91]
+        print "openRSS_( %s )" % repr(s)
+    d = feedparser.parse( url, agent=CactusVersion.user_agent )
+
+    # make basic nodes
+    root = OutlineNode("__ROOT__", "", None, typeOutline)
+
+    head = OutlineNode("head", "", root, typeOutline)
+    root.addChild_( head )
+
+    body = OutlineNode("body", "", root, typeOutline)
+    root.addChild_( body )
+
+    #
+    # head
+    #
+    
+    # feed = docs, generator, language, link, microblog_archive,
+    # microblog_endday, microblog_filename, microblog_startday, microblog_url,
+    # published, subtitle, title, updated, cloud
+    if d.feed:
+        keys = """author authors category comments cloud description docs enclosure generator
+                  generator_detail guid image language link links microblog_archive
+                  microblog_endday microblog_filename microblog_startday
+                  microblog_url published pubDate source subtitle subtitle_detail
+                  sy_updatefrequency sy_updateperiod title title_detail updated
+                  updated_parsed""".split()
+
+        feedkeys = d.feed.keys()
+        feedkeys.sort()
+
+        for k in feedkeys:
+
+            if k in ('links', 'tags', 'updated_parsed', 'authors'):
+                continue
+
+            v = d.feed[k]
+            if type(v) in (list,):
+                if len(v) > 1:
+                    print "Large header list"
+                    print k
+                    print repr(v)
+                elif len(v) == 1:
+                    v = v[0]
+
+            if type(v) not in (str, unicode, NSString,
+                               NSMutableString, objc.pyobjc_unicode):
+                if isinstance(v, dict):
+                    # pdb.set_trace()
+                    l = []
+                    for key, val in v.items():
+                        l.append( (key,val) )
+                    v = l
+                elif type(v) == time.struct_time:
+                    v = time.asctime(v)
+                else:
+                    # pdb.set_trace()
+                    # if k in ('',)
+                    if 1:
+                        print "ATTENTION RSS Head values"
+                        print "KEY:", k
+                        print "TYPE:", type(v)
+                        print "REPR:", repr(v)
+                        print
+                    v = repr(v)
+            node = OutlineNode(k, v, head, typeOutline)
+            head.addChild_( node )
+
+    otherkeys = d.keys()
+
+    if 'feed' in otherkeys:
+        otherkeys.remove("feed")
+
+    if 'entries' in otherkeys:
+        otherkeys.remove("entries")
+
+    otherkeys.sort()
+    for k in otherkeys:
+        v = d[k]
+        if type(v) not in (str, unicode, NSString, NSMutableString,
+                           objc.pyobjc_unicode,
+                           dict, feedparser.FeedParserDict):
+            v = repr(v)
+        node = OutlineNode(k, v, head, typeOutline)
+        head.addChild_( node )
+        
+    if 0:
+        # encoding
+        if 'encoding' in d:
+            node = OutlineNode('encoding', d.encoding, head, typeOutline)
+            head.addChild_( node )
+
+        # bozo
+        if 'bozo' in d:
+            node = OutlineNode('bozo', str(d.bozo), head, typeOutline)
+            head.addChild_( node )
+
+        # etag
+        if 'etag' in d:
+            node = OutlineNode('etag', d.etag, head, typeOutline)
+            head.addChild_( node )
+
+        # headers dict
+        if 'headers' in d:
+            node = OutlineNode('headers', d.headers, head, typeOutline)
+            head.addChild_( node )
+
+        # href
+        if 'href' in d:
+            node = OutlineNode('href', d.href, head, typeOutline)
+            head.addChild_( node )
+        
+        # namespaces
+        if 'namespaces' in d:
+            # pdb.set_trace()
+            node = OutlineNode('namespaces', d.namespaces, head, typeOutline)
+            head.addChild_( node )
+        
+        # version
+        if 'version' in d:
+            node = OutlineNode('version', d.version, head, typeOutline)
+            head.addChild_( node )
+    
+    #
+    # body
+    #
+    for entry in d.entries:
+        name = ""
+        if 'title' in entry:
+            # name = entry.title + "\n\n"
+            name = entry.title
+        elif 'summary' in entry:
+            name = entry.summary
+
+        #if 'summary' in entry:
+        #    name = name + entry.summary
+        value = entry
+        killkeys = ['links', 'authors', 'tags']
+        value['type'] = "rssentry"
+        #
+        # killing items which have a dictionary as value
+        #
+        # too much detail for now
+        for k, v in value.items():
+            if isinstance(v, dict) or isinstance(v, list) :
+                killkeys.append(k)
+            if k.endswith('_parsed'):
+                killkeys.append(k)
+
+        # extract enclosure
+        if 'links' in value:
+            links = value['links']
+            for link in links:
+                rel = link.get('rel', False)
+                if rel == 'enclosure':
+                    s = "%s<<<%s;%s" % (link.get('url',''),
+                                        str(link.get('length','')),
+                                        link.get('type', ""))
+                    value['enclosure'] = s
+        for k in killkeys:
+            value.pop( k, None )
+
+        node = OutlineNode(name, value, body, typeOutline)
+        body.addChild_( node )
+    return root

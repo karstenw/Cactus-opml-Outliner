@@ -8,6 +8,8 @@
 import sys
 import os
 
+import traceback
+
 import time
 import datetime
 
@@ -50,12 +52,17 @@ datestring_nsdate = CactusTools.datestring_nsdate
 
 import CactusVersion
 
+import CactusOutlineDoc
 
 import CactusDocumentTypes
 CactusOPMLType = CactusDocumentTypes.CactusOPMLType
 CactusRSSType = CactusDocumentTypes.CactusRSSType
 CactusXMLType = CactusDocumentTypes.CactusXMLType
 CactusDocumentTypesSet = CactusDocumentTypes.CactusDocumentTypesSet
+
+
+import CactusExceptions
+OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
 
 
 import Foundation
@@ -84,6 +91,8 @@ NSUserDefaults = AppKit.NSUserDefaults
 NSApplication = AppKit.NSApplication
 NSOpenPanel = AppKit.NSOpenPanel
 NSDocumentController = AppKit.NSDocumentController
+
+NSMenu = AppKit.NSMenu
 
 #NSAlert = AppKit.NSAlert
 #NSPopUpButtonWillPopUpNotification = AppKit.NSPopUpButtonWillPopUpNotification
@@ -240,7 +249,7 @@ def open_photo( url, open_=True, cache=False ):
 
 
 # TODO: change parameter to node!
-def open_node( url, nodeType=None, open_=True, cache=False ):
+def open_node( url, nodeType=None, open_=True, cache=True ):
 
     appl = NSApplication.sharedApplication()
     appdelg = appl.delegate()
@@ -267,12 +276,14 @@ def open_node( url, nodeType=None, open_=True, cache=False ):
 
     elif surl in g_qtplayer_extensions:
         # qtplayer can do http:
-        if open_:
+        if 0: #open_:
             workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
                 [ nsurl ],
                 u'com.apple.quicktimeplayer',
                 0,
                 None )
+        if cache:
+            CactusTools.cache_url( nsurl )
 
     elif surl in g_preview_extensions:
         if nsurl.isFileURL():
@@ -284,20 +295,73 @@ def open_node( url, nodeType=None, open_=True, cache=False ):
                     None )
         else:
             # preview can't do http so open it in the std browser:
-            if open_:
+            if 0: #open_:
                 workspace.openURL_( nsurl )
+            if cache:
+                CactusTools.cache_url( nsurl )
     else:
-        if open_:
+        if 0: #open_:
             workspace.openURL_( nsurl )
-    if cache:
-        CactusTools.cache_url( nsurl )
+        if cache:
+            CactusTools.cache_url( nsurl )
 
 
 class KWOutlineView(AutoBaseClass):
     """Subclass of NSOutlineView; to catch keys."""
 
     def awakeFromNib(self):
-        pass
+        # manual en- & disabling menu items
+        #pdb.set_trace()
+        self.menu = NSMenu.alloc().initWithTitle_( u"" )
+        self.menu.setDelegate_(self)
+        self.menu.addItemWithTitle_action_keyEquivalent_( u"Include", "contextMenuInclude:", u"")
+        self.menu.setAutoenablesItems_(False)
+        self.setMenu_(self.menu)
+
+        
+    def contextMenuInclude_(self, sender):
+        print "Contextaction"
+        # pdb.set_trace()
+        item = self.getSelectedRow()
+        if item.noOfChildren < 1:
+            return
+        attributes = item.getValueDict()
+        theType = attributes.get("type", "")
+        url = attributes.get("url", "")
+        url = cleanupURL( url )
+        if theType in ( 'include', 'outline', 'thumbList', 'code', 'thumbListVarCol',
+                         'thumbList'):
+
+            d = None
+            try:
+                d = opml.opml_from_string( readURL( NSURL.URLWithString_( url ), CactusOPMLType ) )
+            except OPMLParseErrorException, err:
+                print traceback.format_exc()
+                print err
+
+            if d:
+                root = CactusOutlineDoc.openOPML_( d )
+                for node in root.children:
+                    if node.name == u"body":
+                        for i in node.children:
+                            item.addChild_(i)
+                            node.removeChild_(i)
+                        break
+                del d
+        self.reloadData()
+        self.setNeedsDisplay_( True )
+        
+
+    #
+    # context menu
+    #
+    def validateMenuItem_(self, sender):
+        row = self.selectedRow()
+        print "contextrow:", row        
+        return True
+
+    def menuNeedsUpdate_(self, sender):
+        print "Menu(%s) needs update." % repr(sender)
 
     #
     # cell editor notifications

@@ -9,6 +9,10 @@ import sys
 import os
 
 import datetime
+
+
+kwdbg = True
+kwlog = True
 import pdb
 
 import re
@@ -46,7 +50,7 @@ def readURL( nsurl, type_=CactusOPMLType, cache=True ):
     # pdb.set_trace()
     print "CactusTools.readURL( '%s', '%s' )" % (url, type_)
 
-    if 1: #not cache:
+    if not cache:
         fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
     else:
         localpath = cache_url(nsurl)
@@ -277,6 +281,9 @@ def cache_url( nsurl ):
 
     url = NSURL2str( nsurl )
 
+    if kwlog:
+        print "CactusTools.cache_url( %s )" % url
+
     dodownload = False
     if os.path.exists( localpath ):
         # file already downloaded; perhaps set file modification date
@@ -297,7 +304,7 @@ def cache_url( nsurl ):
             localpath = os.path.join( localpath, "file.xml" )
         print "LOAD: %s..." % url,
         fname, info = urllib.urlretrieve(url, localpath)
-        print "done"
+        print "LOAD: %s...done" % url
         
         # get file date
         lmodfdate = os.stat( localpath ).st_mtime
