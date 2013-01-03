@@ -668,7 +668,7 @@ class KWOutlineView(AutoBaseClass):
                                 title = item.name
 
                                 # stop it if we are in a table
-                                if item.typ != outlinetypes.typeOutline:
+                                if item.typ not in outlinetypes.hierarchicalTypes:
                                     continue
 
                                 # build a new document from current attributes
@@ -790,18 +790,17 @@ class KWOutlineView(AutoBaseClass):
             if eventModifiers & NSControlKeyMask:
                 # pdb.set_trace()
                 # get selected rows
-                if 1: #delg.typ in outlinetypes.hierarchicalTypes:
-                    items = self.getSelectionItems()
-                    moveSelectionUp(self, items)
-                    #
-                    self.reloadData()
+                items = self.getSelectionItems()
+                moveSelectionUp(self, items)
+                #
+                self.reloadData()
 
-                    selection = [self.rowForItem_(i) for i in items]
-                    if selection:
-                        self.selectItemRows_( selection )
-                
-                    self.setNeedsDisplay_( True )
-                    consumed = True
+                selection = [self.rowForItem_(i) for i in items]
+                if selection:
+                    self.selectItemRows_( selection )
+            
+                self.setNeedsDisplay_( True )
+                consumed = True
 
 
         ###########################################################################
@@ -811,18 +810,17 @@ class KWOutlineView(AutoBaseClass):
             if eventModifiers & NSControlKeyMask:
                 # pdb.set_trace()
                 # get selected rows
-                if 1: #delg.typ in outlinetypes.hierarchicalTypes:
-                    items = self.getSelectionItems()
-                    moveSelectionDown(self, items)
-                    #
-                    self.reloadData()
-                    
-                    selection = [self.rowForItem_(i) for i in items]
-                    if selection:
-                        self.selectItemRows_( selection )
+                items = self.getSelectionItems()
+                moveSelectionDown(self, items)
+                #
+                self.reloadData()
                 
-                    self.setNeedsDisplay_( True )
-                    consumed = True
+                selection = [self.rowForItem_(i) for i in items]
+                if selection:
+                    self.selectItemRows_( selection )
+            
+                self.setNeedsDisplay_( True )
+                consumed = True
 
         if not consumed:
             super(KWOutlineView, self).keyDown_( theEvent )
@@ -1316,8 +1314,10 @@ class OutlineNode(NSObject):
     #
     # nodeAttributes
 
+    # that's the deal
     def __new__(cls, *args, **kwargs):
         # "Pythonic" constructor
+        # print "OutlineNode.__new__() called"
         return cls.alloc().init()
 
     def __repr__(self):
@@ -1340,6 +1340,8 @@ class OutlineNode(NSObject):
 
         self.children = NSMutableArray.arrayWithCapacity_( 10 )
         self.editable = True
+
+        # leave this here or bad things will happen
         self.retain()
 
     def setParent_(self, parent):
@@ -1505,6 +1507,7 @@ class OutlineNode(NSObject):
     def isRoot(self):
         return self.parent == None
 
+    # this is used too excessively, make it a var
     def findRoot(self):
         s = self
         while True:
