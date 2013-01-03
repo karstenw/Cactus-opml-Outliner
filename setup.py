@@ -10,7 +10,15 @@ from distutils.core import setup
 import py2app
 
 import CactusVersion
+
+# select different icons for my old dev system
+if CactusVersion.developmentversion:
+    iconpath = "+icon/small/"
+else:
+    iconpath = "+icon/large/"
+
 import CactusDocumentTypes
+
 
 
 appname = CactusVersion.appname
@@ -81,14 +89,14 @@ setup(
                 "English.lproj/NodeEditor.nib",
                 "English.lproj/OpenURL.nib",
                 "English.lproj/OpenAsAccessoryView.nib",
-                "+icon/OPMLDocument.icns",
-                "+icon/XMLDocument.icns",
-                "+icon/RSSDocument.icns"
-                ],
+                iconpath + "OPMLDocument.icns",
+                iconpath + "XMLDocument.icns",
+                iconpath + "RSSDocument.icns",
+                iconpath + "Cowskull.icns" ],
 
     options={
         'py2app':{
-            'iconfile': './+icon/Cowskull.icns',
+            'iconfile': iconpath + 'Cowskull.icns',
             'packages' : ['lxml'],
             'frameworks' : ['/usr/local/lib/libxml2.2.dylib',
                             '/usr/local/lib/libxslt.1.dylib',
