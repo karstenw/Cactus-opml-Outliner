@@ -7,24 +7,26 @@ Developed on OSX 10.4 with Python 2.7, Xcode 2.5, pyobjc 1.4 and py2app 0.53
 
 It's still in development but gets better and better.
 
-Use it to explore OPML, RSS and XML files. Nodes can be opened in the browser or in Quicktime Player. See the shortcuts section at the end.
+Use it to explore OPML, RSS, XML and HTML files. Nodes can be opened in the browser or in Quicktime Player. See the shortcuts section at the end.
 
 
 ## A Warning ##
 
-RSS and XML files are new and still in the make so please be cautious with Cactus generated files of these kinds. For example Cactus doesn't know about namespaces in RSS. They sure get lost if you save a RSS file in Cactus.
+RSS, XML and HTML files are new and still in the make so please be cautious with Cactus generated files of these kinds. For example Cactus doesn't know about namespaces in RSS. They sure get lost if you save a RSS file in Cactus.
+
+HTML files can not yet be saved.
 
 XML Text for XML files is stored currently in the "Comment" column. This is a temporary solution that will be fixed with the refactoring of the outline node attribute system.
 
 OPML files seem stable. In fact Cactus repairs some of them.
 
-RSS files can be as sloppy as feedparser lets them. When writing them they should be propper XML.
+RSS files can be as sloppy as feedparser lets them. After saving they should be clean XML.
 
 
 ## Quickstart ##
 
-Download a universal binary from
-https://www.dropbox.com/sh/azysrf5pokzp26a/h2mFhfeM6M
+Download the latest binary from
+https://www.dropbox.com/s/v4a3ayrut0mxil3/Cactus_v040.zip
 unzip and launch.
 
 Do a google search for "filetype:opml"
@@ -45,7 +47,9 @@ Selected text can be copied and pasted. The standard simple undo works for text 
 
 Look for nodes with content in the Value column, select one or more and try ctrl-alt-enter (NOT the Return key, the one on the numeric keypad). Depending on the data in those rows, new windows might open in Cactus (for linked OPML and RSS), your standard browser (for websites and pictures) or the Quicktime Player (for movies and sounds).
 
-All three document types can be saved but currently I would advise against using RSS and XML for anything serious. OPML should be stable. If you find a bug, please report it on the mailing list.
+RSS and XML types can be saved but currently I would advise against using the resulting files for anything serious.
+
+OPML should be stable. If you find a bug, please report it on the mailing list.
 
 With the new "Open As..." option in the file dialogs, it is now possible to load an opml or rss file as xml. opml as rss and vice versa makes no sense but try to see why. Some files can only be openened as opmlbecause they are buggy and opening as opml does some repairs. Opening as xml needs a clean xml file.
 
@@ -55,10 +59,14 @@ Mailing list: http://groups.google.com/group/cactus-outliner-dev
 
 Downloads page: https://www.dropbox.com/sh/azysrf5pokzp26a/h2mFhfeM6M
 
-Latest binary: https://www.dropbox.com/s/vgjym30hgxduoah/Cactus_v038.zip
+Latest binary: https://www.dropbox.com/s/v4a3ayrut0mxil3/Cactus_v040.zip
 
 
 ## Latest changes ##
+
+Cactus has now big icons up to 512 pixels.
+
+HTML is now a document type but only for reading.
 
 There is now a context menu. Only item is "Include" which will include linked opml files of the types 'include', 'outline', 'thumbList', 'code', 'thumbListVarCol' and 'thumbList'.
 
@@ -121,6 +129,8 @@ http://goo.gl/EALQi
 
 
 ## Recent versions ##
+
+v0.4.0 HTML document type and big icons.
 
 v0.3.8 Context menu
 
@@ -187,8 +197,8 @@ v0.2.0 Initial release.
 ### open/save files ###
 <table>
 <tr><td>cmd-O</td><td>open file dialog</td></tr>
-<tr><td>cmd-alt-O</td><td>open URL dialog</td>
-<tr><td>cmd-shift-S</td><td>save as dialog</td>
+<tr><td>cmd-alt-O</td><td>open URL dialog</td></tr>
+<tr><td>cmd-shift-S</td><td>save as dialog</td></tr>
 </table>
 
 ### editing ###
@@ -201,9 +211,8 @@ v0.2.0 Initial release.
 
 <tr><td>ctrl-up</td><td>move selection up</td></tr>
 <tr><td>ctrl-down</td><td>move selection down</td></tr>
-
-
 </table>
+
 
 ### deleting ###
 <table>
@@ -224,5 +233,4 @@ v0.2.0 Initial release.
 ### debugging ###
 <table>
 <tr><td>shift-enter</td><td>Dumps current document to Terminal. Cactus needs to be started via Terminal (./Cactus.app/Contents/MacOS/Cactus )</td></tr>
-
 </table>
