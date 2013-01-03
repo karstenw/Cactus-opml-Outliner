@@ -197,12 +197,14 @@ def getXMLNodes( node ):
     result = []
     for n in list(node):
 
+    
         b = {
             'name': n.tag,
             'text': n.text,
             'children': [],
             
             'attributes': {}}
+        custom = {}
 
         keys = n.attrib.keys()
 
@@ -240,6 +242,16 @@ def getXML_( etRootnode ):
 def getHTML_( etRootnode ):
     d = []
 
+    docinfokeys = (
+        'doctype',
+        'encoding',
+        'externalDTD',
+        'internalDTD',
+        'public_id',
+        'root_name',
+        'standalone',
+        'system_url',
+        'xml_version')
     docinfo = etRootnode.docinfo
     rootnode = etRootnode.getroot()
     keys = rootnode.attrib.keys()
