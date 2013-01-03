@@ -38,6 +38,7 @@ NSURL2str = CactusTools.NSURL2str
 import CactusExceptions
 OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
 XMLParseErrorException = CactusExceptions.XMLParseErrorException
+HTMLParseErrorException = CactusExceptions.HTMLParseErrorException
 
 import objc
 
@@ -79,6 +80,7 @@ import CactusDocumentTypes
 CactusOPMLType = CactusDocumentTypes.CactusOPMLType
 CactusRSSType = CactusDocumentTypes.CactusRSSType
 CactusXMLType = CactusDocumentTypes.CactusXMLType
+CactusHTMLType = CactusDocumentTypes.CactusHTMLType
 
 
 extractClasses("OutlineEditor")
@@ -236,6 +238,28 @@ class CactusOutlineDocument(AutoBaseClass):
                 if kwlog:
                     print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
                 return (False, None)
+
+        # read html content
+        elif theType == CactusHTMLType:
+            d = None
+            try:
+                d = opml.html_from_url( url )
+            except HTMLParseErrorException, v:
+                tb = unicode(traceback.format_exc())
+                v = unicode( repr(v) )
+                err = tb
+                errorDialog( message=v, title=tb )
+                return (False, None)
+
+            root = openXML_( d )
+
+            if root:
+                self.rootNode = root
+            else:
+                if kwlog:
+                    print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                return (False, None)
+
         else:
             OK = False
 
@@ -410,6 +434,19 @@ class CactusOutlineDocument(AutoBaseClass):
             t = fob.getvalue()
             fob.close()
             return NSData.dataWithBytes_length_(t, len(t))
+
+        elif theType == CactusHTMLType:
+            # pdb.set_trace()
+            rootHTML = opml.generateHTML( self.rootNode) #, indent=1 )
+            if rootHTML:
+                e = etree.ElementTree( rootXML )
+    
+                fob = cStringIO.StringIO()
+                # e.write(fob, pretty_print=True, encoding="utf-8", xml_declaration=True, method="xml" )
+                e.write(fob, encoding="utf-8", xml_declaration=True, method="xml" )
+                t = fob.getvalue()
+                fob.close()
+                return NSData.dataWithBytes_length_(t, len(t))
 
         # these are just ideas
         elif theType == CactusDocumentTypes.CactusTEXTType:

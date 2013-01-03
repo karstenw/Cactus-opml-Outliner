@@ -26,6 +26,10 @@ class XMLParseErrorException(CactusBaseException):
     """A XML source could not be parsed."""
     pass
 
+class HTMLParseErrorException(CactusBaseException):
+    """A HTML source could not be parsed."""
+    pass
+
 
 
 #

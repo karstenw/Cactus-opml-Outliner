@@ -27,8 +27,20 @@ CactusXMLType = u'XML File'
 CactusXMLFileExtensions = [ 'xml', ]
 CactusXMLOSTypes = [ '****' ]
 
+# an outliner as a general xml editor
+CactusHTMLType = u'HTML File'
+CactusHTMLFileExtensions = [ 'html', 'htm', 'php' ]
+CactusHTMLOSTypes = [ '****' ]
 
-CactusDocumentTypesSet = set( (CactusOPMLType, CactusRSSType, CactusXMLType) )
+
+CactusDocumentTypesSet = set( (CactusOPMLType,
+                               CactusRSSType,
+                               CactusXMLType,
+                               CactusHTMLType) )
+
+CactusDocumentXMLBasedTypesSet = set( (CactusOPMLType,
+                                       CactusRSSType,
+                                       CactusXMLType) )
 
 
 #

@@ -6,6 +6,11 @@ import datetime
 import xml.etree.cElementTree
 etree = xml.etree.cElementTree
 
+import lxml
+import lxml.etree
+lxmletree = lxml.etree
+#from lxml import etree as lxmletree
+
 import cStringIO
 
 import PyRSS2Gen
@@ -24,6 +29,11 @@ import CactusVersion
 import CactusExceptions
 OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
 XMLParseErrorException = CactusExceptions.XMLParseErrorException
+HTMLParseErrorException = CactusExceptions.HTMLParseErrorException
+
+import Foundation
+NSURL = Foundation.NSURL
+
 
 # some globals for opml analyzing
 keyTypes = {}
@@ -225,7 +235,31 @@ def getXML_( etRootnode ):
         b['children'] = s
     d.append(b)
     return b
-    
+
+
+def getHTML_( etRootnode ):
+    d = []
+
+    docinfo = etRootnode.docinfo
+    rootnode = etRootnode.getroot()
+    keys = rootnode.attrib.keys()
+
+    b = {
+        'name': rootnode.tag,
+        'text': rootnode.text,
+        'children': [],
+        
+        'attributes': {}}
+
+    for k in keys:
+        b['attributes'][k] = rootnode.attrib.get(k, "")
+    subs = list(rootnode)
+    if subs:
+        s = getXMLNodes(rootnode)
+        b['children'] = s
+    d.append(b)
+    return b
+    # use getXMLNodes( node )
 
 # these should be unified
 def xml_from_string(xml_text):
@@ -234,6 +268,17 @@ def xml_from_string(xml_text):
     except StandardError, v:
         raise XMLParseErrorException, "The XML file could not be parsed.\n\n%s" % v
     return getXML_( s )
+
+def html_from_url( htmlurl ):
+    if isinstance(htmlurl, NSURL):
+        htmlurl = str(htmlurl.absoluteString())
+    parser = lxmletree.HTMLParser()
+    try:
+        s = lxmletree.parse(htmlurl, parser)
+    except StandardError, v:
+        raise HTMLParseErrorException, "The HTML file could not be parsed.\n\n%s" % v
+    return getHTML_( s )
+
 
 
 def createSubNodesXML(OPnode, ETnode, level):
@@ -265,6 +310,9 @@ def createSubNodesXML(OPnode, ETnode, level):
             s = createSubNodesXML( child, ETSub, level+1 )
     return ETnode
 
+
+def generateHTML( rootNode, indent=False ):
+    pass
 
 def generateXML( rootNode, indent=False ):
     """Generate an OPML/XML tree from OutlineNode rootNode.

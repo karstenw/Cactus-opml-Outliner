@@ -22,6 +22,7 @@ import urllib
 import CactusDocumentTypes
 CactusOPMLType = CactusDocumentTypes.CactusOPMLType
 CactusDocumentTypesSet = CactusDocumentTypes.CactusDocumentTypesSet
+CactusDocumentXMLBasedTypesSet = CactusDocumentTypes.CactusDocumentXMLBasedTypesSet
 
 import CactusVersion
 
@@ -71,7 +72,7 @@ def readURL( nsurl, type_=CactusOPMLType, cache=False ):
             if "<directiveCache>" in s:
                 s = s.replace( "<directiveCache>", "</outline>")
 
-    if type_ in CactusDocumentTypesSet:
+    if type_ in CactusDocumentXMLBasedTypesSet:
         # this apllies to all since cactus currently only reads xml files
         if s.startswith("<?xml ") or s.startswith("<opml") or s.startswith("<rss"):
             re_bogusCharacters = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f]')

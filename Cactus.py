@@ -35,7 +35,6 @@ NSUserDefaults = Foundation.NSUserDefaults
 
 NSBundle = Foundation.NSBundle
 
-
 import AppKit
 NSApplication = AppKit.NSApplication
 NSDocument = AppKit.NSDocument
@@ -45,29 +44,24 @@ NSWorkspace = AppKit.NSWorkspace
 NSString = AppKit.NSString
 NSMutableString = AppKit.NSMutableString
 
-
 # grid styles
 NSTableViewGridNone = AppKit.NSTableViewGridNone
 NSTableViewSolidVerticalGridLineMask = AppKit.NSTableViewSolidVerticalGridLineMask
 NSTableViewSolidHorizontalGridLineMask = AppKit.NSTableViewSolidHorizontalGridLineMask
-
 
 import PyObjCTools
 import PyObjCTools.NibClassBuilder
 extractClasses = PyObjCTools.NibClassBuilder.extractClasses
 AutoBaseClass = PyObjCTools.NibClassBuilder.AutoBaseClass
 
-
 import outlinetypes
 typeOutline = outlinetypes.typeOutline
 typeTable = outlinetypes.typeTable
 typeBrowser = outlinetypes.typeBrowser
 
-
 import Outline
 OutlineViewDelegateDatasource = Outline.OutlineViewDelegateDatasource
 OutlineNode = Outline.OutlineNode
-
 
 import CactusOutlineDoc
 boilerplateOPML = CactusOutlineDoc.boilerplateOPML
@@ -81,7 +75,6 @@ CactusXMLType = CactusDocumentTypes.CactusXMLType
 import CactusTools
 NSURL2str = CactusTools.NSURL2str
 
-
 import opml
 
 extractClasses("MainMenu")
@@ -92,7 +85,6 @@ extractClasses("OpenAsAccessoryView")
 
 import CactusExceptions
 OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
-
 
 
 #
@@ -541,14 +533,12 @@ class CactusAppDelegate(NSObject):
         doc = Document(title, root, parentNode)
         CactusWindowController.alloc().initWithObject_type_(doc, typeTable)
 
-
     # menu "New Table"
     def newTable_(self, sender):
         if kwlog:
             print "DEPRECATED CactusAppDelegate.newTable_()"
         doc = Document("Untitled Table", None)
         CactusWindowController.alloc().initWithObject_type_(doc, typeTable)
-
 
     # menu "New Outline"
     def newOutline_(self, sender):
@@ -580,7 +570,6 @@ class CactusAppDelegate(NSObject):
         url = NSURL.URLWithString_( u"http://goo.gl/EALQi" )
         workspace.openURL_( url )
     
-
     def newOutlineFromURL_Type_(self, url, type_):
         if not isinstance(url, NSURL):
             url = NSURL.URLWithString_( url )
@@ -612,7 +601,6 @@ class CactusAppDelegate(NSObject):
         docctrl = NSDocumentController.sharedDocumentController()
         docctrl.openDocument_(sender)
 
-
     def openFile_(self, sender):
         if kwlog:
             print "DEPRECATED CactusAppDelegate.openFile_()"
@@ -634,7 +622,6 @@ class CactusAppDelegate(NSObject):
                     print "Reading OPML '%s' Done." % (opmlFile.encode("utf-8"),)
                 else:
                     print "Reading OPML '%s' FAILED." % (opmlFile.encode("utf-8"),)
-
 
     def openOPML_(self, rootOPML):
         if kwlog:
@@ -700,7 +687,6 @@ class CactusAppDelegate(NSObject):
                 name = item['name']
                 children = item['children']
 
-
                 # make table here
                 content = item.get('attributes', "")
                 content.pop('text', None)
@@ -725,7 +711,6 @@ class CactusAppDelegate(NSObject):
                         pp(item)
         #title = os
         return root
-
 
     def saveAs_(self, sender):
         if kwlog:
@@ -780,7 +765,6 @@ class CactusAppDelegate(NSObject):
         if ov:
             ov.expandSelection_(sender)
 
-
     def outlineMenuExpandAll_(self, sender):
         if kwlog:
             print "CactusAppDelegate.outlineMenuExpandAll_()"
@@ -809,8 +793,3 @@ class CactusAppDelegate(NSObject):
         if ov:
             ov.collapseToParent_(sender)
 
-    
-
-if __name__ == "XX__main__":
-    from PyObjCTools import AppHelper
-    AppHelper.runEventLoop()

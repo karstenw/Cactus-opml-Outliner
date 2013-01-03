@@ -59,6 +59,7 @@ CactusOPMLType = CactusDocumentTypes.CactusOPMLType
 CactusRSSType = CactusDocumentTypes.CactusRSSType
 CactusXMLType = CactusDocumentTypes.CactusXMLType
 CactusDocumentTypesSet = CactusDocumentTypes.CactusDocumentTypesSet
+CactusDocumentXMLBasedTypesSet = CactusDocumentTypes.CactusDocumentXMLBasedTypesSet
 
 
 import CactusExceptions

@@ -61,6 +61,14 @@ setup(
                     'CFBundleTypeOSTypes': CactusDocumentTypes.CactusXMLOSTypes,
                     'CFBundleTypeRole': 'Editor',
                     'NSDocumentClass': u'CactusOutlineDocument',
+                },
+                {
+                    'CFBundleTypeExtensions': CactusDocumentTypes.CactusHTMLFileExtensions,
+                    'CFBundleTypeIconFile': 'HTMLDocument.icns',
+                    'CFBundleTypeName': CactusDocumentTypes.CactusHTMLType,
+                    'CFBundleTypeOSTypes': CactusDocumentTypes.CactusHTMLOSTypes,
+                    'CFBundleTypeRole': 'Editor',
+                    'NSDocumentClass': u'CactusOutlineDocument',
                 }
             ],
             'LSHasLocalizedDisplayName': False,
@@ -80,5 +88,11 @@ setup(
 
     options={
         'py2app':{
-            'iconfile': './+icon/Cowskull.icns'}}
+            'iconfile': './+icon/Cowskull.icns',
+            'packages' : ['lxml'],
+            'frameworks' : ['/usr/local/lib/libxml2.2.dylib',
+                            '/usr/local/lib/libxslt.1.dylib',
+                            '/usr/local/lib/libexslt.0.dylib']
+          }
+    }
 )
