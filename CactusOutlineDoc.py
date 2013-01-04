@@ -896,7 +896,7 @@ def openXML_( rootXML):
                 n = len(childs)
             except Exception, err:
                 print 
-                pdb.set_trace()
+                # pdb.set_trace()
                 print err
             if len(childs) > 0:
                 getChildrenforNode(newnode, childs)
@@ -931,7 +931,7 @@ def openXML_( rootXML):
         n = len(children)
     except Exception, err:
         print type(children)
-        pdb.set_trace()
+        # pdb.set_trace()
         print err
         
 

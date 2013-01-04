@@ -1505,7 +1505,7 @@ class OutlineNode(NSObject):
         except Exception, err:
             print "\n\nERROR in lineHeight()"
             tb = unicode(traceback.format_exc())
-            pdb.set_trace()
+            # pdb.set_trace()
             print err
             print
             print tb

@@ -7,7 +7,7 @@ Developed on OSX 10.4 with Python 2.7, Xcode 2.5, pyobjc 1.4 and py2app 0.53
 
 It's still in development but gets better and better.
 
-Use it to explore OPML, RSS, XML and HTML files. Nodes can be opened in the browser or in Quicktime Player. See the shortcuts section at the end.
+Use it to explore OPML, RSS, XML and HTML files. Nodes can be opened in the webbrowser, in Quicktime Player or in Cactus depending on node type. See the shortcuts section at the end.
 
 
 ## A Warning ##
@@ -18,15 +18,24 @@ HTML files can not yet be saved.
 
 XML Text for XML files is stored currently in the "Comment" column. This is a temporary solution that will be fixed with the refactoring of the outline node attribute system.
 
-OPML files seem stable. In fact Cactus repairs some of them.
+OPML files seem stable. In fact Cactus repairs some damaged opml files.
 
-RSS files can be as sloppy as feedparser lets them. After saving they should be clean XML.
+RSS reading is very good since it uses feedparser.
 
+RSS writing omits namespaces.
+
+XML reading is good.
+
+XML writing seems good.
+
+HTML reading looks good.
+
+HTML writing is on the todo list.
 
 ## Quickstart ##
 
 Download the latest binary from
-https://www.dropbox.com/s/v4a3ayrut0mxil3/Cactus_v040.zip
+https://www.dropbox.com/s/8j1nzicy26bdgbw/Cactus_v041a.zip
 unzip and launch.
 
 Do a google search for "filetype:opml"
@@ -59,7 +68,7 @@ Mailing list: http://groups.google.com/group/cactus-outliner-dev
 
 Downloads page: https://www.dropbox.com/sh/azysrf5pokzp26a/h2mFhfeM6M
 
-Latest binary: https://www.dropbox.com/s/v4a3ayrut0mxil3/Cactus_v040.zip
+Latest binary: https://www.dropbox.com/s/8j1nzicy26bdgbw/Cactus_v041a.zip
 
 
 ## Latest changes ##
