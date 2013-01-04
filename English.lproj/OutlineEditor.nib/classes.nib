@@ -11,6 +11,7 @@
             CLASS = CactusOutlineWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                menRowLines = id; 
                 optAlterLines = id; 
                 optCommentVisible = id; 
                 optHLines = id; 
@@ -21,6 +22,7 @@
                 optVariableRow = id; 
                 outlineView = id; 
                 txtOutlineType = id; 
+                txtWindowStatus = id; 
             }; 
             SUPERCLASS = NSWindowController; 
         }, 
