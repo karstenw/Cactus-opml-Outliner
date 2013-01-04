@@ -8,6 +8,7 @@
                 butApplySettings = id; 
                 menBehaviour = id; 
                 menFormat = id; 
+                menRowLines = id; 
                 optAlterLines = id; 
                 optCommentVisible = id; 
                 optHLines = id; 
