@@ -173,8 +173,10 @@ def createSubNodesOPML(OPnode, ETnode, level):
         
         # don't have an empty value: tag
         if len(value) == 1:
-            if 'value' in value:
-                value.pop('value')
+            # if 'value' in value:
+            if u'' in value:
+                # value.pop('value')
+                value.pop( u'' )
 
         ETnode.attrib.update( value )
         if comment != "":
@@ -191,16 +193,30 @@ def createSubNodesOPML(OPnode, ETnode, level):
 
 # -----------------------------------------------
 
+stop = 1
+
 def getXMLNodes( node ):
     """Read the outline nodes in XML
     """
     result = []
     for n in list(node):
 
-    
+        name = n.tag
+        if not name:
+            name = u""
+        name = unicode(name)
+
+        if name == u"<built-in function Comment>":
+            name = u"<!--COMMENT-->"
+
+        text = n.text
+        if not text:
+            text = u""
+        text = unicode(text)
+
         b = {
-            'name': n.tag,
-            'text': n.text,
+            'name': name,
+            'text': text,
             'children': [],
             
             'attributes': {}}
@@ -209,7 +225,7 @@ def getXMLNodes( node ):
         keys = n.attrib.keys()
 
         for k in keys:
-            b['attributes'][k] = n.attrib.get(k, "")
+            b['attributes'][k] = unicode(n.attrib.get(k, ""))
         subs = list(n)
         if subs:
             s = getXMLNodes(n)
@@ -223,8 +239,8 @@ def getXML_( etRootnode ):
     keys = etRootnode.attrib.keys()
 
     b = {
-        'name': etRootnode.tag,
-        'text': etRootnode.text,
+        'name': unicode(etRootnode.tag),
+        'text': unicode(etRootnode.text),
         'children': [],
         
         'attributes': {}}
@@ -256,9 +272,22 @@ def getHTML_( etRootnode ):
     rootnode = etRootnode.getroot()
     keys = rootnode.attrib.keys()
 
+    name = rootnode.tag
+    if not name:
+        name = u""
+    name = unicode(name)
+
+    if name == u"<built-in function Comment>":
+        name = u"<!--COMMENT-->"
+
+    text = rootnode.text
+    if not text:
+        text = u""
+    text = unicode(text)
+
     b = {
-        'name': rootnode.tag,
-        'text': rootnode.text,
+        'name': name,
+        'text': text,
         'children': [],
         
         'attributes': {}}
@@ -539,7 +568,8 @@ def generateOPML( rootNode, indent=2 ):
             node = etree.SubElement( head, name)
             if value: # != "":
                 # node.text = value
-                node.text = unicode(value.get('value', ''))
+                # node.text = unicode(value.get('value', ''))
+                node.text = unicode(value.get( u'', ''))
             if comment != "":
                 node.attrib["comment"] = comment
             print "HEAD: ", name

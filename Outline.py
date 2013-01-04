@@ -16,6 +16,7 @@ import datetime
 import urllib
 import urlparse
 
+import math
 import feedparser
 
 
@@ -35,6 +36,7 @@ setitem = operator.setitem
 # debugging; gives nodes a serialnr
 import itertools
 counter = itertools.count()
+messagecount = itertools.count()
 
 import opml
 
@@ -438,6 +440,11 @@ class KWOutlineView(AutoBaseClass):
         if cancelled:
             self.window().makeFirstResponder_(self)
 
+    def setWindowStatus_(self, status):
+        model = self.delegate().controller
+        model.txtWindowStatus.setStringValue_( unicode(status) )
+        
+
     #
     # event capture
     #
@@ -458,7 +465,9 @@ class KWOutlineView(AutoBaseClass):
                   NSBackTabCharacter,
 
                   ord(NSUpArrowFunctionKey),
-                  ord(NSDownArrowFunctionKey) )
+                  ord(NSDownArrowFunctionKey),
+                  ord(NSLeftArrowFunctionKey),
+                  ord(NSRightArrowFunctionKey) )
 
         # tab has       0x09/0x00100
         # shift tab has 0x19/0x20102
@@ -822,6 +831,85 @@ class KWOutlineView(AutoBaseClass):
                 self.setNeedsDisplay_( True )
                 consumed = True
 
+        ###########################################################################
+        # ctrl-left
+        # select parent node
+        #
+        # ctrl-alt-left
+        # select parent node and colapse all
+        #
+        elif eventCharNum == ord(NSLeftArrowFunctionKey):
+            if eventModifiers & NSControlKeyMask:
+
+                # get selected rows
+                items = self.getSelectionItems()
+                selection = []
+                collapse = eventModifiers & NSAlternateKeyMask
+                for item in items:
+                    parent = item.parent
+                    if parent:
+                        selection.append( parent )
+                if selection:
+                    if collapse:
+                        for item in selection:
+                            self.collapseItem_collapseChildren_(item, True)
+                    selection = [self.rowForItem_(i) for i in selection]
+                    self.selectItemRows_( selection )
+
+                self.setNeedsDisplay_( True )
+                consumed = True
+
+        ###########################################################################
+        # ctrl-right
+        # select children
+        #
+        # ctrl-alt-right
+        # select children and expand
+        #
+        elif eventCharNum == ord(NSRightArrowFunctionKey):
+            if eventModifiers & NSControlKeyMask:
+
+                # get selected rows
+                items = self.getSelectionItems()
+
+                selection = []
+
+                expandChildren = eventModifiers & NSAlternateKeyMask
+
+                for item in items:
+                    children = item.children
+                    if children:
+                        self.expandItem_( item )
+                        selection.extend( children )
+                if len(selection) > 0:
+                    if expandChildren:
+                        for child in selection:
+                            if self.isExpandable_( child ):
+                                self.expandItem_expandChildren_(child, False)
+                    # convert items back to indices
+                    selection = [self.rowForItem_(i) for i in selection]
+                    self.selectItemRows_( selection )
+            
+                self.setNeedsDisplay_( True )
+                consumed = True
+
+        if 1: # do always
+            sel = self.selectedRowIndexes()
+            n = sel.count()
+            id_ = messagecount.next()
+            c = 0
+            if consumed:
+                c = 1
+            if n == 1:
+                # show node info
+                next = sel.firstIndex()
+                item = self.itemAtRow_(next)
+                level = self.levelForRow_( next )
+                s = "%i  %s  rowHeight: %i msg: %i cons: %i" % (level, item.name, item.maxHeight, id_, c)
+            else:
+                # show selection info
+                s = u"%i nodes selected msg: %i cons: %i" % (n, id_, c)
+            self.setWindowStatus_( s )
         if not consumed:
             super(KWOutlineView, self).keyDown_( theEvent )
 
@@ -1034,6 +1122,7 @@ class OutlineViewDelegateDatasource(NSObject):
         c = col.identifier()
         item = self.root.childAtIndex_( row )
         if c == u"type":
+            # return item.displayType
             return item.displayType
         elif c == u"value":
             return item.displayValue
@@ -1066,32 +1155,33 @@ class OutlineViewDelegateDatasource(NSObject):
     def outlineView_numberOfChildrenOfItem_(self, view, item):
         if not item:
             item = self.root
-        n = item.noOfChildren()
-        return n
-
+        return item.noOfChildren()
 
     def outlineView_child_ofItem_(self, view, child, item):
         if not item:
             item = self.root
         return item.childAtIndex_( child )
 
-
     def outlineView_isItemExpandable_(self, view, item):
+        if not self.typ in outlinetypes.hierarchicalTypes:
+            return False
         return item.noOfChildren() > 0
-
 
     def outlineView_objectValueForTableColumn_byItem_(self, view, col, item):
         c = col.identifier()
         if not item:
             item = self.root
         if c == u"type":
-            return item.displayType
+            # return item.displayType
+            return item.type
         elif c == u"value":
             return item.displayValue
         elif c == u"name":
-            return item.displayName
+            # return item.displayName
+            return item.name
         elif c == u"comment":
-            return item.displayComment
+            # return item.displayComment
+            return item.comment
 
 
     def outlineView_setObjectValue_forTableColumn_byItem_(self, view, value, col, item):
@@ -1102,6 +1192,7 @@ class OutlineViewDelegateDatasource(NSObject):
         if c == u"type":
             pass #return item.displayType
         elif c == u"value":
+            # if it has a parentNode it's edited attributes
             if self.parentNode != None:
                 name = item.name
                 self.parentNode.updateValue_( (name, unicode(value)) )
@@ -1122,15 +1213,15 @@ class OutlineViewDelegateDatasource(NSObject):
 
 
     def outlineView_heightOfRowByItem_(self, ov, item):
-        # where to store this
         lineheight = 14
+        maxLines = self.controller.rowLines
 
         if not self.controller.variableRowHeight:
             return lineheight
-        if item.value:
-            return len(item.value) * lineheight
-        else:
-            return lineheight
+
+        lines = min( maxLines, int(item.maxHeight))
+        lines = max(1, lines)
+        return lines * lineheight
 
     # UNUSED
     def ovUpdateItem_Key_Value_(self, item, key, value):
@@ -1184,13 +1275,15 @@ class NodeValue(object):
     def __init__(self, value):
         # pdb.set_trace()
         if type(value) != list:
-            if type(value) in (str, unicode, NSString,
+            if type(value) in (str, unicode, NSString, bool, int,
                                NSMutableString, objc.pyobjc_unicode):
                 value = self.listFromDisplayValue( value )
             elif isinstance(value, dict):
                 # pdb.set_trace()
                 value = self.listFromDictionary( value )
-
+            else:
+                print "BOGATIVE VALUETYPE:", type(value)
+                
         if type(value) != list:
             # pdb.set_trace()
             print "VALUE is not list"
@@ -1214,7 +1307,13 @@ class NodeValue(object):
         return '\n'. join(l)
 
     def listFromDisplayValue(self, displayValue):
-        lines = displayValue.split('\n')
+        try:
+            lines = displayValue.split('\n')
+        except AttributeError,err:
+            # pdb.set_trace()
+            print err
+            lines = [ unicode(displayValue) ]
+
         l = []
         for line in lines:
             if line.count(':\t') == 0:
@@ -1223,6 +1322,14 @@ class NodeValue(object):
             else:
                 k, v = line.split(':\t', 1)
             l.append( (k, v) )
+            d = {}
+            for item in l:
+                k, v = item
+                if k in d:
+                    d[k] = d[k] + u'\n' + v
+                else:
+                    d[k] = v
+            l = d.items()
         return l
 
     def listFromDictionary(self, value):
@@ -1323,32 +1430,102 @@ class OutlineNode(NSObject):
     def __repr__(self):
         return "<OutlineNode(%i, name='%s')" % (self.nodenr, self.name)
 
-    def __init__(self, name, obj, parent, typ):
+    def __init__(self, name, obj, parent, typ, rootNode=None):
         # pdb.set_trace()
 
         # this is outlinetype, not valueType
         self.typ = typ
         self.setParent_(parent)
-
+        self.maxHeight = 1
         # debugging
         self.nodenr = counter.next()
 
         self.setName_( name )
         self.setValue_( obj )
+
+        # self.setNodeAttributes( obj )
+
+        self.rootNode = rootNode
+
+        self.setAttributes_( obj )
         self.setComment_( "" )
-        self.setNodeAttributes( obj )
 
         self.children = NSMutableArray.arrayWithCapacity_( 10 )
         self.editable = True
 
+        self.maxHeight = self.setMaxLineHeight()
+
         # leave this here or bad things will happen
         self.retain()
 
+    def setMaxLineHeight(self):
+        maxVal = self.calcAttributesHeight()
+        l = self.lineHeight( self.name )
+        if l > maxVal:
+            maxVal = l
+        l = self.lineHeight( self.comment )
+        if l > maxVal:
+            maxVal = l
+        return maxVal
+
+    def setAttributes_(self, attrs):
+        d = {}
+        t = type(attrs)
+        lines = 0
+        if t in (str, unicode, NSString, bool, int, long,
+                 NSMutableString, objc.pyobjc_unicode):
+            # stringtype
+            d[ u"" ] = unicode(attrs)
+            lines = 1
+        elif t in (list, tuple):
+            #listtype
+            for item in attrs:
+                key, val = item
+                key = unicode(key)
+                val = unicode(val)
+                d[ key ] = val
+                lines += self.lineHeight( val )
+        elif t in (dict, feedparser.FeedParserDict):
+            for key in attrs:
+                val = unicode(attrs[key])
+                key = unicode(key)
+                d[ key ] = val
+                lines += self.lineHeight( val )
+        else:
+            # ???
+            pass
+        self.attributes = d
+        return lines
+
+    def lineHeight(self, val):
+        lines = 0
+        try:
+            lines += val.count( u"\r" )
+            lines += val.count( u"\n" )
+        except Exception, err:
+            print "\n\nERROR in lineHeight()"
+            tb = unicode(traceback.format_exc())
+            pdb.set_trace()
+            print err
+            print
+            print tb
+            print
+        vallength = len( val )
+        if vallength > 100:
+            # pdb.set_trace()
+            pass
+        lines += int(math.ceil(vallength / 40.0))
+        return max(1, lines)
+
+    def calcAttributesHeight(self):
+        lineheight = 0
+        for key in self.attributes:
+            lineheight += self.lineHeight( self.attributes[ key ] )
+        return lineheight
+
+
     def setParent_(self, parent):
         self.parent = parent
-
-    def releaseParent(self):
-        pass
 
     #
     def setName_(self, value):
@@ -1375,6 +1552,7 @@ class OutlineNode(NSObject):
             self.displayValue = nv.displayValue()
         self.displayType = self.type
 
+    # switched off
     def setNodeAttributes(self, nameValueList):
         """Create new node attributes from [ (k,v), ]
         """
@@ -1382,6 +1560,7 @@ class OutlineNode(NSObject):
         if type(nameValueList) in (list,):
             self.nodeAttributes.fromNameValues( nameValueList )
 
+    # UNUSED
     def addValue_(self, nameValue):
         self.value.append( nameValue )
         self.setValue_( self.value )
@@ -1389,6 +1568,7 @@ class OutlineNode(NSObject):
         m = r.model
         m.reloadData_(self)
 
+    # used in attribute editor
     def removeValue_(self, nameValue):
         # repeated myself; copied from updateValue_ ...
         # pdb.set_trace()
@@ -1410,6 +1590,7 @@ class OutlineNode(NSObject):
             m.reloadData_(self)
         return updated
 
+    # used in attribute editor
     def updateValue_(self, nameValue):
         # pdb.set_trace()
         newname, newvalue = nameValue
@@ -1433,6 +1614,7 @@ class OutlineNode(NSObject):
         m = r.model
         m.reloadData_(self)
 
+    # essential
     def getValueDict(self):
         """Create a dictionary from the value."""
         if len(self.value) == 0:
@@ -1455,9 +1637,12 @@ class OutlineNode(NSObject):
     def setComment_(self, comment):
         self.comment = comment
         self.displayComment = unicode( self.comment )
+        self.maxHeight = self.setMaxLineHeight()
 
+    # UNUSED
     def compare_(self, other):
         return cmp(self.name, other.name)
+
     #
     def noOfChildren(self):
         return self.children.count()
@@ -1491,10 +1676,8 @@ class OutlineNode(NSObject):
         if index != NSNotFound:
             c = self.children.objectAtIndex_( index )
             self.children.removeObjectAtIndex_( index )
-            # c.releaseParent()
             if kwdbg:
                 print "removeChild_RELEASE:", c
-            #c.release()
             return index
         return False
 
@@ -1509,9 +1692,12 @@ class OutlineNode(NSObject):
 
     # this is used too excessively, make it a var
     def findRoot(self):
+        if self.rootNode:
+            return self.rootNode
         s = self
         while True:
             if s.parent == None:
+                self.rootNode = s
                 return s
             s = s.parent
 

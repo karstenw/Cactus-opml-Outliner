@@ -550,6 +550,7 @@ class CactusOutlineDocument(AutoBaseClass):
 class CactusOutlineWindowController(AutoBaseClass):
     """the actual base class is NSWindowController
 
+    menRowLines
     outlineView
     optAlterLines
     optCommentVisible
@@ -582,6 +583,8 @@ class CactusOutlineWindowController(AutoBaseClass):
         self.parentNode = None
         self.variableRowHeight = True
         
+        self.rowLines = 2
+
         # check if needed
         self.document = document
 
@@ -632,15 +635,21 @@ class CactusOutlineWindowController(AutoBaseClass):
         self.commentColumn = self.outlineView.tableColumnWithIdentifier_( "comment" )
 
         # set name column to wrap
-        dataCell = self.nameColumn.dataCell()
-        dataCell.setWraps_( True )
+        self.nameColumn.dataCell().setWraps_( True )
+        self.commentColumn.dataCell().setWraps_( True )
+        self.valueColumn.dataCell().setWraps_( True )
 
         # defaults to name & value visible, type & comment invisible
-        typeVisible = self.optTypeVisible.setState_( False )
-        commentVisible = self.optCommentVisible.setState_( False )
-        self.applySettings_(None)
+        self.optTypeVisible.setState_( False )
 
-        # self.showWindow_(self)
+        self.optCommentVisible.setState_( False )
+        if document.fileType() in (CactusXMLType, CactusHTMLType):
+            # enable comment column
+            self.optCommentVisible.setState_( True )
+
+        self.menRowLines.setTitle_( u"2" )
+
+        self.applySettings_(None)
 
         # The window controller doesn't need to be retained (referenced)
         # anywhere, so we pretend to have a reference to ourselves to avoid
@@ -726,6 +735,16 @@ class CactusOutlineWindowController(AutoBaseClass):
         if self.txtOutlineType:
             self.txtOutlineType.setStringValue_( unicode( self.document.fileType() ) )
 
+        # lines per row menu
+        try:
+            l = self.menRowLines.title()
+            l = int(l)
+            self.rowLines = l
+        except StandardError, err:
+            print "\nERROR  ---  Menu Row lines '%'" % repr(l)
+            self.rowLines = 4
+            self.menRowLines.setTitle_( u"4" )
+        
         # grid style
         gridStyleMask = self.outlineView.gridStyleMask()
         newStyle = NSTableViewGridNone
@@ -859,11 +878,26 @@ def openXML_( rootXML):
             else:
                 content = u""
 
-            newnode = OutlineNode(name, content, node, typeOutline)
+            try:
+                newnode = OutlineNode(name, content, node, typeOutline)
+            except Exception, err:
+                print "\n\nERROR in openXML_()"
+                tb = unicode(traceback.format_exc())
+                print err
+                print
+                print tb
+                print
+
             if txt:
                 newnode.setComment_( txt )
 
             node.addChild_( newnode )
+            try:
+                n = len(childs)
+            except Exception, err:
+                print 
+                pdb.set_trace()
+                print err
             if len(childs) > 0:
                 getChildrenforNode(newnode, childs)
 
@@ -892,13 +926,26 @@ def openXML_( rootXML):
         node.setComment_( txt )
 
     root.addChild_( node )
-    if len(children) > 0:
+
+    try:
+        n = len(children)
+    except Exception, err:
+        print type(children)
+        pdb.set_trace()
+        print err
+        
+
+    if n > 0:
         try:
             getChildrenforNode( node, children )
         except Exception, err:
+            print "\n\nERROR in openXML_()"
+            tb = unicode(traceback.format_exc())
             print err
-            # pdb.set_trace()
-            pp(children)
+            print
+            print tb
+            print
+            # pp(children)
     #title = os
     return root
 

@@ -64,6 +64,10 @@ Latest binary: https://www.dropbox.com/s/v4a3ayrut0mxil3/Cactus_v040.zip
 
 ## Latest changes ##
 
+New shortcuts:
+ctrl-left select parent node
+ctrl-alt-left select parent node and collapse
+
 Cactus has now big icons up to 512 pixels.
 
 HTML is now a document type but only for reading.
@@ -184,13 +188,12 @@ v0.2.0 Initial release.
 ## Things that don't work: ##
 
 - error messages can currently only be seen if Cactus is started from the command line: ```./Cactus.app/Contents/MacOS/Cactus```
-- save (only save as)
 - saving when outline structure does not conform to opml (head & body element)
 - cut, copy & paste
 - nodetypes
 - header nodes are saved untouched, no automatic data update
 - honoring expansionstate, windowstate (I don't intend to)
-- freeing memory (take anything you get, give nothing back ;-)
+- freeing memory
 
 
 ## Shortcuts: ##
@@ -211,6 +214,9 @@ v0.2.0 Initial release.
 
 <tr><td>ctrl-up</td><td>move selection up</td></tr>
 <tr><td>ctrl-down</td><td>move selection down</td></tr>
+
+<tr><td>ctrl-left</td><td>select parent node</td></tr>
+<tr><td>ctrl-alt-left</td><td>select parent node and collapse</td></tr>
 </table>
 
 

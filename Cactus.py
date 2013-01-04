@@ -155,6 +155,8 @@ class OpenURLWindowController(AutoBaseClass):
     def OK_(self, sender):
         "User pressed OK button. Get data and try to open that stuff."
 
+        # pdb.set_trace()
+
         app = NSApplication.sharedApplication()
         delg = app.delegate()
         t_url = self.textfield.stringValue()
@@ -247,6 +249,8 @@ class CactusWindowController(AutoBaseClass):
         else:
             pass
 
+        self.rowLines = 2
+
         if not obj:
             obj = Document(title, None)
 
@@ -294,8 +298,9 @@ class CactusWindowController(AutoBaseClass):
         self.commentColumn = self.outlineView.tableColumnWithIdentifier_( "comment" )
 
         # set name column to wrap
-        dataCell = self.nameColumn.dataCell()
-        dataCell.setWraps_( True )
+        self.nameColumn.dataCell().setWraps_( True )
+        self.commentColumn.dataCell().setWraps_( True )
+        self.valueColumn.dataCell().setWraps_( True )
 
         # defaults to name & value visible, type & comment invisible
         typeVisible = self.optTypeVisible.setState_( False )
@@ -311,7 +316,6 @@ class CactusWindowController(AutoBaseClass):
         self.retain()
         return self
 
-
     def windowWillClose_(self, notification):
         if kwlog:
             print "DEPRECATED CactusWindowController.windowWillClose_()"
@@ -320,7 +324,6 @@ class CactusWindowController(AutoBaseClass):
         # check model.dirty
         #
         self.autorelease()
-
 
     def doubleClick_(self, sender):
         # Open a new browser window for each selected expandable item
@@ -331,10 +334,6 @@ class CactusWindowController(AutoBaseClass):
             self.outlineView.reloadData() #reloadItem_reloadChildren_( item, True )
         else:
             self.outlineView.reloadItem_reloadChildren_( item, children )
-
-    def loadFile_(self, sender):
-        pass
-            
 
     def applySettings_(self, sender):
         # pdb.set_trace()
@@ -381,6 +380,16 @@ class CactusWindowController(AutoBaseClass):
         else:
             if self.commentColumn in tableColumns:
                 self.outlineView.removeTableColumn_(self.commentColumn)
+
+        # lines per row menu
+        try:
+            l = self.menRowLines.title()
+            l = int(l)
+            self.rowLines = l
+        except StandardError, err:
+            print "\nERROR  ---  Menu Row lines '%'" % repr(l)
+            self.rowLines = 4
+            self.menRowLines.setTitle_( u"4" )
 
         # grid style
         gridStyleMask = self.outlineView.gridStyleMask()

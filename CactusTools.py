@@ -60,17 +60,61 @@ def readURL( nsurl, type_=CactusOPMLType, cache=False ):
     fob.close()
 
     if type_ == CactusOPMLType:
-        # clear bogative opmleditor opml
+        # this is a quick & dirty approach and should be applied much more carefully than
+        # it is now...
+        
+        # clear bogative opml
         if s.startswith("""<?xml encoding="ISO-8859-1" version="1.0"?>"""):
             s = s.replace("""<?xml encoding="ISO-8859-1" version="1.0"?>""",
                           """<?xml version="1.0" encoding="ISO-8859-1"?>""")
     
-            # this error occurs up until now only combined with the previous one
-            #
-            # this is a quick & dirty approach and should be applied much more carefully than
-            # it is now...
-            if "<directiveCache>" in s:
-                s = s.replace( "<directiveCache>", "</outline>")
+        # this error occurs up until now only combined with the previous one
+        if "<directiveCache>" in s:
+            s = s.replace( "<directiveCache>", "</outline>")
+
+
+        #
+        # opmleditor rules error
+        #
+        startrule = """text="&lt;rules <"""
+        endrule = """&gt;">"""
+
+        if startrule in s:
+            n = s.count(startrule)
+            print "%i OPML SUBSTITUTIONS" % n
+            # pdb.set_trace()
+            idx = s1 = s2 = 0
+            for i in range(1, n+1):
+                s1 = s.find( startrule,s2 )
+                s2 = s.find( endrule, s1 )
+                s2 = s2 + len(endrule)
+                pre = s[:s1]
+                defectiveSnippet = s[s1:s2]
+                post = s[s2:]
+                print "OLD", repr(defectiveSnippet)
+
+                # clear out false markers
+                defectiveSnippet = defectiveSnippet.replace( startrule, "<")
+                defectiveSnippet = defectiveSnippet.replace( endrule, "")
+
+                defectiveSnippet = defectiveSnippet.replace( '<', "&lt;")
+                defectiveSnippet = defectiveSnippet.replace( '>', "&gt;")
+                defectiveSnippet = defectiveSnippet.replace( '"', "&quot;")
+
+                # restore start and end
+                defectiveSnippet = 'text="' + defectiveSnippet + '">'
+
+                # advance pointer
+                s2 = len(pre) + len(defectiveSnippet)
+
+                # restore s
+                s = pre + defectiveSnippet + post
+
+                print "NEW", repr(defectiveSnippet)
+
+            fob = open( "/Users/karstenwo/Desktop/last.opml", 'w' )
+            fob.write(s)
+            fob.close()
 
     if type_ in CactusDocumentXMLBasedTypesSet:
         # this apllies to all since cactus currently only reads xml files
