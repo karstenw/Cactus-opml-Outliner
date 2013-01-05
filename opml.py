@@ -528,7 +528,7 @@ def generateRSS( rootNode, indent=2 ):
     return s
 
 
-def generateOPML( rootNode, indent=2 ):
+def generateOPML( rootNode, indent=2, expansion=None ):
     """Generate an OPML/XML tree from OutlineNode rootNode.
     
     parameters:
@@ -551,13 +551,19 @@ def generateOPML( rootNode, indent=2 ):
     headOP = rootNode.findFirstChildWithName_( "head" )
 
     head = etree.SubElement(rootOPML, "head")
-    
+
     if headOP:
         for headsub in headOP.children:
             name = headsub.name
             value = headsub.getValueDict()
             comment = headsub.comment
+            v = ""            
+            if name == 'expansionState':
+                if expansion:
+                    value = { u"": expansion }
+
             node = etree.SubElement( head, name)
+
             if value: # != "":
                 v = value[ value.keys()[0] ]
 
@@ -566,12 +572,15 @@ def generateOPML( rootNode, indent=2 ):
 
                 # node.text = unicode(value.get( u'', ''))
                 node.text = unicode(v)
+            
             if comment != "":
                 node.attrib["comment"] = comment
-            print "HEAD: ", name
+            print "HEAD: '%s': '%s' " % (name, v)
     else:
         # create generic head here
-        pass
+        if expansion:
+            node = etree.SubElement( head, "expansionState")
+            node.text = expansion
 
     body = etree.SubElement(rootOPML, "body")
     bodyOP = rootNode.findFirstChildWithName_( "body" )

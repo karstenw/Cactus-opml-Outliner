@@ -427,6 +427,87 @@ class CactusOutlineDocument(AutoBaseClass):
         super( CactusOutlineDocument, self).windowControllerDidLoadNib_(aController)
 
 
+    def calculateExpansionState_( self, rootNode ):
+        # for expansionstate
+        controllers = self.windowControllers()
+        for controller in controllers:
+            rootNode = controller.rootNode
+            ov = controller.outlineView
+            # parse root down to head
+            children = rootNode.children
+            head = body = False
+            for child in children:
+                if child.name == u"head":
+                    head = child
+                if child.name == u"body":
+                    body = child
+            #if head:
+            #    ov.collapseItem_collapseChildren_( head, True )
+
+            # start at first child of body
+            if body:
+                if len(body.children) > 0:
+                    expanded = []
+                    item = body.children[0]
+                    # expandable item 1
+                    idx = 1
+                    # is at row
+                    row = ov.rowForItem_( item )
+
+                    if ov.isItemExpanded_( item ):
+                        expanded.append( idx )
+                    
+                    while True:
+                        idx += 1
+                        row += 1
+                        item = ov.itemAtRow_( row )
+                        if not item:
+                            break
+                        if ov.isItemExpanded_( item ):
+                            expanded.append( idx )
+                        if idx % 1000 == 0:
+                            print "idx, items", idx, len(expanded)
+
+                    expanded = [str(i) for i in expanded]
+                    expanded = ', '.join( expanded )
+                    if expanded == "":
+                        expanded = "1"
+                    if kwlog:
+                        print "CactusOutlineDocument.calculateExpansionState_()"
+                        print "'%s'" % expanded
+                        print 
+                    return expanded
+
+            # scavenge document metadata
+            searchKeys = ( 'dateCreated dateModified ownerName ownerEmail '
+                           'expansionState windowTop windowLeft windowBottom '
+                           'windowRight'.split() )
+            meta = {}
+
+            if len(children) == 1:
+                outlineView.expandItem_expandChildren_(children[0], False)
+
+            if head and body: # ;-)
+                children = head.children
+
+                for child in children:
+                    k = child.name
+                    v = child.displayValue
+                    if k in searchKeys:
+                        if v:
+                            meta[k] = v
+
+                # start - collapse head - expand body
+                outlineView.collapseItem_collapseChildren_(head, True)
+                outlineView.collapseItem_collapseChildren_(body, True)
+                outlineView.expandItem_expandChildren_(body, False)
+
+                # first row is 2
+                rows = False
+                if "expansionState" in meta:
+                    rows = meta[ 'expansionState' ]
+
+
     def dataRepresentationOfType_( self, theType ):
         if kwlog:
             print "CactusOutlineDocument.dataRepresentationOfType_( %s )" % repr(theType)
@@ -434,7 +515,8 @@ class CactusOutlineDocument(AutoBaseClass):
         # future scaffolding
         if theType == CactusOPMLType:
 
-            rootOPML = opml.generateOPML( self.rootNode, indent=1 )
+            expansionState = self.calculateExpansionState_( self.rootNode )
+            rootOPML = opml.generateOPML( self.rootNode, indent=1, expansion=expansionState )
 
             e = etree.ElementTree( rootOPML )
 

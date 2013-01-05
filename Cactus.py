@@ -796,4 +796,3 @@ class CactusAppDelegate(NSObject):
         ov = self.getCurrentOutlineView()
         if ov:
             ov.collapseToParent_(sender)
-
