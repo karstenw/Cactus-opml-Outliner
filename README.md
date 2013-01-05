@@ -35,7 +35,7 @@ HTML writing is on the todo list.
 ## Quickstart ##
 
 Download the latest binary from
-https://www.dropbox.com/s/8j1nzicy26bdgbw/Cactus_v041a.zip
+https://www.dropbox.com/s/1lf1tu7qmfudhbz/Cactus_v041c.zip
 unzip and launch.
 
 Do a google search for "filetype:opml"
@@ -73,15 +73,24 @@ Latest binary: https://www.dropbox.com/s/8j1nzicy26bdgbw/Cactus_v041a.zip
 
 ## Latest changes ##
 
+Cactus now honors the expansion state of opml files when reading.
+
+A bug in the RSS generation that ommited the channel description has been corrected.
+
+A bug in the previous version which ommitted all opml head values has been corrected.
+
 New shortcuts:
-ctrl-left select parent node
-ctrl-alt-left select parent node and collapse
+ctrl-left select parents of current selection
+ctrl-alt-left select parents of current selection and collapse children
+
+ctrl-right select children of current selection
+ctrl-alt-right select children of current selection and expand children
 
 Cactus has now big icons up to 512 pixels.
 
 HTML is now a document type but only for reading.
 
-There is now a context menu. Only item is "Include" which will include linked opml files of the types 'include', 'outline', 'thumbList', 'code', 'thumbListVarCol' and 'thumbList'.
+There is now a context menu. The only item is "Include" which will include linked opml files of the types 'include', 'outline', 'thumbList', 'code', 'thumbListVarCol' and 'thumbList'.
 
 The Outline window now shows which file type was loaded. I.e. one of "OPML File", "RSS File" or "XML File".
 
