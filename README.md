@@ -73,7 +73,7 @@ Latest binary: https://www.dropbox.com/s/8j1nzicy26bdgbw/Cactus_v041a.zip
 
 ## Latest changes ##
 
-Cactus now honors the expansion state of opml files when reading.
+Cactus now reads and saves the expansion state of opml files.
 
 A bug in the RSS generation that ommited the channel description has been corrected.
 

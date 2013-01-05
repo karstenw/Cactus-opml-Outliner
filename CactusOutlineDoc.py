@@ -657,9 +657,13 @@ class CactusOutlineDocument(AutoBaseClass):
                 if child.name == u"body":
                     body = child
             # scavenge document metadata
-            searchKeys = ( 'dateCreated dateModified ownerName ownerEmail '
-                           'expansionState windowTop windowLeft windowBottom '
-                           'windowRight'.split() )
+            #
+            # not used for now
+            #
+            # 'dateCreated dateModified ownerName ownerEmail '
+            # 
+            searchKeys = ('expansionState windowTop windowLeft '
+                          'windowBottom windowRight'.split() )
             meta = {}
 
             if len(children) == 1:
