@@ -203,7 +203,7 @@ class CactusOutlineDocument(AutoBaseClass):
                 return (False, None)
 
             if d:
-                root = openOPML_( d )
+                root = openOPML_( d, urltag=NSURL2str(url) )
                 if not root:
                     if kwlog:
                         print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
@@ -320,6 +320,10 @@ class CactusOutlineDocument(AutoBaseClass):
                 
                 self.makeWindowControllers()
                 self.showWindows()
+
+            # check opml file metadata
+            if theType == CactusOPMLType:
+                pass
             return (self, err)
 
         # could not create document
@@ -556,7 +560,60 @@ class CactusOutlineDocument(AutoBaseClass):
         if kwlog:
             print "CactusOutlineDocument.showWindows()"
         super( CactusOutlineDocument, self).showWindows()
-        
+        #
+        # for expansionstate
+        controllers = self.windowControllers()
+        for controller in controllers:
+            rootNode = controller.rootNode
+            outlineView = controller.outlineView
+            # parse root down to head
+            children = rootNode.children
+            head = body = False
+            for child in children:
+                if child.name == u"head":
+                    head = child
+                if child.name == u"body":
+                    body = child
+            # scavenge document metadata
+            searchKeys = ( 'dateCreated dateModified ownerName ownerEmail '
+                           'expansionState windowTop windowLeft windowBottom '
+                           'windowRight'.split() )
+            meta = {}
+
+            if len(children) == 1:
+                outlineView.expandItem_expandChildren_(children[0], False)
+
+            if head and body: # ;-)
+                children = head.children
+
+                for child in children:
+                    k = child.name
+                    v = child.displayValue
+                    if k in searchKeys:
+                        if v:
+                            meta[k] = v
+
+                # start - collapse head - expand body
+                outlineView.collapseItem_collapseChildren_(head, True)
+                outlineView.collapseItem_collapseChildren_(body, True)
+                outlineView.expandItem_expandChildren_(body, False)
+
+                # first row is 2
+                rows = False
+                if "expansionState" in meta:
+                    rows = meta[ 'expansionState' ]
+                    try:
+                        rows = rows.split(',')
+                        rows = [int(i)+1 for i in rows if i]
+                    except Exception, err:
+                        print "\nERROR: expansionState reading failed.\n", err
+                        print
+                if rows:
+                    for row in rows:
+                        item = outlineView.itemAtRow_( row )
+                        outlineView.expandItem_expandChildren_(item, False)
+
+        outlineView.setNeedsDisplay_( True )
 
     def makeWindowControllers(self):
         if kwlog:
@@ -785,7 +842,7 @@ class CactusOutlineWindowController(AutoBaseClass):
         self.outlineView.setNeedsDisplay_( True )
 
 
-def openOPML_(rootOPML):
+def openOPML_(rootOPML, urltag=None):
     if kwlog:
         print "openOPML_()"
     """This builds the node tree and returns the root node."""
@@ -824,14 +881,16 @@ def openOPML_(rootOPML):
         # the outline head node
         head = OutlineNode("head", "", root, typeOutline, root)
         root.addChild_( head )
+        headtags = set()
         for headnode in rootOPML['head']:
             k, v = headnode
-            #v = {'value': v}
-            
-            node = OutlineNode(k, v, head, typeOutline, root)
-            #print "HEAD:", node.name
-            head.addChild_( node )
+            headtags.add( k )
+            head.addChild_( OutlineNode(k, v, head, typeOutline, root) )
 
+        if urltag:
+            if 'cactusUrl' not in headtags:
+                # add this url only once, not for every open
+                head.addChild_(OutlineNode('cactusUrl', unicode(urltag), head, typeOutline, root))
     # fill in missing opml attributes here
     # created, modified
     #
@@ -894,7 +953,8 @@ def openXML_( rootXML):
             content = c.get('attributes', "")
             txt = c.get('text', "")
             if content == "":
-                content = {u'value': ""}
+                # content = {u'value': ""}
+                content = {u'': ""}
             # content.pop('text', None)
             if content:
                 l = []

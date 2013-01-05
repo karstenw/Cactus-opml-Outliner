@@ -176,7 +176,8 @@ def createSubNodesOPML(OPnode, ETnode, level):
             # if 'value' in value:
             if u'' in value:
                 # value.pop('value')
-                value.pop( u'' )
+                # value.pop( u'' )
+                value = {}
 
         ETnode.attrib.update( value )
         if comment != "":
@@ -206,8 +207,10 @@ def getXMLNodes( node ):
             name = u""
         name = unicode(name)
 
+        special = False
         if name == u"<built-in function Comment>":
-            name = u"<!--COMMENT-->"
+            name = u"COMMENT"
+            special = True
 
         text = n.text
         if not text:
@@ -226,6 +229,8 @@ def getXMLNodes( node ):
 
         for k in keys:
             b['attributes'][k] = unicode(n.attrib.get(k, ""))
+        if special:
+            b['attributes']['cactustype'] = u"comment"
         subs = list(n)
         if subs:
             s = getXMLNodes(n)
@@ -277,8 +282,10 @@ def getHTML_( etRootnode ):
         name = u""
     name = unicode(name)
 
+    special = False
     if name == u"<built-in function Comment>":
-        name = u"<!--COMMENT-->"
+        name = u"COMMENT"
+        special = True
 
     text = rootnode.text
     if not text:
@@ -294,6 +301,8 @@ def getHTML_( etRootnode ):
 
     for k in keys:
         b['attributes'][k] = rootnode.attrib.get(k, "")
+    if special:
+        b['attributes']['cactustype'] = u"comment"
     subs = list(rootnode)
     if subs:
         s = getXMLNodes(rootnode)
@@ -324,24 +333,13 @@ def html_from_url( htmlurl ):
 
 def createSubNodesXML(OPnode, ETnode, level):
     # do attributes
-    name = OPnode.name
 
-    ETnode.attrib = OPnode.getValueDict()
-
-    if 0:
-        for k, v in value.items():
-            if type(v) not in (str, unicode):
-                value[k] = unicode(v)
-
-    comment = OPnode.comment
-
-    # ETnode.attrib = value
-    # ETnode.attrib.update( value )
-    ETnode.text = comment        
-    # don't have an empty value: tag
-#     if len(value) == 1:
-#         if 'value' in value:
-#             value.pop('value')
+    attrib = OPnode.getValueDict()
+    if 'cactustype' in attrib:
+        ETnode.append( etree.Comment( OPnode.comment ) )
+    else:
+        ETnode.text = OPnode.comment
+        ETnode.attrib = attrib
 
     if len(OPnode.children) > 0:
         
@@ -432,6 +430,7 @@ def generateRSS( rootNode, indent=2 ):
 
     backTranslator = {
         'summary': 'description',
+        'subtitle': 'description',
         'title': 'title',
         'published': 'pubDate',
         'id': 'guid'
@@ -443,6 +442,7 @@ def generateRSS( rootNode, indent=2 ):
 
     creator = "Created by Cactus v0.2.0 on %s." % (now,)
 
+    # defaults
     head_d = {
         'title': "No Channel Title",
         'description': "No Channel description.",
@@ -454,6 +454,7 @@ def generateRSS( rootNode, indent=2 ):
     if headOP:
         for headsub in headOP.children:
             name = headsub.name
+            name = backTranslator.get(name, name)
             if name in valid_RSSChannel:
                 value = headsub.getValueDict()
                 if name == 'cloud':
@@ -478,6 +479,7 @@ def generateRSS( rootNode, indent=2 ):
                     if len(value) == 1:
                         head_d[name] = value.values()[0]
                     else:
+                        
                         head_d[name] = value
         print "HEAD:"
         pp(head_d)
@@ -557,9 +559,13 @@ def generateOPML( rootNode, indent=2 ):
             comment = headsub.comment
             node = etree.SubElement( head, name)
             if value: # != "":
+                v = value[ value.keys()[0] ]
+
                 # node.text = value
                 # node.text = unicode(value.get('value', ''))
-                node.text = unicode(value.get( u'', ''))
+
+                # node.text = unicode(value.get( u'', ''))
+                node.text = unicode(v)
             if comment != "":
                 node.attrib["comment"] = comment
             print "HEAD: ", name

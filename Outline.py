@@ -635,7 +635,7 @@ class KWOutlineView(AutoBaseClass):
                                 if theType == "blogpost":
                                     if not url:
                                         url = v.get("urlTemplate", "")
-                                        url = cleanupURL( urlTemplate )
+                                        url = cleanupURL( url )
                                     if url:
                                         open_node( url )
 

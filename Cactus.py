@@ -146,7 +146,6 @@ class OpenURLWindowController(AutoBaseClass):
         self.readAsType = self.menuOpenAs.title()
 
     def windowWillClose_(self, notification):
-        #pdb.set_trace()
         # see comment in self.initWithObject_()
         self.autorelease()
 
@@ -159,13 +158,19 @@ class OpenURLWindowController(AutoBaseClass):
         t_url = self.textfield.stringValue()
         url = NSURL.URLWithString_( t_url )
         self.readAsType = self.menuOpenAs.title()
+        if t_url == u"":
+            self.close()
+            return
         if t_url not in self.visitedURLs:
-            self.visitedURLs.append( t_url )
+            self.visitedURLs.insert( 0, t_url )
             n = len(self.visitedURLs)
-            if n > 30:
-                start = n - 30
-                self.visitedURLs = self.visitedURLs[start:]
+            if n > 40:
+                self.visitedURLs = self.visitedURLs[:50]
             delg.visitedURLs = self.visitedURLs[:]
+        else:
+            # put visited url at top
+            self.visitedURLs.remove( t_url )
+            self.visitedURLs.insert( 0, t_url )
         delg.newOutlineFromURL_Type_( url, str(self.readAsType) )
         self.close()
 
