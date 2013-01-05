@@ -363,7 +363,6 @@ def generateXML( rootNode, indent=False ):
     return
      etree.Element of rootNode
     """
-    # pdb.set_trace()
 
     #
     # WARNING: This dereference needs to be removed if the OPML code is ever cleaned
@@ -372,7 +371,7 @@ def generateXML( rootNode, indent=False ):
     #
     #   In the case of XML there are 2 chained roots
     #
-    #   Cactus OPML files ommit the <opml> tag!
+    #   Cactus OPML files ommit the <opml> element!
     #
     baseOP = rootNode.children[0]
 
@@ -485,10 +484,7 @@ def generateRSS( rootNode, indent=2 ):
     body_l = []
     bodyOP = rootNode.findFirstChildWithName_( "body" )
 
-    # pdb.set_trace()
-
     if bodyOP:
-        # pdb.set_trace()
         for bodysub in bodyOP.children:
             name = bodysub.name
             value = bodysub.getValueDict()
@@ -514,17 +510,13 @@ def generateRSS( rootNode, indent=2 ):
                         # TODO: check for type here; dicts and lists may be bad
                         d[ k ] = value[key]
                         if type(d[ k ]) in (list, dict, tuple):
-                            print
-                            # pdb.set_trace()
-                            print "type error."
+                            print "\ngenerateRSS() type error.\n"
                         
             #print "ITEM:"
             #pp( d )
             body_l.append( PyRSS2Gen.RSSItem( **d ) )
 
     head_d[ 'items' ] = body_l
-
-    # pdb.set_trace()
 
     rss = PyRSS2Gen.RSS2( **head_d )
     f = cStringIO.StringIO()
@@ -543,7 +535,6 @@ def generateOPML( rootNode, indent=2 ):
     return
      etree.Element of rootNode
     """
-    # pdb.set_trace()
 
     rootOPML = etree.Element("opml")
     rootOPML.attrib["version"] = "2.0"
@@ -560,7 +551,6 @@ def generateOPML( rootNode, indent=2 ):
     head = etree.SubElement(rootOPML, "head")
     
     if headOP:
-        # pdb.set_trace()
         for headsub in headOP.children:
             name = headsub.name
             value = headsub.getValueDict()
@@ -584,7 +574,6 @@ def generateOPML( rootNode, indent=2 ):
         nodes = createSubNodesOPML(bodyOP, body, 1)
     else:
         # an outline without body
-        # pdb.set_trace()
         nodes = createSubNodesOPML(rootNode, body, 1)
 
     if indent:
@@ -598,7 +587,6 @@ def photo_from_string( photo_text ):
 
 
 def getPhotoXML( rootNode ):
-    # pdb.set_trace()
     title = rootNode.find("title")
     title = title.text
 

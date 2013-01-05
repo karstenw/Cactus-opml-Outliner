@@ -114,7 +114,6 @@ class OpenURLWindowController(AutoBaseClass):
         return cls.alloc()
 
     def init(self):
-        # pdb.set_trace()
         self = self.initWithWindowNibName_("OpenURL")
         window = self.window()
         window.setTitle_( u"Open URL…" )
@@ -155,8 +154,6 @@ class OpenURLWindowController(AutoBaseClass):
     def OK_(self, sender):
         "User pressed OK button. Get data and try to open that stuff."
 
-        # pdb.set_trace()
-
         app = NSApplication.sharedApplication()
         delg = app.delegate()
         t_url = self.textfield.stringValue()
@@ -169,7 +166,6 @@ class OpenURLWindowController(AutoBaseClass):
                 start = n - 30
                 self.visitedURLs = self.visitedURLs[start:]
             delg.visitedURLs = self.visitedURLs[:]
-        # pdb.set_trace()
         delg.newOutlineFromURL_Type_( url, str(self.readAsType) )
         self.close()
 
@@ -241,7 +237,6 @@ class CactusWindowController(AutoBaseClass):
             title = u"Unnamed Outline"
 
         elif theType == typeTable:
-            # pdb.set_trace()
             self = self.initWithWindowNibName_("TableEditor")
             title = u"Unnamed Table"
         elif theType == typeBrowser:
@@ -336,7 +331,6 @@ class CactusWindowController(AutoBaseClass):
             self.outlineView.reloadItem_reloadChildren_( item, children )
 
     def applySettings_(self, sender):
-        # pdb.set_trace()
         """target of the apply button. sets some tableview settings.
         """
         # rowHeight
@@ -447,7 +441,6 @@ class CactusDocumentController(NSDocumentController):
     def makeDocumentWithContentsOfURL_ofType_error_(self, url, theType):
         if kwlog:
             print "CactusDocumentController.makeDocumentWithContentsOfURL_ofType_error_()"
-        # pdb.set_trace()
         if self.selectedType != "automatic" and len(self.urllist) > 0:
             u = NSURL2str( url )
             if u in self.urllist:
@@ -465,7 +458,7 @@ class CactusAppDelegate(NSObject):
         if kwlog:
             print "CactusAppDelegate.initialize()"
         self.visitedURLs = []
-        self.appcontroller = None
+        self.documentcontroller = None
         # default settings for preferences
         userdefaults = NSMutableDictionary.dictionary()
 
@@ -483,7 +476,7 @@ class CactusAppDelegate(NSObject):
         if kwlog:
             print "CactusAppDelegate.applicationDidFinishLaunching_()"
 
-        self.appcontroller = CactusDocumentController.alloc().init()
+        self.documentcontroller = CactusDocumentController.alloc().init()
 
         app = NSApplication.sharedApplication()
         app.activateIgnoringOtherApps_(True)
@@ -582,7 +575,6 @@ class CactusAppDelegate(NSObject):
     def newOutlineFromURL_Type_(self, url, type_):
         if not isinstance(url, NSURL):
             url = NSURL.URLWithString_( url )
-        # pdb.set_trace()
         # just check for local files
         docc = NSDocumentController.sharedDocumentController()
         localurl = url.isFileURL()
@@ -730,7 +722,6 @@ class CactusAppDelegate(NSObject):
         if win:
             print "Save As...", win.title()
             windelg = win.delegate()
-            # pdb.set_trace()
             if windelg:
                 path = windelg.path
                 model = windelg.model
@@ -739,7 +730,6 @@ class CactusAppDelegate(NSObject):
                 f = saveAsDialog( path )
                 if f:
                     rootOPML = opml.generateOPML( root, indent=1 )
-                    # pdb.set_trace()
                     e = etree.ElementTree( rootOPML )
                     fob = open(f, 'w')
                     e.write(fob, encoding="utf-8", xml_declaration=True, method="xml" )

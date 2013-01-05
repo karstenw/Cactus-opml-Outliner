@@ -59,6 +59,13 @@ NSTableViewGridNone = AppKit.NSTableViewGridNone
 NSTableViewSolidVerticalGridLineMask = AppKit.NSTableViewSolidVerticalGridLineMask
 NSTableViewSolidHorizontalGridLineMask = AppKit.NSTableViewSolidHorizontalGridLineMask
 
+# undo manager constants
+NSChangeDone = AppKit.NSChangeDone
+NSChangeUndone = AppKit.NSChangeUndone
+NSChangeCleared = AppKit.NSChangeCleared
+NSChangeReadOtherContents = AppKit.NSChangeReadOtherContents
+NSChangeAutosaved = AppKit.NSChangeAutosaved
+
 
 import PyObjCTools
 import PyObjCTools.NibClassBuilder
@@ -110,24 +117,25 @@ def boilerplateOPML( rootNode ):
     now = datetime.datetime.now( UTC() )
     s = now.strftime("%a, %d %b %Y %H:%M:%S %Z")
 
-    head = OutlineNode("head", "", rootNode, typeOutline)
+    root = rootNode.findRoot()
+    head = OutlineNode("head", "", rootNode, typeOutline, root)
     rootNode.addChild_( head )
 
-    head.addChild_(OutlineNode("dateCreated", s, head, typeOutline))
-    head.addChild_(OutlineNode("dateModified", s, head, typeOutline))
-    head.addChild_(OutlineNode("ownerName", "", head, typeOutline))
-    head.addChild_(OutlineNode("ownerEmail", "", head, typeOutline))
-    head.addChild_(OutlineNode("expansionState", "", head, typeOutline))
-    head.addChild_(OutlineNode("vertScrollState", "", head, typeOutline))
-    head.addChild_(OutlineNode("windowTop", "", head, typeOutline))
-    head.addChild_(OutlineNode("windowLeft", "", head, typeOutline))
-    head.addChild_(OutlineNode("windowBottom", "", head, typeOutline))
-    head.addChild_(OutlineNode("windowRight", "", head, typeOutline))
+    head.addChild_(OutlineNode("dateCreated", s, head, typeOutline, root))
+    head.addChild_(OutlineNode("dateModified", s, head, typeOutline, root))
+    head.addChild_(OutlineNode("ownerName", "", head, typeOutline, root))
+    head.addChild_(OutlineNode("ownerEmail", "", head, typeOutline, root))
+    head.addChild_(OutlineNode("expansionState", "", head, typeOutline, root))
+    head.addChild_(OutlineNode("vertScrollState", "", head, typeOutline, root))
+    head.addChild_(OutlineNode("windowTop", "", head, typeOutline, root))
+    head.addChild_(OutlineNode("windowLeft", "", head, typeOutline, root))
+    head.addChild_(OutlineNode("windowBottom", "", head, typeOutline, root))
+    head.addChild_(OutlineNode("windowRight", "", head, typeOutline, root))
 
-    body = OutlineNode("body", "", rootNode, typeOutline)
+    body = OutlineNode("body", "", rootNode, typeOutline, root)
     rootNode.addChild_( body )
 
-    body.addChild_( OutlineNode("", "", body, typeOutline) )
+    body.addChild_( OutlineNode("", "", body, typeOutline, root) )
 
 
 # a cocoa NSDocument subclass
@@ -156,12 +164,15 @@ class CactusOutlineDocument(AutoBaseClass):
         self.rootNode = None
 
         #
-        self.url = ""
+        self.url = None
 
         #
         self.title = "Untitled Outline"
 
         self.outlineView = None
+
+        # TBD
+        self.setHasUndoManager_( False )
         return self
 
 
@@ -169,14 +180,10 @@ class CactusOutlineDocument(AutoBaseClass):
         """2012-12-12 KW created to disable autosaving."""
         return None
 
-
     def readFromURL_ofType_error_(self, url, theType):
         if kwlog:
-            # pdb.set_trace()
-            print ("CactusOutlineDocument.readFromURL_ofType_error_( %s, %s )"
+            print ("CactusOutlineDocument.readFromURL_ofType_error_( %s, %s )\n"
                    % (repr(url), repr(theType),))
-            # print repr(url)
-            print
 
         OK = True
         s = None
@@ -203,6 +210,10 @@ class CactusOutlineDocument(AutoBaseClass):
                     return (False, "Error creating the outline.")
                 else:
                     self.rootNode = root
+                    if not url.isFileURL():
+                        self.updateChangeCount_( NSChangeReadOtherContents )
+                    else:
+                        self.updateChangeCount_( NSChangeCleared )
             else:
                 if kwlog:
                     print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
@@ -213,6 +224,10 @@ class CactusOutlineDocument(AutoBaseClass):
             root = openRSS_( url )
             if root:
                 self.rootNode = root
+                if not url.isFileURL():
+                    self.updateChangeCount_( NSChangeReadOtherContents )
+                else:
+                    self.updateChangeCount_( NSChangeCleared )
             else:
                 if kwlog:
                     print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
@@ -234,6 +249,10 @@ class CactusOutlineDocument(AutoBaseClass):
 
             if root:
                 self.rootNode = root
+                if not url.isFileURL():
+                    self.updateChangeCount_( NSChangeReadOtherContents )
+                else:
+                    self.updateChangeCount_( NSChangeCleared )
             else:
                 if kwlog:
                     print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
@@ -255,6 +274,10 @@ class CactusOutlineDocument(AutoBaseClass):
 
             if root:
                 self.rootNode = root
+                if not url.isFileURL():
+                    self.updateChangeCount_( NSChangeReadOtherContents )
+                else:
+                    self.updateChangeCount_( NSChangeCleared )
             else:
                 if kwlog:
                     print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
@@ -313,10 +336,10 @@ class CactusOutlineDocument(AutoBaseClass):
             return (None, None)
 
         self.setFileType_( theType )
-        # pdb.set_trace()
 
-        self.rootNode = OutlineNode("__ROOT__", "", None, typeOutline)
+        self.rootNode = OutlineNode("__ROOT__", "", None, typeOutline, None)
         boilerplateOPML( self.rootNode )
+        self.updateChangeCount_( NSChangeCleared )
 
         self.variableRowHeight = True
         return (self, None)
@@ -377,7 +400,6 @@ class CactusOutlineDocument(AutoBaseClass):
 
 
     def setFileURL_( self, theURL ):
-        # pdb.set_trace()
         # print "URLType:", type(theURL)
         if not isinstance( theURL, NSURL ):
             theURL = NSURL.URLWithString_( theURL )
@@ -423,7 +445,6 @@ class CactusOutlineDocument(AutoBaseClass):
             return NSData.dataWithBytes_length_(t, len(t))
 
         elif theType == CactusXMLType:
-            # pdb.set_trace()
             rootXML = opml.generateXML( self.rootNode) #, indent=1 )
 
             e = etree.ElementTree( rootXML )
@@ -436,7 +457,6 @@ class CactusOutlineDocument(AutoBaseClass):
             return NSData.dataWithBytes_length_(t, len(t))
 
         elif theType == CactusHTMLType:
-            # pdb.set_trace()
             rootHTML = opml.generateHTML( self.rootNode) #, indent=1 )
             if rootHTML:
                 e = etree.ElementTree( rootXML )
@@ -541,10 +561,7 @@ class CactusOutlineDocument(AutoBaseClass):
     def makeWindowControllers(self):
         if kwlog:
             print "CactusOutlineDocument.makeWindowControllers()"
-        wc = CactusOutlineWindowController.alloc().initWithObject_( self )
-        self.addWindowController_( wc )
-
-
+        self.addWindowController_( CactusOutlineWindowController.alloc().initWithObject_( self ) )
 
 
 class CactusOutlineWindowController(AutoBaseClass):
@@ -576,9 +593,7 @@ class CactusOutlineWindowController(AutoBaseClass):
         self = self.initWithWindowNibName_("OutlineEditor")
         title = u"Unnamed Outline"
 
-        # pdb.set_trace()
-
-        self.path = ""
+        # self.path = ""
         self.rootNode = None
         self.parentNode = None
         self.variableRowHeight = True
@@ -588,32 +603,45 @@ class CactusOutlineWindowController(AutoBaseClass):
         # check if needed
         self.document = document
 
-        if isinstance(document, CactusOutlineDocument):
-            self.path = NSURL2str(document.url)
+        if not isinstance(document, CactusOutlineDocument):
+            print "FAKE document"
+            # pdb.set_trace()
+            print "FAKE document"
 
-            self.rootNode = document.rootNode
-            self.parentNode = document.parentNode
-            title = document.title
+        path = False
+        if document.url:
+            if document.url.isFileURL():
+                path = unicode(document.url.path())
+            else:
+                path = NSURL2str(document.url)
+        # path is a string or False now
+
+        self.rootNode = document.rootNode
+        self.parentNode = document.parentNode
+        title = document.title
 
         # get window name from url or path
-        if self.path:
-            if os.path.exists(self.path):
-                fld, fle = os.path.split(self.path)
+        if path:
+            if os.path.exists(path):
+                fld, fle = os.path.split(path)
                 title = fle
             else:
-                title = self.path
+                title = path
         else:
             # keep unnamed title
             pass
 
         self.window().setTitle_( title )
 
-        theType = typeOutline
         self.model = OutlineViewDelegateDatasource.alloc().initWithObject_type_parentNode_(
-                                                self.rootNode, theType, self.parentNode )
+                                                self.rootNode,
+                                                typeOutline,
+                                                self.parentNode )
 
-        # this is evil
+        # this is evil, and doesn't work
         self.rootNode.model = self.model
+        
+        self.model.document = document
 
         self.model.setController_( self )
 
@@ -692,8 +720,6 @@ class CactusOutlineWindowController(AutoBaseClass):
         if kwlog:
             print "CactusOutlineWindowController.applySettings_()"
 
-        # pdb.set_trace()
-
         # rowHeight
         self.variableRowHeight = self.optVariableRow.state()
 
@@ -765,7 +791,7 @@ def openOPML_(rootOPML):
     """This builds the node tree and returns the root node."""
     #
     #  Split this up.
-    def getChildrenforNode(node, children):
+    def getChildrenforNode(node, children, root):
         for c in children:
             name = c.get('name', '')
             childs = c.get('children', [])
@@ -781,28 +807,28 @@ def openOPML_(rootOPML):
             else:
                 content = u""
 
-            newnode = OutlineNode(name, content, node, typeOutline)
+            newnode = OutlineNode(name, content, node, typeOutline, root)
             node.addChild_( newnode )
             if len(childs) > 0:
-                getChildrenforNode(newnode, childs)
+                getChildrenforNode(newnode, childs, root)
 
     ######
 
     # root node for document; never visible,
     # always outline type (even for tables)
-    root = OutlineNode("__ROOT__", "", None, typeOutline)
+    root = OutlineNode("__ROOT__", "", None, typeOutline, None)
     
     # get opml head section
     if rootOPML['head']:
         
         # the outline head node
-        head = OutlineNode("head", "", root, typeOutline)
+        head = OutlineNode("head", "", root, typeOutline, root)
         root.addChild_( head )
         for headnode in rootOPML['head']:
             k, v = headnode
             #v = {'value': v}
             
-            node = OutlineNode(k, v, head, typeOutline)
+            node = OutlineNode(k, v, head, typeOutline, root)
             #print "HEAD:", node.name
             head.addChild_( node )
 
@@ -816,7 +842,7 @@ def openOPML_(rootOPML):
     if rootOPML['body']:
 
         # the outline body node
-        body = OutlineNode("body", "", root, typeOutline)
+        body = OutlineNode("body", "", root, typeOutline, root)
         root.addChild_( body )
 
         for item in rootOPML['body']:
@@ -835,12 +861,12 @@ def openOPML_(rootOPML):
             else:
                 content = u""
 
-            node = OutlineNode(name, content, body, typeOutline)
+            node = OutlineNode(name, content, body, typeOutline, root)
             # node.setValue_(content)
             body.addChild_( node )
             if len(children) > 0:
                 try:
-                    getChildrenforNode( node, children )
+                    getChildrenforNode( node, children, root )
                 except Exception, err:
                     print err
                     # pdb.set_trace()
@@ -861,7 +887,7 @@ def openXML_( rootXML):
 
     #
     #  Split this up.
-    def getChildrenforNode(node, children):
+    def getChildrenforNode(node, children, root):
         for c in children:
             name = c.get('name', '')
             childs = c.get('children', [])
@@ -879,7 +905,7 @@ def openXML_( rootXML):
                 content = u""
 
             try:
-                newnode = OutlineNode(name, content, node, typeOutline)
+                newnode = OutlineNode(name, content, node, typeOutline, root)
             except Exception, err:
                 print "\n\nERROR in openXML_()"
                 tb = unicode(traceback.format_exc())
@@ -899,13 +925,13 @@ def openXML_( rootXML):
                 # pdb.set_trace()
                 print err
             if len(childs) > 0:
-                getChildrenforNode(newnode, childs)
+                getChildrenforNode(newnode, childs, root)
 
     ######
 
     # root node for document; never visible,
     # always outline type (even for tables)
-    root = OutlineNode("__ROOT__", "", None, typeOutline)
+    root = OutlineNode("__ROOT__", "", None, typeOutline, None)
 
     rootXML = rootXML
     name = rootXML['name']
@@ -921,7 +947,7 @@ def openXML_( rootXML):
     else:
         content = u""
 
-    node = OutlineNode(name, content, root, typeOutline)
+    node = OutlineNode(name, content, root, typeOutline, root)
     if txt:
         node.setComment_( txt )
 
@@ -937,7 +963,7 @@ def openXML_( rootXML):
 
     if n > 0:
         try:
-            getChildrenforNode( node, children )
+            getChildrenforNode( node, children, root )
         except Exception, err:
             print "\n\nERROR in openXML_()"
             tb = unicode(traceback.format_exc())
@@ -961,12 +987,12 @@ def openRSS_(url):
     d = feedparser.parse( url, agent=CactusVersion.user_agent )
 
     # make basic nodes
-    root = OutlineNode("__ROOT__", "", None, typeOutline)
+    root = OutlineNode("__ROOT__", "", None, typeOutline, None)
 
-    head = OutlineNode("head", "", root, typeOutline)
+    head = OutlineNode("head", "", root, typeOutline, root)
     root.addChild_( head )
 
-    body = OutlineNode("body", "", root, typeOutline)
+    body = OutlineNode("body", "", root, typeOutline, root)
     root.addChild_( body )
 
     #
@@ -1004,7 +1030,6 @@ def openRSS_(url):
             if type(v) not in (str, unicode, NSString,
                                NSMutableString, objc.pyobjc_unicode):
                 if isinstance(v, dict):
-                    # pdb.set_trace()
                     l = []
                     for key, val in v.items():
                         l.append( (key,val) )
@@ -1012,7 +1037,6 @@ def openRSS_(url):
                 elif type(v) == time.struct_time:
                     v = time.asctime(v)
                 else:
-                    # pdb.set_trace()
                     # if k in ('',)
                     if 1:
                         print "ATTENTION RSS Head values"
@@ -1021,7 +1045,7 @@ def openRSS_(url):
                         print "REPR:", repr(v)
                         print
                     v = repr(v)
-            node = OutlineNode(k, v, head, typeOutline)
+            node = OutlineNode(k, v, head, typeOutline, root)
             head.addChild_( node )
 
     otherkeys = d.keys()
@@ -1039,44 +1063,44 @@ def openRSS_(url):
                            objc.pyobjc_unicode,
                            dict, feedparser.FeedParserDict):
             v = repr(v)
-        node = OutlineNode(k, v, head, typeOutline)
+        node = OutlineNode(k, v, head, typeOutline, root)
         head.addChild_( node )
         
     if 0:
         # encoding
         if 'encoding' in d:
-            node = OutlineNode('encoding', d.encoding, head, typeOutline)
+            node = OutlineNode('encoding', d.encoding, head, typeOutline, root)
             head.addChild_( node )
 
         # bozo
         if 'bozo' in d:
-            node = OutlineNode('bozo', str(d.bozo), head, typeOutline)
+            node = OutlineNode('bozo', str(d.bozo), head, typeOutline, root)
             head.addChild_( node )
 
         # etag
         if 'etag' in d:
-            node = OutlineNode('etag', d.etag, head, typeOutline)
+            node = OutlineNode('etag', d.etag, head, typeOutline, root)
             head.addChild_( node )
 
         # headers dict
         if 'headers' in d:
-            node = OutlineNode('headers', d.headers, head, typeOutline)
+            node = OutlineNode('headers', d.headers, head, typeOutline, root)
             head.addChild_( node )
 
         # href
         if 'href' in d:
-            node = OutlineNode('href', d.href, head, typeOutline)
+            node = OutlineNode('href', d.href, head, typeOutline, root)
             head.addChild_( node )
         
         # namespaces
         if 'namespaces' in d:
             # pdb.set_trace()
-            node = OutlineNode('namespaces', d.namespaces, head, typeOutline)
+            node = OutlineNode('namespaces', d.namespaces, head, typeOutline, root)
             head.addChild_( node )
         
         # version
         if 'version' in d:
-            node = OutlineNode('version', d.version, head, typeOutline)
+            node = OutlineNode('version', d.version, head, typeOutline, root)
             head.addChild_( node )
     
     #
@@ -1118,6 +1142,6 @@ def openRSS_(url):
         for k in killkeys:
             value.pop( k, None )
 
-        node = OutlineNode(name, value, body, typeOutline)
+        node = OutlineNode(name, value, body, typeOutline, root)
         body.addChild_( node )
     return root

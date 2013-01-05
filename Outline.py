@@ -167,6 +167,14 @@ NSFunctionKeyMask = AppKit.NSFunctionKeyMask
 NSDeviceIndependentModifierFlagsMask = AppKit.NSDeviceIndependentModifierFlagsMask
 
 
+# undo manager constants
+NSChangeDone = AppKit.NSChangeDone
+NSChangeUndone = AppKit.NSChangeUndone
+NSChangeCleared = AppKit.NSChangeCleared
+NSChangeReadOtherContents = AppKit.NSChangeReadOtherContents
+NSChangeAutosaved = AppKit.NSChangeAutosaved
+
+
 import PyObjCTools
 import PyObjCTools.NibClassBuilder
 extractClasses = PyObjCTools.NibClassBuilder.extractClasses
@@ -315,11 +323,11 @@ class KWOutlineView(AutoBaseClass):
     def awakeFromNib(self):
         # manual en- & disabling menu items
         #pdb.set_trace()
-        self.menu = NSMenu.alloc().initWithTitle_( u"" )
-        self.menu.setDelegate_(self)
-        self.menu.addItemWithTitle_action_keyEquivalent_( u"Include", "contextMenuInclude:", u"")
-        self.menu.setAutoenablesItems_(False)
-        self.setMenu_(self.menu)
+        menu = NSMenu.alloc().initWithTitle_( u"" )
+        menu.setDelegate_(self)
+        menu.addItemWithTitle_action_keyEquivalent_( u"Include", "contextMenuInclude:", u"")
+        menu.setAutoenablesItems_(False)
+        self.setMenu_(menu)
         
     #
     # context menu
@@ -333,14 +341,14 @@ class KWOutlineView(AutoBaseClass):
 
     def validateMenuItem_(self, sender):
         row = self.selectedRow()
-        print "contextrow:", row        
+        print "KWOutlineView.validateMenuItem_( %s )   row(%s)" % (repr(sender), repr(row))
         return True
 
     def menuNeedsUpdate_(self, sender):
-        print "Menu(%s) needs update." % repr(sender)
+        print "KWOutlineView.menuNeedsUpdate_()" % repr(sender)
 
     def contextMenuInclude_(self, sender):
-        print "Contextaction"
+        print "KWOutlineView.contextMenuInclude_()"
 
         # check selection; if right-click in selectio: use selection
         # else use clicked row only
@@ -351,8 +359,6 @@ class KWOutlineView(AutoBaseClass):
         #    selection = [ self.itemAtRow_(row) ]
         #else:
         selection = self.getSelectionItems()
-
-        # pdb.set_trace()
 
         for contextItem in selection:
 
@@ -384,6 +390,7 @@ class KWOutlineView(AutoBaseClass):
                                 contextItem.addChild_(i)
                                 node.removeChild_(i)
                             break
+                    del root
                     del d
         self.reloadData()
         self.setNeedsDisplay_( True )
@@ -393,6 +400,8 @@ class KWOutlineView(AutoBaseClass):
     # cell editor notifications
     #
     def textDidBeginEditing_(self, aNotification):
+        print "KWOutlineView.textDidBeginEditing_()"
+        # pp(aNotification)
         """Notification."""
         userInfo = aNotification.userInfo()
 
@@ -402,6 +411,8 @@ class KWOutlineView(AutoBaseClass):
 
 
     def textDidChange_(self, aNotification):
+        print "KWOutlineView.textDidChange_()"
+        # pp(aNotification)
         """Notification."""
         userInfo = aNotification.userInfo()
 
@@ -411,14 +422,16 @@ class KWOutlineView(AutoBaseClass):
         
 
     def textDidEndEditing_(self, aNotification):
-        """Notification."""
-        # pdb.set_trace()
+        """Notification. Text editing ended."""
+
+        # print "KWOutlineView.textDidEndEditing_()"
+        # pp(aNotification)
+
         if kwlog and kwdbg:
             print "Edit END"
         userInfo = aNotification.userInfo()
         if kwlog and kwdbg:
             pp(userInfo)
-            # pdb.set_trace()
         #textMovement = userInfo.valueForKey_( str("NSTextMovement") ).intValue()
 
         cancelled = False
@@ -491,7 +504,22 @@ class KWOutlineView(AutoBaseClass):
         # NSTabTextMovement
         # NSUpTextMovement
 
-        if kwlog and kwdbg:
+        # unused, just a scribbled idea
+        dispatch ={
+
+            None: {
+                NSBackspaceCharacter: (),
+                NSDeleteCharacter: (),
+                NSCarriageReturnCharacter: ()
+            },
+
+            NSCommandKeyMask: {},
+            NSShiftKeyMask: {},
+            NSAlternateKeyMask: {},
+            NSControlKeyMask: {}
+        }
+
+        if kwlog and 1: #kwdbg:
             print "Key: ", hex(eventCharNum), hex(eventModifiers)
 
         if eventCharNum not in mykeys:
@@ -499,7 +527,6 @@ class KWOutlineView(AutoBaseClass):
             return None
 
         delg = self.delegate()
-
         # did we swallow the event or does it need propagation?
         consumed = False
 
@@ -522,13 +549,13 @@ class KWOutlineView(AutoBaseClass):
             deleteNodes(self, selection=True)
 
             # deselect all or find a good way to select the next item
+            delg.markDirty()
             self.deselectAll_( None )
 
         ###########################################################################
         #
         # Create new node
         elif eventCharNum == NSCarriageReturnCharacter:
-            #pdb.set_trace()
             if eventModifiers & NSShiftKeyMask:
                 if kwlog and kwdbg:
                     print "SHIFT Return"
@@ -551,11 +578,8 @@ class KWOutlineView(AutoBaseClass):
             # cmd shift enter
             # cmd alt shift enter
 
-            # pdb.set_trace()
-
             if eventModifiers & (cmdShiftAlt | NSControlKeyMask):
 
-                # dive down or up
                 appl = NSApplication.sharedApplication()
                 appdelg = appl.delegate()
                 workspace= NSWorkspace.sharedWorkspace()
@@ -596,7 +620,6 @@ class KWOutlineView(AutoBaseClass):
                                 #
                                 # FIXING HACK
                                 # url = item.value
-                                # pdb.set_trace()
                                 url = item.displayValue
                                 url = cleanupURL( url )
                                 open_node( url )
@@ -669,7 +692,6 @@ class KWOutlineView(AutoBaseClass):
                     #
                     # Control Enter
                     else:
-                        # pdb.set_trace()
                         # ctrl enter
                         items = self.getSelectionItems()
                         for item in items:
@@ -682,14 +704,14 @@ class KWOutlineView(AutoBaseClass):
 
                                 # build a new document from current attributes
                                 root = OutlineNode(u"__root__", u"", None,
-                                                   outlinetypes.typeOutline)
+                                                   outlinetypes.typeOutline, None)
                                 for t in item.value:
                                     if isinstance(t, tuple):
                                         name, value = t
                                     elif isinstance(t, str):
                                         name = u"value"
                                         value = t
-                                    node = OutlineNode(name, value, root, outlinetypes.typeTable)
+                                    node = OutlineNode(name, value, root, outlinetypes.typeTable, root)
                                     root.addChild_(node)
 
                                 appdelg.newTableWithRoot_fromNode_(root, item)
@@ -761,6 +783,7 @@ class KWOutlineView(AutoBaseClass):
                     for item in sel:
                         item.moveLeft()
                     consumed = True
+                    delg.markDirty()
                     self.reloadData()
         
         ###########################################################################
@@ -789,6 +812,7 @@ class KWOutlineView(AutoBaseClass):
                 self.selectItemRows_( postselect )
                 
                 consumed = True
+                delg.markDirty()
                 self.reloadData()
 
 
@@ -797,11 +821,11 @@ class KWOutlineView(AutoBaseClass):
         # Move selection up
         elif eventCharNum == ord(NSUpArrowFunctionKey):
             if eventModifiers & NSControlKeyMask:
-                # pdb.set_trace()
                 # get selected rows
                 items = self.getSelectionItems()
                 moveSelectionUp(self, items)
                 #
+                delg.markDirty()
                 self.reloadData()
 
                 selection = [self.rowForItem_(i) for i in items]
@@ -817,11 +841,11 @@ class KWOutlineView(AutoBaseClass):
         # Move selection up
         elif eventCharNum == ord(NSDownArrowFunctionKey):
             if eventModifiers & NSControlKeyMask:
-                # pdb.set_trace()
                 # get selected rows
                 items = self.getSelectionItems()
                 moveSelectionDown(self, items)
                 #
+                delg.markDirty()
                 self.reloadData()
                 
                 selection = [self.rowForItem_(i) for i in items]
@@ -933,7 +957,6 @@ class KWOutlineView(AutoBaseClass):
         return result
 
     def getSelectedRow(self):
-        # pdb.set_trace()
         sel = self.getSelectedRowIndex()
         if sel == -1:
             return sel
@@ -988,7 +1011,7 @@ class KWOutlineView(AutoBaseClass):
         self.selectItemRows_( postselect )
 
 
-class NiceError:
+class NiceError(object):
     """Wrapper for an exception so we can display it nicely in the browser."""
 
     def __init__(self, exc_info):
@@ -1016,7 +1039,6 @@ def stdAction( node, level ):
 
 def visitOutline(startnode, startlevel=0, depthFirst=False, action=stdAction):
     # Debugging HACK
-    # pdb.set_trace()
     action(startnode, startlevel)
     if len(startnode.children) > 0:
         for p in startnode.children:
@@ -1055,10 +1077,8 @@ class OutlineViewDelegateDatasource(NSObject):
     #   parentNode
     #   root
     #   controller
-    #   dirty
     #   restricted
-
-
+    
     def init(self):
         self = super(OutlineViewDelegateDatasource, self).init()
         if not self:
@@ -1067,15 +1087,13 @@ class OutlineViewDelegateDatasource(NSObject):
         self.parentNode = None
         self.root = None
         self.controller = None
-        self.dirty = 0
-
+        self.document = None
+        
         # not yet used; it's an idea for rss documents to constrain node movements.
         self.restricted = False
         return self
 
-
     def initWithObject_type_parentNode_(self, obj, typ, parentNode):
-
         self = self.init()
 
         if not self:
@@ -1085,17 +1103,20 @@ class OutlineViewDelegateDatasource(NSObject):
         self.parentNode = parentNode
 
         if not isinstance(obj, OutlineNode):
-            obj = OutlineNode(unicode(obj), "", None, outlinetypes.typeOutline)
+            obj = OutlineNode(unicode(obj), "", None, outlinetypes.typeOutline, None)
         self.root = obj
         return self
 
 
-    def release():
+    def release(self):
         if kwdbg:
             print "MODEL_release"
         self.root.release()
         super(OutlineViewDelegateDatasource, self).release()
 
+    def markDirty(self):
+        if self.document != None:
+            self.document.updateChangeCount_( NSChangeDone )
 
     def setController_(self, controller):
         self.controller = controller
@@ -1185,7 +1206,6 @@ class OutlineViewDelegateDatasource(NSObject):
 
 
     def outlineView_setObjectValue_forTableColumn_byItem_(self, view, value, col, item):
-        # pdb.set_trace()
         c = col.identifier()
         if not item:
             item = self.root
@@ -1198,13 +1218,13 @@ class OutlineViewDelegateDatasource(NSObject):
                 self.parentNode.updateValue_( (name, unicode(value)) )
                 
             item.setValue_( value )
-            self.dirty += 1
+            self.markDirty()
         elif c == u"name":
             item.setName_(value)
-            self.dirty += 1
+            self.markDirty()
         elif c == u"comment":
             item.setComment_(value)
-            self.dirty += 1
+            self.markDirty()
 
 
     # delegate method
@@ -1238,7 +1258,6 @@ class OutlineViewDelegateDatasource(NSObject):
     # outlineView:heightOfRowByItem:
     # outlineView:isGroupItem: 10.5
     # outlineView:shouldCollapseItem:
-    # outlineView:shouldEditTableColumn:item:
     # outlineView:shouldExpandItem:
     # outlineView:shouldSelectItem:
     # outlineView:shouldSelectTableColumn:
@@ -1273,19 +1292,16 @@ class NodeValue(object):
     """
 
     def __init__(self, value):
-        # pdb.set_trace()
         if type(value) != list:
             if type(value) in (str, unicode, NSString, bool, int,
                                NSMutableString, objc.pyobjc_unicode):
                 value = self.listFromDisplayValue( value )
             elif isinstance(value, dict):
-                # pdb.set_trace()
                 value = self.listFromDictionary( value )
             else:
                 print "BOGATIVE VALUETYPE:", type(value)
                 
         if type(value) != list:
-            # pdb.set_trace()
             print "VALUE is not list"
 
         self.value = value
@@ -1295,7 +1311,6 @@ class NodeValue(object):
         # maxlen = max([len(k) for k in self.value.keys()])
         l = []
         if not isinstance(self.value, list):
-            # pdb.set_trace()
             print "VALUE is not list"
             print repr(self.value)
         for t in self.value:
@@ -1310,7 +1325,6 @@ class NodeValue(object):
         try:
             lines = displayValue.split('\n')
         except AttributeError,err:
-            # pdb.set_trace()
             print err
             lines = [ unicode(displayValue) ]
 
@@ -1430,13 +1444,16 @@ class OutlineNode(NSObject):
     def __repr__(self):
         return "<OutlineNode(%i, name='%s')" % (self.nodenr, self.name)
 
-    def __init__(self, name, obj, parent, typ, rootNode=None):
-        # pdb.set_trace()
+    def __init__(self, name, obj, parent, typ, rootNode):
 
         # this is outlinetype, not valueType
+        self.initphase = True
         self.typ = typ
-        self.setParent_(parent)
         self.maxHeight = 1
+        self.setParent_(parent)
+        self.rootNode = rootNode
+        
+
         # debugging
         self.nodenr = counter.next()
 
@@ -1444,8 +1461,6 @@ class OutlineNode(NSObject):
         self.setValue_( obj )
 
         # self.setNodeAttributes( obj )
-
-        self.rootNode = rootNode
 
         self.setAttributes_( obj )
         self.setComment_( "" )
@@ -1455,8 +1470,10 @@ class OutlineNode(NSObject):
 
         self.maxHeight = self.setMaxLineHeight()
 
+        self.initphase = False
         # leave this here or bad things will happen
         self.retain()
+
 
     def setMaxLineHeight(self):
         maxVal = self.calcAttributesHeight()
@@ -1505,14 +1522,12 @@ class OutlineNode(NSObject):
         except Exception, err:
             print "\n\nERROR in lineHeight()"
             tb = unicode(traceback.format_exc())
-            # pdb.set_trace()
             print err
             print
             print tb
             print
         vallength = len( val )
         if vallength > 100:
-            # pdb.set_trace()
             pass
         lines += int(math.ceil(vallength / 40.0))
         return max(1, lines)
@@ -1571,7 +1586,6 @@ class OutlineNode(NSObject):
     # used in attribute editor
     def removeValue_(self, nameValue):
         # repeated myself; copied from updateValue_ ...
-        # pdb.set_trace()
         newname, newvalue = nameValue
         updated = idx = False
         for i,t in enumerate(self.value):
@@ -1592,7 +1606,6 @@ class OutlineNode(NSObject):
 
     # used in attribute editor
     def updateValue_(self, nameValue):
-        # pdb.set_trace()
         newname, newvalue = nameValue
         updated = idx = None
         for i,t in enumerate(self.value):
@@ -1692,12 +1705,13 @@ class OutlineNode(NSObject):
 
     # this is used too excessively, make it a var
     def findRoot(self):
-        if self.rootNode:
+        if self.rootNode != None:
             return self.rootNode
         s = self
         while True:
             if s.parent == None:
-                self.rootNode = s
+                if s != self:
+                    self.rootNode = s
                 return s
             s = s.parent
 
@@ -1866,7 +1880,7 @@ def deleteNodes(ov, nodes=(), selection=False):
             deleted = parentNode.removeValue_( (item.name, item.value) )
         if deleted:
             p.removeChild_( item )
-            delg.dirty += 1
+            delg.markDirty()
     ov.reloadData()
 
 def createNode(ov, selection, startEditing=True):
@@ -1880,9 +1894,9 @@ def createNode(ov, selection, startEditing=True):
     if selection == -1:
         rowIndex = ov.delegate().appendToRoot_Value_(u"", u"")
     else:
-        # pdb.set_trace()
         p = selection.parent
-        node = OutlineNode(u"", "", selection.parent, typ)
+        root = p.rootNode
+        node = OutlineNode(u"", "", p, typ, root)
         targetIdx = selection.nextIndex()
         if targetIdx == -1:
             p.addChild_( node )
@@ -1898,7 +1912,7 @@ def createNode(ov, selection, startEditing=True):
         ov.selectRowIndexes_byExtendingSelection_(s, False)
         ov.reloadData()
         ov.editColumn_row_withEvent_select_(0, rowIndex, None, True)
-    delg.dirty += 1
+    delg.markDirty()
 
 def moveSelectionUp(ov, items):
     delg = ov.delegate()
@@ -1915,7 +1929,7 @@ def moveSelectionUp(ov, items):
         previousIndex = previous.siblingIndex()
         parent.removeChild_( item )
         parent.addChild_atIndex_(item, previousIndex)
-        delg.dirty += 1
+        delg.markDirty()
 
 def moveSelectionDown(ov, items):
     #
@@ -1925,7 +1939,6 @@ def moveSelectionDown(ov, items):
     # sortorder
     delg = ov.delegate()
     items.reverse()
-    # pdb.set_trace()
     for item in items:
 
         parent = item.parent
@@ -1935,14 +1948,13 @@ def moveSelectionDown(ov, items):
         if next == -1:
             return
         parent.removeChild_( item )
-        # pdb.set_trace()
         # after removal of item, nexitndex changes
         nextIndex = next.nextIndex()
         if nextIndex == -1:
             parent.addChild_( item )
         else:
             parent.addChild_atIndex_(item, nextIndex)
-        delg.dirty += 1
+        delg.markDirty()
 
 def moveSelectionLeft(ov, selection):
     pass
@@ -1953,7 +1965,6 @@ def moveSelectionRight(ov, selection):
 def cleanupURL( url ):
     # lots of URLs contain spaces, &, '
 
-    # pdb.set_trace()
     url = NSURL2str(url)
 
     purl = urlparse.urlparse( url )

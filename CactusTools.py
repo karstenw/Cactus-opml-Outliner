@@ -48,7 +48,6 @@ def readURL( nsurl, type_=CactusOPMLType, cache=False ):
     """Read a file. May be local, may be http"""
 
     url = NSURL2str(nsurl)
-    # pdb.set_trace()
     print "CactusTools.readURL( '%s', '%s' )" % (url, type_)
 
     if not cache:
@@ -68,9 +67,13 @@ def readURL( nsurl, type_=CactusOPMLType, cache=False ):
             s = s.replace("""<?xml encoding="ISO-8859-1" version="1.0"?>""",
                           """<?xml version="1.0" encoding="ISO-8859-1"?>""")
     
+            if kwlog:
+                print "\nBOGUS XML DELARATION REPLACED\n"
         # this error occurs up until now only combined with the previous one
         if "<directiveCache>" in s:
             s = s.replace( "<directiveCache>", "</outline>")
+            if kwlog:
+                print "\nBOGUS <directiveCache> XML TAG REPLACED\n"
 
 
         #
@@ -81,8 +84,8 @@ def readURL( nsurl, type_=CactusOPMLType, cache=False ):
 
         if startrule in s:
             n = s.count(startrule)
-            print "%i OPML SUBSTITUTIONS" % n
-            # pdb.set_trace()
+            if kwlog:
+                print "BOGUS OPML RULE SECTION: %i SUBSTITUTIONS" % n
             idx = s1 = s2 = 0
             for i in range(1, n+1):
                 s1 = s.find( startrule,s2 )
@@ -91,7 +94,9 @@ def readURL( nsurl, type_=CactusOPMLType, cache=False ):
                 pre = s[:s1]
                 defectiveSnippet = s[s1:s2]
                 post = s[s2:]
-                print "OLD", repr(defectiveSnippet)
+                
+                if kwlog:
+                    print "\nOLD", repr(defectiveSnippet)
 
                 # clear out false markers
                 defectiveSnippet = defectiveSnippet.replace( startrule, "<")
@@ -110,11 +115,8 @@ def readURL( nsurl, type_=CactusOPMLType, cache=False ):
                 # restore s
                 s = pre + defectiveSnippet + post
 
-                print "NEW", repr(defectiveSnippet)
-
-            fob = open( "/Users/karstenwo/Desktop/last.opml", 'w' )
-            fob.write(s)
-            fob.close()
+                if kwlog:
+                    print "\nNEW", repr(defectiveSnippet)
 
     if type_ in CactusDocumentXMLBasedTypesSet:
         # this apllies to all since cactus currently only reads xml files
@@ -242,8 +244,6 @@ def getFileProperties( theFile ):
     sfm = NSFileManager.defaultManager()
     props = sfm.fileAttributesAtPath_traverseLink_( theFile, True )
 
-    # pdb.set_trace()
-
     mtprops = props.mutableCopy()
     mtprops.removeObjectsForKeys_( [
         u"NSFileExtensionHidden",
@@ -315,14 +315,11 @@ def setFileModificationDate( filepath, modfdt ):
     print "Setting file(%s) modification date to %s" % (filename, repr(modfdt))
 
 def cache_url( nsurl ):
-    # pdb.set_trace()
     localpath = getDownloadFolder(nsurl)
 
     folder, filename = os.path.split( localpath )
     if not os.path.exists(folder):
         os.makedirs( folder )
-
-    # pdb.set_trace()
 
     url = NSURL2str( nsurl )
 
