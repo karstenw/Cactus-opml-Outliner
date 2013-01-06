@@ -30,7 +30,7 @@ XML writing seems good.
 
 HTML reading looks good.
 
-HTML writing is on the todo list.
+HTML writing works but is not good yet. HTML DOCTYPE declarations are missing.
 
 ## Quickstart ##
 
@@ -72,6 +72,8 @@ Latest binary: https://www.dropbox.com/s/8j1nzicy26bdgbw/Cactus_v041a.zip
 
 
 ## Latest changes ##
+
+Cactus now reads and saves the window position of opml files.
 
 Cactus now reads and saves the expansion state of opml files.
 
