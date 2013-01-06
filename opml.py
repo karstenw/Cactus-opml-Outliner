@@ -555,7 +555,10 @@ def generateRSS( rootNode, indent=2 ):
                  'description': "No Item description."}
 
             for key in value:
+                v = value[key]
                 k = backTranslator.get(key, key)
+                if k == "summary":
+                    k = "description"
                 if k in valid_RSSItems:
 
                     if k == 'enclosure':
@@ -571,7 +574,7 @@ def generateRSS( rootNode, indent=2 ):
                         d[k] = enc
                     else:
                         # TODO: check for type here; dicts and lists may be bad
-                        d[ k ] = value[key]
+                        d[ k ] = v #value[key]
                         if type(d[ k ]) in (list, dict, tuple):
                             print "\ngenerateRSS() type error.\n"
                         
@@ -589,7 +592,7 @@ def generateRSS( rootNode, indent=2 ):
     return s
 
 
-def generateOPML( rootNode, indent=2, expansion=None ):
+def generateOPML( rootNode, indent=2, expansion={} ):
     """Generate an OPML/XML tree from OutlineNode rootNode.
     
     parameters:
@@ -615,17 +618,18 @@ def generateOPML( rootNode, indent=2, expansion=None ):
 
     head = etree.SubElement(rootOPML, "head")
 
-    expandCreated = False
+    expandCreated = set()
     if headOP:
         for headsub in headOP.children:
             name = headsub.name
             value = headsub.getValueDict()
             comment = headsub.comment
-            v = ""            
-            if name == 'expansionState':
-                if expansion:
-                    value = { u"": expansion }
-                    expandCreated = True
+            v = ""
+
+            if name in expansion:
+                value = { u"": unicode(expansion[name]) }
+                expandCreated.add(name)
+
             node = etree.SubElement( head, name)
 
             if value: # != "":
@@ -640,16 +644,19 @@ def generateOPML( rootNode, indent=2, expansion=None ):
             if comment != "":
                 node.attrib["comment"] = comment
             print "HEAD: '%s': '%s' " % (name, v)
+        # add missing keys
         if expansion:
-            if not expandCreated:
-                node = etree.SubElement( head, "expansionState")
-                node.text = expansion
+            for key in expansion:
+                if key not in expandCreated:
+                    node = etree.SubElement( head, key)
+                    node.text = unicode(expansion[key])
                 
     else:
         # create generic head here
-        if expansion:
-            node = etree.SubElement( head, "expansionState")
-            node.text = expansion
+        for key in expansion:
+            if key not in expandCreated:
+                node = etree.SubElement( head, key)
+                node.text = expansion[key]
 
     body = etree.SubElement(rootOPML, "body")
     bodyOP = rootNode.findFirstChildWithName_( "body" )
