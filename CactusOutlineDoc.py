@@ -46,6 +46,7 @@ import Foundation
 NSObject = Foundation.NSObject
 NSURL = Foundation.NSURL
 NSData = Foundation.NSData
+NSMakeRect = Foundation.NSMakeRect
 
 import AppKit
 NSDocument = AppKit.NSDocument
@@ -192,6 +193,7 @@ class CactusOutlineDocument(AutoBaseClass):
 
         # read opml content
         if theType == CactusOPMLType:
+            # pdb.set_trace()
             d = None
             try:
                 d = opml.opml_from_string( readURL( url, CactusOPMLType ) )
@@ -429,10 +431,22 @@ class CactusOutlineDocument(AutoBaseClass):
 
     def calculateExpansionState_( self, rootNode ):
         # for expansionstate
+        # pdb.set_trace()
         controllers = self.windowControllers()
         for controller in controllers:
+            winframe = {}
             rootNode = controller.rootNode
             ov = controller.outlineView
+            win = ov.window()
+            frame = win.frame()
+            if frame:
+                winframe = {
+                    'windowLeft': int(frame.origin.x),
+                    'windowTop': int(frame.origin.y),
+                    'windowRight': int(frame.origin.x + frame.size.width),
+                    'windowBottom': int(frame.origin.y + frame.size.height)
+                }                    
+
             # parse root down to head
             children = rootNode.children
             head = body = False
@@ -476,7 +490,8 @@ class CactusOutlineDocument(AutoBaseClass):
                         print "CactusOutlineDocument.calculateExpansionState_()"
                         print "'%s'" % expanded
                         print 
-                    return expanded
+                    winframe['expansionState'] = expanded
+                    return winframe
 
             # scavenge document metadata
             searchKeys = ( 'dateCreated dateModified ownerName ownerEmail '
@@ -685,19 +700,32 @@ class CactusOutlineDocument(AutoBaseClass):
                 outlineView.expandItem_expandChildren_(body, False)
 
                 # first row is 2
-                rows = False
-                if "expansionState" in meta:
-                    rows = meta[ 'expansionState' ]
+                rows = meta.get("expansionState", [])
+                # pdb.set_trace()
+                if rows:
                     try:
                         rows = rows.split(',')
                         rows = [int(i)+1 for i in rows if i]
                     except Exception, err:
                         print "\nERROR: expansionState reading failed.\n", err
                         print
-                if rows:
-                    for row in rows:
-                        item = outlineView.itemAtRow_( row )
-                        outlineView.expandItem_expandChildren_(item, False)
+                    if rows:
+                        for row in rows:
+                            item = outlineView.itemAtRow_( row )
+                            outlineView.expandItem_expandChildren_(item, False)
+                keys = 'windowLeft windowTop windowRight windowBottom'.split()
+                coords = []
+                # pdb.set_trace()
+                try:
+                    for key in keys:
+                        coords.append( float( meta[key] ))
+                    window = outlineView.window()
+                    s = NSMakeRect(coords[0], coords[1], coords[2] - coords[0], coords[3] - coords[1])
+                    window.setFrame_display_animate_(s, True, True)
+                except StandardError, err:
+                    print err
+                    print "No window setting for you."
+                break
 
         outlineView.setNeedsDisplay_( True )
 

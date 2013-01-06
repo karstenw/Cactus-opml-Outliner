@@ -373,7 +373,7 @@ class KWOutlineView(AutoBaseClass):
             url = attributes.get("url", "")
             url = cleanupURL( url )
             if theType in ( 'include', 'outline', 'thumbList', 'code', 'thumbListVarCol',
-                            'thumbList'):
+                            'thumbList', 'blogpost'):
     
                 d = None
                 try:
@@ -523,7 +523,7 @@ class KWOutlineView(AutoBaseClass):
             NSControlKeyMask: {}
         }
 
-        if kwlog and 1: #kwdbg:
+        if kwlog and 0: #kwdbg:
             print "Key: ", hex(eventCharNum), hex(eventModifiers)
 
         if eventCharNum not in mykeys:
@@ -1235,7 +1235,7 @@ class OutlineViewDelegateDatasource(NSObject):
         pass
 
     def outlineViewSelectionDidChange_( self, aNotification ):
-        print "outlineViewSelectionDidChange_()"
+        # print "outlineViewSelectionDidChange_()"
 
         if aNotification:
             ov = aNotification.object()
