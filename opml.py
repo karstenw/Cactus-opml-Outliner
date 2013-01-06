@@ -3,17 +3,7 @@
 import os
 import datetime
 
-import xml.etree.cElementTree
-etree = xml.etree.cElementTree
-
-import lxml
-import lxml.etree
-lxmletree = lxml.etree
-#from lxml import etree as lxmletree
-
 import cStringIO
-
-import PyRSS2Gen
 
 import pprint
 pp = pprint.pprint
@@ -23,6 +13,17 @@ kwlog = False
 import pdb
 
 
+import lxml
+import lxml.etree
+lxmletree = lxml.etree
+
+import xml.etree.cElementTree
+etree = xml.etree.cElementTree
+
+#import lxml.html
+#import lxml.html.builder
+
+import PyRSS2Gen
 
 import CactusVersion
 
@@ -262,7 +263,7 @@ def getXML_( etRootnode ):
 
 def getHTML_( etRootnode ):
     d = []
-
+    # pdb.set_trace()
     docinfokeys = (
         'doctype',
         'encoding',
@@ -345,13 +346,77 @@ def createSubNodesXML(OPnode, ETnode, level):
         
         # do children
         for child in OPnode.children:
+            attrib = child.getValueDict()
             ETSub = etree.SubElement( ETnode, child.name)
             s = createSubNodesXML( child, ETSub, level+1 )
     return ETnode
 
 
+def reorderAttribKeys( d ):
+    keys = d.keys()
+    if 'name' in keys:
+        keys.remove( 'name' )
+        keys.insert( 0, 'name' )
+    if 'content' in keys:
+        keys.remove( 'content' )
+        keys.append( 'content' )
+    return keys    
+
+
+def createSubNodesHTML(OPnode, ETnode, level):
+
+    attrib = OPnode.getValueDict()
+    attrib_keys = reorderAttribKeys( attrib )
+    ETnode.text = OPnode.comment
+    # ETnode.attrib.update( attrib )
+
+    for key in attrib_keys:
+        ETnode.attrib[key] = attrib[key]
+
+    if len(OPnode.children) > 0:
+        # do children
+        for child in OPnode.children:
+            attrib = child.getValueDict()
+            if 'cactustype' in attrib:
+                ETSub = lxmletree.Comment( child.comment )
+                ETnode.append( ETSub )
+            else:
+                ETSub = lxmletree.SubElement( ETnode, child.name)
+                s = createSubNodesHTML( child, ETSub, level+1 )
+    return ETnode
+
 def generateHTML( rootNode, indent=False ):
-    pass
+
+    baseOP = rootNode.children[0]
+
+    # pdb.set_trace()
+    rootElement = lxmletree.Element("html")
+    
+    #pi = lxmletree.Element.DocType("html")
+    #rootElement.appendbefore( pi )
+    # lxml.etree.Element
+    page = lxmletree.ElementTree( rootElement )
+
+    now = str(datetime.datetime.now())
+    now = now[:19]
+    now = now.replace(" ", "_")
+
+    c = lxmletree.Comment( CactusVersion.document_creator + " on %s." % (now,))
+    rootElement.append(c)
+
+    # rootElement.attrib = baseOP.getValueDict()
+    rootElement.attrib.update( baseOP.getValueDict() )
+
+    comment = baseOP.comment
+    if comment:
+        rootElement.text = comment
+
+    nodes = createSubNodesHTML(baseOP, rootElement, 1)
+
+    indentXML(rootElement)
+
+    return page
+
 
 def generateXML( rootNode, indent=False ):
     """Generate an OPML/XML tree from OutlineNode rootNode.
@@ -372,7 +437,6 @@ def generateXML( rootNode, indent=False ):
     #   Cactus OPML files ommit the <opml> element!
     #
     baseOP = rootNode.children[0]
-
 
     rootXML = etree.Element( baseOP.name )
 
@@ -404,9 +468,7 @@ def generateXML( rootNode, indent=False ):
 
     return rootXML
 
-
 # -----------------------------------------------
-
 
 def generateRSS( rootNode, indent=2 ):
     """Generate an OPML/XML tree from OutlineNode rootNode.
@@ -429,7 +491,6 @@ def generateRSS( rootNode, indent=2 ):
             "pubDate", "source" )
 
     backTranslator = {
-        'summary': 'description',
         'subtitle': 'description',
         'title': 'title',
         'published': 'pubDate',
@@ -534,6 +595,8 @@ def generateOPML( rootNode, indent=2, expansion=None ):
     parameters:
      filepath - unused since file writing has been factored out
      indent   - if > 0 indent with indent spaces per level
+     expansion- a string that will be the value of head.expansionState 
+
     return
      etree.Element of rootNode
     """
@@ -552,6 +615,7 @@ def generateOPML( rootNode, indent=2, expansion=None ):
 
     head = etree.SubElement(rootOPML, "head")
 
+    expandCreated = False
     if headOP:
         for headsub in headOP.children:
             name = headsub.name
@@ -561,7 +625,7 @@ def generateOPML( rootNode, indent=2, expansion=None ):
             if name == 'expansionState':
                 if expansion:
                     value = { u"": expansion }
-
+                    expandCreated = True
             node = etree.SubElement( head, name)
 
             if value: # != "":
@@ -576,6 +640,11 @@ def generateOPML( rootNode, indent=2, expansion=None ):
             if comment != "":
                 node.attrib["comment"] = comment
             print "HEAD: '%s': '%s' " % (name, v)
+        if expansion:
+            if not expandCreated:
+                node = etree.SubElement( head, "expansionState")
+                node.text = expansion
+                
     else:
         # create generic head here
         if expansion:

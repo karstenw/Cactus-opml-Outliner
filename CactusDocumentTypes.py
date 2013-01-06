@@ -49,25 +49,25 @@ CactusDocumentXMLBasedTypesSet = set( (CactusOPMLType,
 
 
 # don't know yet, if this is useful
-CactusTEXTType = u'Cactus Text'
+CactusTEXTType = u'Text File'
 CactusTEXTFileExtensions = [ 'txt', ]
 CactusTEXTOSTypes = [ 'TEXT', 'utxt' ]
 
 
-# I want to have...
-CactusSQLITEType = u'Cactus Sqlite'
+# I want to have... but is it useful?
+CactusSQLITEType = u'Sqlite File'
 CactusSQLITEFileExtensions = [ 'sqlite', ]
 CactusSQLITEOSTypes = [ '****' ]
 
 
 # I want to have...
-CactusXOXOType = u'Cactus XOXO'
+CactusXOXOType = u'XOXO File'
 CactusXOXOFileExtensions = [ 'xoxo', 'xml', 'html']
 CactusXOXOOSTypes = [ '****' ]
 
 
 # haven't looked into it yet
-CactusEMACSORGType = u'Cactus Emacs ORG'
+CactusEMACSORGType = u'ORG File'
 CactusEMACSORGFileExtensions = [ 'org', ]
 CactusEMACSORGOSTypes = [  ]
 

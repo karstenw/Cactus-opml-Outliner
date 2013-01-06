@@ -543,13 +543,13 @@ class CactusOutlineDocument(AutoBaseClass):
             return NSData.dataWithBytes_length_(t, len(t))
 
         elif theType == CactusHTMLType:
-            rootHTML = opml.generateHTML( self.rootNode) #, indent=1 )
-            if rootHTML:
-                e = etree.ElementTree( rootXML )
+            etHTML = opml.generateHTML( self.rootNode, indent=1 )
+            if etHTML:
+                # e = etree.ElementTree( rootHTML )
     
                 fob = cStringIO.StringIO()
                 # e.write(fob, pretty_print=True, encoding="utf-8", xml_declaration=True, method="xml" )
-                e.write(fob, encoding="utf-8", xml_declaration=True, method="xml" )
+                etHTML.write(fob) # , encoding="utf-8", xml_declaration=False, method="html" )
                 t = fob.getvalue()
                 fob.close()
                 return NSData.dataWithBytes_length_(t, len(t))

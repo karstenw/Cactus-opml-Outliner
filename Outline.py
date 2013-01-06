@@ -36,7 +36,7 @@ setitem = operator.setitem
 # debugging; gives nodes a serialnr
 import itertools
 counter = itertools.count()
-messagecount = itertools.count()
+
 
 import opml
 
@@ -365,7 +365,7 @@ class KWOutlineView(AutoBaseClass):
             if not contextItem:
                 continue
 
-            if contextItem.noOfChildren < 1:
+            if contextItem.noOfChildren() > 1:
                 continue
 
             attributes = contextItem.getValueDict()
@@ -390,6 +390,13 @@ class KWOutlineView(AutoBaseClass):
                                 contextItem.addChild_(i)
                                 node.removeChild_(i)
                             break
+                    # do I really need to kill the link?
+                    #
+                    # attrs = contextItem.getValueDict()
+                    # attrs.pop( u"url" )
+                    # attrs.pop( u"type" )
+                    # contextItem.setValue_( attrs )
+                    #
                     del root
                     del d
         self.reloadData()
@@ -401,7 +408,6 @@ class KWOutlineView(AutoBaseClass):
     #
     def textDidBeginEditing_(self, aNotification):
         print "KWOutlineView.textDidBeginEditing_()"
-        # pp(aNotification)
         """Notification."""
         userInfo = aNotification.userInfo()
 
@@ -412,7 +418,6 @@ class KWOutlineView(AutoBaseClass):
 
     def textDidChange_(self, aNotification):
         print "KWOutlineView.textDidChange_()"
-        # pp(aNotification)
         """Notification."""
         userInfo = aNotification.userInfo()
 
@@ -425,7 +430,6 @@ class KWOutlineView(AutoBaseClass):
         """Notification. Text editing ended."""
 
         # print "KWOutlineView.textDidEndEditing_()"
-        # pp(aNotification)
 
         if kwlog and kwdbg:
             print "Edit END"
@@ -916,24 +920,6 @@ class KWOutlineView(AutoBaseClass):
             
                 self.setNeedsDisplay_( True )
                 consumed = True
-
-        if 1: # do always
-            sel = self.selectedRowIndexes()
-            n = sel.count()
-            id_ = messagecount.next()
-            c = 0
-            if consumed:
-                c = 1
-            if n == 1:
-                # show node info
-                next = sel.firstIndex()
-                item = self.itemAtRow_(next)
-                level = self.levelForRow_( next )
-                s = "%i  %s  rowHeight: %i msg: %i cons: %i" % (level, item.name, item.maxHeight, id_, c)
-            else:
-                # show selection info
-                s = u"%i nodes selected msg: %i cons: %i" % (n, id_, c)
-            self.setWindowStatus_( s )
         if not consumed:
             super(KWOutlineView, self).keyDown_( theEvent )
 
@@ -1247,6 +1233,29 @@ class OutlineViewDelegateDatasource(NSObject):
     def ovUpdateItem_Key_Value_(self, item, key, value):
         # update a single key value pair in the value dict
         pass
+
+    def outlineViewSelectionDidChange_( self, aNotification ):
+        print "outlineViewSelectionDidChange_()"
+
+        if aNotification:
+            ov = aNotification.object()
+            if not isinstance(ov, KWOutlineView):
+                ov = False
+        if ov:
+            sel = ov.selectedRowIndexes()
+            n = sel.count()
+
+            if n == 1:
+                # show node info
+                next = sel.firstIndex()
+                item = ov.itemAtRow_(next)
+                level = ov.levelForRow_( next )
+                s = "%i  %s  rowHeight: %i" % (level, item.name, item.maxHeight)
+            else:
+                # show selection info
+                s = u"%i nodes selected" % (n,)
+            ov.setWindowStatus_( s )
+
 
     #def outlineView_didClickTableColumn_(self, view, tablecolumn):
     #    pass
