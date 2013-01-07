@@ -26,16 +26,12 @@ RSS writing omits namespaces.
 
 XML reading is good.
 
-XML writing seems good.
-
 HTML reading looks good.
-
-HTML writing works but is not good yet. HTML DOCTYPE declarations are missing.
 
 ## Quickstart ##
 
 Download the latest binary from
-https://www.dropbox.com/s/1lf1tu7qmfudhbz/Cactus_v041c.zip
+https://www.dropbox.com/s/r0p7gow8q7xx89e/Cactus_v041d.zip
 unzip and launch.
 
 Do a google search for "filetype:opml"
@@ -68,7 +64,7 @@ Mailing list: http://groups.google.com/group/cactus-outliner-dev
 
 Downloads page: https://www.dropbox.com/sh/azysrf5pokzp26a/h2mFhfeM6M
 
-Latest binary: https://www.dropbox.com/s/8j1nzicy26bdgbw/Cactus_v041a.zip
+Latest binary: https://www.dropbox.com/s/r0p7gow8q7xx89e/Cactus_v041d.zip
 
 
 ## Latest changes ##
