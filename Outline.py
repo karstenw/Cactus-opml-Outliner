@@ -244,12 +244,19 @@ def open_photo( url, open_=True, cache=False ):
     #
     d = opml.photo_from_string( s )
     
+    # sortedSizes contains all picture sizes in descensing order
+    # first pict will be max size. size large is usually good but 
+    # not always present
     
-    if d['weightedSizes']:
-        if len(d['weightedSizes']) > 1:
-            s, idx = d['weightedSizes'][1]
+    # so we pick the second biggest pict, except when there's only
+    # one pict, then the first
+    if d['sortedSizes']:
+        # make a pick
+        if len(d['sortedSizes']) > 1:
+            s, idx = d['sortedSizes'][1]
         else:
-            s, idx = d['weightedSizes'][0]
+            s, idx = d['sortedSizes'][0]
+        # grab the picture record
         picture = d['sizes'][idx]
 
         workspace= NSWorkspace.sharedWorkspace()
@@ -258,6 +265,8 @@ def open_photo( url, open_=True, cache=False ):
 
         nsurl = NSURL.URLWithString_( url )
 
+        # if opened from cache, open in preview
+        # else in safari since preview can't urlopen
         target = u'com.apple.Safari'
         if cache:
             target = u'com.apple.Preview'
