@@ -7,6 +7,7 @@
 
 import sys
 import os
+import traceback
 
 import datetime
 
@@ -21,8 +22,20 @@ import urllib
 
 import CactusDocumentTypes
 CactusOPMLType = CactusDocumentTypes.CactusOPMLType
+CactusOPMLFileExtensions = CactusDocumentTypes.CactusOPMLFileExtensions
+
+CactusRSSType = CactusDocumentTypes.CactusRSSType
+CactusRSSFileExtensions = CactusDocumentTypes.CactusRSSFileExtensions
+
+CactusXMLType = CactusDocumentTypes.CactusXMLType
+CactusXMLFileExtensions = CactusDocumentTypes.CactusXMLFileExtensions
+
+CactusHTMLType = CactusDocumentTypes.CactusHTMLType
+CactusHTMLFileExtensions = CactusDocumentTypes.CactusHTMLFileExtensions
+
 CactusDocumentTypesSet = CactusDocumentTypes.CactusDocumentTypesSet
 CactusDocumentXMLBasedTypesSet = CactusDocumentTypes.CactusDocumentXMLBasedTypesSet
+
 
 import CactusVersion
 
@@ -50,11 +63,11 @@ def readURL( nsurl, type_=CactusOPMLType, cache=False ):
     url = NSURL2str(nsurl)
     print "CactusTools.readURL( '%s', '%s' )" % (url, type_)
 
-    if not cache:
-        fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
-    else:
-        localpath = cache_url(nsurl)
-        fob = open(localpath, 'r')
+    if cache:
+        if not nsurl.isFileURL():
+            nsurl = cache_url(nsurl, type_)
+
+    fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
     s = fob.read()
     fob.close()
 
@@ -284,9 +297,10 @@ def getDownloadFolder( nsurl, cachefolder=CactusVersion.cachefolder):
         localpath = localpath[1:]
     localpath = os.path.join( str(nsurl.host()), localpath)
     if localpath:
+        localname = localpath.replace('/', '_')
         localpath = os.path.join( cachefolder, localpath )
-        return localpath
-    return False
+        return localpath, localname
+    return False, False
 
 
 def getRemotefilemodificationDate( url ):
@@ -314,47 +328,76 @@ def setFileModificationDate( filepath, modfdt ):
     folder, filename = os.path.split( filepath )
     print "Setting file(%s) modification date to %s" % (filename, repr(modfdt))
 
-def cache_url( nsurl ):
-    localpath = getDownloadFolder(nsurl)
+def cache_url( nsurl, filetype ):
 
-    folder, filename = os.path.split( localpath )
-    if not os.path.exists(folder):
-        os.makedirs( folder )
 
-    url = NSURL2str( nsurl )
-
-    if kwlog:
-        print "CactusTools.cache_url( %s )" % url
-
-    dodownload = False
-    if os.path.exists( localpath ):
-        # file already downloaded; perhaps set file modification date
-        lmodfdate = os.stat( localpath ).st_mtime
-        lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
-        rmodfdate = getRemotefilemodificationDate( url )
-        
-        if rmodfdate and (rmodfdate + datetime.timedelta(seconds=60)) > lmodfdate:
-            setFileModificationDate( localpath, rmodfdate )
+    try:
+        localpath, localname = getDownloadFolder(nsurl)
+    
+        folder, filename = os.path.split( localpath )
+        if not os.path.exists(folder):
+            os.makedirs( folder )
+    
+        url = NSURL2str( nsurl )
+    
+        if kwlog:
+            print "CactusTools.cache_url( %s, %s )" % (url, filetype)
+    
+        dodownload = False
+        if os.path.exists( localpath ):
+            # file already downloaded; perhaps set file modification date
+            lmodfdate = os.stat( localpath ).st_mtime
+            lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
+            rmodfdate = getRemotefilemodificationDate( url )
+            
+            if rmodfdate and rmodfdate < lmodfdate:
+                setFileModificationDate( localpath, rmodfdate )
+            elif rmodfdate and rmodfdate == lmodfdate:
+                pass
+            else:
+                dodownload = True
         else:
             dodownload = True
-    else:
-        dodownload = True
+    
+        if dodownload:
+            #
+            if os.path.isdir( localpath ):
+                if not localname:
+                    localname = "file"
+                if filetype == CactusOPMLType:
+                    localpath = os.path.join( localpath, localname + ".opml" )
+                elif filetype == CactusXMLType:
+                    localpath = os.path.join( localpath, localname + ".xml" )
+                elif filetype == CactusHTMLType:
+                    localpath = os.path.join( localpath, localname + ".html" )
+                elif filetype == CactusRSSType:
+                    localpath = os.path.join( localpath, localname + ".rss" )
+                else:
+                    localpath = os.path.join( localpath, localname + "." + filetype )
 
-    if dodownload:
-        #
-        if os.path.isdir( localpath ):
-            localpath = os.path.join( localpath, "file.xml" )
-        print "LOAD: %s..." % url,
-        fname, info = urllib.urlretrieve(url, localpath)
-        print "LOAD: %s...done" % url
+            print "LOAD: %s..." % url
+            fname, info = urllib.urlretrieve(url, localpath)
+            print "LOAD: %s...done" % url
+            
+            # get file date
+            lmodfdate = os.stat( localpath ).st_mtime
+            lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
+            try:
+                rmodfdate = datetime.datetime( *info.getdate('last-modified')[:6] )
+                setFileModificationDate( localpath, rmodfdate )
+                print "Setting dowloaded file(%s) modification date to %s" % (fname, repr(rmodfdate))
+            except TypeError, err:
+                print "Could not get remote file(%s) modification date." % fname
         
-        # get file date
-        lmodfdate = os.stat( localpath ).st_mtime
-        lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
-        try:
-            rmodfdate = datetime.datetime( *info.getdate('last-modified')[:6] )
-            setFileModificationDate( localpath, rmodfdate )
-            print "Setting dowloaded file(%s) modification date to %s" % (fname, repr(rmodfdate))
-        except TypeError, err:
-            print "Could not get remote file(%s) modification date." % fname
-    return localpath
+        returnURL = NSURL.fileURLWithPath_( unicode(localpath) )
+
+    except Exception, err:
+        # pdb.set_trace()
+        tb = unicode(traceback.format_exc())
+        print tb
+        print 
+    if not returnURL:
+        # pdb.set_trace()
+        print returnURL
+
+    return returnURL
