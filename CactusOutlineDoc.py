@@ -137,6 +137,12 @@ def boilerplateOPML( rootNode ):
     rootNode.addChild_( body )
 
     body.addChild_( OutlineNode("", "", body, typeOutline, root) )
+    #head.release()
+    #body.release()
+    print "root:", root.retainCount()
+    print "head:", head.retainCount()
+    print "body:", body.retainCount()
+    return
 
 
 # a cocoa NSDocument subclass
@@ -175,6 +181,10 @@ class CactusOutlineDocument(AutoBaseClass):
         # TBD
         self.setHasUndoManager_( False )
         return self
+
+    def dealloc(self):
+        print "CactusOutlineDocument.dealloc()"
+        super(CactusOutlineDocument, self).dealloc()
 
 
     def autosavingFileType(self):
@@ -252,8 +262,10 @@ class CactusOutlineDocument(AutoBaseClass):
             if root:
                 self.rootNode = root
                 if not url.isFileURL():
+                    # mark internet document dirty
                     self.updateChangeCount_( NSChangeReadOtherContents )
                 else:
+                    # mark local document clean
                     self.updateChangeCount_( NSChangeCleared )
             else:
                 if kwlog:
@@ -333,7 +345,7 @@ class CactusOutlineDocument(AutoBaseClass):
 
 
     def initWithType_error_(self, theType):
-        
+        # pdb.set_trace()
         if kwlog:
             print "CactusOutlineDocument.initWithType_error_( %s )" % (repr(theType),)
 
@@ -344,7 +356,11 @@ class CactusOutlineDocument(AutoBaseClass):
         self.setFileType_( theType )
 
         self.rootNode = OutlineNode("__ROOT__", "", None, typeOutline, None)
+        if kwlog:
+            print "    .initWithType_error_ rootRetaines %i " % (self.rootNode.retainCount(),)
         boilerplateOPML( self.rootNode )
+        if kwlog:
+            print "    .initWithType_error_ boilerplate rootRetaines %i " % (self.rootNode.retainCount(),)
         self.updateChangeCount_( NSChangeCleared )
 
         self.variableRowHeight = True
@@ -432,8 +448,12 @@ class CactusOutlineDocument(AutoBaseClass):
     def calculateExpansionState_( self, rootNode ):
         # for expansionstate
         # pdb.set_trace()
-        controllers = self.windowControllers()
-        for controller in controllers:
+        # controllers = self.windowControllers()
+        n = self.windowControllers().count()
+        
+        for i in range(n):
+            controller = self.windowControllers().objectAtIndex_(i)
+            print controller, controller.retainCount()
             winframe = {}
             rootNode = controller.rootNode
             ov = controller.outlineView
@@ -500,7 +520,7 @@ class CactusOutlineDocument(AutoBaseClass):
             meta = {}
 
             if len(children) == 1:
-                outlineView.expandItem_expandChildren_(children[0], False)
+                ov.expandItem_expandChildren_(children[0], False)
 
             if head and body: # ;-)
                 children = head.children
@@ -513,9 +533,9 @@ class CactusOutlineDocument(AutoBaseClass):
                             meta[k] = v
 
                 # start - collapse head - expand body
-                outlineView.collapseItem_collapseChildren_(head, True)
-                outlineView.collapseItem_collapseChildren_(body, True)
-                outlineView.expandItem_expandChildren_(body, False)
+                ov.collapseItem_collapseChildren_(head, True)
+                ov.collapseItem_collapseChildren_(body, True)
+                ov.expandItem_expandChildren_(body, False)
 
                 # first row is 2
                 rows = False
@@ -546,6 +566,8 @@ class CactusOutlineDocument(AutoBaseClass):
             return NSData.dataWithBytes_length_(t, len(t))
 
         elif theType == CactusXMLType:
+            # closed after finding the trailing text bug/misconception
+            # return None
             rootXML = opml.generateXML( self.rootNode) #, indent=1 )
 
             e = etree.ElementTree( rootXML )
@@ -558,6 +580,8 @@ class CactusOutlineDocument(AutoBaseClass):
             return NSData.dataWithBytes_length_(t, len(t))
 
         elif theType == CactusHTMLType:
+            # closed after finding the trailing text bug/misconception
+            # return None
             etHTML = opml.generateHTML( self.rootNode, indent=1 )
             if etHTML:
                 # e = etree.ElementTree( rootHTML )
@@ -661,6 +685,7 @@ class CactusOutlineDocument(AutoBaseClass):
         # for expansionstate
         controllers = self.windowControllers()
         for controller in controllers:
+            print controller, controller.retainCount()
             rootNode = controller.rootNode
             outlineView = controller.outlineView
             # parse root down to head
@@ -730,9 +755,17 @@ class CactusOutlineDocument(AutoBaseClass):
         outlineView.setNeedsDisplay_( True )
 
     def makeWindowControllers(self):
+        c = CactusOutlineWindowController.alloc().initWithObject_( self )
         if kwlog:
-            print "CactusOutlineDocument.makeWindowControllers()"
+            print "CactusOutlineDocument.makeWindowControllers()", c.retainCount()
         self.addWindowController_( CactusOutlineWindowController.alloc().initWithObject_( self ) )
+
+
+    def printShowingPrintPanel_(self, show):
+        printInfo = self.printInfo()
+        printOp =NSPrintOperation.printOperationWithView_printInfo_(self, printInfo )
+        printOp.setShowPanel_(show)
+        self.runModalPrintOperation_delegate_didRunSelector_contextInfo_( printOp, None, None, None, None)
 
 
 class CactusOutlineWindowController(AutoBaseClass):
@@ -751,6 +784,15 @@ class CactusOutlineWindowController(AutoBaseClass):
     txtOutlineType
     window
     """
+
+    def dealloc(self):
+        #if self.rootNode:
+        #    self.rootNode.release()
+        #if self.parentNode:
+        #    self.parentNode.release()
+        self.model.release()
+        super(CactusOutlineWindowController, self).dealloc()
+
 
     def initWithObject_(self, document):
         """This controller is used for outline and table windows.
