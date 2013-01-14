@@ -590,6 +590,7 @@ class CactusAppDelegate(NSObject):
             doc, err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
                                                                        type_)
 
+
     # UNUSED but defined in class
     def newBrowser_(self, sender):
         if kwlog:

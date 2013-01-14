@@ -5,8 +5,10 @@ import datetime
 
 import cStringIO
 
+
 import pprint
 pp = pprint.pprint
+import traceback
 
 kwdbg = True
 kwlog = False
@@ -208,6 +210,11 @@ def getXMLNodes( node ):
             name = u""
         name = unicode(name)
 
+        tail = n.tail
+        if not tail:
+            tail = u""
+        unicode(tail)
+
         special = False
         if name == u"<built-in function Comment>":
             name = u"COMMENT"
@@ -221,6 +228,7 @@ def getXMLNodes( node ):
         b = {
             'name': name,
             'text': text,
+            'tail': tail,
             'children': [],
             
             'attributes': {}}
@@ -241,12 +249,13 @@ def getXMLNodes( node ):
 
 def getXML_( etRootnode ):
     d = []
-
+    # pdb.set_trace()
     keys = etRootnode.attrib.keys()
 
     b = {
         'name': unicode(etRootnode.tag),
         'text': unicode(etRootnode.text),
+        'tail': unicode(etRootnode.tail),
         'children': [],
         
         'attributes': {}}
@@ -314,6 +323,7 @@ def getHTML_( etRootnode ):
 
 # these should be unified
 def xml_from_string(xml_text):
+    # pdb.set_trace()
     try:
         s = etree.fromstring(xml_text)
     except StandardError, v:
@@ -321,6 +331,9 @@ def xml_from_string(xml_text):
     return getXML_( s )
 
 def html_from_url( htmlurl ):
+    # pdb.set_trace()
+    import CactusTools
+    CactusTools.cache_url(htmlurl, "html")
     if isinstance(htmlurl, NSURL):
         htmlurl = str(htmlurl.absoluteString())
     parser = lxmletree.HTMLParser()
@@ -643,7 +656,7 @@ def generateOPML( rootNode, indent=2, expansion={} ):
             
             if comment != "":
                 node.attrib["comment"] = comment
-            print "HEAD: '%s': '%s' " % (name, v)
+            print "HEAD: '%s': '%s' " % (repr(name), repr(v))
         # add missing keys
         if expansion:
             for key in expansion:
@@ -653,21 +666,29 @@ def generateOPML( rootNode, indent=2, expansion={} ):
                 
     else:
         # create generic head here
-        for key in expansion:
-            if key not in expandCreated:
-                node = etree.SubElement( head, key)
-                node.text = expansion[key]
+        if expansion:
+            for key in expansion:
+                if key not in expandCreated:
+                    node = etree.SubElement( head, key)
+                    node.text = unicode(expansion[key])
 
     body = etree.SubElement(rootOPML, "body")
     bodyOP = rootNode.findFirstChildWithName_( "body" )
 
-    if bodyOP:
-        nodes = createSubNodesOPML(bodyOP, body, 1)
-    else:
-        # an outline without body
-        nodes = createSubNodesOPML(rootNode, body, 1)
+    try:
+        if bodyOP:
+            nodes = createSubNodesOPML(bodyOP, body, 1)
+        else:
+            # an outline without body
+            nodes = createSubNodesOPML(rootNode, body, 1)
+    except Exception, err:
+        # pdb.set_trace()
+        tb = unicode(traceback.format_exc())
+        print tb
+        print 
 
     if indent:
+        # pdb.set_trace()
         indentXML(rootOPML, 0, indent)
 
     return rootOPML
@@ -678,6 +699,7 @@ def photo_from_string( photo_text ):
 
 
 def getPhotoXML( rootNode ):
+
     title = rootNode.find("title")
     title = title.text
 
@@ -685,19 +707,45 @@ def getPhotoXML( rootNode ):
     description = description.text
 
     whenUploaded = rootNode.find("whenUploaded")
+    whenUploaded = whenUploaded.text
+
     whenArchived = rootNode.find("whenArchived")
+    whenArchived = whenArchived.text
+
     license = rootNode.find("license")
+    license = license.text
 
     urlFolder = rootNode.find("urlFolder")
     urlFolder = urlFolder.text
 
     sizes = rootNode.find("sizes")
     picts = {}
+
+    picture = {
+        'title': title,
+        'urlFolder': urlFolder,
+        'description': description,
+        'whenUploaded': whenUploaded,
+        'whenArchived': whenArchived,
+        'license': license,
+        'sizes': []
+    }
+    weightedSizes = []
     if urlFolder:
-        for size in list(sizes):
-            attr = size.attrib.keys()
-            if 'fname' in attr:
+        for i, size in enumerate(list(sizes)):
+            picture['sizes'].append(size.attrib)
+
+            maxWH = max(int(size.attrib.get('width', 0)),
+                        int(size.attrib.get('height', 0)) )
+
+            weightedSizes.append( (maxWH, i) )
+
+            if 'fname' in size.attrib:
                 name = size.attrib['fname']
                 url = urlFolder + name
                 picts[ name ] = url
-    return picts
+    weightedSizes.sort()
+    weightedSizes.reverse()
+    picture['weightedSizes'] = weightedSizes
+    return picture
+

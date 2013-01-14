@@ -68,6 +68,7 @@ setup(
                     'CFBundleTypeName': CactusDocumentTypes.CactusXMLType,
                     'CFBundleTypeOSTypes': CactusDocumentTypes.CactusXMLOSTypes,
                     'CFBundleTypeRole': 'Editor',
+                    # 'CFBundleTypeRole': 'Viewer',
                     'NSDocumentClass': u'CactusOutlineDocument',
                 },
                 {
@@ -76,6 +77,7 @@ setup(
                     'CFBundleTypeName': CactusDocumentTypes.CactusHTMLType,
                     'CFBundleTypeOSTypes': CactusDocumentTypes.CactusHTMLOSTypes,
                     'CFBundleTypeRole': 'Editor',
+                    # 'CFBundleTypeRole': 'Viewer',
                     'NSDocumentClass': u'CactusOutlineDocument',
                 }
             ],
