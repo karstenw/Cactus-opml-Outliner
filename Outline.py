@@ -41,6 +41,7 @@ counter = itertools.count()
 import opml
 
 import outlinetypes
+typeOutline = outlinetypes.typeOutline
 
 import objc
 
@@ -60,12 +61,15 @@ import CactusDocumentTypes
 CactusOPMLType = CactusDocumentTypes.CactusOPMLType
 CactusRSSType = CactusDocumentTypes.CactusRSSType
 CactusXMLType = CactusDocumentTypes.CactusXMLType
+CactusHTMLType = CactusDocumentTypes.CactusHTMLType
+
 CactusDocumentTypesSet = CactusDocumentTypes.CactusDocumentTypesSet
 CactusDocumentXMLBasedTypesSet = CactusDocumentTypes.CactusDocumentXMLBasedTypesSet
 
 
 import CactusExceptions
 OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
+
 
 
 import Foundation
@@ -97,6 +101,7 @@ NSDocumentController = AppKit.NSDocumentController
 
 NSMenu = AppKit.NSMenu
 
+NSPasteboard = AppKit.NSPasteboard
 #NSAlert = AppKit.NSAlert
 #NSPopUpButtonWillPopUpNotification = AppKit.NSPopUpButtonWillPopUpNotification
 
@@ -143,6 +148,7 @@ NSTabTextMovement = AppKit.NSTabTextMovement
 NSBacktabTextMovement = AppKit.NSBacktabTextMovement
 NSIllegalTextMovement = AppKit.NSIllegalTextMovement
 NSCancelTextMovement = AppKit.NSCancelTextMovement
+NSDownTextMovement = AppKit.NSDownTextMovement
 
 
 # modifiers
@@ -173,6 +179,10 @@ NSChangeUndone = AppKit.NSChangeUndone
 NSChangeCleared = AppKit.NSChangeCleared
 NSChangeReadOtherContents = AppKit.NSChangeReadOtherContents
 NSChangeAutosaved = AppKit.NSChangeAutosaved
+
+# printing
+NSPrintOperation = AppKit.NSPrintOperation
+
 
 
 import PyObjCTools
@@ -223,56 +233,60 @@ g_qtplayer_extensions = g_qtplayer_extensions.split()
 
 
 def open_photo( url, open_=True, cache=False ):
+    """opens 2nd biggest picture"""
+
+    # get photo xml
     f = urllib.FancyURLopener()
     fob = f.open(url)
     s = fob.read()
     fob.close()
+
+    #
     d = opml.photo_from_string( s )
-    photolist = []
-    fulllist = [ NSURL.URLWithString_( url ) ]
-    dl = []
-    isFile = False
+    
+    
+    if d['weightedSizes']:
+        if len(d['weightedSizes']) > 1:
+            s, idx = d['weightedSizes'][1]
+        else:
+            s, idx = d['weightedSizes'][0]
+        picture = d['sizes'][idx]
 
-    for k, v in d.items():
-        nsurl = NSURL.URLWithString_( v )
-        isFile = nsurl.isFileURL()
-
-        if k.startswith("large"):
-            photolist.append( nsurl )
-            #if not k.startswith("original"):
-            fulllist.append( nsurl )
-
-    if photolist:
         workspace= NSWorkspace.sharedWorkspace()
-        # target = u'com.apple.Preview'
-        # if 1: #not isFile:
+
+        url = d['urlFolder'] + picture['fname']
+
+        nsurl = NSURL.URLWithString_( url )
+
         target = u'com.apple.Safari'
+        if cache:
+            target = u'com.apple.Preview'
+            nsurl = CactusTools.cache_url( nsurl, None )
+        else:
+            target = u'com.apple.Safari'
+
         if open_:
             workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
-                photolist,
+                [ nsurl ],
                 target,
                 0,
                 None )
 
-    if fulllist and cache:
-        for nsurl in fulllist:
-            CactusTools.cache_url( nsurl )
-
 
 # TODO: change parameter to node!
 def open_node( url, nodeType=None, open_=True, cache=False ):
-
+    print "Outline.open_node()"
     appl = NSApplication.sharedApplication()
     appdelg = appl.delegate()
     workspace= NSWorkspace.sharedWorkspace()
-
+    
     url = cleanupURL( url )
     surl = os.path.splitext( url )[1]
     surl = surl.replace( '.', '', 1)
     surl = surl.lower()
-
+    
     nsurl = NSURL.URLWithString_( url )
-
+    
     if nodeType == "OPML" or url.endswith(".opml"):
         if open_:
             appdelg.newOutlineFromURL_Type_( nsurl, CactusOPMLType )
@@ -283,18 +297,22 @@ def open_node( url, nodeType=None, open_=True, cache=False ):
         if open_:
             appdelg.newOutlineFromURL_Type_( nsurl, CactusXMLType )
     elif nodeType == "HTML" or url.endswith(".html"):
-        workspace.openURL_( nsurl )
+        if open_:
+            appdelg.newOutlineFromURL_Type_( nsurl, CactusHTMLType )
+            workspace.openURL_( nsurl )
 
+        # workspace.openURL_( nsurl )
+    
     elif surl in g_qtplayer_extensions:
         # qtplayer can do http:
+        if cache:
+            nsurl = CactusTools.cache_url( nsurl, surl )
         if open_:
             workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
                 [ nsurl ],
                 u'com.apple.quicktimeplayer',
                 0,
                 None )
-        if cache:
-            CactusTools.cache_url( nsurl )
 
     elif surl in g_preview_extensions:
         if nsurl.isFileURL():
@@ -306,26 +324,36 @@ def open_node( url, nodeType=None, open_=True, cache=False ):
                     None )
         else:
             # preview can't do http so open it in the std browser:
+            if cache:
+                nsurl = CactusTools.cache_url( nsurl, surl )
             if open_:
                 workspace.openURL_( nsurl )
-            if cache:
-                CactusTools.cache_url( nsurl )
     else:
+        if cache:
+            nsurl = CactusTools.cache_url( nsurl, surl )
         if open_:
             workspace.openURL_( nsurl )
-        if cache:
-            CactusTools.cache_url( nsurl )
+
+def handleEventReturnKeyOV_Event_( ov, event ):
+    pass
 
 
 class KWOutlineView(AutoBaseClass):
     """Subclass of NSOutlineView; to catch keys."""
 
     def awakeFromNib(self):
+        self.editSession = False
         # manual en- & disabling menu items
         #pdb.set_trace()
+        self.clipboardRoot = OutlineNode("Clipboard root", "", None, typeOutline, None)
         menu = NSMenu.alloc().initWithTitle_( u"" )
         menu.setDelegate_(self)
         menu.addItemWithTitle_action_keyEquivalent_( u"Include", "contextMenuInclude:", u"")
+        menu.addItemWithTitle_action_keyEquivalent_( u"Python Copy", "copySelectionPython:", u"")
+        menu.addItemWithTitle_action_keyEquivalent_( u"Node Copy", "copySelectionNodes:", u"")
+        menu.addItemWithTitle_action_keyEquivalent_( u"Node paste", "pasteSelectionNodes:", u"")
+
+        # copySelectionPython_
         menu.setAutoenablesItems_(False)
         self.setMenu_(menu)
         
@@ -347,9 +375,56 @@ class KWOutlineView(AutoBaseClass):
     def menuNeedsUpdate_(self, sender):
         print "KWOutlineView.menuNeedsUpdate_()" % repr(sender)
 
+    def copySelectionPython_(self, sender):
+        print "KWOutlineView.copySelectionPython_()"
+        # pdb.set_trace()
+        row = self.clickedRow()
+        selection = self.getSelectionItems()
+        result = []
+        for contextItem in selection:
+            result.append( contextItem.copyPython() )
+        s = pprint.pformat(result)
+        pb = NSPasteboard.generalPasteboard()
+        pb.declareTypes_owner_( [AppKit.NSStringPboardType,], self )
+        pb.setString_forType_(s, AppKit.NSStringPboardType)
+        
+    def copySelectionNodes_(self, sender):
+        print "KWOutlineView.copySelectionPython_()"
+        # pdb.set_trace()
+        selection = self.getSelectionItems()
+        result = []
+        for contextItem in selection:
+            self.clipboardRoot.addChild_( contextItem.copyNodesWithRoot_(self.clipboardRoot) )
+    
+    def pasteSelectionNodes_(self, sender):
+        # pdb.set_trace()
+        selection = self.getSelectionItems()
+        if not selection:
+            return
+        item = selection[0]
+        idx = item.siblingIndex()
+        parent = item.parent
+        
+        def setRoot(item, root):
+            item.rootNode = root
+            for child in item.children:
+                child.rootNode = root
+                setRoot(child, root)
+
+        def addChildren( item, target):
+            pass
+
+        for child in self.clipboardRoot.children:
+            idx += 1
+            parent.addChild_atIndex_(child, idx)
+            setRoot( child, parent.rootNode)
+        self.clipboardRoot.children.removeAllObjects()
+        self.reloadData()
+        self.setNeedsDisplay_( True )
+
+
     def contextMenuInclude_(self, sender):
         print "KWOutlineView.contextMenuInclude_()"
-
         # check selection; if right-click in selectio: use selection
         # else use clicked row only
         row = self.clickedRow()
@@ -373,7 +448,7 @@ class KWOutlineView(AutoBaseClass):
             url = attributes.get("url", "")
             url = cleanupURL( url )
             if theType in ( 'include', 'outline', 'thumbList', 'code', 'thumbListVarCol',
-                            'thumbList', 'blogpost'):
+                            'thumbList', 'blogpost', 'link'):
     
                 d = None
                 try:
@@ -409,6 +484,8 @@ class KWOutlineView(AutoBaseClass):
     def textDidBeginEditing_(self, aNotification):
         print "KWOutlineView.textDidBeginEditing_()"
         """Notification."""
+        self.editSession = True
+
         userInfo = aNotification.userInfo()
 
         # textMovement = userInfo.valueForKey_( str("NSTextMovement") ).intValue()
@@ -417,11 +494,15 @@ class KWOutlineView(AutoBaseClass):
 
 
     def textDidChange_(self, aNotification):
-        print "KWOutlineView.textDidChange_()"
+        # print "KWOutlineView.textDidChange_()"
         """Notification."""
+        self.editSession = True
         userInfo = aNotification.userInfo()
-
-        # pp(userInfo)
+        print "EDITOR:", self.currentEditor()
+        #textMovement = userInfo.valueForKey_( u"NSTextMovement" ).intValue()
+        #print "TextMovement: '%i'" % textMovement
+        
+        # pp(aNotification)
         super( KWOutlineView, self).textDidChange_(aNotification)
         #self.window().makeFirstResponder_(self)
         
@@ -439,23 +520,72 @@ class KWOutlineView(AutoBaseClass):
         #textMovement = userInfo.valueForKey_( str("NSTextMovement") ).intValue()
 
         cancelled = False
+        returnContinue = False
 
         # hm, i want to continue editing with a new node if a return is pressed
         # it looks like the cell editor handles return and enter as the same.
 
+        textMovement = userInfo.valueForKey_( u"NSTextMovement" ).intValue()
+        print "TextMovement: '%i'" % textMovement, 
+
         # check for table/outline editing modes here
-        if userInfo.valueForKey_( u"NSTextMovement" ).intValue() == NSReturnTextMovement:
-            cancelled = True
-            newInfo = NSMutableDictionary.dictionaryWithDictionary_(userInfo)
-            newTextActionCode = NSNumber.numberWithInt_(NSCancelTextMovement)
-            newInfo.setObject_forKey_( newTextActionCode, str("NSTextMovement"))
+        
+        returnInfo = NSMutableDictionary.dictionaryWithDictionary_(userInfo)
+
+        # NSCancelTextMovement
+        if textMovement == NSReturnTextMovement:
+            print "RETURN MOVEMENT"
+            returnContinue = True
+            newTextActionCode = NSNumber.numberWithInt_(NSDownTextMovement)
+            returnInfo.setObject_forKey_( newTextActionCode, str("NSTextMovement"))
             aNotification = NSNotification.notificationWithName_object_userInfo_(
                         aNotification.name(),
                         aNotification.object(),
-                        newInfo)
+                        returnInfo)
+
+        elif textMovement == NSCancelTextMovement:
+            print "CANCEL MOVEMENT"
+            cancelled = True
+            newTextActionCode = NSNumber.numberWithInt_(NSOtherTextMovement)
+            returnInfo.setObject_forKey_( newTextActionCode, str("NSTextMovement"))
+            aNotification = NSNotification.notificationWithName_object_userInfo_(
+                        aNotification.name(),
+                        aNotification.object(),
+                        returnInfo)
+        else:
+            print "UNHANDLED MOVEMENT"
+        # finish current cell
         super( KWOutlineView, self).textDidEndEditing_(aNotification)
-        if cancelled:
+
+        if returnContinue:
             self.window().makeFirstResponder_(self)
+            # pdb.set_trace()
+            selRow = self.getSelectedRowIndex()
+            item = self.itemAtRow_(selRow)
+            
+            if item:
+                last = item.isLast()
+                if last:
+                    # we are at the end of the outline
+                    createNode(self, item, startEditing=True)
+                else:
+                    row = self.rowForItem_( item.next() )
+                    # s = NSIndexSet.indexSetWithIndex_( row )
+                    #self.selectRowIndexes_byExtendingSelection_(s, False)
+                    self.reloadData()
+                    self.editColumn_row_withEvent_select_(0, row, None, True)
+                return 
+        if cancelled:
+            self.editSession = False
+            self.reloadData()
+            self.window().makeFirstResponder_(self)
+
+    def cancelOperation_(self, sender):
+        if self.currentEditor():
+            # self.abortEditing()
+            self.validateEditing()
+        # We lose focus so re-establish
+        self.window().makeFirstResponder_(self)
 
     def setWindowStatus_(self, status):
         model = self.delegate().controller
@@ -526,6 +656,10 @@ class KWOutlineView(AutoBaseClass):
         if kwlog and 0: #kwdbg:
             print "Key: ", hex(eventCharNum), hex(eventModifiers)
 
+        editor = self.currentEditor()
+        if editor:
+            print "EDITOR:", editor
+
         if eventCharNum not in mykeys:
             super(KWOutlineView, self).keyDown_( theEvent )
             return None
@@ -564,6 +698,8 @@ class KWOutlineView(AutoBaseClass):
                 if kwlog and kwdbg:
                     print "SHIFT Return"
             else:
+                if kwlog and kwdbg:
+                    print "KEY: Return"
                 # open new line and start editing
 
                 # TODO: if already editing, start new line, continue editing
@@ -650,6 +786,7 @@ class KWOutlineView(AutoBaseClass):
 
                                 elif theType == "photo":
                                     url = v.get("xmlUrl", "")
+                                    # pdb.set_trace()
                                     open_photo( url )
 
                                 elif theType == "rssentry":
@@ -807,11 +944,14 @@ class KWOutlineView(AutoBaseClass):
 
                     # ignore command if item is first Child
                     if previous != -1:
+                        item.retain()
                         previous.addChild_( item )
                         parent.removeChild_(item)
+                        item.release()
                         postselect.add(item)
                         self.expandItem_( previous )
                         self.reloadItem_reloadChildren_( previous, True )
+                        self.reloadItem_reloadChildren_( parent, True )
                 postselect = [self.rowForItem_(i) for i in postselect]
                 self.selectItemRows_( postselect )
                 
@@ -1079,6 +1219,19 @@ class OutlineViewDelegateDatasource(NSObject):
         self.restricted = False
         return self
 
+    def dealloc(self):
+        if kwdbg:
+            print "MODEL_release"
+        #if self.parentNode:
+        #    self.parentNode.release()
+        if self.root:
+            self.root.release()
+        #if self.controller:
+        #    self.controller.release()
+        #if self.document:
+        #    self.document.release()
+        super(OutlineViewDelegateDatasource, self).dealloc()
+
     def initWithObject_type_parentNode_(self, obj, typ, parentNode):
         self = self.init()
 
@@ -1093,12 +1246,6 @@ class OutlineViewDelegateDatasource(NSObject):
         self.root = obj
         return self
 
-
-    def release(self):
-        if kwdbg:
-            print "MODEL_release"
-        self.root.release()
-        super(OutlineViewDelegateDatasource, self).release()
 
     def markDirty(self):
         if self.document != None:
@@ -1115,10 +1262,11 @@ class OutlineViewDelegateDatasource(NSObject):
         return self.parentNode != None
 
     def appendToRoot_Value_(self, name, value):
-        n = OutlineNode(name, value, self.root, self.typ)
-        self.root.addChild_( n )
-        self.reloadData_( None )
-        idx = self.controller.outlineView.rowForItem_(n)
+        node = OutlineNode(name, value, self.root, self.typ, self.root)
+        self.root.addChild_( node )
+        self.reloadData_( node )
+        # need to reload all so the new node gets recognized
+        idx = self.controller.outlineView.rowForItem_( node )
         return idx
 
     #
@@ -1150,12 +1298,11 @@ class OutlineViewDelegateDatasource(NSObject):
         newWidth = column.width()
         # print "COL: '%s' changed from: %i  to  %i" % (column.identifier(),
         #                                               oldWidth, newWidth)
-
-
+    
     def tableViewColumnDidResize_(self, aNotification):
         # for some reaon only th outlineView delegate is called. Even for tables
         pass
-
+    
     #
     # NSOutlineViewDataSource  methods
     #
@@ -1163,12 +1310,12 @@ class OutlineViewDelegateDatasource(NSObject):
         if not item:
             item = self.root
         return item.noOfChildren()
-
+    
     def outlineView_child_ofItem_(self, view, child, item):
         if not item:
             item = self.root
         return item.childAtIndex_( child )
-
+    
     def outlineView_isItemExpandable_(self, view, item):
         if not self.typ in outlinetypes.hierarchicalTypes:
             return False
@@ -1194,27 +1341,32 @@ class OutlineViewDelegateDatasource(NSObject):
     def outlineView_setObjectValue_forTableColumn_byItem_(self, view, value, col, item):
         c = col.identifier()
         if not item:
-            item = self.root
+            # item = self.root
+            return
         if c == u"type":
             pass #return item.displayType
         elif c == u"value":
-            # if it has a parentNode it's edited attributes
-            if self.parentNode != None:
-                name = item.name
-                self.parentNode.updateValue_( (name, unicode(value)) )
-                
-            item.setValue_( value )
-            self.markDirty()
+            if value != item.displayValue:
+                # if it has a parentNode it's edited attributes
+                if self.parentNode != None:
+                    name = item.name
+                    self.parentNode.updateValue_( (name, unicode(value)) )
+                item.setValue_( value )
+                self.markDirty()
         elif c == u"name":
-            item.setName_(value)
-            self.markDirty()
+            if value != item.name:
+                item.setName_(value)
+                self.markDirty()
         elif c == u"comment":
-            item.setComment_(value)
-            self.markDirty()
+            if value != item.comment:
+                item.setComment_(value)
+                self.markDirty()
 
 
     # delegate method
-    def outlineView_shouldEditTableColumn_item_(self, view, col, item):
+
+    # see below
+    def XXXXoutlineView_shouldEditTableColumn_item_(self, view, col, item):
         return item.editable
 
 
@@ -1228,6 +1380,12 @@ class OutlineViewDelegateDatasource(NSObject):
         lines = min( maxLines, int(item.maxHeight))
         lines = max(1, lines)
         return lines * lineheight
+
+    def outlineView_shouldEditTableColumn_item_(self, ov, col, item):
+        c = col.identifier()
+        if c == u"type":
+            return False
+        return True
 
     # UNUSED
     def ovUpdateItem_Key_Value_(self, item, key, value):
@@ -1446,8 +1604,6 @@ class OutlineNode(NSObject):
 
     # that's the deal
     def __new__(cls, *args, **kwargs):
-        # "Pythonic" constructor
-        # print "OutlineNode.__new__() called"
         return cls.alloc().init()
 
     def __repr__(self):
@@ -1455,9 +1611,11 @@ class OutlineNode(NSObject):
 
     def __init__(self, name, obj, parent, typ, rootNode):
 
-        # this is outlinetype, not valueType
         self.initphase = True
+
+        # this is outlinetype, not valueType
         self.typ = typ
+
         self.maxHeight = 1
         self.setParent_(parent)
         self.rootNode = rootNode
@@ -1480,10 +1638,21 @@ class OutlineNode(NSObject):
         self.maxHeight = self.setMaxLineHeight()
 
         self.initphase = False
-        # leave this here or bad things will happen
-        self.retain()
 
+        if 1: #self.parent == None and self.rootNode == None:
+            # leave this here or bad things will happen
+            self.retain()
 
+    def dealloc(self):
+        print "NODE DEALLOC:", self.nodenr
+        pp(self.__dict__)
+        self.children.release()
+        #self.root.release()
+        self.root = None
+        #self.rootNode.release()
+        super(OutlineNode, self).dealloc()
+
+        
     def setMaxLineHeight(self):
         maxVal = self.calcAttributesHeight()
         l = self.lineHeight( self.name )
@@ -1671,18 +1840,21 @@ class OutlineNode(NSObject):
     
     #
     def addChild_(self, child):
+        # retain: child+1
         if isinstance(child, OutlineNode):
-            if kwdbg:
-                print "addChild_setParent", child
+            if kwlog and False:
+                print "OutlineNode.addChild_", child
             child.setParent_(self)
             self.children.addObject_( child )
+            # child.release()
 
     def addChild_atIndex_(self, child, index):
-        # child.retain()
+        # retain: child+1
         self.children.insertObject_atIndex_( child, index)
         if kwdbg:
             print "addChild_atIndex_setParent", child
         child.setParent_(self)
+        # child.release()
 
     def childAtIndex_( self, index ):
         # delegeate child getter
@@ -1691,15 +1863,13 @@ class OutlineNode(NSObject):
         return None
 
     def removeChild_(self, child):
+        # retain: child-1
         # perhaps this should return the orphan
 
         # root is always outlineType
         index = self.children.indexOfObject_(child)
         if index != NSNotFound:
-            c = self.children.objectAtIndex_( index )
             self.children.removeObjectAtIndex_( index )
-            if kwdbg:
-                print "removeChild_RELEASE:", c
             return index
         return False
 
@@ -1869,6 +2039,28 @@ class OutlineNode(NSObject):
         if previous != -1:
             self.makeChildOf_(previous)
 
+    def copyPython(self):
+        result = []
+        start = {
+            'name': self.name,
+            'value': self.getValueDict(),
+            'comment': self.comment,
+            'children': result}
+        for i in self.children:
+            result.append( i.copyPython() )
+        return start
+
+    def copyNodesWithRoot_(self, root):
+        # pdb.set_trace()
+        result = []
+        # pdb.set_trace()
+        node = OutlineNode(self.name, self.getValueDict(), root, typeOutline, None)
+        node.setComment_( self.comment )
+        for i in self.children:
+            node.addChild_( i.copyNodesWithRoot_(root) )
+        return node
+
+
 #
 # node editing
 #
@@ -1893,7 +2085,7 @@ def deleteNodes(ov, nodes=(), selection=False):
     ov.reloadData()
 
 def createNode(ov, selection, startEditing=True):
-    #pdb.set_trace()
+    # pdb.set_trace()
     # create node at selection and start editing
     
     # open new line and start editing
@@ -1923,12 +2115,14 @@ def createNode(ov, selection, startEditing=True):
         ov.editColumn_row_withEvent_select_(0, rowIndex, None, True)
     delg.markDirty()
 
+
 def moveSelectionUp(ov, items):
     delg = ov.delegate()
     for item in items:
         # move item before previous
         #  get grandparent
         #  insert at index of previous
+        # pdb.set_trace()
         previous = item.previous()
         if previous == -1:
             return
@@ -1936,34 +2130,43 @@ def moveSelectionUp(ov, items):
         if parent == None:
             return
         previousIndex = previous.siblingIndex()
+        item.retain()
+
+        # don't swap these two
         parent.removeChild_( item )
         parent.addChild_atIndex_(item, previousIndex)
+
         delg.markDirty()
+
 
 def moveSelectionDown(ov, items):
     #
-
     # this really needs to be sorted down; use indices
     # otherwise there will be overlapping moves destroying
     # sortorder
     delg = ov.delegate()
     items.reverse()
     for item in items:
-
+        # retain item 0
         parent = item.parent
         if parent == None:
             return
         next = item.next()
         if next == -1:
             return
+
+        item.retain()
         parent.removeChild_( item )
+
         # after removal of item, nexitndex changes
         nextIndex = next.nextIndex()
         if nextIndex == -1:
             parent.addChild_( item )
         else:
             parent.addChild_atIndex_(item, nextIndex)
+        item.release()
         delg.markDirty()
+
 
 def moveSelectionLeft(ov, selection):
     pass
