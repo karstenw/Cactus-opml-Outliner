@@ -730,7 +730,7 @@ def getPhotoXML( rootNode ):
         'license': license,
         'sizes': []
     }
-    weightedSizes = []
+    sortedSizes = []
     if urlFolder:
         for i, size in enumerate(list(sizes)):
             picture['sizes'].append(size.attrib)
@@ -738,14 +738,14 @@ def getPhotoXML( rootNode ):
             maxWH = max(int(size.attrib.get('width', 0)),
                         int(size.attrib.get('height', 0)) )
 
-            weightedSizes.append( (maxWH, i) )
+            sortedSizes.append( (maxWH, i) )
 
             if 'fname' in size.attrib:
                 name = size.attrib['fname']
                 url = urlFolder + name
                 picts[ name ] = url
-    weightedSizes.sort()
-    weightedSizes.reverse()
-    picture['weightedSizes'] = weightedSizes
+    sortedSizes.sort()
+    sortedSizes.reverse()
+    picture['sortedSizes'] = sortedSizes
     return picture
 

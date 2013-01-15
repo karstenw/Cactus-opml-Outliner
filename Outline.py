@@ -507,7 +507,7 @@ class KWOutlineView(AutoBaseClass):
         """Notification."""
         self.editSession = True
         userInfo = aNotification.userInfo()
-        print "EDITOR:", self.currentEditor()
+        # print "EDITOR:", self.currentEditor()
         #textMovement = userInfo.valueForKey_( u"NSTextMovement" ).intValue()
         #print "TextMovement: '%i'" % textMovement
         
@@ -1716,7 +1716,7 @@ class OutlineNode(NSObject):
         vallength = len( val )
         if vallength > 100:
             pass
-        lines += int(math.ceil(vallength / 40.0))
+        lines += int(math.ceil(vallength / 55.0))
         return max(1, lines)
 
     def calcAttributesHeight(self):

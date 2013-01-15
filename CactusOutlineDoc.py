@@ -1009,18 +1009,24 @@ def openOPML_(rootOPML, urltag=None):
             name = c.get('name', '')
             childs = c.get('children', [])
             content = c.get('attributes', "")
+            comment = ""
             if content == "":
                 content = {u'value': ""}
             content.pop('text', None)
             if content:
                 l = []
                 for k, v in content.items():
-                    l.append( (k, v) )
+                    if k == "comment":
+                        comment = v
+                    else:
+                        l.append( (k, v) )
                 content = l
             else:
                 content = u""
 
             newnode = OutlineNode(name, content, node, typeOutline, root)
+            if comment:
+                newnode.setComment_( comment )
             node.addChild_( newnode )
             if len(childs) > 0:
                 getChildrenforNode(newnode, childs, root)
@@ -1055,7 +1061,7 @@ def openOPML_(rootOPML, urltag=None):
     #
     # get opml body section
     if rootOPML['body']:
-
+        # pdb.set_trace()
         # the outline body node
         body = OutlineNode("body", "", root, typeOutline, root)
         root.addChild_( body )
@@ -1063,6 +1069,7 @@ def openOPML_(rootOPML, urltag=None):
         for item in rootOPML['body']:
             name = item['name']
             children = item['children']
+            comment = ""
 
 
             # make table here
@@ -1071,12 +1078,17 @@ def openOPML_(rootOPML, urltag=None):
             if content:
                 l = []
                 for k, v in content.items():
-                    l.append( (k, v) )
+                    if k == "comment":
+                        comment = v
+                    else:
+                        l.append( (k, v) )
                 content = l
             else:
                 content = u""
 
             node = OutlineNode(name, content, body, typeOutline, root)
+            if comment:
+                node.setComment_( comment )
             # node.setValue_(content)
             body.addChild_( node )
             if len(children) > 0:
