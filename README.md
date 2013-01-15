@@ -14,7 +14,7 @@ Use it to explore OPML, RSS, XML and HTML files. Nodes can be opened in the webb
 
 RSS, XML and HTML files are new and still in the make so please be cautious with Cactus generated files of these kinds. For example Cactus doesn't know about namespaces in RSS. They sure get lost if you save a RSS file in Cactus.
 
-HTML files can not yet be saved.
+XML and HTML Files don't get text tails. I.E. if a tag's text is interspersed with other tags. That is an error and therefore both types have been demoted to "Viewer".
 
 XML Text for XML files is stored currently in the "Comment" column. This is a temporary solution that will be fixed with the refactoring of the outline node attribute system.
 
@@ -150,6 +150,8 @@ http://goo.gl/EALQi
 
 ## Recent versions ##
 
+v0.4.1 Status line, new select all subnodes (see shortcuts), better RSS write, reading and writing windowposition and expansionstate, maxRowHeight menu, better editing.
+
 v0.4.0 HTML document type and big icons.
 
 v0.3.8 Context menu
@@ -189,9 +191,9 @@ v0.2.0 Initial release.
 ## Things that work: ##
 
 ### files, outlines and tables ###
-- open file (opml)
+- open file (opml, rss, xml, html)
 - open document via open event or by dragging files to the dock icon
-- open url (opml)
+- open url (opml, rss, xml, html)
 - open outline from outline node (opml & rss)
 - new outline
 - new table
@@ -217,13 +219,14 @@ v0.2.0 Initial release.
 <table>
 <tr><td>cmd-O</td><td>open file dialog</td></tr>
 <tr><td>cmd-alt-O</td><td>open URL dialog</td></tr>
+<tr><td>cmd-S</td><td>save (for opml, rss)</td></tr>
 <tr><td>cmd-shift-S</td><td>save as dialog</td></tr>
 </table>
 
 ### editing ###
 <table>
 <tr><td>Return</td><td>create a new node after the current and start editing</td></tr>
-<tr><td>enter</td><td>start/end editing current node</td></tr>
+<tr><td>escape</td><td>start/end editing current node</td></tr>
 
 <tr><td>tab</td><td>indent selection</td></tr>
 <tr><td>shift-tab</td><td>outdent selection</td></tr>
@@ -233,6 +236,8 @@ v0.2.0 Initial release.
 
 <tr><td>ctrl-left</td><td>select parent node</td></tr>
 <tr><td>ctrl-alt-left</td><td>select parent node and collapse</td></tr>
+<tr><td>ctrl-right</td><td>select all children</td></tr>
+<tr><td>ctrl-alt-right</td><td>select all children and expand</td></tr>
 </table>
 
 
@@ -245,10 +250,10 @@ v0.2.0 Initial release.
 
 ### opening nodes ###
 <table>
-<tr><td>control-enter</td><td>open node in a table view (usefull if node has attributes)</td></tr>
+<tr><td>control-enter</td><td>open node in a table (usefull if node has attributes)</td></tr>
 
 <tr><td>control-alt-enter</td>
-<td>open node selection in new opml document, browser or movieplayer.</td></tr>
+<td>open node selection in new opml document, browser or movieplayer depending on nodetype.</td></tr>
 
 </table>
 
