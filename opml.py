@@ -332,8 +332,8 @@ def xml_from_string(xml_text):
 
 def html_from_url( htmlurl ):
     # pdb.set_trace()
-    import CactusTools
-    CactusTools.cache_url(htmlurl, "html")
+    #import CactusTools
+    #CactusTools.cache_url(htmlurl, "html")
     if isinstance(htmlurl, NSURL):
         htmlurl = str(htmlurl.absoluteString())
     parser = lxmletree.HTMLParser()
@@ -700,25 +700,34 @@ def photo_from_string( photo_text ):
 
 def getPhotoXML( rootNode ):
 
-    title = rootNode.find("title")
-    title = title.text
+    title = description = whenUploaded = whenArchived = license = urlFolder = ""
 
-    description = rootNode.find("description")
-    description = description.text
+    node = rootNode.find("title")
+    if node != None:
+        title = node.text
 
-    whenUploaded = rootNode.find("whenUploaded")
-    whenUploaded = whenUploaded.text
+    node = rootNode.find("description")
+    if node != None:
+        description = node.text
 
-    whenArchived = rootNode.find("whenArchived")
-    whenArchived = whenArchived.text
+    node = rootNode.find("whenUploaded")
+    if node != None:
+        whenUploaded = node.text
 
-    license = rootNode.find("license")
-    license = license.text
+    node = rootNode.find("whenArchived")
+    if node != None:
+        whenArchived = node.text
 
-    urlFolder = rootNode.find("urlFolder")
-    urlFolder = urlFolder.text
+    node = rootNode.find("license")
+    if node != None:
+        license = node.text
+
+    node = rootNode.find("urlFolder")
+    if node != None:
+        urlFolder = node.text
 
     sizes = rootNode.find("sizes")
+
     picts = {}
 
     picture = {
@@ -730,7 +739,9 @@ def getPhotoXML( rootNode ):
         'license': license,
         'sizes': []
     }
+
     sortedSizes = []
+
     if urlFolder:
         for i, size in enumerate(list(sizes)):
             picture['sizes'].append(size.attrib)
@@ -744,8 +755,8 @@ def getPhotoXML( rootNode ):
                 name = size.attrib['fname']
                 url = urlFolder + name
                 picts[ name ] = url
+
     sortedSizes.sort()
     sortedSizes.reverse()
     picture['sortedSizes'] = sortedSizes
     return picture
-

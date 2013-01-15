@@ -234,7 +234,8 @@ g_qtplayer_extensions = g_qtplayer_extensions.split()
 
 def open_photo( url, open_=True, cache=False ):
     """opens 2nd biggest picture"""
-
+    print "Outline.open_photo( %s )" % repr(url)
+    # pdb.set_trace()
     # get photo xml
     f = urllib.FancyURLopener()
     fob = f.open(url)

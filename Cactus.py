@@ -166,11 +166,14 @@ class OpenURLWindowController(AutoBaseClass):
             n = len(self.visitedURLs)
             if n > 40:
                 self.visitedURLs = self.visitedURLs[:50]
-            delg.visitedURLs = self.visitedURLs[:]
         else:
             # put visited url at top
             self.visitedURLs.remove( t_url )
             self.visitedURLs.insert( 0, t_url )
+            self.menuLastVisited.removeAllItems()
+            for menuItem in self.visitedURLs:
+                self.menuLastVisited.addItemWithTitle_( menuItem )
+        delg.visitedURLs = self.visitedURLs[:]
         delg.newOutlineFromURL_Type_( url, str(self.readAsType) )
         self.close()
 
