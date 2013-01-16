@@ -22,22 +22,29 @@ CactusRSSFileExtensions = [ 'rss' ]
 CactusRSSOSTypes = [ '****' ]
 
 
-# an outliner as a general xml editor
+# an outliner as a xml editor
 CactusXMLType = u'XML File'
 CactusXMLFileExtensions = [ 'xml', ]
 CactusXMLOSTypes = [ '****' ]
 
-# an outliner as a general xml editor
+# an outliner as a html editor
 CactusHTMLType = u'HTML File'
 CactusHTMLFileExtensions = [ 'html', 'htm', 'php' ]
 CactusHTMLOSTypes = [ '****' ]
+
+# an outliner as a property list editor
+CactusPLISTType = u'PLIST File'
+CactusPLISTFileExtensions = [ 'plist', ]
+CactusPLISTOSTypes = [ '****' ]
 
 
 CactusDocumentTypesSet = set( (CactusOPMLType,
                                CactusRSSType,
                                CactusXMLType,
-                               CactusHTMLType) )
+                               CactusHTMLType,
+                               CactusPLISTType) )
 
+# plists don't need to be xml files
 CactusDocumentXMLBasedTypesSet = set( (CactusOPMLType,
                                        CactusRSSType,
                                        CactusXMLType) )

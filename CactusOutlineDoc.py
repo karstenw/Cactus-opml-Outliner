@@ -39,14 +39,26 @@ import CactusExceptions
 OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
 XMLParseErrorException = CactusExceptions.XMLParseErrorException
 HTMLParseErrorException = CactusExceptions.HTMLParseErrorException
+PLISTParseErrorException = CactusExceptions.PLISTParseErrorException
 
 import objc
 
 import Foundation
 NSObject = Foundation.NSObject
 NSURL = Foundation.NSURL
-NSData = Foundation.NSData
 NSMakeRect = Foundation.NSMakeRect
+
+# NSDate, NSNumber, NSArray, or NSDictionary
+NSData = Foundation.NSData
+NSCFData = Foundation.NSCFData
+NSDate = Foundation.NSDate
+NSCFDate = Foundation.NSCFDate
+NSNumber = Foundation.NSNumber
+NSArray = Foundation.NSArray
+NSCFArray = Foundation.NSCFArray
+NSCFDictionary = Foundation.NSCFDictionary
+NSDictionary = Foundation.NSDictionary
+
 
 import AppKit
 NSDocument = AppKit.NSDocument
@@ -89,6 +101,7 @@ CactusOPMLType = CactusDocumentTypes.CactusOPMLType
 CactusRSSType = CactusDocumentTypes.CactusRSSType
 CactusXMLType = CactusDocumentTypes.CactusXMLType
 CactusHTMLType = CactusDocumentTypes.CactusHTMLType
+CactusPLISTType = CactusDocumentTypes.CactusPLISTType
 
 
 extractClasses("OutlineEditor")
@@ -285,6 +298,31 @@ class CactusOutlineDocument(AutoBaseClass):
                 return (False, None)
 
             root = openXML_( d )
+
+            if root:
+                self.rootNode = root
+                if not url.isFileURL():
+                    self.updateChangeCount_( NSChangeReadOtherContents )
+                else:
+                    self.updateChangeCount_( NSChangeCleared )
+            else:
+                if kwlog:
+                    print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                return (False, None)
+        
+        # read plist content
+        elif theType == CactusPLISTType:
+            d = None
+            try:
+                d = opml.parse_plist( url )
+            except PLISTParseErrorException, v:
+                tb = unicode(traceback.format_exc())
+                v = unicode( repr(v) )
+                err = tb
+                errorDialog( message=v, title=tb )
+                return (False, None)
+
+            root = openPLIST_( d )
 
             if root:
                 self.rootNode = root
@@ -1372,4 +1410,74 @@ def openRSS_(url):
 
         node = OutlineNode(name, value, body, typeOutline, root)
         body.addChild_( node )
+    return root
+
+
+
+def openPLIST_( nsdict ):
+
+    if kwlog:
+        s = repr(nsdict)
+        if len(s) > 90:
+            s = s[:91]
+        print "openPLIST_( %s )" % s
+
+    """This builds the node tree and returns the root node."""
+
+    ######
+
+    # root node for document; never visible,
+    # always outline type (even for tables)
+    root = OutlineNode("__ROOT__", "", None, typeOutline, None)
+
+    def dispatchLevel( nsdict, parent, parentType, root ):
+
+        # array or dict
+        selfType = type(nsdict)
+        i = 0
+
+        for key in nsdict:
+            i += 1
+
+            if selfType in (NSCFDictionary, NSDictionary):
+                name = unicode(key)
+                nsvalue = nsdict[key]
+            elif selfType in (NSArray, NSCFArray, list, tuple):
+                name = str(i)
+                nsvalue = key
+            else:
+                print "BOGATIVE TYPE:", repr(selfType)
+                # pdb.set_trace()
+                print
+
+            valueType = type(nsvalue)
+
+            node = OutlineNode(name, "", parent, typeOutline, root)
+
+            if valueType in (NSData, NSCFData, NSDate, NSCFDate,
+                             datetime.datetime,
+                             NSString, objc.pyobjc_unicode):
+                value = unicode(nsvalue.description())
+                node.setComment_( value )
+
+            elif valueType == bool:
+                value = repr(int(nsvalue))
+                node.setComment_( value )
+
+            elif valueType in (NSNumber, int, long, float,
+                               objc._pythonify.OC_PythonFloat,
+                               objc._pythonify.OC_PythonInt,
+                               objc._pythonify.OC_PythonLong):
+                value = unicode(nsvalue.descriptionWithLocale_( None ))
+                node.setComment_( value )
+
+            elif valueType in (NSArray, NSCFArray, NSDictionary, NSCFDictionary):
+                dispatchLevel(nsvalue, node, selfType, root)
+
+            else:
+                print "BOGATIVE TYPE:", repr(valueType)                
+                #pdb.set_trace()
+                print
+            parent.addChild_(node)
+    dispatchLevel(nsdict, root, type(NSCFDictionary), root)
     return root

@@ -79,6 +79,15 @@ setup(
                     'CFBundleTypeRole': 'Editor',
                     # 'CFBundleTypeRole': 'Viewer',
                     'NSDocumentClass': u'CactusOutlineDocument',
+                },
+                {
+                    'CFBundleTypeExtensions': CactusDocumentTypes.CactusPLISTFileExtensions,
+                    'CFBundleTypeIconFile': 'PLISTDocument.icns',
+                    'CFBundleTypeName': CactusDocumentTypes.CactusPLISTType,
+                    'CFBundleTypeOSTypes': CactusDocumentTypes.CactusPLISTOSTypes,
+                    'CFBundleTypeRole': 'Editor',
+                    # 'CFBundleTypeRole': 'Viewer',
+                    'NSDocumentClass': u'CactusOutlineDocument',
                 }
             ],
             'LSHasLocalizedDisplayName': False,

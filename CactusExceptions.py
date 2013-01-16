@@ -30,6 +30,10 @@ class HTMLParseErrorException(CactusBaseException):
     """A HTML source could not be parsed."""
     pass
 
+class PLISTParseErrorException(CactusBaseException):
+    """A PLIST source could not be parsed."""
+    pass
+
 
 
 #

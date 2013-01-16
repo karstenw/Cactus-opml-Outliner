@@ -1642,7 +1642,7 @@ class OutlineNode(NSObject):
         self.setAttributes_( obj )
         self.setComment_( "" )
 
-        self.children = NSMutableArray.arrayWithCapacity_( 10 )
+        self.children = NSMutableArray.arrayWithCapacity_( 0 )
         self.editable = True
 
         self.maxHeight = self.setMaxLineHeight()

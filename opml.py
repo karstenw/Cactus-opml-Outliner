@@ -33,10 +33,12 @@ import CactusExceptions
 OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
 XMLParseErrorException = CactusExceptions.XMLParseErrorException
 HTMLParseErrorException = CactusExceptions.HTMLParseErrorException
+PLISTParseErrorException = CactusExceptions.PLISTParseErrorException
+
 
 import Foundation
 NSURL = Foundation.NSURL
-
+NSDictionary = Foundation.NSDictionary
 
 # some globals for opml analyzing
 keyTypes = {}
@@ -136,6 +138,15 @@ def opml_from_string(opml_text):
     return getOPML( s )
 
 
+def parse_plist( nsurl ):
+    try:
+        nsdict = NSDictionary.dictionaryWithContentsOfURL_( nsurl )
+    except StandardError, v:
+        raise PLISTParseErrorException, "The PLIST file could not be parsed.\n\n%s" % v
+    return nsdict
+    
+
+# UNUSED
 def parse(opml_url):
     return getOPML(etree.parse(opml_url))
 
@@ -247,6 +258,7 @@ def getXMLNodes( node ):
         result.append(b)
     return result
 
+
 def getXML_( etRootnode ):
     d = []
     # pdb.set_trace()
@@ -330,10 +342,8 @@ def xml_from_string(xml_text):
         raise XMLParseErrorException, "The XML file could not be parsed.\n\n%s" % v
     return getXML_( s )
 
+
 def html_from_url( htmlurl ):
-    # pdb.set_trace()
-    #import CactusTools
-    #CactusTools.cache_url(htmlurl, "html")
     if isinstance(htmlurl, NSURL):
         htmlurl = str(htmlurl.absoluteString())
     parser = lxmletree.HTMLParser()
