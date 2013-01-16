@@ -19,6 +19,7 @@
                 outlineMenuExpandAll = id; 
                 outlineMenuExpandEverything = id; 
                 saveAs = id; 
+                showPreferencePanel = id; 
             }; 
             CLASS = CactusAppDelegate; 
             LANGUAGE = ObjC; 

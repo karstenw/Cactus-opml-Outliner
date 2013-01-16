@@ -1,0 +1,28 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {chooseFolder = id; }; 
+            CLASS = CactusPreferenceController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                butSetCacheFolder = id; 
+                optAlternateLines = id; 
+                optCache = id; 
+                optCommentColumn = id; 
+                optHLines = id; 
+                optTypeColumn = id; 
+                optVLines = id; 
+                optValueColumn = id; 
+                optVariableRowHeight = id; 
+                txtCacheFolder = id; 
+                txtNoOfMaxRowLines = id; 
+                txtNoOfRecentURLs = id; 
+                txtUserEmail = id; 
+                txtUserName = id; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

@@ -100,6 +100,7 @@ setup(
                 "English.lproj/NodeEditor.nib",
                 "English.lproj/OpenURL.nib",
                 "English.lproj/OpenAsAccessoryView.nib",
+                "English.lproj/Preferences.nib",
                 iconpath + "OPMLDocument.icns",
                 iconpath + "XMLDocument.icns",
                 iconpath + "RSSDocument.icns",

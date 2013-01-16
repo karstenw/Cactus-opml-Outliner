@@ -81,6 +81,8 @@ extractClasses("MainMenu")
 extractClasses("OpenURL")
 extractClasses("OutlineEditor")
 extractClasses("OpenAsAccessoryView")
+extractClasses("Preferences")
+
 
 
 import CactusExceptions
@@ -116,17 +118,32 @@ class OpenURLWindowController(AutoBaseClass):
     def init(self):
         self = self.initWithWindowNibName_("OpenURL")
         window = self.window()
+        window.setDelegate_( self )
         window.setTitle_( u"Open URL…" )
-        # self.label.setStringValue_(u"URL:")
         window.makeFirstResponder_(self.textfield)
+
         app = NSApplication.sharedApplication()
         delg = app.delegate()
+
         self.readAsType = CactusOPMLType
         self.visitedURLs = delg.visitedURLs[:]
         self.menuLastVisited.removeAllItems()
+
+        defaults = NSUserDefaults.standardUserDefaults()
+        self.noOfRecentURLs = 40
+        try:
+            self.noOfRecentURLs = int(defaults.objectForKey_( u'txtNoOfRecentURLs'))
+        except StandardError, err:
+            print "ERROR reading defaults.", repr(err)
+
+        # cap recentURLs to max size
+        if len(self.visitedURLs) > self.noOfRecentURLs:
+            self.visitedURLs = self.visitedURLs[:self.noOfRecentURLs]
+
         for url in self.visitedURLs:
             self.menuLastVisited.addItemWithTitle_( url )
         self.showWindow_(self)
+        
 
         self.retain()
         return self
@@ -164,8 +181,8 @@ class OpenURLWindowController(AutoBaseClass):
         if t_url not in self.visitedURLs:
             self.visitedURLs.insert( 0, t_url )
             n = len(self.visitedURLs)
-            if n > 40:
-                self.visitedURLs = self.visitedURLs[:50]
+            if n > self.noOfRecentURLs:
+                self.visitedURLs = self.visitedURLs[:self.noOfRecentURLs]
         else:
             # put visited url at top
             self.visitedURLs.remove( t_url )
@@ -180,6 +197,67 @@ class OpenURLWindowController(AutoBaseClass):
     def Cancel_(self, sender):
         #pdb.set_trace()
         self.close()
+
+####
+
+
+#
+# Open Preferences
+#
+class CactusPreferenceController(AutoBaseClass):
+    """Present a dialog for entering a URL for http document retrieval."""
+    def init(self):
+        self = self.initWithWindowNibName_("Preferences")
+
+        wnd = self.window()
+
+        wnd.setTitle_( u"Cactus Preferences" )
+        wnd.setDelegate_( self )
+
+        defaults = NSUserDefaults.standardUserDefaults()
+
+        self.optCache.setState_( defaults.objectForKey_( u'optCache') )
+        self.txtCacheFolder.setStringValue_( defaults.objectForKey_( u'txtCacheFolder') )
+        self.txtNoOfMaxRowLines.setStringValue_( defaults.objectForKey_( u'txtNoOfMaxRowLines') )
+        self.txtNoOfRecentURLs.setStringValue_( defaults.objectForKey_( u'txtNoOfRecentURLs') )
+        self.txtUserEmail.setStringValue_( defaults.objectForKey_( u'txtUserEmail') )
+        self.txtUserName.setStringValue_( defaults.objectForKey_( u'txtUserName') )
+
+        self.optAlternateLines.setState_( defaults.objectForKey_( u'optAlternateLines') )
+        self.optCommentColumn.setState_( defaults.objectForKey_( u'optCommentColumn') )
+        self.optTypeColumn.setState_( defaults.objectForKey_( u'optTypeColumn') )
+        self.optValueColumn.setState_( defaults.objectForKey_( u'optValueColumn') )
+
+        self.optHLines.setState_( defaults.objectForKey_( u'optHLines') )
+        self.optVLines.setState_( defaults.objectForKey_( u'optVLines') )
+        self.optVariableRowHeight.setState_( defaults.objectForKey_( u'optVariableRowHeight') )
+
+        # self.showWindow_(self)
+        return self
+
+    def windowWillClose_(self, notification):
+        defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setObject_forKey_(self.optCache.state(),   u'optCache')
+        defaults.setObject_forKey_(self.txtCacheFolder.stringValue(),   u'txtCacheFolder')
+        defaults.setObject_forKey_(self.txtNoOfMaxRowLines.stringValue(),   u'txtNoOfMaxRowLines')
+        defaults.setObject_forKey_(self.txtNoOfRecentURLs.stringValue(),   u'txtNoOfRecentURLs')
+        defaults.setObject_forKey_(self.txtUserEmail.stringValue(),   u'txtUserEmail')
+        defaults.setObject_forKey_(self.txtUserName.stringValue(),   u'txtUserName')
+
+        defaults.setObject_forKey_(self.optAlternateLines.state(),   u'optAlternateLines')
+        defaults.setObject_forKey_(self.optCommentColumn.state(),   u'optCommentColumn')
+        defaults.setObject_forKey_(self.optTypeColumn.state(),   u'optTypeColumn')
+        defaults.setObject_forKey_(self.optValueColumn.state(),   u'optValueColumn')
+
+        defaults.setObject_forKey_(self.optHLines.state(),   u'optHLines')
+        defaults.setObject_forKey_(self.optVLines.state(),   u'optVLines')
+        defaults.setObject_forKey_(self.optVariableRowHeight.state(),   u'optVariableRowHeight')
+
+    def chooseFolder_(self, sender):
+        if sender == self.butSetCacheFolder:
+            folders = CactusTools.getFolderDialog()
+            if folders:
+                self.txtCacheFolder.setStringValue_( folders[0] )
 
 
 class Document(object):
@@ -471,8 +549,24 @@ class CactusAppDelegate(NSObject):
         userdefaults = NSMutableDictionary.dictionary()
 
         userdefaults.setObject_forKey_([],   u'lastURLsVisited')
+        userdefaults.setObject_forKey_(False,   u'optCache')
+        userdefaults.setObject_forKey_("",   u'txtCacheFolder')
+        userdefaults.setObject_forKey_("2",   u'txtNoOfMaxRowLines')
+        userdefaults.setObject_forKey_("40",   u'txtNoOfRecentURLs')
+        userdefaults.setObject_forKey_("",   u'txtUserEmail')
+        userdefaults.setObject_forKey_("",   u'txtUserName')
+
+        userdefaults.setObject_forKey_(True,   u'optAlternateLines')
+        userdefaults.setObject_forKey_(True,   u'optHLines')
+        userdefaults.setObject_forKey_(True,   u'optVLines')
+        userdefaults.setObject_forKey_(True,   u'optVariableRowHeight')
+
+        userdefaults.setObject_forKey_(False,   u'optCommentColumn')
+        userdefaults.setObject_forKey_(False,   u'optTypeColumn')
+        userdefaults.setObject_forKey_(True,   u'optValueColumn')
 
         NSUserDefaults.standardUserDefaults().registerDefaults_(userdefaults)
+        self.preferenceController = None
 
 
     def awakeFromNib(self):
@@ -514,10 +608,18 @@ class CactusAppDelegate(NSObject):
 
         defaults = NSUserDefaults.standardUserDefaults()
 
-        defaults.setObject_forKey_(self.visitedURLs ,
+        defaults.setObject_forKey_(self.visitedURLs,
                                    u'lastURLsVisited')
         return True
 
+    ####
+
+    def showPreferencePanel_(self, sender):
+        if self.preferenceController == None:
+            self.preferenceController = CactusPreferenceController.alloc().init()
+        self.preferenceController.showWindow_( self.preferenceController )
+
+    ####
 
     def newTableWithRoot_(self, root):
         if kwlog:
@@ -550,6 +652,8 @@ class CactusAppDelegate(NSObject):
         doc = Document("Untitled Table", None)
         CactusWindowController.alloc().initWithObject_type_(doc, typeTable)
 
+    ####
+
     # menu "New Outline"
     def newOutline_(self, sender):
         if kwlog:
@@ -564,6 +668,8 @@ class CactusAppDelegate(NSObject):
         """Open new "URL opener". Currently no measures against opening multiple of those...
         """
         OpenURLWindowController().init()
+
+    ####
 
     def openMailingList_(sender):
         workspace= NSWorkspace.sharedWorkspace()
@@ -580,6 +686,8 @@ class CactusAppDelegate(NSObject):
         url = NSURL.URLWithString_( u"http://goo.gl/EALQi" )
         workspace.openURL_( url )
     
+    ####
+
     def newOutlineFromURL_Type_(self, url, type_):
         if not isinstance(url, NSURL):
             url = NSURL.URLWithString_( url )

@@ -39,6 +39,7 @@ PLISTParseErrorException = CactusExceptions.PLISTParseErrorException
 import Foundation
 NSURL = Foundation.NSURL
 NSDictionary = Foundation.NSDictionary
+NSUserDefaults = Foundation.NSUserDefaults
 
 # some globals for opml analyzing
 keyTypes = {}

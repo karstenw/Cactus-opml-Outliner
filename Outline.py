@@ -232,15 +232,18 @@ g_qtplayer_extensions = ("aac aifc aiff aif au ulw snd caf gsm kar mid smf midi 
 g_qtplayer_extensions = g_qtplayer_extensions.split()
 
 
-def open_photo( url, open_=True, cache=False ):
+def open_photo( url, open_=True ):
     """opens 2nd biggest picture"""
     print "Outline.open_photo( %s )" % repr(url)
-    # pdb.set_trace()
-    # get photo xml
-    f = urllib.FancyURLopener()
-    fob = f.open(url)
-    s = fob.read()
-    fob.close()
+
+    defaults = NSUserDefaults.standardUserDefaults()
+    cache = False
+    try:
+        cache = bool(defaults.objectForKey_( u'optCache'))
+    except StandardError, err:
+        print "ERROR reading defaults.", repr(err)
+
+    s = CactusTools.readURL( NSURL.URLWithString_( url ) )
 
     #
     d = opml.photo_from_string( s )
@@ -284,8 +287,16 @@ def open_photo( url, open_=True, cache=False ):
 
 
 # TODO: change parameter to node!
-def open_node( url, nodeType=None, open_=True, cache=False ):
+def open_node( url, nodeType=None, open_=True ):
     print "Outline.open_node()"
+
+    defaults = NSUserDefaults.standardUserDefaults()
+    cache = False
+    try:
+        cache = bool(defaults.objectForKey_( u'optCache'))
+    except StandardError, err:
+        print "ERROR reading defaults.", repr(err)
+
     appl = NSApplication.sharedApplication()
     appdelg = appl.delegate()
     workspace= NSWorkspace.sharedWorkspace()

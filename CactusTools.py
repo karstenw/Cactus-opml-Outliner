@@ -44,6 +44,7 @@ import feedparser
 import Foundation
 NSURL = Foundation.NSURL
 NSFileManager = Foundation.NSFileManager
+NSUserDefaults = Foundation.NSUserDefaults
 
 
 import AppKit
@@ -57,8 +58,16 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 #
 # tools
 #
-def readURL( nsurl, type_=CactusOPMLType, cache=False ):
+def readURL( nsurl, type_=CactusOPMLType ):
     """Read a file. May be local, may be http"""
+
+
+    defaults = NSUserDefaults.standardUserDefaults()
+    cache = False
+    try:
+        cache = bool(defaults.objectForKey_( u'optCache'))
+    except StandardError, err:
+        print "ERROR reading defaults.", repr(err)
 
     url = NSURL2str(nsurl)
     print "CactusTools.readURL( '%s', '%s' )" % (url, type_)
@@ -219,6 +228,17 @@ def getFileDialog(multiple=False):
     return []
 
 
+def getFolderDialog(multiple=False):
+    panel = NSOpenPanel.openPanel()
+    panel.setCanChooseFiles_(False)
+    panel.setCanChooseDirectories_(True)
+    panel.setAllowsMultipleSelection_(multiple)
+    rval = panel.runModalForTypes_([])
+    if rval:
+        return [t for t in panel.filenames()]
+    return []
+
+
 def NSURL2str( nsurl ):
     if isinstance(nsurl, NSURL):
         return str(nsurl.absoluteString())
@@ -287,10 +307,24 @@ def datestring_nsdate( dt=datetime.datetime.now() ):
     return now
 
 
-def getDownloadFolder( nsurl, cachefolder=CactusVersion.cachefolder):
+def getDownloadFolder( nsurl ):
 
-    if not os.path.exists(cachefolder):
-        os.makedirs( cachefolder )
+    defaults = NSUserDefaults.standardUserDefaults()
+    cacheFolder = CactusVersion.cachefolder
+    try:
+        cacheFolder = unicode(defaults.objectForKey_( u'txtCacheFolder'))
+    except StandardError, err:
+        print "ERROR reading defaults.", repr(err)
+
+    cacheFolder = os.path.expanduser( cacheFolder )
+
+    # parent fodler must exists; minimal plausibility
+    parent, foldername = os.path.split( cacheFolder )
+    if not os.path.exists( parent ):
+        return False, False
+
+    if not os.path.exists(cacheFolder):
+        os.makedirs( cacheFolder )
 
     localpath = str( nsurl.relativePath() )
     if localpath.startswith('/'):
@@ -298,7 +332,7 @@ def getDownloadFolder( nsurl, cachefolder=CactusVersion.cachefolder):
     localpath = os.path.join( str(nsurl.host()), localpath)
     if localpath:
         localname = localpath.replace('/', '_')
-        localpath = os.path.join( cachefolder, localpath )
+        localpath = os.path.join( cacheFolder, localpath )
         return localpath, localname
     return False, False
 
@@ -320,6 +354,7 @@ def getRemotefilemodificationDate( url ):
         return False
     return rmodfdate
 
+
 def setFileModificationDate( filepath, modfdt ):
     l = getFileProperties( filepath )
     date = Foundation.NSDate.dateWithString_( datestring_nsdate( modfdt ) )
@@ -328,12 +363,14 @@ def setFileModificationDate( filepath, modfdt ):
     folder, filename = os.path.split( filepath )
     print "Setting file(%s) modification date to %s" % (filename, repr(modfdt))
 
+
 def cache_url( nsurl, filetype ):
-
-
+    returnURL = nsurl
     try:
         localpath, localname = getDownloadFolder(nsurl)
-    
+        if not localpath:
+            return nsurl
+
         folder, filename = os.path.split( localpath )
         if not os.path.exists(folder):
             os.makedirs( folder )
@@ -396,8 +433,5 @@ def cache_url( nsurl, filetype ):
         tb = unicode(traceback.format_exc())
         print tb
         print 
-    if not returnURL:
-        # pdb.set_trace()
-        print returnURL
 
     return returnURL

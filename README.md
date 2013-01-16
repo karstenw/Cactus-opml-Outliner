@@ -69,6 +69,8 @@ https://www.dropbox.com/s/wyt0xfxutymyf4v/Cactus_v042a.zip
 
 ## Latest changes ##
 
+Preference panel
+
 Cactus now reads and saves the window position of opml files.
 
 Cactus now reads and saves the expansion state of opml files.

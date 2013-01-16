@@ -58,6 +58,7 @@ NSArray = Foundation.NSArray
 NSCFArray = Foundation.NSCFArray
 NSCFDictionary = Foundation.NSCFDictionary
 NSDictionary = Foundation.NSDictionary
+NSUserDefaults = Foundation.NSUserDefaults
 
 
 import AppKit
@@ -135,10 +136,18 @@ def boilerplateOPML( rootNode ):
     head = OutlineNode("head", "", rootNode, typeOutline, root)
     rootNode.addChild_( head )
 
+    defaults = NSUserDefaults.standardUserDefaults()
+    uname = uemail = ""
+    try:
+        uname = unicode(defaults.objectForKey_( u'txtUserName'))
+        uemail = unicode(defaults.objectForKey_( u'txtUserEmail'))
+    except StandardError, err:
+        print "ERROR reading defaults.", repr(err)
+
     head.addChild_(OutlineNode("dateCreated", s, head, typeOutline, root))
     head.addChild_(OutlineNode("dateModified", s, head, typeOutline, root))
-    head.addChild_(OutlineNode("ownerName", "", head, typeOutline, root))
-    head.addChild_(OutlineNode("ownerEmail", "", head, typeOutline, root))
+    head.addChild_(OutlineNode("ownerName", uname, head, typeOutline, root))
+    head.addChild_(OutlineNode("ownerEmail", uemail, head, typeOutline, root))
     head.addChild_(OutlineNode("expansionState", "", head, typeOutline, root))
     head.addChild_(OutlineNode("vertScrollState", "", head, typeOutline, root))
     head.addChild_(OutlineNode("windowTop", "", head, typeOutline, root))
@@ -370,6 +379,8 @@ class CactusOutlineDocument(AutoBaseClass):
                 docc = NSDocumentController.sharedDocumentController()
                 added = docc.addDocument_(self)
                 
+                # this is source of trouble ( double or none call to makeWindowControllers)
+                # 
                 self.makeWindowControllers()
                 self.showWindows()
 
@@ -848,7 +859,6 @@ class CactusOutlineWindowController(AutoBaseClass):
         self.rootNode = None
         self.parentNode = None
         self.variableRowHeight = True
-        
         self.rowLines = 2
 
         # check if needed
@@ -918,26 +928,34 @@ class CactusOutlineWindowController(AutoBaseClass):
         self.commentColumn.dataCell().setWraps_( True )
         self.valueColumn.dataCell().setWraps_( True )
 
-        # defaults to name & value visible, type & comment invisible
-        self.optTypeVisible.setState_( False )
+        defaults = NSUserDefaults.standardUserDefaults()
+        self.rowLines = 2
+        self.optValueVisible.setState_( True )
+        try:
+            self.rowLines = int(defaults.objectForKey_( u'txtNoOfMaxRowLines'))
+            self.menRowLines.setTitle_( str(self.rowLines) )
+            self.optValueVisible.setState_( defaults.objectForKey_( u'optValueColumn') )
+            self.optCommentVisible.setState_( defaults.objectForKey_( u'optCommentColumn') )
+            self.optTypeVisible.setState_( defaults.objectForKey_( u'optTypeColumn') )
 
-        self.optCommentVisible.setState_( False )
-        if document.fileType() in (CactusXMLType, CactusHTMLType, CactusPLISTType):
-            # enable comment column
-            self.optCommentVisible.setState_( True )
+            self.optAlterLines.setState_( defaults.objectForKey_( u'optAlternateLines') )
+            self.optVariableRow.setState_( defaults.objectForKey_( u'optVariableRowHeight') )
+            self.optVLines.setState_( defaults.objectForKey_( u'optVLines') )
+            self.optHLines.setState_( defaults.objectForKey_( u'optHLines') )
+
+        except StandardError, err:
+            print "ERROR reading defaults.", repr(err)
 
         if document.fileType() in (CactusPLISTType,):
             # disable value column for plist (for now)
             self.optValueVisible.setState_( False )
 
-        self.menRowLines.setTitle_( u"2" )
+        if document.fileType() in (CactusXMLType, CactusHTMLType, CactusPLISTType):
+            # enable comment column
+            self.optCommentVisible.setState_( True )
 
         self.applySettings_(None)
 
-        # The window controller doesn't need to be retained (referenced)
-        # anywhere, so we pretend to have a reference to ourselves to avoid
-        # being garbage collected before the window is closed. The extra
-        # reference will be released in self.windowWillClose_()
         self.retain()
         return self
 
@@ -951,17 +969,20 @@ class CactusOutlineWindowController(AutoBaseClass):
         #
         self.autorelease()
 
+
     def doubleClick_(self, sender):
         if kwlog:
             print "CactusOutlineWindowController.doubleClick_()"
+
 
     def reloadData_(self, item=None, children=False):
         if kwlog:
             print "CactusOutlineWindowController.reloadData_()"
         if item == None:
-            self.outlineView.reloadData() #reloadItem_reloadChildren_( item, True )
+            self.outlineView.reloadData()
         else:
             self.outlineView.reloadItem_reloadChildren_( item, children )
+
 
     def loadFile_(self, sender):
         if kwlog:
@@ -969,7 +990,7 @@ class CactusOutlineWindowController(AutoBaseClass):
             
 
     def applySettings_(self, sender):
-        """target of the apply button. sets some tableview settings.
+        """target of the document check boxes. sets some tableview settings.
         """
 
         if kwlog:
