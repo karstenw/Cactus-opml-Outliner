@@ -31,7 +31,7 @@ HTML reading looks good.
 ## Quickstart ##
 
 Download the latest binary from
-https://www.dropbox.com/s/wyt0xfxutymyf4v/Cactus_v042a.zip
+https://www.dropbox.com/s/nijcgw0fpktdzoi/Cactus_v042b.zip
 unzip and launch.
 
 Do a google search for "filetype:opml"
@@ -64,7 +64,7 @@ Mailing list: http://groups.google.com/group/cactus-outliner-dev
 
 Downloads page: https://www.dropbox.com/sh/azysrf5pokzp26a/h2mFhfeM6M
 
-https://www.dropbox.com/s/wyt0xfxutymyf4v/Cactus_v042a.zip
+https://www.dropbox.com/s/nijcgw0fpktdzoi/Cactus_v042b.zip
 
 
 ## Latest changes ##
