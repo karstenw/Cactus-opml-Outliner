@@ -103,6 +103,7 @@ setup(
                 iconpath + "OPMLDocument.icns",
                 iconpath + "XMLDocument.icns",
                 iconpath + "RSSDocument.icns",
+                iconpath + "PLISTDocument.icns",
                 iconpath + "Cowskull.icns" ],
 
     options={
