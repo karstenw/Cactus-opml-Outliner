@@ -922,9 +922,13 @@ class CactusOutlineWindowController(AutoBaseClass):
         self.optTypeVisible.setState_( False )
 
         self.optCommentVisible.setState_( False )
-        if document.fileType() in (CactusXMLType, CactusHTMLType):
+        if document.fileType() in (CactusXMLType, CactusHTMLType, CactusPLISTType):
             # enable comment column
             self.optCommentVisible.setState_( True )
+
+        if document.fileType() in (CactusPLISTType,):
+            # disable value column for plist (for now)
+            self.optValueVisible.setState_( False )
 
         self.menRowLines.setTitle_( u"2" )
 
