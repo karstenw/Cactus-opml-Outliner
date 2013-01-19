@@ -1,6 +1,4 @@
-
 # -*- coding: utf-8 -*-
-
 
 """
 """
@@ -83,11 +81,8 @@ extractClasses("OutlineEditor")
 extractClasses("OpenAsAccessoryView")
 extractClasses("Preferences")
 
-
-
 import CactusExceptions
 OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
-
 
 #
 # Open URL Delegate
@@ -166,7 +161,6 @@ class OpenURLWindowController(AutoBaseClass):
         # see comment in self.initWithObject_()
         self.autorelease()
 
-
     def OK_(self, sender):
         "User pressed OK button. Get data and try to open that stuff."
 
@@ -199,7 +193,6 @@ class OpenURLWindowController(AutoBaseClass):
         self.close()
 
 ####
-
 
 #
 # Open Preferences
@@ -302,7 +295,6 @@ class CactusWindowController(AutoBaseClass):
     # the actual base class is NSWindowController
     # outlineView
 
-
     def init(self):
         # outline or table here
         # tables are outlines with no children
@@ -310,7 +302,6 @@ class CactusWindowController(AutoBaseClass):
             print "DEPRECATED CactusWindowController.init()"
         doc = Document("Untitled", None)
         return self.initWithObject_type_(doc, typeOutline)
-
 
     def initWithObject_type_(self, obj, theType):
         """This controller is used for outline and table windows."""
@@ -572,17 +563,13 @@ class CactusAppDelegate(NSObject):
     def awakeFromNib(self):
         defaults = NSUserDefaults.standardUserDefaults()
         self.visitedURLs = defaults.arrayForKey_( u"lastURLsVisited" )
-        
 
     def applicationDidFinishLaunching_(self, notification):
         if kwlog:
             print "CactusAppDelegate.applicationDidFinishLaunching_()"
-
         self.documentcontroller = CactusDocumentController.alloc().init()
-
         app = NSApplication.sharedApplication()
         app.activateIgnoringOtherApps_(True)
-
 
     def applicationShouldOpenUntitledFile_( self, sender ):
         if kwlog:
@@ -592,7 +579,6 @@ class CactusAppDelegate(NSObject):
         # should really be in the (not yet existent) preferences
         return False
 
-
     def applicationShouldHandleReopen_hasVisibleWindows_( self, theApplication, flag ):
         if kwlog:
             print "CactusAppDelegate.applicationShouldHandleReopen_hasVisibleWindows_()"
@@ -601,13 +587,11 @@ class CactusAppDelegate(NSObject):
         # should really be in the (not yet existent) preferences
         return False
 
-
     def applicationShouldTerminate_(self, aNotification):
         """Store preferences before quitting
         """
 
         defaults = NSUserDefaults.standardUserDefaults()
-
         defaults.setObject_forKey_(self.visitedURLs,
                                    u'lastURLsVisited')
         return True
@@ -625,7 +609,6 @@ class CactusAppDelegate(NSObject):
         if kwlog:
             print "CactusAppDelegate.newTableWithRoot_()"
         self.newTableWithRoot_title_(root, None)
-
 
     def newTableWithRoot_title_(self, root, title):
         if kwlog:
@@ -701,7 +684,6 @@ class CactusAppDelegate(NSObject):
             doc, err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
                                                                        type_)
 
-
     # UNUSED but defined in class
     def newBrowser_(self, sender):
         if kwlog:
@@ -714,8 +696,6 @@ class CactusAppDelegate(NSObject):
     def openOutlineDocument_(self, sender):
         if kwlog:
             print "CactusAppDelegate.openOutlineDocument_()"
-
-        # docctrl = CactusDocumentController.sharedDocumentController()
         docctrl = NSDocumentController.sharedDocumentController()
         docctrl.openDocument_(sender)
 
@@ -817,7 +797,6 @@ class CactusAppDelegate(NSObject):
                     content = u""
 
                 node = OutlineNode(name, content, body, typeOutline)
-                # node.setValue_(content)
                 body.addChild_( node )
                 if len(children) > 0:
                     try:
@@ -827,7 +806,6 @@ class CactusAppDelegate(NSObject):
                         # pdb.set_trace()
                         pp(children)
                         pp(item)
-        #title = os
         return root
 
     def saveAs_(self, sender):

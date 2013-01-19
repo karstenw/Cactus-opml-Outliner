@@ -50,13 +50,10 @@ NSMakeRect = Foundation.NSMakeRect
 
 # NSDate, NSNumber, NSArray, or NSDictionary
 NSData = Foundation.NSData
-NSCFData = Foundation.NSCFData
 NSDate = Foundation.NSDate
-NSCFDate = Foundation.NSCFDate
+
 NSNumber = Foundation.NSNumber
 NSArray = Foundation.NSArray
-NSCFArray = Foundation.NSCFArray
-NSCFDictionary = Foundation.NSCFDictionary
 NSDictionary = Foundation.NSDictionary
 NSUserDefaults = Foundation.NSUserDefaults
 
@@ -1455,54 +1452,64 @@ def openPLIST_( nsdict ):
     # always outline type (even for tables)
     root = OutlineNode("__ROOT__", "", None, typeOutline, None)
 
-    def dispatchLevel( nsdict, parent, parentType, root ):
+    def dispatchLevel( nsdict, parent, root ):
 
         # array or dict
-        selfType = type(nsdict)
         i = 0
+
+        if hasattr(nsdict, "objectForKey_"):
+            selfTypeName = "dictionary"
+        elif hasattr(nsdict, "objectAtIndex_"):
+            selfTypeName = "list"
+
+        selfType = [ ('cactusNodeType', selfTypeName) ]
+
+        parent.setValue_( selfType )
 
         for key in nsdict:
             i += 1
 
-            if selfType in (NSCFDictionary, NSDictionary):
-                name = unicode(key)
-                nsvalue = nsdict[key]
-            elif selfType in (NSArray, NSCFArray, list, tuple):
-                name = str(i)
-                nsvalue = key
+            typeAttribute = ""
+            value = ""
+
+            if selfTypeName == "list":
+                itemName = str(i)
+                nsvalue = nsdict.objectAtIndex_( i-1 )
             else:
-                print "BOGATIVE TYPE:", repr(selfType)
-                # pdb.set_trace()
-                print
+                itemName = unicode(key)
+                nsvalue = nsdict.objectForKey_(key)
 
             valueType = type(nsvalue)
 
-            node = OutlineNode(name, "", parent, typeOutline, root)
+            node = OutlineNode(itemName, "", parent, typeOutline, root)
 
-            if valueType in (NSData, NSCFData, NSDate, NSCFDate,
-                             datetime.datetime,
-                             NSString, objc.pyobjc_unicode):
-                value = unicode(nsvalue.description())
-                node.setComment_( value )
-
-            elif valueType == bool:
+            if valueType == bool:
                 value = repr(int(nsvalue))
-                node.setComment_( value )
+                node.setValue_( [ ('cactusNodeType', "bool") ] )
 
-            elif valueType in (NSNumber, int, long, float,
-                               objc._pythonify.OC_PythonFloat,
-                               objc._pythonify.OC_PythonInt,
-                               objc._pythonify.OC_PythonLong):
+            # dict
+            elif hasattr(nsvalue, "objectForKey_"):
+                dispatchLevel(nsvalue, node, root)
+
+            # list
+            elif hasattr(nsvalue, "objectAtIndex_"):
+                dispatchLevel(nsvalue, node, root)
+
+            # number
+            elif hasattr(nsvalue, "descriptionWithLocale_"):
                 value = unicode(nsvalue.descriptionWithLocale_( None ))
-                node.setComment_( value )
+                node.setValue_( [ ('cactusNodeType', "number") ] )
 
-            elif valueType in (NSArray, NSCFArray, NSDictionary, NSCFDictionary):
-                dispatchLevel(nsvalue, node, selfType, root)
-
+            # anything else
+            elif hasattr(nsvalue, "description"):
+                value = unicode(nsvalue.description())
+                node.setValue_( [ ('cactusNodeType', "string") ] )
             else:
-                print "BOGATIVE TYPE:", repr(valueType)                
+                print "BOGATIVE VALUE TYPE:", repr(valueType)
                 #pdb.set_trace()
                 print
+
+            node.setComment_( value )
             parent.addChild_(node)
-    dispatchLevel(nsdict, root, type(NSCFDictionary), root)
+    dispatchLevel(nsdict, root, root)
     return root

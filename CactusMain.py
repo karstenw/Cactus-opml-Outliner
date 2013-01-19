@@ -26,6 +26,11 @@ import CactusTableDocument
 import Outline
 import Cactus
 
+import CactusVersion
+
+if CactusVersion.developmentversion:
+    import PyObjCTools.Debugging
+    PyObjCTools.Debugging.installVerboseExceptionHandler()
 
 if __name__ == "__main__":
     from PyObjCTools import AppHelper
