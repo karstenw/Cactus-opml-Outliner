@@ -68,7 +68,7 @@ setup(
                     'CFBundleTypeName': CactusDocumentTypes.CactusXMLType,
                     'CFBundleTypeOSTypes': CactusDocumentTypes.CactusXMLOSTypes,
                     'CFBundleTypeRole': 'Editor',
-                    # 'CFBundleTypeRole': 'Viewer',
+                    #'CFBundleTypeRole': 'Viewer',
                     'NSDocumentClass': u'CactusOutlineDocument',
                 },
                 {
@@ -77,7 +77,7 @@ setup(
                     'CFBundleTypeName': CactusDocumentTypes.CactusHTMLType,
                     'CFBundleTypeOSTypes': CactusDocumentTypes.CactusHTMLOSTypes,
                     'CFBundleTypeRole': 'Editor',
-                    # 'CFBundleTypeRole': 'Viewer',
+                    #'CFBundleTypeRole': 'Viewer',
                     'NSDocumentClass': u'CactusOutlineDocument',
                 },
                 {
@@ -85,6 +85,15 @@ setup(
                     'CFBundleTypeIconFile': 'PLISTDocument.icns',
                     'CFBundleTypeName': CactusDocumentTypes.CactusPLISTType,
                     'CFBundleTypeOSTypes': CactusDocumentTypes.CactusPLISTOSTypes,
+                    'CFBundleTypeRole': 'Editor',
+                    # 'CFBundleTypeRole': 'Viewer',
+                    'NSDocumentClass': u'CactusOutlineDocument',
+                },
+                {
+                    'CFBundleTypeExtensions': CactusDocumentTypes.CactusIMLFileExtensions,
+                    'CFBundleTypeIconFile': 'IMLDocument.icns',
+                    'CFBundleTypeName': CactusDocumentTypes.CactusIMLType,
+                    'CFBundleTypeOSTypes': CactusDocumentTypes.CactusIMLOSTypes,
                     'CFBundleTypeRole': 'Editor',
                     # 'CFBundleTypeRole': 'Viewer',
                     'NSDocumentClass': u'CactusOutlineDocument',
@@ -105,6 +114,7 @@ setup(
                 iconpath + "XMLDocument.icns",
                 iconpath + "RSSDocument.icns",
                 iconpath + "PLISTDocument.icns",
+                iconpath + "iXMLDocument.icns",
                 iconpath + "Cowskull.icns" ],
 
     options={

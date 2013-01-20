@@ -12,6 +12,7 @@ import traceback
 import time
 import datetime
 import urllib
+import binascii
 
 import xml.etree.cElementTree
 etree = xml.etree.cElementTree
@@ -56,7 +57,8 @@ NSNumber = Foundation.NSNumber
 NSArray = Foundation.NSArray
 NSDictionary = Foundation.NSDictionary
 NSUserDefaults = Foundation.NSUserDefaults
-
+NSMutableData = Foundation.NSMutableData
+NSKeyedArchiver = Foundation.NSKeyedArchiver
 
 import AppKit
 NSDocument = AppKit.NSDocument
@@ -100,7 +102,7 @@ CactusRSSType = CactusDocumentTypes.CactusRSSType
 CactusXMLType = CactusDocumentTypes.CactusXMLType
 CactusHTMLType = CactusDocumentTypes.CactusHTMLType
 CactusPLISTType = CactusDocumentTypes.CactusPLISTType
-
+CactusIMLType = CactusDocumentTypes.CactusIMLType
 
 extractClasses("OutlineEditor")
 
@@ -329,6 +331,32 @@ class CactusOutlineDocument(AutoBaseClass):
                 return (False, None)
 
             root = openPLIST_( d )
+
+            if root:
+                self.rootNode = root
+                if not url.isFileURL():
+                    self.updateChangeCount_( NSChangeReadOtherContents )
+                else:
+                    self.updateChangeCount_( NSChangeCleared )
+            else:
+                if kwlog:
+                    print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                return (False, None)
+
+        # read itunes music xml
+        elif theType == CactusIMLType:
+            d = None
+            # pdb.set_trace()
+            try:
+                d = opml.parse_plist( url )
+            except PLISTParseErrorException, v:
+                tb = unicode(traceback.format_exc())
+                v = unicode( repr(v) )
+                err = tb
+                errorDialog( message=v, title=tb )
+                return (False, None)
+
+            root = openIML_( d )
 
             if root:
                 self.rootNode = root
@@ -638,6 +666,9 @@ class CactusOutlineDocument(AutoBaseClass):
                 t = fob.getvalue()
                 fob.close()
                 return NSData.dataWithBytes_length_(t, len(t))
+
+        elif theType == CactusDocumentTypes.CactusPLISTType:
+            return opml.serializePLISTOutline_( self.rootNode )
 
         # these are just ideas
         elif theType == CactusDocumentTypes.CactusTEXTType:
@@ -1435,6 +1466,153 @@ def openRSS_(url):
     return root
 
 
+def getPLISTValue(nsvalue):
+    valueType = type(nsvalue)
+    value = ""
+    valueTypeName = ""
+    if valueType == bool:
+        # print "BOOLVALUE: '%s' --> '%s'" % (repr(nsvalue), repr(bool(nsvalue)) )
+        value = repr(bool(nsvalue))
+        valueTypeName = [ ('cactusNodeType', "bool") ]
+    
+    # number
+    elif hasattr(nsvalue, "descriptionWithLocale_"):
+        value = unicode(nsvalue.descriptionWithLocale_( None ))
+        valueTypeName = [ ('cactusNodeType', "number") ]
+    
+    # data
+    elif hasattr(nsvalue, "bytes"):
+        value = unicode( binascii.hexlify(nsvalue.bytes()) )
+        valueTypeName = [ ('cactusNodeType', "data") ]
+    
+    # anything else
+    elif hasattr(nsvalue, "description"):
+        value = unicode(nsvalue.description())
+        valueTypeName = [ ('cactusNodeType', "string") ]
+    else:
+        print "BOGATIVE VALUE TYPE:", repr(valueType)
+        #pdb.set_trace()
+        print
+    return value, valueTypeName
+
+
+def openIML_( nsdict ):
+    if kwlog:
+        s = repr(nsdict)
+        if len(s) > 90:
+            s = s[:91]
+        print "openPLIST_( %s )" % s
+
+    """This builds the node tree and returns the root node."""
+
+    ######
+
+    # root node for document; never visible,
+    # always outline type (even for tables)
+    root = OutlineNode("__ROOT__", "", None, typeOutline, None)
+
+    progressCount = 0
+
+    def getTracks( nsdict, parent ):
+        # pdb.set_trace()
+        i = 0
+        for trackItem in nsdict:
+            trackData = nsdict.objectForKey_( trackItem )
+            trackNode = OutlineNode("", "", parent, typeOutline, root)
+            trackAttributes = []
+            trackName = ""
+            trackAlbum = ""
+            trackArtist = ""
+            for trackAttribute in trackData:
+                nsvalue = trackData.objectForKey_( trackAttribute )
+                value, valueType = getPLISTValue( nsvalue)
+                if trackAttribute == u"Name":
+                    trackName = value
+                if trackAttribute == u"Album":
+                    trackAlbum = value
+
+                trackAttributes.append( (trackAttribute, value) )
+            itemName = u"%s - %s" % (trackAlbum, trackName)
+            # print repr(itemName)
+            trackNode.setName_( itemName )
+            trackNode.setValue_( trackAttributes )
+            trackNode.setMaxLineHeight()
+            parent.addChild_( trackNode )
+            i += 1
+            if i % 1000 == 0:
+                sys.stdout.write('.')
+                sys.stdout.flush()
+                if i % 100000 == 0:
+                    sys.stdout.write('\n')
+                    sys.stdout.flush()
+        print
+        print "%i Tracks." % i
+
+    def getPlaylists( nsvalue, node ):
+        pass
+
+
+    def dispatchLevel( nsdict, parent, root, progressCount ):
+        # array or dict
+        i = 0
+
+        if hasattr(nsdict, "objectForKey_"):
+            selfTypeName = "dictionary"
+        elif hasattr(nsdict, "objectAtIndex_"):
+            selfTypeName = "list"
+
+        selfType = [ ('cactusNodeType', selfTypeName) ]
+
+        parent.setValue_( selfType )
+
+        for key in nsdict:
+            i += 1
+
+            typeAttribute = ""
+            value = ""
+
+            if selfTypeName == "list":
+                itemName = str(i)
+                nsvalue = nsdict.objectAtIndex_( i-1 )
+            else:
+                itemName = unicode(key)
+                nsvalue = nsdict.objectForKey_(key)
+
+            valueType = type(nsvalue)
+
+            node = OutlineNode(itemName, "", parent, typeOutline, root)
+
+            if itemName == u"Tracks":
+                getTracks( nsvalue, node )
+            elif itemName == u"Playlists":
+                getPlaylists( nsvalue, node )
+            else:
+                # dict
+                if hasattr(nsvalue, "objectForKey_"):
+                    progressCount = dispatchLevel(nsvalue, node, root, progressCount)
+    
+                # list
+                elif hasattr(nsvalue, "objectAtIndex_"):
+                    progressCount = dispatchLevel(nsvalue, node, root, progressCount)
+    
+                else:
+                    value, valueType = getPLISTValue( nsvalue )
+                    node.setValue_( valueType )
+            node.setComment_( value )
+            parent.addChild_(node)
+            progressCount += 1
+            if kwlog:
+                if progressCount % 1000 == 0:
+                    sys.stdout.write('.')
+                    sys.stdout.flush()
+                    if progressCount % 100000 == 0:
+                        sys.stdout.write('\n')
+                        sys.stdout.flush()
+        return progressCount
+
+    dispatchLevel(nsdict, root, root, progressCount)
+    return root
+
 
 def openPLIST_( nsdict ):
 
@@ -1452,8 +1630,9 @@ def openPLIST_( nsdict ):
     # always outline type (even for tables)
     root = OutlineNode("__ROOT__", "", None, typeOutline, None)
 
-    def dispatchLevel( nsdict, parent, root ):
+    progressCount = 0
 
+    def dispatchLevel( nsdict, parent, root, progressCount ):
         # array or dict
         i = 0
 
@@ -1484,21 +1663,27 @@ def openPLIST_( nsdict ):
             node = OutlineNode(itemName, "", parent, typeOutline, root)
 
             if valueType == bool:
-                value = repr(int(nsvalue))
+                # print "BOOLVALUE: '%s' --> '%s'" % (repr(nsvalue), repr(bool(nsvalue)) )
+                value = repr(bool(nsvalue))
                 node.setValue_( [ ('cactusNodeType', "bool") ] )
 
             # dict
             elif hasattr(nsvalue, "objectForKey_"):
-                dispatchLevel(nsvalue, node, root)
+                dispatchLevel(nsvalue, node, root, progressCount)
 
             # list
             elif hasattr(nsvalue, "objectAtIndex_"):
-                dispatchLevel(nsvalue, node, root)
+                dispatchLevel(nsvalue, node, root, progressCount)
 
             # number
             elif hasattr(nsvalue, "descriptionWithLocale_"):
                 value = unicode(nsvalue.descriptionWithLocale_( None ))
                 node.setValue_( [ ('cactusNodeType', "number") ] )
+
+            # data
+            elif hasattr(nsvalue, "bytes"):
+                value = unicode( binascii.hexlify(nsvalue.bytes()) )
+                node.setValue_( [ ('cactusNodeType', "data") ] )
 
             # anything else
             elif hasattr(nsvalue, "description"):
@@ -1511,5 +1696,13 @@ def openPLIST_( nsdict ):
 
             node.setComment_( value )
             parent.addChild_(node)
-    dispatchLevel(nsdict, root, root)
+            progressCount += 1
+            if kwlog:
+                if progressCount % 1000 == 0:
+                    sys.stdout.write('.')
+                    sys.stdout.flush()
+                    if progressCount % 100000 == 0:
+                        sys.stdout.write('\n')
+                        sys.stdout.flush()
+    dispatchLevel(nsdict, root, root, progressCount)
     return root

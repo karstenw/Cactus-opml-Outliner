@@ -4,7 +4,7 @@ import os
 import datetime
 
 import cStringIO
-
+import binascii
 
 import pprint
 pp = pprint.pprint
@@ -40,6 +40,16 @@ import Foundation
 NSURL = Foundation.NSURL
 NSDictionary = Foundation.NSDictionary
 NSUserDefaults = Foundation.NSUserDefaults
+NSMutableDictionary = Foundation.NSMutableDictionary
+NSMutableArray = Foundation.NSMutableArray
+NSData = Foundation.NSData
+NSNumber = Foundation.NSNumber
+NSMutableData = Foundation.NSMutableData
+NSKeyedArchiver = Foundation.NSKeyedArchiver
+
+
+
+
 
 # some globals for opml analyzing
 keyTypes = {}
@@ -452,14 +462,18 @@ def generateXML( rootNode, indent=False ):
     """
 
     #
-    # WARNING: This dereference needs to be removed if the OPML code is ever cleaned
-    #          up. Currently the rootNode is invisible and attached to the document.
+    # WARNING: The following dereference needs to be removed if the
+    #          OPML code is ever cleaned up. Currently the rootNode
+    #          is invisible and attached to the document.
+    #
     #          That needs to change but not for now.
     #
     #   In the case of XML there are 2 chained roots
     #
     #   Cactus OPML files ommit the <opml> element!
     #
+
+    # ignore the opml element
     baseOP = rootNode.children[0]
 
     rootXML = etree.Element( baseOP.name )
@@ -532,7 +546,6 @@ def generateRSS( rootNode, indent=2 ):
         'title': "No Channel Title",
         'description': "No Channel description.",
         'link':  ""}
-
 
     headOP = rootNode.findFirstChildWithName_( "head" )
 
@@ -616,6 +629,81 @@ def generateRSS( rootNode, indent=2 ):
     return s
 
 
+def serializePLISTOutline_( rootNode ):
+    nsdict = generatePLISTDict_( rootNode )
+    p = "/tmp/tmp.plist"
+    ok = nsdict.writeToFile_atomically_(p, True)
+    if ok:
+        f = open( p, 'rb')
+        s = f.read()
+        f.close()
+        data = NSData.dataWithBytes_length_(s, len(s) )
+        return data
+    return False
+
+
+def generatePLISTDict_( rootNode ):
+    plist = NSMutableDictionary.dictionaryWithCapacity_(rootNode.noOfChildren())
+    
+    for child in rootNode.children:
+        attrs = child.getValueDict()
+        name = child.name
+        cactusType = attrs.get( 'cactusNodeType', None)
+        immediateValue = unicode(child.comment)
+        if cactusType == 'bool':
+            plist[ name ] = False
+            if immediateValue != u"False":
+                plist[ name ] = True
+        elif cactusType == 'number':
+            if '.' in str(immediateValue):
+                plist[ name ] = NSNumber.numberWithFloat_( float(immediateValue) )
+            else:
+                # plist[ name ] = long(immediateValue)
+                plist[ name ] = NSNumber.numberWithLongLong_( long(immediateValue) )
+        elif cactusType == 'string':
+            plist[ name ] = immediateValue
+        elif cactusType == 'data':
+            s = binascii.unhexlify(immediateValue)
+            l = len(s)
+            plist[ name ] = NSData.dataWithBytes_length_(s, l)
+        elif cactusType == 'list':
+            plist[ name ] = generatePLISTArray_( child )
+        elif cactusType == 'dictionary':
+            plist[ name ] = generatePLISTDict_( child )
+    return plist
+
+
+def generatePLISTArray_( rootNode ):
+    plist = NSMutableArray.arrayWithCapacity_(rootNode.noOfChildren())
+    
+    for child in rootNode.children:
+        attrs = child.getValueDict()
+        name = child.name
+        cactusType = attrs.get( 'cactusNodeType', None)
+        immediateValue = unicode(child.comment)
+        if cactusType == 'bool':
+            b = False
+            if immediateValue != u"False":
+                b = True
+            plist.append( b )
+        elif cactusType == 'number':
+            if '.' in str(immediateValue):
+                plist.append( float(immediateValue) )
+            else:
+                plist.append( long(immediateValue) )
+        elif cactusType == 'string':
+            plist.append( immediateValue )
+        elif cactusType == 'data':
+            s = binascii.unhexlify(immediateValue)
+            l = len(s)
+            plist.append( NSData.dataWithBytes_length_(s, l) )
+        elif cactusType == 'list':
+            plist.append( generatePLISTArray_( child ) )
+        elif cactusType == 'dictionary':
+            plist.append( generatePLISTDict_( child ) )
+    return plist
+
+    
 def generateOPML( rootNode, indent=2, expansion={} ):
     """Generate an OPML/XML tree from OutlineNode rootNode.
     

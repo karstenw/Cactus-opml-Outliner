@@ -10,15 +10,13 @@
 
 # works
 CactusOPMLType = u'OPML File'
-# CactusOPMLFileExtensions = [ 'opml', 'xml']
-CactusOPMLFileExtensions = [ 'opml' ]
+CactusOPMLFileExtensions = [ 'opml', 'xml']
 CactusOPMLOSTypes = [ 'OPML', '****' ]
 
 
 # works --- so far
 CactusRSSType = u'RSS File'
-# CactusRSSFileExtensions = [ 'rss', 'xml']
-CactusRSSFileExtensions = [ 'rss' ]
+CactusRSSFileExtensions = [ 'rss', 'xml']
 CactusRSSOSTypes = [ '****' ]
 
 
@@ -29,13 +27,18 @@ CactusXMLOSTypes = [ '****' ]
 
 # an outliner as a html editor
 CactusHTMLType = u'HTML File'
-CactusHTMLFileExtensions = [ 'html', 'htm', 'php' ]
+CactusHTMLFileExtensions = [ 'html', 'htm', 'php', 'xhtml' ]
 CactusHTMLOSTypes = [ '****' ]
 
 # an outliner as a property list editor
 CactusPLISTType = u'PLIST File'
-CactusPLISTFileExtensions = [ 'plist', ]
+CactusPLISTFileExtensions = [ 'plist', 'xml']
 CactusPLISTOSTypes = [ '****' ]
+
+# an outliner as a iTunes Library editor
+CactusIMLType = u'iTunes XML File'
+CactusIMLFileExtensions = [ 'xml']
+CactusIMLOSTypes = [ 'TEXT', '****' ]
 
 
 CactusDocumentTypesSet = set( (CactusOPMLType,

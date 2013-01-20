@@ -1553,46 +1553,6 @@ class NodeValue(object):
 # Outline
 #
 
-class NodeAttributes(object):
-    """Hold the attributes associated with an outline node.
-    
-    Will replace Nodevalue
-    """
-    def __init__(self):
-        self.attributes = {}
-
-    def fromNameValues(self, nameValueList):
-        for t in nameValueList:
-            k, v = t
-            self.attributes[k] = v
-
-    def asstring(self):
-        """Return the attributes as a string.
-        
-        key:\tvalue\n
-        """
-        l = []
-        keys = self.attributes.keys()
-        keys.sort()
-        for key in keys:
-            k, v = key, self.attributes[key]
-            l.append(u"%s:\t%s" % (k, v) )
-        s = u'\n'.join( l )
-        return s
-
-    def astuplelist(self):
-        """Return the attributes as a list of tuples.
-        
-        [ (k,v), (k,v), ...]
-        """
-        l = []
-        keys = self.attributes.keys()
-        keys.sort()
-        for key in keys:
-            k, v = key, self.attributes[key]
-            l.append( (k,v) )
-        return l
-
 class OutlineNode(NSObject):
 
     """Wrapper class for items to be displayed in the outline view."""
@@ -1647,8 +1607,6 @@ class OutlineNode(NSObject):
 
         self.setName_( name )
         self.setValue_( obj )
-
-        # self.setNodeAttributes( obj )
 
         self.setAttributes_( obj )
         self.setComment_( "" )
@@ -1765,14 +1723,6 @@ class OutlineNode(NSObject):
                 self.type = u"String"
             self.displayValue = nv.displayValue()
         self.displayType = self.type
-
-    # switched off
-    def setNodeAttributes(self, nameValueList):
-        """Create new node attributes from [ (k,v), ]
-        """
-        self.nodeAttributes = NodeAttributes()
-        if type(nameValueList) in (list,):
-            self.nodeAttributes.fromNameValues( nameValueList )
 
     # UNUSED
     def addValue_(self, nameValue):
