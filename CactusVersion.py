@@ -15,4 +15,4 @@ document_creator = "Created by %s %s" % (appname, version)
 
 cachefolder = os.path.expanduser("~/Library/Application Support/%s" % appname )
 
-developmentversion = True
+developmentversion = False

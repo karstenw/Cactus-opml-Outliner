@@ -69,7 +69,9 @@ https://www.dropbox.com/s/nijcgw0fpktdzoi/Cactus_v042b.zip
 
 ## Latest changes ##
 
-Preference panel
+
+
+Preferences
 
 Cactus now reads and saves the window position of opml files.
 
