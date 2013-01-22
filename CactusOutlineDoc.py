@@ -222,6 +222,8 @@ class CactusOutlineDocument(AutoBaseClass):
         err = None
         self.url = url
 
+        defaults = NSUserDefaults.standardUserDefaults()
+
         # read opml content
         if theType == CactusOPMLType:
             # pdb.set_trace()
@@ -621,6 +623,8 @@ class CactusOutlineDocument(AutoBaseClass):
         if kwlog:
             print "CactusOutlineDocument.dataRepresentationOfType_( %s )" % repr(theType)
 
+        defaults = NSUserDefaults.standardUserDefaults()
+
         # future scaffolding
         if theType == CactusOPMLType:
 
@@ -656,16 +660,29 @@ class CactusOutlineDocument(AutoBaseClass):
         elif theType == CactusHTMLType:
             # closed after finding the trailing text bug/misconception
             # return None
-            etHTML = opml.generateHTML( self.rootNode, indent=1 )
+            doctype = encoding = ""
+            indent = 0
+            try:
+                doctype = unicode(defaults.objectForKey_( u'txtDoctype'))
+                encoding = unicode(defaults.objectForKey_( u'txtEncoding'))
+                indent = unicode(defaults.objectForKey_( u'txtIndent'))
+                indent = int(indent)
+
+            except StandardError, err:
+                print "ERROR reading defaults.", repr(err)
+
+            etHTML = opml.generateHTML( self.rootNode, doctype, encoding, indent )
+
             if etHTML:
                 # e = etree.ElementTree( rootHTML )
     
-                fob = cStringIO.StringIO()
-                # e.write(fob, pretty_print=True, encoding="utf-8", xml_declaration=True, method="xml" )
-                etHTML.write(fob) # , encoding="utf-8", xml_declaration=False, method="html" )
-                t = fob.getvalue()
-                fob.close()
-                return NSData.dataWithBytes_length_(t, len(t))
+                #fob = cStringIO.StringIO()
+                ## e.write(fob, pretty_print=True, encoding="utf-8", xml_declaration=True, method="xml" )
+                #etHTML.write(fob) # , encoding="utf-8", xml_declaration=False, method="html" )
+                #t = fob.getvalue()
+                #fob.close()
+                #return NSData.dataWithBytes_length_(t, len(t))
+                return NSData.dataWithBytes_length_(etHTML, len(etHTML))
 
         elif theType == CactusDocumentTypes.CactusPLISTType:
             return opml.serializePLISTOutline_( self.rootNode )
@@ -1208,17 +1225,20 @@ def openXML_( rootXML):
     def getChildrenforNode(node, children, root):
         for c in children:
             name = c.get('name', '')
+            tail = c.get('tail', '')
             childs = c.get('children', [])
             content = c.get('attributes', "")
             txt = c.get('text', "")
+
             if content == "":
-                # content = {u'value': ""}
                 content = {u'': ""}
-            # content.pop('text', None)
-            if content:
+
+            if content or tail:
                 l = []
                 for k, v in content.items():
                     l.append( (k, v) )
+                if tail != u"":
+                    l.append( (u'tail', tail) )
                 content = l
             else:
                 content = u""
@@ -1233,7 +1253,7 @@ def openXML_( rootXML):
                 print tb
                 print
 
-            if txt:
+            if txt != "":
                 newnode.setComment_( txt )
 
             node.addChild_( newnode )
@@ -1555,7 +1575,7 @@ def openIML_( nsdict ):
     def dispatchLevel( nsdict, parent, root, progressCount ):
         # array or dict
         i = 0
-
+        selfTypeName = "None"
         if hasattr(nsdict, "objectForKey_"):
             selfTypeName = "dictionary"
         elif hasattr(nsdict, "objectAtIndex_"):
@@ -1640,7 +1660,8 @@ def openPLIST_( nsdict ):
             selfTypeName = "dictionary"
         elif hasattr(nsdict, "objectAtIndex_"):
             selfTypeName = "list"
-
+        else:
+            selfTypeName = "None"
         selfType = [ ('cactusNodeType', selfTypeName) ]
 
         parent.setValue_( selfType )

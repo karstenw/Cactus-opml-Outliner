@@ -61,6 +61,8 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 def readURL( nsurl, type_=CactusOPMLType ):
     """Read a file. May be local, may be http"""
 
+    url = NSURL2str(nsurl)
+    print "CactusTools.readURL( '%s', '%s' )" % (url, type_)
 
     defaults = NSUserDefaults.standardUserDefaults()
     cache = False
@@ -69,12 +71,11 @@ def readURL( nsurl, type_=CactusOPMLType ):
     except StandardError, err:
         print "ERROR reading defaults.", repr(err)
 
-    url = NSURL2str(nsurl)
-    print "CactusTools.readURL( '%s', '%s' )" % (url, type_)
-
     if cache:
         if not nsurl.isFileURL():
             nsurl = cache_url(nsurl, type_)
+
+    url = NSURL2str(nsurl)
 
     fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
     s = fob.read()

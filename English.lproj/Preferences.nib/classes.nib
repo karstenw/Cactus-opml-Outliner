@@ -15,6 +15,9 @@
                 optValueColumn = id; 
                 optVariableRowHeight = id; 
                 txtCacheFolder = id; 
+                txtDoctype = id; 
+                txtEncoding = id; 
+                txtIndent = id; 
                 txtNoOfMaxRowLines = id; 
                 txtNoOfRecentURLs = id; 
                 txtUserEmail = id; 

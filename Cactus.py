@@ -225,6 +225,10 @@ class CactusPreferenceController(AutoBaseClass):
         self.optVLines.setState_( defaults.objectForKey_( u'optVLines') )
         self.optVariableRowHeight.setState_( defaults.objectForKey_( u'optVariableRowHeight') )
 
+        self.txtDoctype.setStringValue_( defaults.objectForKey_( u'txtDoctype') )
+        self.txtEncoding.setStringValue_( defaults.objectForKey_( u'txtEncoding') )
+        self.txtIndent.setStringValue_( defaults.objectForKey_( u'txtIndent') )
+
         # self.showWindow_(self)
         return self
 
@@ -245,6 +249,10 @@ class CactusPreferenceController(AutoBaseClass):
         defaults.setObject_forKey_(self.optHLines.state(),   u'optHLines')
         defaults.setObject_forKey_(self.optVLines.state(),   u'optVLines')
         defaults.setObject_forKey_(self.optVariableRowHeight.state(),   u'optVariableRowHeight')
+
+        defaults.setObject_forKey_(self.txtDoctype.stringValue(),   u'txtDoctype')
+        defaults.setObject_forKey_(self.txtEncoding.stringValue(),   u'txtEncoding')
+        defaults.setObject_forKey_(self.txtIndent.stringValue(),   u'txtIndent')
 
     def chooseFolder_(self, sender):
         if sender == self.butSetCacheFolder:
@@ -555,6 +563,10 @@ class CactusAppDelegate(NSObject):
         userdefaults.setObject_forKey_(False,   u'optCommentColumn')
         userdefaults.setObject_forKey_(False,   u'optTypeColumn')
         userdefaults.setObject_forKey_(True,   u'optValueColumn')
+
+        userdefaults.setObject_forKey_("<!DOCTYPE html>",   u'txtDoctype')
+        userdefaults.setObject_forKey_("utf-8",   u'txtEncoding')
+        userdefaults.setObject_forKey_("2",   u'txtIndent')
 
         NSUserDefaults.standardUserDefaults().registerDefaults_(userdefaults)
         self.preferenceController = None

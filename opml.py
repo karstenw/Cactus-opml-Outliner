@@ -11,7 +11,7 @@ pp = pprint.pprint
 import traceback
 
 kwdbg = True
-kwlog = False
+kwlog = True
 import pdb
 
 
@@ -22,7 +22,7 @@ lxmletree = lxml.etree
 import xml.etree.cElementTree
 etree = xml.etree.cElementTree
 
-#import lxml.html
+import lxml.html
 #import lxml.html.builder
 
 import PyRSS2Gen
@@ -46,9 +46,6 @@ NSData = Foundation.NSData
 NSNumber = Foundation.NSNumber
 NSMutableData = Foundation.NSMutableData
 NSKeyedArchiver = Foundation.NSKeyedArchiver
-
-
-
 
 
 # some globals for opml analyzing
@@ -232,20 +229,35 @@ def getXMLNodes( node ):
             name = u""
         name = unicode(name)
 
-        tail = n.tail
-        if not tail:
-            tail = u""
-        unicode(tail)
-
-        special = False
-        if name == u"<built-in function Comment>":
-            name = u"COMMENT"
-            special = True
-
         text = n.text
         if not text:
             text = u""
         text = unicode(text)
+        fulltext = text
+        #text = text.strip(u" \t\r\n")
+
+        tail = n.tail
+        if not tail:
+            tail = u""
+        tail = unicode(tail)
+        fulltail = tail
+        #tail = tail.strip(u" \t\r\n")
+
+        if 0: #kwlog:
+            if tail:
+                if name == u"a":
+                    print
+                    print "NAME:", repr(name)
+                    print "TEXT:", repr(text)
+                    print "TAIL:", repr(tail)
+                
+        comment = False
+        if name == u"<built-in function Comment>":
+            name = u"COMMENT"
+            comment = True
+            # dont strip comments
+            text = fulltext
+            tail = fulltail
 
         b = {
             'name': name,
@@ -254,14 +266,15 @@ def getXMLNodes( node ):
             'children': [],
             
             'attributes': {}}
-        custom = {}
 
         keys = n.attrib.keys()
 
         for k in keys:
             b['attributes'][k] = unicode(n.attrib.get(k, ""))
-        if special:
+
+        if comment:
             b['attributes']['cactustype'] = u"comment"
+
         subs = list(n)
         if subs:
             s = getXMLNodes(n)
@@ -315,10 +328,10 @@ def getHTML_( etRootnode ):
         name = u""
     name = unicode(name)
 
-    special = False
+    comment = False
     if name == u"<built-in function Comment>":
         name = u"COMMENT"
-        special = True
+        comment = True
 
     text = rootnode.text
     if not text:
@@ -334,7 +347,7 @@ def getHTML_( etRootnode ):
 
     for k in keys:
         b['attributes'][k] = rootnode.attrib.get(k, "")
-    if special:
+    if comment:
         b['attributes']['cactustype'] = u"comment"
     subs = list(rootnode)
     if subs:
@@ -342,7 +355,7 @@ def getHTML_( etRootnode ):
         b['children'] = s
     d.append(b)
     return b
-    # use getXMLNodes( node )
+
 
 # these should be unified
 def xml_from_string(xml_text):
@@ -365,15 +378,20 @@ def html_from_url( htmlurl ):
     return getHTML_( s )
 
 
-
 def createSubNodesXML(OPnode, ETnode, level):
     # do attributes
 
     attrib = OPnode.getValueDict()
-    if 'cactustype' in attrib:
+    if 'cactustype' in attrib and attrib["cactustype"] == u"comment":
         ETnode.append( etree.Comment( OPnode.comment ) )
     else:
         ETnode.text = OPnode.comment
+        for key in attrib:
+            if key == u'tail':
+                ETnode.tail = attrib[key]
+            else:
+                ETnode.attrib[key] = attrib[key]
+
         ETnode.attrib = attrib
 
     if len(OPnode.children) > 0:
@@ -397,38 +415,43 @@ def reorderAttribKeys( d ):
     return keys    
 
 
-def createSubNodesHTML(OPnode, ETnode, level):
+def createSubNodesHTML(OPnode, ETnode, level, indent=0):
 
     attrib = OPnode.getValueDict()
     attrib_keys = reorderAttribKeys( attrib )
+    
     ETnode.text = OPnode.comment
-    # ETnode.attrib.update( attrib )
+    if indent:
+        ETnode.text.rstrip(u" \t\r\n")
 
     for key in attrib_keys:
-        ETnode.attrib[key] = attrib[key]
+        if key == u'tail':
+            ETnode.tail = attrib[key]
+        else:
+            ETnode.attrib[key] = attrib[key]
+    if not ETnode.tail:
+        ETnode.tail = u"\n"
 
     if len(OPnode.children) > 0:
         # do children
         for child in OPnode.children:
             attrib = child.getValueDict()
-            if 'cactustype' in attrib:
+            if 'cactustype' in attrib and attrib["cactustype"] == u"comment":
                 ETSub = lxmletree.Comment( child.comment )
                 ETnode.append( ETSub )
             else:
                 ETSub = lxmletree.SubElement( ETnode, child.name)
-                s = createSubNodesHTML( child, ETSub, level+1 )
+                s = createSubNodesHTML( child, ETSub, level+1, indent )
     return ETnode
 
-def generateHTML( rootNode, indent=False ):
+def generateHTML( rootNode, doctype, encoding, indent=0 ):
 
     baseOP = rootNode.children[0]
 
     # pdb.set_trace()
     rootElement = lxmletree.Element("html")
-    
-    #pi = lxmletree.Element.DocType("html")
-    #rootElement.appendbefore( pi )
-    # lxml.etree.Element
+    rootElement.tail = u"\n"
+
     page = lxmletree.ElementTree( rootElement )
 
     now = str(datetime.datetime.now())
@@ -436,20 +459,27 @@ def generateHTML( rootNode, indent=False ):
     now = now.replace(" ", "_")
 
     c = lxmletree.Comment( CactusVersion.document_creator + " on %s." % (now,))
+    c.tail = u"\n"
+    
     rootElement.append(c)
 
-    # rootElement.attrib = baseOP.getValueDict()
     rootElement.attrib.update( baseOP.getValueDict() )
 
     comment = baseOP.comment
     if comment:
         rootElement.text = comment
 
-    nodes = createSubNodesHTML(baseOP, rootElement, 1)
+    nodes = createSubNodesHTML(baseOP, rootElement, 1, indent)
 
-    indentXML(rootElement)
+    if indent:
+        indentXML(rootElement, level=0, width=indent)
 
-    return page
+    return lxml.html.tostring( page,
+                               pretty_print=False,
+                               include_meta_content_type=True,
+                               encoding=encoding,
+                               doctype=doctype)
+    # return page
 
 
 def generateXML( rootNode, indent=False ):

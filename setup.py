@@ -90,7 +90,7 @@ setup(
                     'NSDocumentClass': u'CactusOutlineDocument',
                 },
                 {
-                    'CFBundleTypeExtensions': CactusDocumentTypes.CactusIMLFileExtensions,
+                    # 'CFBundleTypeExtensions': CactusDocumentTypes.CactusIMLFileExtensions,
                     'CFBundleTypeIconFile': 'IMLDocument.icns',
                     'CFBundleTypeName': CactusDocumentTypes.CactusIMLType,
                     'CFBundleTypeOSTypes': CactusDocumentTypes.CactusIMLOSTypes,
