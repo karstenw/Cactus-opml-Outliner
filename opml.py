@@ -10,8 +10,8 @@ import pprint
 pp = pprint.pprint
 import traceback
 
-kwdbg = True
-kwlog = True
+kwdbg = False
+kwlog = False
 import pdb
 
 
@@ -243,7 +243,7 @@ def getXMLNodes( node ):
         fulltail = tail
         #tail = tail.strip(u" \t\r\n")
 
-        if 0: #kwlog:
+        if kwlog and kwdbg:
             if tail:
                 if name == u"a":
                     print
@@ -392,7 +392,7 @@ def createSubNodesXML(OPnode, ETnode, level):
             else:
                 ETnode.attrib[key] = attrib[key]
 
-        ETnode.attrib = attrib
+        # ETnode.attrib = attrib
 
     if len(OPnode.children) > 0:
         
@@ -422,14 +422,16 @@ def createSubNodesHTML(OPnode, ETnode, level, indent=0):
     
     ETnode.text = OPnode.comment
     if indent:
-        ETnode.text.rstrip(u" \t\r\n")
+        ETnode.text.rstrip(u"\r\n")
 
     for key in attrib_keys:
         if key == u'tail':
             ETnode.tail = attrib[key]
         else:
             ETnode.attrib[key] = attrib[key]
-    if not ETnode.tail:
+
+    # if indenting, force 1 element per line
+    if not ETnode.tail and indent:
         ETnode.tail = u"\n"
 
     if len(OPnode.children) > 0:
@@ -507,6 +509,7 @@ def generateXML( rootNode, indent=False ):
     baseOP = rootNode.children[0]
 
     rootXML = etree.Element( baseOP.name )
+    rootXML.tail = u"\n"
 
     now = str(datetime.datetime.now())
     now = now[:19]

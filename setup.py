@@ -68,7 +68,6 @@ setup(
                     'CFBundleTypeName': CactusDocumentTypes.CactusXMLType,
                     'CFBundleTypeOSTypes': CactusDocumentTypes.CactusXMLOSTypes,
                     'CFBundleTypeRole': 'Editor',
-                    #'CFBundleTypeRole': 'Viewer',
                     'NSDocumentClass': u'CactusOutlineDocument',
                 },
                 {
@@ -77,7 +76,6 @@ setup(
                     'CFBundleTypeName': CactusDocumentTypes.CactusHTMLType,
                     'CFBundleTypeOSTypes': CactusDocumentTypes.CactusHTMLOSTypes,
                     'CFBundleTypeRole': 'Editor',
-                    #'CFBundleTypeRole': 'Viewer',
                     'NSDocumentClass': u'CactusOutlineDocument',
                 },
                 {
@@ -86,7 +84,6 @@ setup(
                     'CFBundleTypeName': CactusDocumentTypes.CactusPLISTType,
                     'CFBundleTypeOSTypes': CactusDocumentTypes.CactusPLISTOSTypes,
                     'CFBundleTypeRole': 'Editor',
-                    # 'CFBundleTypeRole': 'Viewer',
                     'NSDocumentClass': u'CactusOutlineDocument',
                 },
                 {
@@ -94,8 +91,8 @@ setup(
                     'CFBundleTypeIconFile': 'IMLDocument.icns',
                     'CFBundleTypeName': CactusDocumentTypes.CactusIMLType,
                     'CFBundleTypeOSTypes': CactusDocumentTypes.CactusIMLOSTypes,
-                    'CFBundleTypeRole': 'Editor',
-                    # 'CFBundleTypeRole': 'Viewer',
+                    # 'CFBundleTypeRole': 'Editor',
+                    'CFBundleTypeRole': 'Viewer',
                     'NSDocumentClass': u'CactusOutlineDocument',
                 }
             ],

@@ -17,7 +17,7 @@ etree = xml.etree.cElementTree
 import pdb
 import pprint
 pp = pprint.pprint
-kwdbg = True
+kwdbg = False
 kwlog = True
 
 import feedparser
@@ -225,8 +225,8 @@ class CactusPreferenceController(AutoBaseClass):
         self.optVLines.setState_( defaults.objectForKey_( u'optVLines') )
         self.optVariableRowHeight.setState_( defaults.objectForKey_( u'optVariableRowHeight') )
 
-        self.txtDoctype.setStringValue_( defaults.objectForKey_( u'txtDoctype') )
-        self.txtEncoding.setStringValue_( defaults.objectForKey_( u'txtEncoding') )
+        self.menDoctype.setTitle_( defaults.objectForKey_( u'menDoctype') )
+        self.menEncoding.setTitle_( defaults.objectForKey_( u'menEncoding') )
         self.txtIndent.setStringValue_( defaults.objectForKey_( u'txtIndent') )
 
         # self.showWindow_(self)
@@ -250,8 +250,8 @@ class CactusPreferenceController(AutoBaseClass):
         defaults.setObject_forKey_(self.optVLines.state(),   u'optVLines')
         defaults.setObject_forKey_(self.optVariableRowHeight.state(),   u'optVariableRowHeight')
 
-        defaults.setObject_forKey_(self.txtDoctype.stringValue(),   u'txtDoctype')
-        defaults.setObject_forKey_(self.txtEncoding.stringValue(),   u'txtEncoding')
+        defaults.setObject_forKey_(self.menDoctype.title(),   u'menDoctype')
+        defaults.setObject_forKey_(self.menEncoding.title(),   u'menEncoding')
         defaults.setObject_forKey_(self.txtIndent.stringValue(),   u'txtIndent')
 
     def chooseFolder_(self, sender):
@@ -564,8 +564,8 @@ class CactusAppDelegate(NSObject):
         userdefaults.setObject_forKey_(False,   u'optTypeColumn')
         userdefaults.setObject_forKey_(True,   u'optValueColumn')
 
-        userdefaults.setObject_forKey_("<!DOCTYPE html>",   u'txtDoctype')
-        userdefaults.setObject_forKey_("utf-8",   u'txtEncoding')
+        userdefaults.setObject_forKey_("<!DOCTYPE html>",   u'menDoctype')
+        userdefaults.setObject_forKey_("utf-8",   u'menEncoding')
         userdefaults.setObject_forKey_("2",   u'txtIndent')
 
         NSUserDefaults.standardUserDefaults().registerDefaults_(userdefaults)

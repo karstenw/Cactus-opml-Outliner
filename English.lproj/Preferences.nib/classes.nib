@@ -6,6 +6,8 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 butSetCacheFolder = id; 
+                menDoctype = id; 
+                menEncoding = id; 
                 optAlternateLines = id; 
                 optCache = id; 
                 optCommentColumn = id; 
@@ -15,8 +17,6 @@
                 optValueColumn = id; 
                 optVariableRowHeight = id; 
                 txtCacheFolder = id; 
-                txtDoctype = id; 
-                txtEncoding = id; 
                 txtIndent = id; 
                 txtNoOfMaxRowLines = id; 
                 txtNoOfRecentURLs = id; 

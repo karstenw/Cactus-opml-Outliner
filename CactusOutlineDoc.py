@@ -22,7 +22,7 @@ import cStringIO
 import pdb
 import pprint
 pp = pprint.pprint
-kwdbg = True
+kwdbg = False
 kwlog = True
 
 import feedparser
@@ -663,8 +663,8 @@ class CactusOutlineDocument(AutoBaseClass):
             doctype = encoding = ""
             indent = 0
             try:
-                doctype = unicode(defaults.objectForKey_( u'txtDoctype'))
-                encoding = unicode(defaults.objectForKey_( u'txtEncoding'))
+                doctype = unicode(defaults.objectForKey_( u'menDoctype'))
+                encoding = unicode(defaults.objectForKey_( u'menEncoding'))
                 indent = unicode(defaults.objectForKey_( u'txtIndent'))
                 indent = int(indent)
 

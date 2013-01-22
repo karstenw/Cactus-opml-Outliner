@@ -7,18 +7,37 @@ Developed on OSX 10.4 with Python 2.7, Xcode 2.5, pyobjc 1.4 and py2app 0.53
 
 It's still in development but gets better and better.
 
-Use it to explore OPML, RSS, XML and HTML files. Nodes can be opened in the webbrowser, in Quicktime Player or in Cactus depending on node type. See the shortcuts section at the end.
+Use it to explore OPML, RSS, XML, PLIST and HTML files. Nodes can be opened in the webbrowser, in Quicktime Player or in Cactus depending on node type. See the shortcuts section at the end.
 
 
 ## A Warning ##
 
-RSS, XML and HTML files are new and still in the make so please be cautious with Cactus generated files of these kinds. For example Cactus doesn't know about namespaces in RSS. They sure get lost if you save a RSS file in Cactus.
+Due to the way how Cactus writes it's files you might be surprised at what you get after a save. For example, the RSS file type writes only RSS 2.0 files even though you perhaps read in an atom feed.
 
-XML and HTML Files don't get text tails. I.E. if a tag's text is interspersed with other tags. That is an error and therefore both types have been demoted to "Viewer".
+Each file write generates a new file. If your HTML file had a doctype of HTML3 or XHTML, after saving it will have the doctype selected in the HTML preferences and an utf-8 encoding.
 
-XML Text for XML files is stored currently in the "Comment" column. This is a temporary solution that will be fixed with the refactoring of the outline node attribute system.
+The mappings are:
+<table>
+<tr><th>source</th><th></th><th>result</th></tr>
 
-OPML files seem stable. In fact Cactus repairs some damaged opml files.
+<tr><td>OPML</td><td>&#x21d2;</td><td>OPML 2.0</td></tr>
+<tr><td>RSS</td><td>&#x21d2;</td><td>RSS 2.0</td></tr>
+<tr><td>atom</td><td>&#x21d2;</td><td>RSS 2.0</td></tr>
+<tr><td>PLIST xml</td><td>&#x21d2;</td><td>PLIST xml</td></tr>
+<tr><td>PLIST binary</td><td>&#x21d2;</td><td>PLIST xml</td></tr>
+<tr><td>HTML</td><td>&#x21d2;</td><td>HTML 4.1strict or html5</td></tr>
+
+</table>
+
+
+
+RSS, XML PLIST and HTML files are new and still in the make so please be cautious with Cactus generated files of these kinds. For example Cactus doesn't know about namespaces in RSS. They sure get lost if you save a RSS file in Cactus.
+
+XML and HTML Files had writing errors which are fixed now. Be cautios anyway.
+
+The element text for XML and HTML files is stored currently in the "Comment" column. A possibly present tail part is stored as an attribute.  This is a temporary solution that will be fixed with the refactoring of the outline node attribute system.
+
+OPML files seem stable. In fact Cactus repairs some damaged OPML files.
 
 RSS reading is very good since it uses feedparser.
 
@@ -26,12 +45,14 @@ RSS writing omits namespaces.
 
 XML reading is good.
 
-HTML reading looks good.
+HTML reading and writing looks good.
+
+Currently Cactus can open "iTunes Music Library.xml" files. This is incomplete (the playlists are not parsed) and was a proof of concept since opening large libraries consumed too much memory and generated several 100000 outline nodes. Perhaps it will become a subtype of PLIST.
 
 ## Quickstart ##
 
 Download the latest binary from
-https://www.dropbox.com/s/4wohccaj0aph0u8/Cactus_v042d.zip
+http://goo.gl/EALQi
 unzip and launch.
 
 Do a google search for "filetype:opml"
@@ -56,30 +77,31 @@ RSS and XML types can be saved but currently I would advise against using the re
 
 OPML should be stable. If you find a bug, please report it on the mailing list.
 
-With the new "Open As..." option in the file dialogs, it is now possible to load an opml or rss file as xml. opml as rss and vice versa makes no sense but try to see why. Some files can only be openened as opmlbecause they are buggy and opening as opml does some repairs. Opening as xml needs a clean xml file.
+With the new "Open As..." option in the file dialogs, it is now possible to load an OPML or RSS file as XML. OPML as RSS and vice versa makes no sense but try to see why. Some files can only be openened as opmlbecause they are buggy and opening as OPML does some repairs. Opening as XML needs a clean XML file.
 
 ## Pointers ##
 
 Mailing list: http://groups.google.com/group/cactus-outliner-dev
 
-Downloads page: https://www.dropbox.com/sh/azysrf5pokzp26a/h2mFhfeM6M
+Downloads page: http://goo.gl/EALQi
 
-https://www.dropbox.com/s/4wohccaj0aph0u8/Cactus_v042d.zip
 
 
 ## Latest changes ##
 
+XML and HTML writing are back.
 
+PLIST file type. Read and write apple property lists.
 
-Preferences
+Preferences.
 
-Cactus now reads and saves the window position of opml files.
+Cactus now reads and saves the window position of OPML files.
 
-Cactus now reads and saves the expansion state of opml files.
+Cactus now reads and saves the expansion state of OPML files.
 
 A bug in the RSS generation that ommited the channel description has been corrected.
 
-A bug in the previous version which ommitted all opml head values has been corrected.
+A bug in the previous version which ommitted all OPML head values has been corrected.
 
 New shortcuts:
 ctrl-left select parents of current selection
@@ -92,7 +114,7 @@ Cactus has now big icons up to 512 pixels.
 
 HTML is now a document type but only for reading.
 
-There is now a context menu. The only item is "Include" which will include linked opml files of the types 'include', 'outline', 'thumbList', 'code', 'thumbListVarCol' and 'thumbList'.
+There is now a context menu. The only item is "Include" which will include linked OPML files of the types 'include', 'outline', 'thumbList', 'code', 'thumbListVarCol' and 'thumbList'.
 
 The Outline window now shows which file type was loaded. I.e. one of "OPML File", "RSS File" or "XML File".
 
@@ -108,12 +130,12 @@ Document icons for local files.
 
 Added a recent URLs menu to the open URL dialog. Holds the last 30 visited URLs.
 
-Cactus now tries to correct some common errors in opml files.
+Cactus now tries to correct some common errors in OPML files.
 
 Corrections applied are:
-+ wrong xml declarations ( "&lt;?xml encoding...?&gt;" instead of "&lt;?xml version...?>"
++ wrong XML declarations ( "&lt;?xml encoding...?&gt;" instead of "&lt;?xml version...?>"
 + illegal characters (chrs 0-8,11,12,14-31) are replaced with "???"
-+ some opml files had a &lt;directiveCache&gt; tag instead of &lt;/outline&gt; at the top level
++ some OPML files had a &lt;directiveCache&gt; tag instead of &lt;/outline&gt; at the top level
 
 
 Take a look at the updated shortcuts section. The ctrl-up/down keys were previously undocumented.
@@ -124,7 +146,7 @@ gsm,kar,mid,smf,midi,mp3,swa,wav,3gp,3g2,amc,avi,vfw,dif,dv,fli,mp2,m1s,m75,
 m15,m2p,mpg,mpeg,mp4,mpg4,mqv,qtz,mov,qt,qtl,rtsp,sd2,sdp,sml,m1a,mpa,mpm,
 m1v,m2v,m4a,m4p,m4b,m4v,amr,cdda,dvd,atr,sdv,pls,qmed) are now open in Quicktime-Player
 
-rss parser should be more tolerant now.
+RSS parser should be more tolerant now.
 
 Internal stuff. Preparing for the NSDocument refactoring.
 
@@ -170,7 +192,7 @@ v0.3.3a XML is now a document type.
 
 v0.3.2a RSS save as. Enclosures are now included in RSS documents.
 
-v0.3.1 rss opens as rss document. Included PyRSS2Gen for RSS write.
+v0.3.1 RSS opens as RSS document. Included PyRSS2Gen for RSS write.
 
 v0.3.0 document icons, recent URLs menu
 
@@ -195,10 +217,10 @@ v0.2.0 Initial release.
 ## Things that work: ##
 
 ### files, outlines and tables ###
-- open file (opml, rss, xml, html)
+- open file (OPML, RSS, XML, HTML)
 - open document via open event or by dragging files to the dock icon
-- open url (opml, rss, xml, html)
-- open outline from outline node (opml & rss)
+- open url (OPML, RSS, XML, HTML)
+- open outline from outline node (OPML & RSS)
 - new outline
 - new table
 - node movements up & down
@@ -210,7 +232,7 @@ v0.2.0 Initial release.
 ## Things that don't work: ##
 
 - error messages can currently only be seen if Cactus is started from the command line: ```./Cactus.app/Contents/MacOS/Cactus```
-- saving when outline structure does not conform to opml (head & body element)
+- saving when outline structure does not conform to OPML (head & body element)
 - cut, copy & paste
 - nodetypes
 - header nodes are saved untouched, no automatic data update
@@ -223,7 +245,7 @@ v0.2.0 Initial release.
 <table>
 <tr><td>cmd-O</td><td>open file dialog</td></tr>
 <tr><td>cmd-alt-O</td><td>open URL dialog</td></tr>
-<tr><td>cmd-S</td><td>save (for opml, rss)</td></tr>
+<tr><td>cmd-S</td><td>save (for OPML, RSS)</td></tr>
 <tr><td>cmd-shift-S</td><td>save as dialog</td></tr>
 </table>
 
@@ -257,7 +279,7 @@ v0.2.0 Initial release.
 <tr><td>control-enter</td><td>open node in a table (usefull if node has attributes)</td></tr>
 
 <tr><td>control-alt-enter</td>
-<td>open node selection in new opml document, browser or movieplayer depending on nodetype.</td></tr>
+<td>open node selection in new OPML document, browser or movieplayer depending on nodetype.</td></tr>
 
 </table>
 

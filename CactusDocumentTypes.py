@@ -27,7 +27,7 @@ CactusXMLOSTypes = [ '****' ]
 
 # an outliner as a html editor
 CactusHTMLType = u'HTML File'
-CactusHTMLFileExtensions = [ 'html', 'htm', 'php', 'xhtml' ]
+CactusHTMLFileExtensions = [ 'html', 'htm' ]
 CactusHTMLOSTypes = [ '****' ]
 
 # an outliner as a property list editor
@@ -38,7 +38,7 @@ CactusPLISTOSTypes = [ '****' ]
 # an outliner as a iTunes Library editor
 CactusIMLType = u'iTunes XML File'
 # CactusIMLFileExtensions = [ 'xml' ]
-CactusIMLOSTypes = [ 'TEXT', '****' ]
+CactusIMLOSTypes = [ '****' ]
 
 
 CactusDocumentTypesSet = set( (CactusOPMLType,
@@ -52,28 +52,33 @@ CactusDocumentXMLBasedTypesSet = set( (CactusOPMLType,
                                        CactusRSSType,
                                        CactusXMLType) )
 
-
 #
 # from here on it's wishful thinking
 #
 
-
 # don't know yet, if this is useful
+#
+# seems like a useful export format
+# prefs indent spaces/tabs, encoding, columns
 CactusTEXTType = u'Text File'
 CactusTEXTFileExtensions = [ 'txt', ]
 CactusTEXTOSTypes = [ 'TEXT', 'utxt' ]
 
 
 # I want to have... but is it useful?
+#
+# seems like a useful export format
 CactusSQLITEType = u'Sqlite File'
 CactusSQLITEFileExtensions = [ 'sqlite', ]
 CactusSQLITEOSTypes = [ '****' ]
 
 
 # I want to have...
-CactusXOXOType = u'XOXO File'
-CactusXOXOFileExtensions = [ 'xoxo', 'xml', 'html']
-CactusXOXOOSTypes = [ '****' ]
+#
+# after researching it a bit, this seems like a lost art...
+#CactusXOXOType = u'XOXO File'
+#CactusXOXOFileExtensions = [ 'xoxo', 'xml', 'html']
+#CactusXOXOOSTypes = [ '****' ]
 
 
 # haven't looked into it yet
@@ -82,8 +87,8 @@ CactusEMACSORGFileExtensions = [ 'org', ]
 CactusEMACSORGOSTypes = [  ]
 
 
-# this is on the delete list
-CactusTABLEType = u'Cactus Table'
-CactusTABLEFileExtensions = [ 'table', ]
-CactusTABLEOSTypes = [ '****' ]
+# this is on the delete list; to be replaced by an outline
+#CactusTABLEType = u'Cactus Table'
+#CactusTABLEFileExtensions = [ 'table', ]
+#CactusTABLEOSTypes = [ '****' ]
 
