@@ -757,6 +757,14 @@ class KWOutlineView(AutoBaseClass):
                     #
                     # open a node
                     #
+                    #
+                    # This stuff needs serious refactoring. Opening nodes was and still
+                    # is a great idea but this ad hoc implementation has too many
+                    # repetitions and logic holes.
+                    #
+                    # A separate function that analyses the node, perhaps sets a menu,
+                    # and opens it should do the trick.
+                    #
                     if eventModifiers & NSAlternateKeyMask:
 
                         # get node selection
@@ -776,8 +784,47 @@ class KWOutlineView(AutoBaseClass):
                             # for generic xml make getOPML a getXML with params
                             #
                             
-                            # in a table
-                            if name in ('url', 'htmlUrl', 'xmlUrl', 'xmlurl', 'link'):
+                            # in a table or in html
+
+                            if name == 'link':
+                                d = item.getValueDict()
+                                type = d.get('type', '')
+                                href = d.get('href', '')
+                                url = cleanupURL( href )
+                                nodetype = None
+                                # some of the mediatypes listed at en.wikipedia.org
+                                if type == u"application/rss+xml":
+                                    nodetype = "RSS"
+                                elif type == u"application/opml+xml":
+                                    nodetype = "RSS"
+                                elif type == u"application/atom+xml":
+                                    nodetype = "RSS"
+                                elif type == u"application/xhtml+xml":
+                                    nodetype = "HTML"
+                                elif type == u"application/xml":
+                                    # perhaps xml, perhaps opml, perhaps rss
+                                    if "rss" in title.lower():
+                                        nodetype = "RSS"
+                                    elif "outline" in title.lower():
+                                        nodetype = "OPML"
+                                    else:
+                                        nodetype = "XML"
+                                if not url.startswith( 'http' ) :
+                                    root = item.rootNode
+                                    ctrl = root.controller
+                                    urlbase = "NONE"
+                                    if ctrl != None:
+                                        urlbase = ctrl.nsurl.baseURL()
+                                        if not urlbase:
+                                            urlbase = ctrl.nsurl.absoluteString()
+                                        else:
+                                            urlbase = urlbase.absoluteString()
+                                        urlbase = urlbase + url
+                                        url = urlbase
+                                    print repr(urlbase)
+                                open_node( url, nodetype )
+
+                            elif name in ('url', 'htmlUrl', 'xmlUrl', 'xmlurl'):
                                 #
                                 # FIXING HACK
                                 # url = item.value
@@ -1592,15 +1639,12 @@ class OutlineNode(NSObject):
 
     def __init__(self, name, obj, parent, typ, rootNode):
 
-        self.initphase = True
-
         # this is outlinetype, not valueType
         self.typ = typ
 
         self.maxHeight = 1
         self.setParent_(parent)
         self.rootNode = rootNode
-        
 
         # debugging
         self.nodenr = counter.next()
@@ -1616,11 +1660,12 @@ class OutlineNode(NSObject):
 
         self.maxHeight = self.setMaxLineHeight()
 
-        self.initphase = False
+        self.controller = None
+        if rootNode != None:
+            self.controller = rootNode.controller
 
-        if 1: #self.parent == None and self.rootNode == None:
-            # leave this here or bad things will happen
-            self.retain()
+        # leave this here or bad things will happen
+        self.retain()
 
     def dealloc(self):
         print "NODE DEALLOC:", self.nodenr

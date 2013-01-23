@@ -905,6 +905,8 @@ class CactusOutlineWindowController(AutoBaseClass):
         self.parentNode = None
         self.variableRowHeight = True
         self.rowLines = 2
+        self.nsurl = None
+        self.url = None
 
         # check if needed
         self.document = document
@@ -914,25 +916,29 @@ class CactusOutlineWindowController(AutoBaseClass):
             # pdb.set_trace()
             print "FAKE document"
 
-        path = False
         if document.url:
+            self.nsurl = document.url
             if document.url.isFileURL():
-                path = unicode(document.url.path())
+                self.url = unicode(document.url.path())
             else:
-                path = NSURL2str(document.url)
+                self.url = NSURL2str(document.url)
         # path is a string or False now
 
         self.rootNode = document.rootNode
+        if self.rootNode:
+            # all nodes can access the document
+            self.rootNode.controller = self
+
         self.parentNode = document.parentNode
         title = document.title
 
         # get window name from url or path
-        if path:
-            if os.path.exists(path):
-                fld, fle = os.path.split(path)
+        if self.nsurl:
+            if os.path.exists( self.url ):
+                fld, fle = os.path.split( self.url )
                 title = fle
             else:
-                title = path
+                title = self.url
         else:
             # keep unnamed title
             pass
@@ -945,8 +951,8 @@ class CactusOutlineWindowController(AutoBaseClass):
                                                 self.parentNode )
 
         # this is evil, and doesn't work
-        self.rootNode.model = self.model
-        
+        # self.rootNode.model = self.model
+
         self.model.document = document
 
         self.model.setController_( self )
