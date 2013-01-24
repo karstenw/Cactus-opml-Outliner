@@ -6,6 +6,9 @@ import datetime
 import cStringIO
 import binascii
 
+import urllib2
+urlopen = urllib2.urlopen
+
 import pprint
 pp = pprint.pprint
 import traceback
@@ -370,7 +373,6 @@ def xml_from_string(xml_text):
 def html_from_url( htmlurl ):
     if isinstance(htmlurl, NSURL):
         htmlurl = str(htmlurl.absoluteString())
-    from urllib2 import urlopen
     parser = lxmletree.HTMLParser()
     try:
         # s = lxmletree.parse(htmlurl, parser)
