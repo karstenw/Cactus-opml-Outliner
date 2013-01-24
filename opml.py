@@ -370,11 +370,17 @@ def xml_from_string(xml_text):
 def html_from_url( htmlurl ):
     if isinstance(htmlurl, NSURL):
         htmlurl = str(htmlurl.absoluteString())
+    from urllib2 import urlopen
     parser = lxmletree.HTMLParser()
     try:
-        s = lxmletree.parse(htmlurl, parser)
+        # s = lxmletree.parse(htmlurl, parser)
+        s = lxmletree.parse(urlopen(htmlurl), parser)
     except StandardError, v:
-        raise HTMLParseErrorException, "The HTML file could not be parsed.\n\n%s" % v
+        print
+        print v
+        print
+        print "trying something else..."
+        # raise HTMLParseErrorException, "The HTML file could not be parsed.\n\n%s" % v
     return getHTML_( s )
 
 
