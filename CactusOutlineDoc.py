@@ -13,6 +13,7 @@ import time
 import datetime
 import urllib
 import binascii
+import struct
 
 import xml.etree.cElementTree
 etree = xml.etree.cElementTree
@@ -222,8 +223,6 @@ class CactusOutlineDocument(AutoBaseClass):
         err = None
         self.url = url
 
-        defaults = NSUserDefaults.standardUserDefaults()
-
         # read opml content
         if theType == CactusOPMLType:
             # pdb.set_trace()
@@ -238,7 +237,7 @@ class CactusOutlineDocument(AutoBaseClass):
                 return (False, None)
 
             if d:
-                root = openOPML_( d, urltag=NSURL2str(url) )
+                root, theType = openOPML_( d, urltag=NSURL2str(url) )
                 if not root:
                     if kwlog:
                         print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
@@ -256,7 +255,7 @@ class CactusOutlineDocument(AutoBaseClass):
 
         # read rss content
         elif theType == CactusRSSType:
-            root = openRSS_( url )
+            root, theType = openRSS_( url )
             if root:
                 self.rootNode = root
                 if not url.isFileURL():
@@ -280,7 +279,7 @@ class CactusOutlineDocument(AutoBaseClass):
                 errorDialog( message=v, title=tb )
                 return (False, None)
 
-            root = openXML_( d )
+            root, theType = openXML_( d )
 
             if root:
                 self.rootNode = root
@@ -307,7 +306,8 @@ class CactusOutlineDocument(AutoBaseClass):
                 errorDialog( message=v, title=tb )
                 return (False, None)
 
-            root = openXML_( d )
+            # don't read type here, HTML is terminal type
+            root, dummy = openXML_( d )
 
             if root:
                 self.rootNode = root
@@ -332,7 +332,8 @@ class CactusOutlineDocument(AutoBaseClass):
                 errorDialog( message=v, title=tb )
                 return (False, None)
 
-            root = openPLIST_( d )
+            # may return ttheType=CactusPLISTType
+            root, theType = openPLIST_( d )
 
             if root:
                 self.rootNode = root
@@ -358,7 +359,8 @@ class CactusOutlineDocument(AutoBaseClass):
                 errorDialog( message=v, title=tb )
                 return (False, None)
 
-            root = openIML_( d )
+            # don't read type here, HTML is terminal type
+            root, dummy = openIML_( d )
 
             if root:
                 self.rootNode = root
@@ -750,7 +752,7 @@ class CactusOutlineDocument(AutoBaseClass):
         if typeName == CactusOPMLType:
             d = opml.opml_from_string( s )
             if d:
-                root = openOPML_( d )
+                root, typeName = openOPML_( d )
                 if self.rootNode:
                     pass
                     # release here
@@ -760,7 +762,7 @@ class CactusOutlineDocument(AutoBaseClass):
         elif theType == CactusDocumentTypes.CactusRSSType:
             d = feedparser.parse( s, agent=CactusVersion.user_agent )
             if d:
-                root = openRSS_( d )
+                root, typeName = openRSS_( d )
                 if self.rootNode:
                     pass
                     # release here
@@ -1214,7 +1216,7 @@ def openOPML_(rootOPML, urltag=None):
                     pp(children)
                     pp(item)
     #title = os
-    return root
+    return root, CactusOPMLType
 
 def openXML_( rootXML):
 
@@ -1318,7 +1320,7 @@ def openXML_( rootXML):
             print
             # pp(children)
     #title = os
-    return root
+    return root, CactusXMLType
 
 def openRSS_(url):
 
@@ -1489,7 +1491,7 @@ def openRSS_(url):
 
         node = OutlineNode(name, value, body, typeOutline, root)
         body.addChild_( node )
-    return root
+    return root, CactusRSSType
 
 
 def getPLISTValue(nsvalue):
@@ -1552,13 +1554,29 @@ def openIML_( nsdict ):
             for trackAttribute in trackData:
                 nsvalue = trackData.objectForKey_( trackAttribute )
                 value, valueType = getPLISTValue( nsvalue)
+
                 if trackAttribute == u"Name":
                     trackName = value
+
                 if trackAttribute == u"Album":
                     trackAlbum = value
 
+                if trackAttribute in (u"File Creator", u"File Type"):
+                    value = num2ostype( long(value) )
+
+                if trackAttribute == u"Total Time":
+                    # formatted duration hack
+                    secondsTotal = int(value) / 1000.0
+                    minutes = secondsTotal // 60
+                    seconds = round(secondsTotal % 60, 1)
+                    seconds = "0%.1f" % seconds
+                    value = u"%i:%s" % (minutes, seconds[-4:])
+
                 trackAttributes.append( (trackAttribute, value) )
-            itemName = u"%s - %s" % (trackAlbum, trackName)
+
+            # itemName = u"%s - %s" % (trackAlbum, trackName)
+            itemName = trackName
+
             # print repr(itemName)
             trackNode.setName_( itemName )
             trackNode.setValue_( trackAttributes )
@@ -1637,7 +1655,19 @@ def openIML_( nsdict ):
         return progressCount
 
     dispatchLevel(nsdict, root, root, progressCount)
-    return root
+    return root, CactusIMLType
+
+###
+#
+# plist tools
+#
+###
+
+def num2ostype( num ):
+    return struct.pack(">I", num)
+
+def ostype2num( ostype ):
+    return struct.pack('BBBB', list(ostype))
 
 
 def openPLIST_( nsdict ):
@@ -1651,6 +1681,14 @@ def openPLIST_( nsdict ):
     """This builds the node tree and returns the root node."""
 
     ######
+
+    defaults = NSUserDefaults.standardUserDefaults()
+    optIMLAutodetect = defaults.objectForKey_( u'optIMLAutodetect')
+
+    if optIMLAutodetect:
+        pass
+
+
 
     # root node for document; never visible,
     # always outline type (even for tables)
@@ -1732,4 +1770,4 @@ def openPLIST_( nsdict ):
                         sys.stdout.write('\n')
                         sys.stdout.flush()
     dispatchLevel(nsdict, root, root, progressCount)
-    return root
+    return root, CactusPLISTType
