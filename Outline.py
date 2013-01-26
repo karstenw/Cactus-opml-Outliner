@@ -1714,12 +1714,10 @@ class OutlineNode(NSObject):
     def setAttributes_(self, attrs):
         d = {}
         t = type(attrs)
-        lines = 0
         if t in (str, unicode, NSString, bool, int, long,
                  NSMutableString, objc.pyobjc_unicode):
             # stringtype
             d[ u"" ] = unicode(attrs)
-            lines = 1
         elif t in (list, tuple):
             #listtype
             for item in attrs:
@@ -1727,18 +1725,16 @@ class OutlineNode(NSObject):
                 key = unicode(key)
                 val = unicode(val)
                 d[ key ] = val
-                lines += self.lineHeight( val )
         elif t in (dict, feedparser.FeedParserDict):
             for key in attrs:
                 val = unicode(attrs[key])
                 key = unicode(key)
                 d[ key ] = val
-                lines += self.lineHeight( val )
         else:
             # ???
             pass
         self.attributes = d
-        return lines
+
 
     def lineHeight(self, val):
         lines = 0
@@ -1869,10 +1865,6 @@ class OutlineNode(NSObject):
         self.comment = comment
         self.displayComment = unicode( self.comment )
         self.maxHeight = self.setMaxLineHeight()
-
-    # UNUSED
-    def compare_(self, other):
-        return cmp(self.name, other.name)
 
     #
     def noOfChildren(self):
