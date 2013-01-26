@@ -231,8 +231,13 @@ class CactusPreferenceController(AutoBaseClass):
         self.menDoctype.setTitle_( defaults.objectForKey_( u'menDoctype') )
         self.menEncoding.setTitle_( defaults.objectForKey_( u'menEncoding') )
         self.txtIndent.setStringValue_( defaults.objectForKey_( u'txtIndent') )
+        
+        self.optIMLAutodetect.setState_( defaults.objectForKey_( u'optIMLAutodetect') )
 
-        # self.showWindow_(self)
+        self.optOPMLAutodetect.setState_( defaults.objectForKey_( u'optOPMLAutodetect') )
+        self.optRSSAutodetect.setState_( defaults.objectForKey_( u'optRSSAutodetect') )
+        self.optHTMLAutodetect.setState_( defaults.objectForKey_( u'optHTMLAutodetect') )
+        self.optPLISTAutodetect.setState_( defaults.objectForKey_( u'optPLISTAutodetect') )
         return self
 
     def windowWillClose_(self, notification):
@@ -256,6 +261,12 @@ class CactusPreferenceController(AutoBaseClass):
         defaults.setObject_forKey_(self.menDoctype.title(),   u'menDoctype')
         defaults.setObject_forKey_(self.menEncoding.title(),   u'menEncoding')
         defaults.setObject_forKey_(self.txtIndent.stringValue(),   u'txtIndent')
+
+        defaults.setObject_forKey_(self.optIMLAutodetect.state(),   u'optIMLAutodetect')
+        defaults.setObject_forKey_(self.optOPMLAutodetect.state(),   u'optOPMLAutodetect')
+        defaults.setObject_forKey_(self.optRSSAutodetect.state(),   u'optRSSAutodetect')
+        defaults.setObject_forKey_(self.optHTMLAutodetect.state(),   u'optHTMLAutodetect')
+        defaults.setObject_forKey_(self.optPLISTAutodetect.state(),   u'optPLISTAutodetect')
 
     def chooseFolder_(self, sender):
         if sender == self.butSetCacheFolder:
@@ -570,6 +581,12 @@ class CactusAppDelegate(NSObject):
         userdefaults.setObject_forKey_("<!DOCTYPE html>",   u'menDoctype')
         userdefaults.setObject_forKey_("utf-8",     u'menEncoding')
         userdefaults.setObject_forKey_("2",         u'txtIndent')
+
+        userdefaults.setObject_forKey_(False,        u'optIMLAutodetect')
+        userdefaults.setObject_forKey_(False,        u'optOPMLAutodetect')
+        userdefaults.setObject_forKey_(False,        u'optRSSAutodetect')
+        userdefaults.setObject_forKey_(False,        u'optHTMLAutodetect')
+        userdefaults.setObject_forKey_(False,        u'optPLISTAutodetect')
 
         NSUserDefaults.standardUserDefaults().registerDefaults_(userdefaults)
         self.preferenceController = None

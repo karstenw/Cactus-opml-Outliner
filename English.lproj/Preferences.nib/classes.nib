@@ -12,6 +12,11 @@
                 optCache = id; 
                 optCommentColumn = id; 
                 optHLines = id; 
+                optHTMLAutodetect = id; 
+                optIMLAutodetect = id; 
+                optOPMLAutodetect = id; 
+                optPLISTAutodetect = id; 
+                optRSSAutodetect = id; 
                 optTypeColumn = id; 
                 optVLines = id; 
                 optValueColumn = id; 
