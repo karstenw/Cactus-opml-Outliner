@@ -378,11 +378,7 @@ def html_from_url( htmlurl ):
         # s = lxmletree.parse(htmlurl, parser)
         s = lxmletree.parse(urlopen(htmlurl), parser)
     except StandardError, v:
-        print
-        print v
-        print
-        print "trying something else..."
-        # raise HTMLParseErrorException, "The HTML file could not be parsed.\n\n%s" % v
+        raise HTMLParseErrorException, "The HTML file could not be parsed.\n\n%s" % v
     return getHTML_( s )
 
 

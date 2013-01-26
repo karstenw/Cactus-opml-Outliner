@@ -73,6 +73,9 @@ CactusXMLType = CactusDocumentTypes.CactusXMLType
 import CactusTools
 NSURL2str = CactusTools.NSURL2str
 
+import CactusVersion
+cachefolder = CactusVersion.cachefolder
+
 import opml
 
 extractClasses("MainMenu")
@@ -547,26 +550,26 @@ class CactusAppDelegate(NSObject):
         # default settings for preferences
         userdefaults = NSMutableDictionary.dictionary()
 
-        userdefaults.setObject_forKey_([],   u'lastURLsVisited')
-        userdefaults.setObject_forKey_(False,   u'optCache')
-        userdefaults.setObject_forKey_("",   u'txtCacheFolder')
-        userdefaults.setObject_forKey_("2",   u'txtNoOfMaxRowLines')
-        userdefaults.setObject_forKey_("40",   u'txtNoOfRecentURLs')
-        userdefaults.setObject_forKey_("",   u'txtUserEmail')
-        userdefaults.setObject_forKey_("",   u'txtUserName')
+        userdefaults.setObject_forKey_([],          u'lastURLsVisited')
+        userdefaults.setObject_forKey_(False,       u'optCache')
+        userdefaults.setObject_forKey_(cachefolder, u'txtCacheFolder')
+        userdefaults.setObject_forKey_("2",         u'txtNoOfMaxRowLines')
+        userdefaults.setObject_forKey_("40",        u'txtNoOfRecentURLs')
+        userdefaults.setObject_forKey_("",          u'txtUserEmail')
+        userdefaults.setObject_forKey_("",          u'txtUserName')
 
-        userdefaults.setObject_forKey_(True,   u'optAlternateLines')
-        userdefaults.setObject_forKey_(True,   u'optHLines')
-        userdefaults.setObject_forKey_(True,   u'optVLines')
-        userdefaults.setObject_forKey_(True,   u'optVariableRowHeight')
+        userdefaults.setObject_forKey_(True,        u'optAlternateLines')
+        userdefaults.setObject_forKey_(True,        u'optHLines')
+        userdefaults.setObject_forKey_(True,        u'optVLines')
+        userdefaults.setObject_forKey_(True,        u'optVariableRowHeight')
 
-        userdefaults.setObject_forKey_(False,   u'optCommentColumn')
-        userdefaults.setObject_forKey_(False,   u'optTypeColumn')
-        userdefaults.setObject_forKey_(True,   u'optValueColumn')
+        userdefaults.setObject_forKey_(False,       u'optCommentColumn')
+        userdefaults.setObject_forKey_(False,       u'optTypeColumn')
+        userdefaults.setObject_forKey_(True,        u'optValueColumn')
 
         userdefaults.setObject_forKey_("<!DOCTYPE html>",   u'menDoctype')
-        userdefaults.setObject_forKey_("utf-8",   u'menEncoding')
-        userdefaults.setObject_forKey_("2",   u'txtIndent')
+        userdefaults.setObject_forKey_("utf-8",     u'menEncoding')
+        userdefaults.setObject_forKey_("2",         u'txtIndent')
 
         NSUserDefaults.standardUserDefaults().registerDefaults_(userdefaults)
         self.preferenceController = None

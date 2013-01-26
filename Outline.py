@@ -92,6 +92,7 @@ NSNumber = Foundation.NSNumber
 
 NSURL = Foundation.NSURL
 
+NSMakePoint = Foundation.NSMakePoint
 
 import AppKit
 NSUserDefaults = AppKit.NSUserDefaults
@@ -119,7 +120,6 @@ NSWorkspace = AppKit.NSWorkspace
 NSString = AppKit.NSString
 NSMutableString = AppKit.NSMutableString
 
-#NSMakePoint = AppKit.NSMakePoint
 #NSBitmapImageRep = AppKit.NSBitmapImageRep
 #NSPICTFileType = AppKit.NSPICTFileType
 #NSTIFFFileType = AppKit.NSTIFFFileType
@@ -846,6 +846,8 @@ class KWOutlineView(AutoBaseClass):
                                         url = cleanupURL( url )
                                     if url:
                                         open_node( url )
+                                elif theType in ( 'redirect', ):
+                                    open_node( url, "HTML" )
 
                                 elif theType in ( 'howto', 'html', 'include', 'outline',
                                                   'redirect', 'thumbList',
@@ -1092,6 +1094,12 @@ class KWOutlineView(AutoBaseClass):
                     selection = [self.rowForItem_(i) for i in selection]
                     self.selectItemRows_( selection )
 
+                    # make first selection item visible
+                    if selection:
+                        first = selection[0]
+                        rowRect = self.rectOfRow_( first )
+                        self.scrollRowToVisible_( first )
+
                 self.setNeedsDisplay_( True )
                 consumed = True
 
@@ -1125,6 +1133,22 @@ class KWOutlineView(AutoBaseClass):
                     # convert items back to indices
                     selection = [self.rowForItem_(i) for i in selection]
                     self.selectItemRows_( selection )
+
+                    # make first selection item visible
+                    if selection:
+                        first = selection[0]
+                        rowRect = self.rectOfRow_( first )
+                        ##
+                        # an attempt to scroll top selection 
+                        #
+                        # x, y = rowRect.origin.x, rowRect.origin.y
+                        # selfRect = self.bounds()
+                        # deltaH = selfRect.size.height / 2
+                        # y += deltaH
+                        # pdb.set_trace()
+                        # print "ScrollTo_( %s, %s )" % (repr(x), repr(y))
+                        # self.superview().scrollToPoint_( NSMakePoint( x, y ) )
+                        self.scrollRowToVisible_( first )
             
                 self.setNeedsDisplay_( True )
                 consumed = True

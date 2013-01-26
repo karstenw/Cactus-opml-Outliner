@@ -11,6 +11,9 @@ import traceback
 
 import datetime
 
+import mactypes
+import appscript
+asc = appscript
 
 kwdbg = False
 kwlog = True
@@ -32,6 +35,9 @@ CactusXMLFileExtensions = CactusDocumentTypes.CactusXMLFileExtensions
 
 CactusHTMLType = CactusDocumentTypes.CactusHTMLType
 CactusHTMLFileExtensions = CactusDocumentTypes.CactusHTMLFileExtensions
+
+CactusPLISTType = CactusDocumentTypes.CactusPLISTType
+CactusPLISTFileExtensions = CactusDocumentTypes.CactusPLISTFileExtensions
 
 CactusDocumentTypesSet = CactusDocumentTypes.CactusDocumentTypesSet
 CactusDocumentXMLBasedTypesSet = CactusDocumentTypes.CactusDocumentXMLBasedTypesSet
@@ -61,6 +67,16 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 def readURL( nsurl, type_=CactusOPMLType ):
     """Read a file. May be local, may be http"""
 
+    translateType = {
+        CactusOPMLType: "opml",
+        CactusHTMLType: "html",
+        CactusXMLType: "xml",
+        CactusRSSType: "rss",
+        CactusPLISTType: "plist"
+    }
+
+    fileext = translateType.get( type_, "")
+
     url = NSURL2str(nsurl)
     print "CactusTools.readURL( '%s', '%s' )" % (url, type_)
 
@@ -73,7 +89,7 @@ def readURL( nsurl, type_=CactusOPMLType ):
 
     if cache:
         if not nsurl.isFileURL():
-            nsurl = cache_url(nsurl, type_)
+            nsurl = cache_url(nsurl, fileext)
 
     url = NSURL2str(nsurl)
 
@@ -319,20 +335,33 @@ def getDownloadFolder( nsurl ):
 
     cacheFolder = os.path.expanduser( cacheFolder )
 
-    # parent fodler must exists; minimal plausibility
+    # parent folder must exists; minimal plausibility
     parent, foldername = os.path.split( cacheFolder )
     if not os.path.exists( parent ):
         return False, False
 
     if not os.path.exists(cacheFolder):
         os.makedirs( cacheFolder )
-
+    # 
     localpath = str( nsurl.relativePath() )
+    s = nsurl.absoluteString()
+    if '#' in s:
+        # pdb.set_trace()
+        n = s.count( '/' )
+        if n >= 3:
+            l = s.split( '/' )
+            filename = l[-1]
+            filename = urllib.unquote( filename )
+            base , fname = os.path.split( localpath )
+            
+            localpath = os.path.join( base, filename )
+
     if localpath.startswith('/'):
         localpath = localpath[1:]
     localpath = os.path.join( str(nsurl.host()), localpath)
+
     if localpath:
-        localname = localpath.replace('/', '_')
+        localrelfolder, localname = os.path.split( localpath )
         localpath = os.path.join( cacheFolder, localpath )
         return localpath, localname
     return False, False
@@ -365,7 +394,7 @@ def setFileModificationDate( filepath, modfdt ):
     print "Setting file(%s) modification date to %s" % (filename, repr(modfdt))
 
 
-def cache_url( nsurl, filetype ):
+def cache_url( nsurl, fileextension ):
     returnURL = nsurl
     try:
         localpath, localname = getDownloadFolder(nsurl)
@@ -379,7 +408,7 @@ def cache_url( nsurl, filetype ):
         url = NSURL2str( nsurl )
     
         if kwlog:
-            print "CactusTools.cache_url( %s, %s )" % (url, filetype)
+            print "CactusTools.cache_url( %s, %s )" % (url, fileextension)
     
         dodownload = False
         if os.path.exists( localpath ):
@@ -402,28 +431,29 @@ def cache_url( nsurl, filetype ):
             if os.path.isdir( localpath ):
                 if not localname:
                     localname = "file"
-                if filetype == CactusOPMLType:
-                    localpath = os.path.join( localpath, localname + ".opml" )
-                elif filetype == CactusXMLType:
-                    localpath = os.path.join( localpath, localname + ".xml" )
-                elif filetype == CactusHTMLType:
-                    localpath = os.path.join( localpath, localname + ".html" )
-                elif filetype == CactusRSSType:
-                    localpath = os.path.join( localpath, localname + ".rss" )
-                else:
-                    localpath = os.path.join( localpath, localname + "." + filetype )
+                    localpath = os.path.join( localpath, localname + "." + fileextension )
 
+            if '#' in url:
+                url = url.replace('#', '%23')
+            if fileextension:
+                if not localpath.endswith( "." + fileextension ):
+                    localpath = localpath + '.' + fileextension
             print "LOAD: %s..." % url
             fname, info = urllib.urlretrieve(url, localpath)
             print "LOAD: %s...done" % url
-            
+            try:
+                finder = asc.app(u'Finder.app')
+                hfspath = mactypes.File( localpath ).hfspath
+                # .files[u'Terra:Users:karstenwo:Desktop:Neuer Ordner:Untitled 2'].comment.set('Hello World')
+                finder.files[hfspath].comment.set( url )
+            except StadardError, v:
+                print "SET COMMENT FAILED ON '%s'" % localpath
             # get file date
             lmodfdate = os.stat( localpath ).st_mtime
             lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
             try:
                 rmodfdate = datetime.datetime( *info.getdate('last-modified')[:6] )
                 setFileModificationDate( localpath, rmodfdate )
-                print "Setting dowloaded file(%s) modification date to %s" % (fname, repr(rmodfdate))
             except TypeError, err:
                 print "Could not get remote file(%s) modification date." % fname
         
