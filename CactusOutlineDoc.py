@@ -238,6 +238,7 @@ class CactusOutlineDocument(AutoBaseClass):
 
             if d:
                 root, theType = openOPML_( d, urltag=NSURL2str(url) )
+                del d
                 if not root:
                     if kwlog:
                         print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
@@ -280,6 +281,7 @@ class CactusOutlineDocument(AutoBaseClass):
                 return (False, None)
 
             root, theType = openXML_( d )
+            del d
 
             if root:
                 self.rootNode = root
@@ -308,6 +310,7 @@ class CactusOutlineDocument(AutoBaseClass):
 
             # don't read type here, HTML is terminal type
             root, dummy = openXML_( d )
+            del d
 
             if root:
                 self.rootNode = root
@@ -334,6 +337,7 @@ class CactusOutlineDocument(AutoBaseClass):
 
             # may return ttheType=CactusPLISTType
             root, theType = openPLIST_( d )
+            del d
 
             if root:
                 self.rootNode = root
@@ -361,6 +365,7 @@ class CactusOutlineDocument(AutoBaseClass):
 
             # don't read type here, HTML is terminal type
             root, dummy = openIML_( d )
+            del d
 
             if root:
                 self.rootNode = root
@@ -372,7 +377,6 @@ class CactusOutlineDocument(AutoBaseClass):
                 if kwlog:
                     print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
                 return (False, None)
-
         else:
             OK = False
 
@@ -1544,6 +1548,7 @@ def openIML_( nsdict ):
     def getTracks( nsdict, parent ):
         # pdb.set_trace()
         i = 0
+        id_trackname = {}
         for trackItem in nsdict:
             trackData = nsdict.objectForKey_( trackItem )
             trackNode = OutlineNode("", "", parent, typeOutline, root)
@@ -1551,20 +1556,24 @@ def openIML_( nsdict ):
             trackName = ""
             trackAlbum = ""
             trackArtist = ""
+            trackID = ""
             for trackAttribute in trackData:
                 nsvalue = trackData.objectForKey_( trackAttribute )
                 value, valueType = getPLISTValue( nsvalue)
 
-                if trackAttribute == u"Name":
+                if trackAttribute == u"Track ID":
+                    trackID = value
+
+                elif trackAttribute == u"Name":
                     trackName = value
 
-                if trackAttribute == u"Album":
+                elif trackAttribute == u"Album":
                     trackAlbum = value
 
-                if trackAttribute in (u"File Creator", u"File Type"):
+                elif trackAttribute in (u"File Creator", u"File Type"):
                     value = num2ostype( long(value) )
 
-                if trackAttribute == u"Total Time":
+                elif trackAttribute == u"Total Time":
                     # formatted duration hack
                     secondsTotal = int(value) / 1000.0
                     minutes = secondsTotal // 60
@@ -1573,6 +1582,7 @@ def openIML_( nsdict ):
                     value = u"%i:%s" % (minutes, seconds[-4:])
 
                 trackAttributes.append( (trackAttribute, value) )
+                id_trackname[ trackID ] = trackName
 
             # itemName = u"%s - %s" % (trackAlbum, trackName)
             itemName = trackName
@@ -1591,9 +1601,120 @@ def openIML_( nsdict ):
                     sys.stdout.flush()
         print
         print "%i Tracks." % i
+        return id_trackname
 
-    def getPlaylists( nsvalue, node ):
-        pass
+
+    def getPlaylists( nsdict, parent, id_track_dict ):
+        # pdb.set_trace()
+
+        root = parent.rootNode
+        # add the standard playlist attributes
+        i = 0
+        for playlist in nsdict:
+
+            #
+            # check for keys not listed here
+            #
+
+            playlistName = playlist.get( u"Name", "")
+
+            playlistNode = OutlineNode( playlistName, "", parent, typeOutline, root)
+            parent.addChild_( playlistNode )
+
+            n1 = OutlineNode( u"Name",
+                              [ ('cactusNodeType', "string") ],
+                              playlistNode,
+                              typeOutline,
+                              root)
+            n1.setComment_( unicode(playlistName) )
+            playlistNode.addChild_( n1 )
+    
+            n2 = OutlineNode( u"Master",
+                              [ ('cactusNodeType', "bool") ],
+                              playlistNode,
+                              typeOutline,
+                              root)
+            n2.setComment_( unicode(playlist.get( u"Master", "False")) )
+            playlistNode.addChild_( n2 )
+    
+            n3 = OutlineNode( u"Playlist ID",
+                              [ ('cactusNodeType', "number") ],
+                              playlistNode,
+                              typeOutline,
+                              root)
+            n3.setComment_( unicode(playlist.get( u"Playlist ID", "0")) )
+            playlistNode.addChild_( n3 )
+    
+            n4 = OutlineNode( u"Playlist Persistent ID",
+                              [ ('cactusNodeType', "string") ],
+                              playlistNode,
+                              typeOutline,
+                              root)
+            n4.setComment_( unicode(playlist.get( u"Playlist Persistent ID", "0")) )
+            playlistNode.addChild_( n4 )
+    
+            # "Parent Persistent ID"
+            # "Distinguished Kind"
+            # "Movies"
+            # "Podcasts"
+            # "iTunesU"
+            # "Audiobooks"
+            # "Smart Info"
+            # "Smart Criteria"    
+
+            n5 = OutlineNode( u"Visible",
+                              [ ('cactusNodeType', "bool") ],
+                              playlistNode,
+                              typeOutline,
+                              root)
+            n5.setComment_( unicode(playlist.get( u"Visible", "0")) )
+            playlistNode.addChild_( n5 )
+    
+            n6 = OutlineNode( u"All Items",
+                              [ ('cactusNodeType', "bool") ],
+                              playlistNode,
+                              typeOutline,
+                              root)
+            n6.setComment_( unicode(playlist.get( u"All Items", u"True")) )
+            playlistNode.addChild_( n6 )
+
+            # "Folder"    
+            n7 = OutlineNode( u"Playlist Items",
+                              [ ('cactusNodeType', "dictionary") ],
+                              playlistNode,
+                              typeOutline,
+                              root)
+            playlistNode.addChild_( n7 )
+
+            i += 7
+            j = 0
+
+            if not u"Playlist Items" in playlist:
+                continue
+
+            for item in playlist[ u"Playlist Items" ]:
+                id_ = item[u"Track ID"]
+                attrs = {
+                    u"Track ID": id_
+                }
+                
+                name = id_track_dict.get(unicode(id_), "###Noname###")
+    
+                node = OutlineNode( name, attrs, n7, typeOutline, root)
+                n7.addChild_( node )
+    
+                i += 1
+                j += 1
+                if i % 1000 == 0:
+                    sys.stdout.write('.')
+                    sys.stdout.flush()
+                    if i % 100000 == 0:
+                        sys.stdout.write('\n')
+                        sys.stdout.flush()
+            print
+            print "%s has %i Playlist Items." % (repr(playlistName), j)
+        print
+        print "A total of %i Playlist Items." % i
 
 
     def dispatchLevel( nsdict, parent, root, progressCount ):
@@ -1609,6 +1730,7 @@ def openIML_( nsdict ):
 
         parent.setValue_( selfType )
 
+        id_track_dict = {}
         for key in nsdict:
             i += 1
 
@@ -1627,9 +1749,9 @@ def openIML_( nsdict ):
             node = OutlineNode(itemName, "", parent, typeOutline, root)
 
             if itemName == u"Tracks":
-                getTracks( nsvalue, node )
+                id_track_dict = getTracks( nsvalue, node )
             elif itemName == u"Playlists":
-                getPlaylists( nsvalue, node )
+                getPlaylists( nsvalue, node, id_track_dict )
             else:
                 # dict
                 if hasattr(nsvalue, "objectForKey_"):
@@ -1682,13 +1804,20 @@ def openPLIST_( nsdict ):
 
     ######
 
+    # check for itunes xml file
     defaults = NSUserDefaults.standardUserDefaults()
     optIMLAutodetect = defaults.objectForKey_( u'optIMLAutodetect')
 
     if optIMLAutodetect:
-        pass
-
-
+        isIML = True
+        for key in (u"Music Folder", u"Application Version",
+                    u"Tracks", u"Playlists",
+                    u"Minor Version", u"Major Version"):
+            if key not in nsdict:
+                isIML = False
+                break
+        if isIML:
+            return openIML_( nsdict )
 
     # root node for document; never visible,
     # always outline type (even for tables)

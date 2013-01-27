@@ -1658,9 +1658,6 @@ class OutlineNode(NSObject):
     def __new__(cls, *args, **kwargs):
         return cls.alloc().init()
 
-    def __repr__(self):
-        return "<OutlineNode(%i, name='%s')" % (self.nodenr, self.name)
-
     def __init__(self, name, obj, parent, typ, rootNode):
 
         # this is outlinetype, not valueType
@@ -1690,6 +1687,9 @@ class OutlineNode(NSObject):
 
         # leave this here or bad things will happen
         self.retain()
+
+    def __repr__(self):
+        return "<OutlineNode(%i, name='%s')" % (self.nodenr, self.name)
 
     def dealloc(self):
         print "NODE DEALLOC:", self.nodenr

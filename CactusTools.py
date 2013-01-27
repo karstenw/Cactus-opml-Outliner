@@ -25,19 +25,11 @@ import urllib
 
 import CactusDocumentTypes
 CactusOPMLType = CactusDocumentTypes.CactusOPMLType
-CactusOPMLFileExtensions = CactusDocumentTypes.CactusOPMLFileExtensions
-
 CactusRSSType = CactusDocumentTypes.CactusRSSType
-CactusRSSFileExtensions = CactusDocumentTypes.CactusRSSFileExtensions
-
 CactusXMLType = CactusDocumentTypes.CactusXMLType
-CactusXMLFileExtensions = CactusDocumentTypes.CactusXMLFileExtensions
-
 CactusHTMLType = CactusDocumentTypes.CactusHTMLType
-CactusHTMLFileExtensions = CactusDocumentTypes.CactusHTMLFileExtensions
-
 CactusPLISTType = CactusDocumentTypes.CactusPLISTType
-CactusPLISTFileExtensions = CactusDocumentTypes.CactusPLISTFileExtensions
+CactusIMLType = CactusDocumentTypes.CactusIMLType
 
 CactusDocumentTypesSet = CactusDocumentTypes.CactusDocumentTypesSet
 CactusDocumentXMLBasedTypesSet = CactusDocumentTypes.CactusDocumentXMLBasedTypesSet
@@ -64,6 +56,19 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 #
 # tools
 #
+
+def detectFileType( nsfileurl ):
+    """Not yet sure how to autodetect without reading some files twice.
+    
+    So far the parsers used are:
+        OPML: cElementTree (opens string)
+        RSS: feedparser (opens string)
+        XML: cElementTree (opens string)
+        HTML: lxml (opens URL)
+        PLIST: NSDictionary.dictionaryWithContentsOfURL_ (opens URL)
+    """
+    pass
+
 def readURL( nsurl, type_=CactusOPMLType ):
     """Read a file. May be local, may be http"""
 
@@ -72,7 +77,8 @@ def readURL( nsurl, type_=CactusOPMLType ):
         CactusHTMLType: "html",
         CactusXMLType: "xml",
         CactusRSSType: "rss",
-        CactusPLISTType: "plist"
+        CactusPLISTType: "plist",
+        CactusIMLType: "xml"
     }
 
     fileext = translateType.get( type_, "")
@@ -101,7 +107,7 @@ def readURL( nsurl, type_=CactusOPMLType ):
         # this is a quick & dirty approach and should be applied much more carefully than
         # it is now...
         
-        # clear bogative opml
+        # clear bogative xml declaration. OPML-Editor, I'looking at you
         if s.startswith("""<?xml encoding="ISO-8859-1" version="1.0"?>"""):
             s = s.replace("""<?xml encoding="ISO-8859-1" version="1.0"?>""",
                           """<?xml version="1.0" encoding="ISO-8859-1"?>""")
@@ -113,7 +119,6 @@ def readURL( nsurl, type_=CactusOPMLType ):
             s = s.replace( "<directiveCache>", "</outline>")
             if kwlog:
                 print "\nBOGUS <directiveCache> XML TAG REPLACED\n"
-
 
         #
         # opmleditor rules error
