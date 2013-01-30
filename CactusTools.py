@@ -10,6 +10,7 @@ import os
 import traceback
 
 import datetime
+import unicodedata
 
 import mactypes
 import appscript
@@ -43,7 +44,7 @@ import Foundation
 NSURL = Foundation.NSURL
 NSFileManager = Foundation.NSFileManager
 NSUserDefaults = Foundation.NSUserDefaults
-
+NSString = Foundation.NSString
 
 import AppKit
 NSOpenPanel = AppKit.NSOpenPanel
@@ -56,6 +57,15 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 #
 # tools
 #
+
+def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
+    try:
+        s = unicode(s, srcencoding)
+    except TypeError:
+        print type(s)
+    s = unicodedata.normalize(normalizer, s)
+    return s
+
 
 def detectFileType( nsfileurl ):
     """Not yet sure how to autodetect without reading some files twice.

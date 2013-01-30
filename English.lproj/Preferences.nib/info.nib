@@ -6,12 +6,12 @@
 	<string>337 335 636 543 0 0 1440 878 </string>
 	<key>IBFramework Version</key>
 	<string>489.0</string>
+	<key>IBLockedTabItems</key>
+	<array>
+		<integer>10</integer>
+	</array>
 	<key>IBOldestOS</key>
 	<integer>4</integer>
-	<key>IBOpenObjects</key>
-	<array>
-		<integer>5</integer>
-	</array>
 	<key>IBSystem Version</key>
 	<string>8S165</string>
 	<key>IBUsesTextArchiving</key>

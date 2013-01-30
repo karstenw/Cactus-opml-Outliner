@@ -89,6 +89,8 @@ Downloads page: http://goo.gl/EALQi
 
 ## Latest changes ##
 
+Open iTunes Library.xml file as their own type since .xml is already used.
+
 XML and HTML writing are back.
 
 PLIST file type. Read and write apple property lists.
@@ -217,7 +219,10 @@ v0.2.0 Initial release.
 ## Things that work: ##
 
 ### files, outlines and tables ###
-- open file (OPML, RSS, XML, HTML)
+- open file (OPML, RSS, XML, HTML, PLIST)
+- some sub types:
+-- open iTunes Library.xml as iXML
+-- open Safari webarchives as PLIST
 - open document via open event or by dragging files to the dock icon
 - open url (OPML, RSS, XML, HTML)
 - open outline from outline node (OPML & RSS)

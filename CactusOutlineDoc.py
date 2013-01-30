@@ -36,6 +36,7 @@ import CactusTools
 readURL = CactusTools.readURL
 errorDialog = CactusTools.errorDialog
 NSURL2str = CactusTools.NSURL2str
+makeunicode = CactusTools.makeunicode
 
 import CactusExceptions
 OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
@@ -1528,6 +1529,14 @@ def getPLISTValue(nsvalue):
     return value, valueTypeName
 
 
+# 
+cactusBool = [ ('cactusNodeType', "bool") ]
+cactusString = [ ('cactusNodeType', "string") ]
+cactusNumber = [ ('cactusNodeType', "number") ]
+cactusDictionary = [ ('cactusNodeType', "dictionary") ]
+cactusData = [ ('cactusNodeType', "data") ]
+
+
 def openIML_( nsdict ):
     if kwlog:
         s = repr(nsdict)
@@ -1603,9 +1612,39 @@ def openIML_( nsdict ):
         print "%i Tracks." % i
         return id_trackname
 
+    def makePlaylistNode( name, curPlaylist, value, parent, root, type_):
+        if name in curPlaylist:
+                
+            if type_ == cactusData:
+                value = unicode( binascii.hexlify(value.bytes()) )
+            elif type_ == cactusBool:
+                value = repr(bool(value))
+            elif type_ == cactusNumber:
+                value = unicode(value.descriptionWithLocale_( None ))
+            # elif type_ == cactusDictionary:
+
+            node = OutlineNode( name,
+                                type_,
+                                parent,
+                                typeOutline,
+                                root)
+            if value != "":
+                node.setComment_( unicode(value) )
+            parent.addChild_( node )
+            return node
 
     def getPlaylists( nsdict, parent, id_track_dict ):
         # pdb.set_trace()
+
+        defaults = NSUserDefaults.standardUserDefaults()
+        optIMLImportSystemLibraries = defaults.objectForKey_( u'optIMLImportSystemLibraries')
+        systemLibraries = (
+            u"Library",
+            u"Music",
+            u"Movies",
+            u"Podcasts",
+            u"iTunes U",
+            u"Books")
 
         root = parent.rootNode
         # add the standard playlist attributes
@@ -1621,70 +1660,74 @@ def openIML_( nsdict ):
             playlistNode = OutlineNode( playlistName, "", parent, typeOutline, root)
             parent.addChild_( playlistNode )
 
-            n1 = OutlineNode( u"Name",
-                              [ ('cactusNodeType', "string") ],
-                              playlistNode,
-                              typeOutline,
-                              root)
-            n1.setComment_( unicode(playlistName) )
-            playlistNode.addChild_( n1 )
-    
-            n2 = OutlineNode( u"Master",
-                              [ ('cactusNodeType', "bool") ],
-                              playlistNode,
-                              typeOutline,
-                              root)
-            n2.setComment_( unicode(playlist.get( u"Master", "False")) )
-            playlistNode.addChild_( n2 )
-    
-            n3 = OutlineNode( u"Playlist ID",
-                              [ ('cactusNodeType', "number") ],
-                              playlistNode,
-                              typeOutline,
-                              root)
-            n3.setComment_( unicode(playlist.get( u"Playlist ID", "0")) )
-            playlistNode.addChild_( n3 )
-    
-            n4 = OutlineNode( u"Playlist Persistent ID",
-                              [ ('cactusNodeType', "string") ],
-                              playlistNode,
-                              typeOutline,
-                              root)
-            n4.setComment_( unicode(playlist.get( u"Playlist Persistent ID", "0")) )
-            playlistNode.addChild_( n4 )
-    
-            # "Parent Persistent ID"
-            # "Distinguished Kind"
-            # "Movies"
-            # "Podcasts"
-            # "iTunesU"
-            # "Audiobooks"
-            # "Smart Info"
-            # "Smart Criteria"    
+            # drop out if AllItems pref is false
+            if playlistName in systemLibraries:
+                if not optIMLImportSystemLibraries:
+                    continue
 
-            n5 = OutlineNode( u"Visible",
-                              [ ('cactusNodeType', "bool") ],
-                              playlistNode,
-                              typeOutline,
-                              root)
-            n5.setComment_( unicode(playlist.get( u"Visible", "0")) )
-            playlistNode.addChild_( n5 )
-    
-            n6 = OutlineNode( u"All Items",
-                              [ ('cactusNodeType', "bool") ],
-                              playlistNode,
-                              typeOutline,
-                              root)
-            n6.setComment_( unicode(playlist.get( u"All Items", u"True")) )
-            playlistNode.addChild_( n6 )
+            makePlaylistNode( u"Name", playlist,
+                              playlistName,
+                              playlistNode, root, cactusString)
 
-            # "Folder"    
-            n7 = OutlineNode( u"Playlist Items",
-                              [ ('cactusNodeType', "dictionary") ],
-                              playlistNode,
-                              typeOutline,
-                              root)
-            playlistNode.addChild_( n7 )
+            makePlaylistNode( u"Master", playlist,
+                              playlist.get( u"Master", "False"),
+                              playlistNode, root, cactusBool)
+
+            makePlaylistNode( u"Playlist ID", playlist,
+                              playlist.get( u"Playlist ID", "0"),
+                              playlistNode, root, cactusNumber)
+
+            makePlaylistNode( u"Playlist Persistent ID", playlist,
+                              playlist.get( u"Playlist Persistent ID", ""),
+                              playlistNode, root, cactusString)
+
+            makePlaylistNode( u"Parent Persistent ID", playlist,
+                              playlist.get( u"Playlist Persistent ID", ""),
+                              playlistNode, root, cactusString)
+
+            makePlaylistNode( u"Distinguished Kind", playlist,
+                              playlist.get( u"Distinguished Kind", 0),
+                              playlistNode, root, cactusNumber)
+
+            makePlaylistNode( u"Movies", playlist,
+                              playlist.get( u"Movies", "False"),
+                              playlistNode, root, cactusBool)
+
+            makePlaylistNode( u"Podcasts", playlist,
+                              playlist.get( u"Podcasts", "False"),
+                              playlistNode, root, cactusBool)
+
+            makePlaylistNode( u"iTunesU", playlist,
+                              playlist.get( u"iTunesU", "False"),
+                              playlistNode, root, cactusBool)
+
+            makePlaylistNode( u"Audiobooks", playlist,
+                              playlist.get( u"Audiobooks", "False"),
+                              playlistNode, root, cactusBool)
+
+            makePlaylistNode( u"Smart Info", playlist,
+                              playlist.get( u"Smart Info", ""),
+                              playlistNode, root, cactusData)
+
+            makePlaylistNode( u"Smart Criteria", playlist,
+                              playlist.get( u"Smart Criteria", ""),
+                              playlistNode, root, cactusData)
+
+            makePlaylistNode( u"Visible", playlist,
+                              playlist.get( u"Visible", "False"),
+                              playlistNode, root, cactusBool)
+
+            makePlaylistNode( u"All Items", playlist,
+                              playlist.get( u"All Items", "False"),
+                              playlistNode, root, cactusBool)
+
+            makePlaylistNode( u"Folder", playlist,
+                              playlist.get( u"Folder", "False"),
+                              playlistNode, root, cactusBool)
+
+            plnode = makePlaylistNode( u"Playlist Items", playlist,
+                                       "",
+                                       playlistNode, root, cactusDictionary)
 
             i += 7
             j = 0
@@ -1700,8 +1743,8 @@ def openIML_( nsdict ):
                 
                 name = id_track_dict.get(unicode(id_), "###Noname###")
     
-                node = OutlineNode( name, attrs, n7, typeOutline, root)
-                n7.addChild_( node )
+                node = OutlineNode( name, attrs, plnode, typeOutline, root)
+                plnode.addChild_( node )
     
                 i += 1
                 j += 1

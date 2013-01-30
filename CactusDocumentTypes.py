@@ -32,7 +32,7 @@ CactusHTMLOSTypes = [ '****' ]
 
 # an outliner as a property list editor
 CactusPLISTType = u'PLIST File'
-CactusPLISTFileExtensions = [ 'plist' ]
+CactusPLISTFileExtensions = [ 'plist', 'webarchive' ]
 CactusPLISTOSTypes = [ '****' ]
 
 # an outliner as a iTunes Library editor
