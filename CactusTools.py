@@ -79,7 +79,7 @@ def detectFileType( nsfileurl ):
     """
     pass
 
-def readURL( nsurl, type_=CactusOPMLType ):
+def readURL( nsurl, type_="" ):
     """Read a file. May be local, may be http"""
 
     translateType = {

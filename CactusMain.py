@@ -33,5 +33,4 @@ if CactusVersion.developmentversion:
     PyObjCTools.Debugging.installVerboseExceptionHandler()
 
 if __name__ == "__main__":
-    from PyObjCTools import AppHelper
     AppHelper.runEventLoop()

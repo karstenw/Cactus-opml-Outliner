@@ -261,6 +261,7 @@ def open_photo( url, open_=True ):
         else:
             s, idx = d['sortedSizes'][0]
         # grab the picture record
+
         picture = d['sizes'][idx]
 
         workspace= NSWorkspace.sharedWorkspace()

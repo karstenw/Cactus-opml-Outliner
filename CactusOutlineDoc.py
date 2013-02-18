@@ -378,6 +378,7 @@ class CactusOutlineDocument(AutoBaseClass):
                 if kwlog:
                     print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
                 return (False, None)
+
         else:
             OK = False
 
@@ -592,7 +593,7 @@ class CactusOutlineDocument(AutoBaseClass):
                     if kwlog:
                         print "CactusOutlineDocument.calculateExpansionState_()"
                         print "'%s'" % expanded
-                        print 
+                        print
                     winframe['expansionState'] = expanded
                     return winframe
 
@@ -1045,7 +1046,7 @@ class CactusOutlineWindowController(AutoBaseClass):
     def loadFile_(self, sender):
         if kwlog:
             print "EMPTY CactusOutlineWindowController.loadFile_()"
-            
+
 
     def applySettings_(self, sender):
         """target of the document check boxes. sets some tableview settings.
@@ -1919,6 +1920,7 @@ def openPLIST_( nsdict ):
 
             # data
             elif hasattr(nsvalue, "bytes"):
+                # pdb.set_trace()
                 value = unicode( binascii.hexlify(nsvalue.bytes()) )
                 node.setValue_( [ ('cactusNodeType', "data") ] )
 

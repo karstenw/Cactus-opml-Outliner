@@ -3,7 +3,7 @@
 # the different document types
 
 #
-# ATTENTIOON: changing the string here (CactusOPMLType = u'OPML File') needs to 
+# ATTENTIOON: changing the string here (CactusOPMLType = u'OPML File') needs to
 # change the string in "OpenURL.nib" window too!
 #
 
@@ -40,12 +40,14 @@ CactusIMLType = u'iTunes XML File'
 # CactusIMLFileExtensions = [ 'xml' ]
 CactusIMLOSTypes = [ '****' ]
 
+#
 
 CactusDocumentTypesSet = set( (CactusOPMLType,
                                CactusRSSType,
                                CactusXMLType,
                                CactusHTMLType,
                                CactusPLISTType) )
+
 
 # plists don't need to be xml files
 CactusDocumentXMLBasedTypesSet = set( (CactusOPMLType,
