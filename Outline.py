@@ -288,9 +288,11 @@ def open_photo( url, open_=True ):
 
 
 # TODO: change parameter to node!
-def open_node( url, nodeType=None, open_=True ):
+def open_node( url, nodeType=None, open_=True, supressCache=False ):
     print "Outline.open_node()"
 
+
+    # pdb.set_trace()
     defaults = NSUserDefaults.standardUserDefaults()
     cache = False
     try:
@@ -324,10 +326,16 @@ def open_node( url, nodeType=None, open_=True ):
             workspace.openURL_( nsurl )
 
         # workspace.openURL_( nsurl )
-    
-    elif surl in g_qtplayer_extensions:
+    elif nodeType == "hook":
+        if open_:
+            workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
+                [ nsurl ],
+                u'com.apple.itunes',
+                0,
+                None )
+    elif surl in g_qtplayer_extensions or nodeType == "QTPL":
         # qtplayer can do http:
-        if cache:
+        if cache and not supressCache:
             nsurl = CactusTools.cache_url( nsurl, surl )
         if open_:
             workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
@@ -838,9 +846,15 @@ class KWOutlineView(AutoBaseClass):
                                 #
                                 v = item.getValueDict()
                                 theType = v.get("type", "")
-                                url = v.get("url", "")
+                                url = ""
+                                if 'url' in v:
+                                    url = v.get("url", "")
+                                elif 'link' in v:
+                                    url = v.get("link", "")
+                                elif 'URL' in v:
+                                    url = v.get("URL", "")
+                                
                                 url = cleanupURL( url )
-
                                 if theType == "blogpost":
                                     if not url:
                                         url = v.get("urlTemplate", "")
@@ -852,8 +866,34 @@ class KWOutlineView(AutoBaseClass):
 
                                 elif theType in ( 'howto', 'html', 'include', 'outline',
                                                   'redirect', 'thumbList',
-                                                  'thumbListVarCol', 'link', 'code'):
+                                                  'thumbListVarCol', 'code'):
                                     open_node( url )
+
+                                elif theType in ('link', ):
+                                    nodeType=None
+                                    if "opml.radiotime.com" in url:
+                                        nodeType = "OPML"
+                                    open_node( url, nodeType )
+
+                                elif theType in ('audio', ):
+                                    # pdb.set_trace()
+
+                                    # 
+                                    # make this it's own function
+                                    #
+                                    # see urllib._urlopener, 
+                                    #
+                                    # sometimes the stream is indirected several layers...
+
+                                    audiourl, info = urllib.urlretrieve( url )
+                                    faudio = open(audiourl)
+                                    url = faudio.read()
+                                    url = url.strip('\r\n')
+                                    faudio.close()
+                                    # baseurl, ext = os.path.splitext(url)
+                                    if '\n' in url:
+                                        url = url.split('\n')[0]
+                                    open_node( url, "hook", supressCache=True)
 
                                 elif theType == "photo":
                                     url = v.get("xmlUrl", "")

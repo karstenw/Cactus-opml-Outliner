@@ -174,6 +174,7 @@ http://goo.gl/EALQi
 + PyobjC
 + py2app
 + Apple developer tools
++ lxml library
 
 
 ## Recent versions ##

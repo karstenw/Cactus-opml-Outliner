@@ -22,7 +22,7 @@ CactusRSSOSTypes = [ '****' ]
 
 # an outliner as a xml editor
 CactusXMLType = u'XML File'
-CactusXMLFileExtensions = [ 'xml' ]
+CactusXMLFileExtensions = [ 'xml', '*' ]
 CactusXMLOSTypes = [ '****' ]
 
 # an outliner as a html editor
