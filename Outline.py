@@ -1353,15 +1353,20 @@ class OutlineViewDelegateDatasource(NSObject):
         return self
 
     def dealloc(self):
-        if kwdbg:
-            print "MODEL_release"
+        print "OutlineViewDelegateDatasource.dealloc()"
         #if self.parentNode:
         #    self.parentNode.release()
         if self.root:
-            self.root.release()
-        #if self.controller:
+            n = self.root.retainCount()
+            for i in range(n):
+                self.root.release()
+            self.root=None
+        if self.controller:
+            print "TODO OutlineViewDelegateDatasource.controller.release()", self.controller.retainCount()
+            
         #    self.controller.release()
-        #if self.document:
+        if self.document:
+            print "TODO OutlineViewDelegateDatasource.document.release()", self.document.retainCount()
         #    self.document.release()
         super(OutlineViewDelegateDatasource, self).dealloc()
 
@@ -1733,13 +1738,16 @@ class OutlineNode(NSObject):
         return "<OutlineNode(%i, name='%s')" % (self.nodenr, self.name)
 
     def dealloc(self):
-        print "NODE DEALLOC:", self.nodenr
-        pp(self.__dict__)
+        print "OutlineNode.dealloc()"
+        # pp(self.__dict__)
         self.children.release()
-        #self.root.release()
-        self.root = None
-        #self.rootNode.release()
-        super(OutlineNode, self).dealloc()
+
+        # 2013-05-15
+        # currently crashes during dict dealloc.
+        # seems like I'm on the right way to deallocation...
+        psolved = False
+        if psolved:
+            super(OutlineNode, self).dealloc()
 
         
     def setMaxLineHeight(self):
@@ -1836,7 +1844,7 @@ class OutlineNode(NSObject):
         self.setValue_( self.value )
         r = self.findRoot()
         m = r.model
-        m.reloadData_(self)
+        m.reloadData(self)
 
     # used in attribute editor
     def removeValue_(self, nameValue):
@@ -1856,7 +1864,7 @@ class OutlineNode(NSObject):
             self.setValue_( self.value )
             r = self.findRoot()
             m = r.model
-            m.reloadData_(self)
+            m.reloadData(self)
         return updated
 
     # used in attribute editor
@@ -1880,7 +1888,7 @@ class OutlineNode(NSObject):
 
         r = self.findRoot()
         m = r.model
-        m.reloadData_(self)
+        m.reloadData(self)
 
     # essential
     def getValueDict(self):
