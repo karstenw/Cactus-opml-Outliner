@@ -120,16 +120,16 @@ def boilerplateOPML( rootNode ):
     HOUR = datetime.timedelta(hours=1)
     class UTC(datetime.tzinfo):
         """UTC - from python library examples."""
-    
+
         def utcoffset(self, dt):
             return ZERO
-    
+
         def tzname(self, dt):
             return "UTC"
-    
+
         def dst(self, dt):
             return ZERO
-        
+
     now = datetime.datetime.now( UTC() )
     s = now.strftime("%a, %d %b %Y %H:%M:%S %Z")
 
@@ -181,6 +181,15 @@ class CactusOutlineDocument(AutoBaseClass):
     """
     """
 
+    def __repr__(self):
+        s = u"CactusOutlineDocument\n"
+        s = s + u"    rootNode: '%s'\n" % self.rootNode
+        s = s + u"    parentNode: '%s'\n" % self.parentNode
+        s = s + u"    url: '%s'\n" % self.url
+        s = s + u"    title: '%s'\n" % self.title
+        s = s + u"    outlineView: '%s'\n" % self.outlineView
+        return s.encode("utf-8")
+
     def init(self):
         if kwlog:
             print "CactusOutlineDocument.init()"
@@ -214,7 +223,7 @@ class CactusOutlineDocument(AutoBaseClass):
         """2012-12-12 KW created to disable autosaving."""
         return None
 
-    def readFromURL_ofType_error_(self, url, theType):
+    def readFromURL_ofType_error_(self, url, theType, err):
         if kwlog:
             print ("CactusOutlineDocument.readFromURL_ofType_error_( %s, %s )\n"
                    % (repr(url), repr(theType),))
@@ -323,7 +332,7 @@ class CactusOutlineDocument(AutoBaseClass):
                 if kwlog:
                     print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
                 return (False, None)
-        
+
         # read plist content
         elif theType == CactusPLISTType:
             d = None
@@ -388,12 +397,12 @@ class CactusOutlineDocument(AutoBaseClass):
 
         print "OK CactusOutlineDocument.readFromURL_ofType_error_()"
         return (OK, None)
-    
-    
-    def initWithContentsOfURL_ofType_error_(self, url, theType):
+
+
+    def initWithContentsOfURL_ofType_error_(self, url, theType, err):
         """Main entry point for opening documents."""
 
-        self, err = self.initWithType_error_( theType )
+        self, err = self.initWithType_error_( theType, err )
 
         if not self:
             return( None, None)
@@ -402,9 +411,9 @@ class CactusOutlineDocument(AutoBaseClass):
             print "\nCactusOutlineDocument.initWithContentsOfURL_ofType_error_( %s )" % (
                                                                         repr(theType),)
             print repr(url); print
-        
-        OK, err = self.readFromURL_ofType_error_( url, theType )
 
+        OK, err = self.readFromURL_ofType_error_( url, theType, err )
+        pdb.set_trace()
         if OK:
             if not url.isFileURL():
                 #
@@ -413,9 +422,9 @@ class CactusOutlineDocument(AutoBaseClass):
                 #
                 docc = NSDocumentController.sharedDocumentController()
                 added = docc.addDocument_(self)
-                
+
                 # this is source of trouble ( double or none call to makeWindowControllers)
-                # 
+                #
                 self.makeWindowControllers()
                 self.showWindows()
 
@@ -428,7 +437,7 @@ class CactusOutlineDocument(AutoBaseClass):
         return (None, err)
 
 
-    def initWithType_error_(self, theType):
+    def initWithType_error_(self, theType, err):
         # pdb.set_trace()
         if kwlog:
             print "CactusOutlineDocument.initWithType_error_( %s )" % (repr(theType),)
@@ -452,7 +461,7 @@ class CactusOutlineDocument(AutoBaseClass):
 
 
     def displayName(self):
-        
+
         if kwlog:
             print "CactusOutlineDocument.displayName() ->",
 
@@ -534,7 +543,7 @@ class CactusOutlineDocument(AutoBaseClass):
         # pdb.set_trace()
         # controllers = self.windowControllers()
         n = self.windowControllers().count()
-        
+
         for i in range(n):
             controller = self.windowControllers().objectAtIndex_(i)
             print controller, controller.retainCount()
@@ -549,7 +558,7 @@ class CactusOutlineDocument(AutoBaseClass):
                     'windowTop': int(frame.origin.y),
                     'windowRight': int(frame.origin.x + frame.size.width),
                     'windowBottom': int(frame.origin.y + frame.size.height)
-                }                    
+                }
 
             # parse root down to head
             children = rootNode.children
@@ -574,7 +583,7 @@ class CactusOutlineDocument(AutoBaseClass):
 
                     if ov.isItemExpanded_( item ):
                         expanded.append( idx )
-                    
+
                     while True:
                         idx += 1
                         row += 1
@@ -683,7 +692,7 @@ class CactusOutlineDocument(AutoBaseClass):
 
             if etHTML:
                 # e = etree.ElementTree( rootHTML )
-    
+
                 #fob = cStringIO.StringIO()
                 ## e.write(fob, pretty_print=True, encoding="utf-8", xml_declaration=True, method="xml" )
                 #etHTML.write(fob) # , encoding="utf-8", xml_declaration=False, method="html" )
@@ -715,7 +724,7 @@ class CactusOutlineDocument(AutoBaseClass):
         # Insert code here to write your document from the given data.
         # You can also choose to override -fileWrapperRepresentationOfType:
         # or -writeToFile:ofType: instead.
-        
+
         # For applications targeted for Tiger or later systems, you should
         # use the new Tiger API -dataOfType:error:.  In this case you can
         # also choose to override -writeToURL:ofType:error:,
@@ -728,7 +737,7 @@ class CactusOutlineDocument(AutoBaseClass):
         return None
 
 
-    def loadDataRepresentation_ofType_(data, aType):
+    def loadDataRepresentation_ofType_(self, data, aType):
         if kwlog:
             print
             print "------ TBD ----- CactusOutlineDocument.loadDataRepresentation_ofType_()"
@@ -736,16 +745,16 @@ class CactusOutlineDocument(AutoBaseClass):
         # Insert code here to read your document from the given data.  You can
         # also choose to override -loadFileWrapperRepresentation:ofType: or
         # -readFromFile:ofType: instead.
-    
+
         # For applications targeted for Tiger or later systems, you should use
         # the new Tiger API readFromData:ofType:error:.  In this case you can
         # also choose to override -readFromURL:ofType:error: or
         # -readFromFileWrapper:ofType:error: instead.
-    
+
         return True
 
 
-    def readFromData_ofType_error_(self, data, typeName):
+    def readFromData_ofType_error_(self, data, typeName, err):
         if kwlog:
             print "X" * 80
             print "CactusOutlineDocument.readFromData_ofType_error_()"
@@ -782,6 +791,7 @@ class CactusOutlineDocument(AutoBaseClass):
     def showWindows( self ):
         if kwlog:
             print "CactusOutlineDocument.showWindows()"
+        # pdb.set_trace()
         super( CactusOutlineDocument, self).showWindows()
         #
         # for expansionstate
@@ -803,7 +813,7 @@ class CactusOutlineDocument(AutoBaseClass):
             # not used for now
             #
             # 'dateCreated dateModified ownerName ownerEmail '
-            # 
+            #
             searchKeys = ('expansionState windowTop windowLeft '
                           'windowBottom windowRight'.split() )
             meta = {}
@@ -853,14 +863,16 @@ class CactusOutlineDocument(AutoBaseClass):
                     print err
                     print "No window setting for you."
                 break
-
-        outlineView.setNeedsDisplay_( True )
+            outlineView.setNeedsDisplay_( True )
 
     def makeWindowControllers(self):
-        c = CactusOutlineWindowController.alloc().initWithObject_( self )
+        # c = CactusOutlineWindowController.alloc().initWithObject_( self )
         if kwlog:
-            print "CactusOutlineDocument.makeWindowControllers()", c.retainCount()
+            print "CactusOutlineDocument.makeWindowControllers()"# , c.retainCount()
+        # self.addWindowController_( CactusOutlineWindowController.alloc().initWithObject_( self ) )
         self.addWindowController_( CactusOutlineWindowController.alloc().initWithObject_( self ) )
+        # c.release()
+        # del c
 
 
     def printShowingPrintPanel_(self, show):
@@ -888,23 +900,25 @@ class CactusOutlineWindowController(AutoBaseClass):
     """
 
     def dealloc(self):
+        print "CactusOutlineWindowController.dealloc()", self.retainCount()
         #if self.rootNode:
         #    self.rootNode.release()
         #if self.parentNode:
         #    self.parentNode.release()
+        print "DEALLOCDBG model:", self.model, self.model.retainCount()
         self.model.release()
         super(CactusOutlineWindowController, self).dealloc()
 
 
     def initWithObject_(self, document):
         """This controller is used for outline and table windows.
-        
+
         document is a CactusOutlineDocument
-        
+
         """
         if kwlog:
             print "CactusOutlineWindowController.initWithObject_()"
-
+        pdb.set_trace()
         self = self.initWithWindowNibName_("OutlineEditor")
         title = u"Unnamed Outline"
 
@@ -917,7 +931,7 @@ class CactusOutlineWindowController(AutoBaseClass):
         self.url = None
 
         # check if needed
-        self.document = document
+        self.setDocument_( document )
 
         if not isinstance(document, CactusOutlineDocument):
             print "FAKE document"
@@ -961,12 +975,14 @@ class CactusOutlineWindowController(AutoBaseClass):
         # this is evil, and doesn't work
         # self.rootNode.model = self.model
 
+        # TBD: make this accesssor
         self.model.document = document
 
         self.model.setController_( self )
 
         # this will become very dangerous when a document gets more than 1 window
-        self.document.outlineView = self.outlineView
+        s = self.document()
+        s.outlineView = self.outlineView
 
         self.outlineView.setDataSource_(self.model)
         self.outlineView.setDelegate_(self.model)
@@ -975,7 +991,7 @@ class CactusOutlineWindowController(AutoBaseClass):
         self.outlineView.setDoubleAction_("doubleClick:")
 
         self.window().makeFirstResponder_(self.outlineView)
-        
+
         # store them columns
         self.nameColumn = self.outlineView.tableColumnWithIdentifier_( "name" )
         self.typeColumn = self.outlineView.tableColumnWithIdentifier_( "type" )
@@ -1033,18 +1049,24 @@ class CactusOutlineWindowController(AutoBaseClass):
         if kwlog:
             print "CactusOutlineWindowController.doubleClick_()"
 
-
-    def reloadData_(self, item=None, children=False):
+    def reloadData(self):
         if kwlog:
-            print "CactusOutlineWindowController.reloadData_()"
-        if item == None:
-            self.outlineView.reloadData()
-        else:
-            self.outlineView.reloadItem_reloadChildren_( item, children )
+            print "CactusOutlineWindowController.reloadData()"
+        self.outlineView.reloadData()
 
+    def reloadData_(self, item):
+        if kwlog:
+            print "CactusOutlineWindowController.reloadData_(item)"
+        self.outlineView.reloadItem_reloadChildren_( item, True )
+
+    def reloadData_reloadChildren(self, item, children):
+        if kwlog:
+            print "CactusOutlineWindowController.reloadData_reloadChildren_(item, children)"
+        self.outlineView.reloadItem_reloadChildren_( item, children )
 
     def loadFile_(self, sender):
         if kwlog:
+            print "-" * 80
             print "EMPTY CactusOutlineWindowController.loadFile_()"
 
 
@@ -1064,7 +1086,7 @@ class CactusOutlineWindowController(AutoBaseClass):
 
         # columns
         tableColumns = self.outlineView.tableColumns()
-        
+
         if self.optNameVisible.state():
             if not self.nameColumn in tableColumns:
                 self.outlineView.addTableColumn_(self.nameColumn)
@@ -1094,7 +1116,8 @@ class CactusOutlineWindowController(AutoBaseClass):
                 self.outlineView.removeTableColumn_(self.commentColumn)
 
         if self.txtOutlineType:
-            self.txtOutlineType.setStringValue_( unicode( self.document.fileType() ) )
+            s = self.document()
+            self.txtOutlineType.setStringValue_( unicode( s.fileType() ) )
 
         # lines per row menu
         try:
@@ -1105,7 +1128,7 @@ class CactusOutlineWindowController(AutoBaseClass):
             print "\nERROR  ---  Menu Row lines '%'" % repr(l)
             self.rowLines = 4
             self.menRowLines.setTitle_( u"4" )
-        
+
         # grid style
         gridStyleMask = self.outlineView.gridStyleMask()
         newStyle = NSTableViewGridNone
@@ -1158,10 +1181,10 @@ def openOPML_(rootOPML, urltag=None):
     # root node for document; never visible,
     # always outline type (even for tables)
     root = OutlineNode("__ROOT__", "", None, typeOutline, None)
-    
+
     # get opml head section
     if rootOPML['head']:
-        
+
         # the outline head node
         head = OutlineNode("head", "", root, typeOutline, root)
         root.addChild_( head )
@@ -1274,11 +1297,13 @@ def openXML_( rootXML):
             try:
                 n = len(childs)
             except Exception, err:
-                print 
+                print
                 # pdb.set_trace()
                 print err
             if len(childs) > 0:
                 getChildrenforNode(newnode, childs, root)
+            newnode.release()
+            del newnode
 
     ######
 
@@ -1312,7 +1337,7 @@ def openXML_( rootXML):
         print type(children)
         # pdb.set_trace()
         print err
-        
+
 
     if n > 0:
         try:
@@ -1351,7 +1376,7 @@ def openRSS_(url):
     #
     # head
     #
-    
+
     # feed = docs, generator, language, link, microblog_archive,
     # microblog_endday, microblog_filename, microblog_startday, microblog_url,
     # published, subtitle, title, updated, cloud
@@ -1418,7 +1443,7 @@ def openRSS_(url):
             v = repr(v)
         node = OutlineNode(k, v, head, typeOutline, root)
         head.addChild_( node )
-        
+
     if 0:
         # encoding
         if 'encoding' in d:
@@ -1444,18 +1469,18 @@ def openRSS_(url):
         if 'href' in d:
             node = OutlineNode('href', d.href, head, typeOutline, root)
             head.addChild_( node )
-        
+
         # namespaces
         if 'namespaces' in d:
             # pdb.set_trace()
             node = OutlineNode('namespaces', d.namespaces, head, typeOutline, root)
             head.addChild_( node )
-        
+
         # version
         if 'version' in d:
             node = OutlineNode('version', d.version, head, typeOutline, root)
             head.addChild_( node )
-    
+
     #
     # body
     #
@@ -1508,17 +1533,17 @@ def getPLISTValue(nsvalue):
         # print "BOOLVALUE: '%s' --> '%s'" % (repr(nsvalue), repr(bool(nsvalue)) )
         value = repr(bool(nsvalue))
         valueTypeName = [ ('cactusNodeType', "bool") ]
-    
+
     # number
     elif hasattr(nsvalue, "descriptionWithLocale_"):
         value = unicode(nsvalue.descriptionWithLocale_( None ))
         valueTypeName = [ ('cactusNodeType', "number") ]
-    
+
     # data
     elif hasattr(nsvalue, "bytes"):
         value = unicode( binascii.hexlify(nsvalue.bytes()) )
         valueTypeName = [ ('cactusNodeType', "data") ]
-    
+
     # anything else
     elif hasattr(nsvalue, "description"):
         value = unicode(nsvalue.description())
@@ -1530,7 +1555,7 @@ def getPLISTValue(nsvalue):
     return value, valueTypeName
 
 
-# 
+#
 cactusBool = [ ('cactusNodeType', "bool") ]
 cactusString = [ ('cactusNodeType', "string") ]
 cactusNumber = [ ('cactusNodeType', "number") ]
@@ -1615,7 +1640,7 @@ def openIML_( nsdict ):
 
     def makePlaylistNode( name, curPlaylist, value, parent, root, type_):
         if name in curPlaylist:
-                
+
             if type_ == cactusData:
                 value = unicode( binascii.hexlify(value.bytes()) )
             elif type_ == cactusBool:
@@ -1741,12 +1766,12 @@ def openIML_( nsdict ):
                 attrs = {
                     u"Track ID": id_
                 }
-                
+
                 name = id_track_dict.get(unicode(id_), "###Noname###")
-    
+
                 node = OutlineNode( name, attrs, plnode, typeOutline, root)
                 plnode.addChild_( node )
-    
+
                 i += 1
                 j += 1
                 if i % 1000 == 0:
@@ -1800,11 +1825,11 @@ def openIML_( nsdict ):
                 # dict
                 if hasattr(nsvalue, "objectForKey_"):
                     progressCount = dispatchLevel(nsvalue, node, root, progressCount)
-    
+
                 # list
                 elif hasattr(nsvalue, "objectAtIndex_"):
                     progressCount = dispatchLevel(nsvalue, node, root, progressCount)
-    
+
                 else:
                     value, valueType = getPLISTValue( nsvalue )
                     node.setValue_( valueType )
