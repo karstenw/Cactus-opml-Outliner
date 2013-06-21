@@ -428,11 +428,11 @@ class CactusWindowController(AutoBaseClass):
         # Open a new browser window for each selected expandable item
         print "DEPRECATED doubleClick_()"
 
-    def reloadData_(self, item=None, children=False):
-        if item == None:
-            self.outlineView.reloadData() #reloadItem_reloadChildren_( item, True )
-        else:
-            self.outlineView.reloadItem_reloadChildren_( item, children )
+    def reloadData_(self, item):
+            self.outlineView.reloadItem_reloadChildren_( item, True )
+
+    def reloadData_Children_(self, item, children):
+        self.outlineView.reloadItem_reloadChildren_( item, children )
 
     def applySettings_(self, sender):
         """target of the apply button. sets some tableview settings.
@@ -542,7 +542,7 @@ class CactusDocumentController(NSDocumentController):
             self.urllist = set([NSURL2str(t) for t in panel.URLs()])
         return result
 
-    def makeDocumentWithContentsOfURL_ofType_error_(self, url, theType):
+    def makeDocumentWithContentsOfURL_ofType_error_(self, url, theType, err):
         if kwlog:
             print "CactusDocumentController.makeDocumentWithContentsOfURL_ofType_error_()"
         if self.selectedType != "automatic" and len(self.urllist) > 0:
@@ -550,7 +550,7 @@ class CactusDocumentController(NSDocumentController):
             if u in self.urllist:
                 self.urllist.discard( u )
                 theType = self.selectedType
-        result, error = super( CactusDocumentController, self).makeDocumentWithContentsOfURL_ofType_error_( url, theType)
+        result, error = super( CactusDocumentController, self).makeDocumentWithContentsOfURL_ofType_error_( url, theType, err)
         # self.selectedType = "automatic"
         return (result, error)
         
@@ -693,17 +693,17 @@ class CactusAppDelegate(NSObject):
 
     ####
 
-    def openMailingList_(sender):
+    def openMailingList_(self, sender):
         workspace= NSWorkspace.sharedWorkspace()
         url = NSURL.URLWithString_( u"http://groups.google.com/group/cactus-outliner-dev" )
         workspace.openURL_( url )
 
-    def openGithubPage_(sender):
+    def openGithubPage_(self, sender):
         workspace= NSWorkspace.sharedWorkspace()
         url = NSURL.URLWithString_( u"https://github.com/karstenw/Cactus-opml-Outliner" )
         workspace.openURL_( url )
 
-    def openDownloadsPage_(sender):
+    def openDownloadsPage_(self, sender):
         workspace= NSWorkspace.sharedWorkspace()
         url = NSURL.URLWithString_( u"http://goo.gl/EALQi" )
         workspace.openURL_( url )
@@ -721,7 +721,8 @@ class CactusAppDelegate(NSObject):
             loaded = docc.documentForURL_( url )
         if not loaded or not localurl:
             doc, err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
-                                                                       type_)
+                                                                       type_,
+                                                                       None)
 
     # UNUSED but defined in class
     def newBrowser_(self, sender):
@@ -786,6 +787,7 @@ class CactusAppDelegate(NSObject):
                 node.addChild_( newnode )
                 if len(childs) > 0:
                     getChildrenforNode(newnode, childs)
+                del newnode
 
         ######
 
