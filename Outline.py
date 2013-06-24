@@ -99,6 +99,8 @@ NSUserDefaults = AppKit.NSUserDefaults
 NSApplication = AppKit.NSApplication
 NSOpenPanel = AppKit.NSOpenPanel
 NSDocumentController = AppKit.NSDocumentController
+NSOutlineView = AppKit.NSOutlineView
+NSWindowController = AppKit.NSWindowController
 
 NSMenu = AppKit.NSMenu
 
@@ -186,14 +188,14 @@ NSPrintOperation = AppKit.NSPrintOperation
 
 
 import PyObjCTools
-import PyObjCTools.NibClassBuilder
-extractClasses = PyObjCTools.NibClassBuilder.extractClasses
-AutoBaseClass = PyObjCTools.NibClassBuilder.AutoBaseClass
+#import PyObjCTools.NibClassBuilder
+#extractClasses = PyObjCTools.NibClassBuilder.extractClasses
+#AutoBaseClass = PyObjCTools.NibClassBuilder.AutoBaseClass
 
 
-extractClasses("OutlineEditor")
-extractClasses("TableEditor")
-extractClasses("NodeEditor")
+#extractClasses("OutlineEditor")
+#extractClasses("TableEditor")
+#extractClasses("NodeEditor")
 
 
 # simple dict for opening outline nodes
@@ -218,10 +220,10 @@ g_opmplnodetypes = {
 
 g_preview_extensions = ("pdf ai ps epi eps epsf epsi "
                         "tiff tif "
-                         "crw cr2 nef raf orf mrw srf dcr arw pef raw mos"
-                         "dng xbm exr bmp gif ico jpg jpeg jpe thm pict pct "
-                         "png qtif tga targa sgi psd pntg fpx fax jfx jfax icns jp2 "
-                         "pic hdr ")
+                        "crw cr2 nef raf orf mrw srf dcr arw pef raw mos"
+                        "dng xbm exr bmp gif ico jpg jpeg jpe thm pict pct "
+                        "png qtif tga targa sgi psd pntg fpx fax jfx jfax icns jp2 "
+                        "pic hdr ")
 g_preview_extensions = g_preview_extensions.split()
 
 g_qtplayer_extensions = ("aac aifc aiff aif au ulw snd caf gsm kar mid smf midi "
@@ -247,11 +249,11 @@ def open_photo( url, open_=True ):
 
     #
     d = opml.photo_from_string( s )
-    
+
     # sortedSizes contains all picture sizes in descensing order
-    # first pict will be max size. size large is usually good but 
+    # first pict will be max size. size large is usually good but
     # not always present
-    
+
     # so we pick the second biggest pict, except when there's only
     # one pict, then the first
     if d['sortedSizes']:
@@ -303,14 +305,14 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
     appl = NSApplication.sharedApplication()
     appdelg = appl.delegate()
     workspace= NSWorkspace.sharedWorkspace()
-    
+
     url = cleanupURL( url )
     surl = os.path.splitext( url )[1]
     surl = surl.replace( '.', '', 1)
     surl = surl.lower()
-    
+
     nsurl = NSURL.URLWithString_( url )
-    
+
     if nodeType == "OPML" or url.endswith(".opml"):
         if open_:
             appdelg.newOutlineFromURL_Type_( nsurl, CactusOPMLType )
@@ -368,7 +370,7 @@ def handleEventReturnKeyOV_Event_( ov, event ):
     pass
 
 
-class KWOutlineView(AutoBaseClass):
+class KWOutlineView(NSOutlineView):
     """Subclass of NSOutlineView; to catch keys."""
 
     def awakeFromNib(self):
@@ -386,7 +388,7 @@ class KWOutlineView(AutoBaseClass):
         # copySelectionPython_
         menu.setAutoenablesItems_(False)
         self.setMenu_(menu)
-        
+
     #
     # context menu
     #
@@ -417,7 +419,7 @@ class KWOutlineView(AutoBaseClass):
         pb = NSPasteboard.generalPasteboard()
         pb.declareTypes_owner_( [AppKit.NSStringPboardType,], self )
         pb.setString_forType_(s, AppKit.NSStringPboardType)
-        
+
     def copySelectionNodes_(self, sender):
         print "KWOutlineView.copySelectionPython_()"
         # pdb.set_trace()
@@ -425,7 +427,7 @@ class KWOutlineView(AutoBaseClass):
         result = []
         for contextItem in selection:
             self.clipboardRoot.addChild_( contextItem.copyNodesWithRoot_(self.clipboardRoot) )
-    
+
     def pasteSelectionNodes_(self, sender):
         # pdb.set_trace()
         selection = self.getSelectionItems()
@@ -434,7 +436,7 @@ class KWOutlineView(AutoBaseClass):
         item = selection[0]
         idx = item.siblingIndex()
         parent = item.parent
-        
+
         def setRoot(item, root):
             item.rootNode = root
             for child in item.children:
@@ -479,14 +481,14 @@ class KWOutlineView(AutoBaseClass):
             url = cleanupURL( url )
             if theType in ( 'include', 'outline', 'thumbList', 'code', 'thumbListVarCol',
                             'thumbList', 'blogpost', 'link'):
-    
+
                 d = None
                 try:
                     d = opml.opml_from_string( readURL( NSURL.URLWithString_( url ), CactusOPMLType ) )
                 except OPMLParseErrorException, err:
                     print traceback.format_exc()
                     print err
-    
+
                 if d:
                     root = CactusOutlineDoc.openOPML_( d )
                     for node in root.children:
@@ -531,11 +533,11 @@ class KWOutlineView(AutoBaseClass):
         # print "EDITOR:", self.currentEditor()
         #textMovement = userInfo.valueForKey_( u"NSTextMovement" ).intValue()
         #print "TextMovement: '%i'" % textMovement
-        
+
         # pp(aNotification)
         super( KWOutlineView, self).textDidChange_(aNotification)
         #self.window().makeFirstResponder_(self)
-        
+
 
     def textDidEndEditing_(self, aNotification):
         """Notification. Text editing ended."""
@@ -556,10 +558,10 @@ class KWOutlineView(AutoBaseClass):
         # it looks like the cell editor handles return and enter as the same.
 
         textMovement = userInfo.valueForKey_( u"NSTextMovement" ).intValue()
-        print "TextMovement: '%i'" % textMovement, 
+        print "TextMovement: '%i'" % textMovement,
 
         # check for table/outline editing modes here
-        
+
         returnInfo = NSMutableDictionary.dictionaryWithDictionary_(userInfo)
 
         # NSCancelTextMovement
@@ -592,7 +594,7 @@ class KWOutlineView(AutoBaseClass):
             # pdb.set_trace()
             selRow = self.getSelectedRowIndex()
             item = self.itemAtRow_(selRow)
-            
+
             if item:
                 last = item.isLast()
                 if last:
@@ -604,7 +606,7 @@ class KWOutlineView(AutoBaseClass):
                     #self.selectRowIndexes_byExtendingSelection_(s, False)
                     self.reloadData()
                     self.editColumn_row_withEvent_select_(0, row, None, True)
-                return 
+                return
         if cancelled:
             self.editSession = False
             self.reloadData()
@@ -620,7 +622,7 @@ class KWOutlineView(AutoBaseClass):
     def setWindowStatus_(self, status):
         model = self.delegate().controller
         model.txtWindowStatus.setStringValue_( unicode(status) )
-        
+
 
     #
     # event capture
@@ -792,7 +794,7 @@ class KWOutlineView(AutoBaseClass):
                             #
                             # for generic xml make getOPML a getXML with params
                             #
-                            
+
                             # in a table or in html
 
                             if name == 'link':
@@ -853,7 +855,7 @@ class KWOutlineView(AutoBaseClass):
                                     url = v.get("link", "")
                                 elif 'URL' in v:
                                     url = v.get("URL", "")
-                                
+
                                 url = cleanupURL( url )
                                 if theType == "blogpost":
                                     if not url:
@@ -878,10 +880,10 @@ class KWOutlineView(AutoBaseClass):
                                 elif theType in ('audio', ):
                                     # pdb.set_trace()
 
-                                    # 
+                                    #
                                     # make this it's own function
                                     #
-                                    # see urllib._urlopener, 
+                                    # see urllib._urlopener,
                                     #
                                     # sometimes the stream is indirected several layers...
 
@@ -966,7 +968,10 @@ class KWOutlineView(AutoBaseClass):
                                     node = OutlineNode(name, value, root, outlinetypes.typeTable, root)
                                     root.addChild_(node)
 
-                                appdelg.newTableWithRoot_fromNode_(root, item)
+                                #
+                                # TBD: eliminate tables, move to outlines, reactivate next line
+                                #
+                                # appdelg.newTableWithRoot_fromNode_(root, item)
                         consumed = True
 
                 ###################################################################
@@ -985,10 +990,10 @@ class KWOutlineView(AutoBaseClass):
                     else:
                         if kwlog and kwdbg:
                             print "SHIFT Enter"
-                        
+
                         nodes = visitOutline(delg.root)
                         consumed = True
-            
+
             #######################################################################
             #
             # Enter
@@ -1013,7 +1018,7 @@ class KWOutlineView(AutoBaseClass):
                     # editing in progreess with row 'edited'
                     # how to stop?
                     pass
-        
+
         ###########################################################################
         #
         # Outdenting
@@ -1023,21 +1028,21 @@ class KWOutlineView(AutoBaseClass):
                 if kwdbg:
                     print "SHIFT Tab"
                 # dedent selection
-                
+
                 if delg.typ in outlinetypes.hierarchicalTypes:
                     # get selected rows
                     sel = self.getSelectionItems()
-                    
+
                     # working from the end
                     sel.reverse()
-                    
+
                     # dedent each row one level
                     for item in sel:
                         item.moveLeft()
                     consumed = True
                     delg.markDirty()
                     self.reloadData()
-        
+
         ###########################################################################
         #
         # Indenting
@@ -1065,7 +1070,7 @@ class KWOutlineView(AutoBaseClass):
                         self.reloadItem_reloadChildren_( parent, True )
                 postselect = [self.rowForItem_(i) for i in postselect]
                 self.selectItemRows_( postselect )
-                
+
                 consumed = True
                 delg.markDirty()
                 self.reloadData()
@@ -1086,7 +1091,7 @@ class KWOutlineView(AutoBaseClass):
                 selection = [self.rowForItem_(i) for i in items]
                 if selection:
                     self.selectItemRows_( selection )
-            
+
                 self.setNeedsDisplay_( True )
                 consumed = True
 
@@ -1102,11 +1107,11 @@ class KWOutlineView(AutoBaseClass):
                 #
                 delg.markDirty()
                 self.reloadData()
-                
+
                 selection = [self.rowForItem_(i) for i in items]
                 if selection:
                     self.selectItemRows_( selection )
-            
+
                 self.setNeedsDisplay_( True )
                 consumed = True
 
@@ -1180,7 +1185,7 @@ class KWOutlineView(AutoBaseClass):
                         first = selection[0]
                         rowRect = self.rectOfRow_( first )
                         ##
-                        # an attempt to scroll top selection 
+                        # an attempt to scroll top selection
                         #
                         # x, y = rowRect.origin.x, rowRect.origin.y
                         # selfRect = self.bounds()
@@ -1190,7 +1195,7 @@ class KWOutlineView(AutoBaseClass):
                         # print "ScrollTo_( %s, %s )" % (repr(x), repr(y))
                         # self.superview().scrollToPoint_( NSMakePoint( x, y ) )
                         self.scrollRowToVisible_( first )
-            
+
                 self.setNeedsDisplay_( True )
                 consumed = True
         if not consumed:
@@ -1238,11 +1243,13 @@ class KWOutlineView(AutoBaseClass):
         s = NSIndexSet.indexSetWithIndex_( index )
         self.selectRowIndexes_byExtendingSelection_(s, False)
 
+    @objc.IBAction
     def expandSelection_(self, sender):
         items = self.getSelectionItems()
         for item in items:
             self.expandItem_(item)
 
+    @objc.IBAction
     def expandAllSelection_(self, sender):
         items = self.getSelectionItems()
         for item in items:
@@ -1294,7 +1301,7 @@ def stdAction( node, level ):
     n = n.ljust(4)
     s = n + s
     print s.encode("utf-8")
-    
+
 
 def visitOutline(startnode, startlevel=0, depthFirst=False, action=stdAction):
     # Debugging HACK
@@ -1323,8 +1330,8 @@ def dfid(T,children,callback=stdAction):
 # Outline Document Model
 #
 class OutlineViewDelegateDatasource(NSObject):
-
     """This is a delegate as well as a data source for NSOutlineViews."""
+
     #
     # instantiated from AppDelegate
     #
@@ -1337,7 +1344,7 @@ class OutlineViewDelegateDatasource(NSObject):
     #   root
     #   controller
     #   restricted
-    
+
     def init(self):
         self = super(OutlineViewDelegateDatasource, self).init()
         if not self:
@@ -1347,7 +1354,7 @@ class OutlineViewDelegateDatasource(NSObject):
         self.root = None
         self.controller = None
         self.document = None
-        
+
         # not yet used; it's an idea for rss documents to constrain node movements.
         self.restricted = False
         return self
@@ -1363,7 +1370,7 @@ class OutlineViewDelegateDatasource(NSObject):
             self.root=None
         if self.controller:
             print "TODO OutlineViewDelegateDatasource.controller.release()", self.controller.retainCount()
-            
+
         #    self.controller.release()
         if self.document:
             print "TODO OutlineViewDelegateDatasource.document.release()", self.document.retainCount()
@@ -1436,11 +1443,11 @@ class OutlineViewDelegateDatasource(NSObject):
         newWidth = column.width()
         # print "COL: '%s' changed from: %i  to  %i" % (column.identifier(),
         #                                               oldWidth, newWidth)
-    
+
     def tableViewColumnDidResize_(self, aNotification):
         # for some reaon only th outlineView delegate is called. Even for tables
         pass
-    
+
     #
     # NSOutlineViewDataSource  methods
     #
@@ -1448,12 +1455,12 @@ class OutlineViewDelegateDatasource(NSObject):
         if not item:
             item = self.root
         return item.noOfChildren()
-    
+
     def outlineView_child_ofItem_(self, view, child, item):
         if not item:
             item = self.root
         return item.childAtIndex_( child )
-    
+
     def outlineView_isItemExpandable_(self, view, item):
         if not self.typ in outlinetypes.hierarchicalTypes:
             return False
@@ -1605,7 +1612,7 @@ class NodeValue(object):
                 value = self.listFromDictionary( value )
             else:
                 print "BOGATIVE VALUETYPE:", type(value)
-                
+
         if type(value) != list:
             print "VALUE is not list"
 
@@ -1694,7 +1701,7 @@ class OutlineNode(NSObject):
     # displayComment
     # displayType
     #
-    
+
     #
     # to be added
     #
@@ -1749,7 +1756,7 @@ class OutlineNode(NSObject):
         if psolved:
             super(OutlineNode, self).dealloc()
 
-        
+
     def setMaxLineHeight(self):
         maxVal = self.calcAttributesHeight()
         l = self.lineHeight( self.name )
@@ -1830,7 +1837,7 @@ class OutlineNode(NSObject):
         else:
             nv = NodeValue( value )
             self.value = nv.value
-            
+
             if nv.isMultiValue():
                 self.type = u"Attributes"
             else:
@@ -1918,7 +1925,7 @@ class OutlineNode(NSObject):
     #
     def noOfChildren(self):
         return self.children.count()
-    
+
     #
     def addChild_(self, child):
         # retain: child+1
@@ -2053,7 +2060,7 @@ class OutlineNode(NSObject):
         if n >= 0:
             return self.parent.children.objectAtIndex_(n)
         return -1
-            
+
     def previous(self):
         """Return my immediate previous sibling or -1."""
         n = self.previousIndex()
@@ -2168,7 +2175,7 @@ def deleteNodes(ov, nodes=(), selection=False):
 def createNode(ov, selection, startEditing=True):
     # pdb.set_trace()
     # create node at selection and start editing
-    
+
     # open new line and start editing
     # if already editing, start new line, continue editing
     delg = ov.delegate()
@@ -2188,7 +2195,7 @@ def createNode(ov, selection, startEditing=True):
         ov.selectRowItem_( node )
         rowIndex = ov.rowForItem_( node )
         consumed = True
-    
+
     if startEditing:
         s = NSIndexSet.indexSetWithIndex_( rowIndex )
         ov.selectRowIndexes_byExtendingSelection_(s, False)

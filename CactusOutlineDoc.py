@@ -68,6 +68,7 @@ NSDocumentController = AppKit.NSDocumentController
 NSWorkspace = AppKit.NSWorkspace
 NSString = AppKit.NSString
 NSMutableString = AppKit.NSMutableString
+NSWindowController = AppKit.NSWindowController
 
 # grid styles
 NSTableViewGridNone = AppKit.NSTableViewGridNone
@@ -83,9 +84,9 @@ NSChangeAutosaved = AppKit.NSChangeAutosaved
 
 
 import PyObjCTools
-import PyObjCTools.NibClassBuilder
-extractClasses = PyObjCTools.NibClassBuilder.extractClasses
-AutoBaseClass = PyObjCTools.NibClassBuilder.AutoBaseClass
+#import PyObjCTools.NibClassBuilder
+#extractClasses = PyObjCTools.NibClassBuilder.extractClasses
+#AutoBaseClass = PyObjCTools.NibClassBuilder.AutoBaseClass
 
 
 import outlinetypes
@@ -106,7 +107,7 @@ CactusHTMLType = CactusDocumentTypes.CactusHTMLType
 CactusPLISTType = CactusDocumentTypes.CactusPLISTType
 CactusIMLType = CactusDocumentTypes.CactusIMLType
 
-extractClasses("OutlineEditor")
+# extractClasses("OutlineEditor")
 
 
 def boilerplateOPML( rootNode ):
@@ -169,7 +170,11 @@ def boilerplateOPML( rootNode ):
 
 
 # a cocoa NSDocument subclass
-class CactusOutlineDocument(AutoBaseClass):
+class CactusOutlineDocument(NSDocument):
+    parentNode = objc.IBOutlet()
+    rootNode = objc.IBOutlet()
+    url = objc.IBOutlet()
+
     #
     # outlets:
     #  parentNode
@@ -420,8 +425,11 @@ class CactusOutlineDocument(AutoBaseClass):
                 # evil hack, because NSDocumentController doesn't open window if
                 # document is loaded with http: scheme
                 #
+                # addendum 10.6
+                #
+                # now this does not work anymore
                 docc = NSDocumentController.sharedDocumentController()
-                added = docc.addDocument_(self)
+                docc.addDocument_(self)
 
                 # this is source of trouble ( double or none call to makeWindowControllers)
                 #
@@ -791,7 +799,7 @@ class CactusOutlineDocument(AutoBaseClass):
     def showWindows( self ):
         if kwlog:
             print "CactusOutlineDocument.showWindows()"
-        # pdb.set_trace()
+        pdb.set_trace()
         super( CactusOutlineDocument, self).showWindows()
         #
         # for expansionstate
@@ -866,13 +874,14 @@ class CactusOutlineDocument(AutoBaseClass):
             outlineView.setNeedsDisplay_( True )
 
     def makeWindowControllers(self):
-        # c = CactusOutlineWindowController.alloc().initWithObject_( self )
         if kwlog:
             print "CactusOutlineDocument.makeWindowControllers()"# , c.retainCount()
-        # self.addWindowController_( CactusOutlineWindowController.alloc().initWithObject_( self ) )
         self.addWindowController_( CactusOutlineWindowController.alloc().initWithObject_( self ) )
-        # c.release()
-        # del c
+        # pdb.set_trace()
+        #c = CactusOutlineWindowController.alloc().initWithObject_( self )
+        #self.addWindowController_( c )
+        #c.release()
+        #del c
 
 
     def printShowingPrintPanel_(self, show):
@@ -882,7 +891,19 @@ class CactusOutlineDocument(AutoBaseClass):
         self.runModalPrintOperation_delegate_didRunSelector_contextInfo_( printOp, None, None, None, None)
 
 
-class CactusOutlineWindowController(AutoBaseClass):
+class CactusOutlineWindowController(NSWindowController):
+    menRowLines = objc.IBOutlet()
+    outlineView = objc.IBOutlet()
+    optAlterLines = objc.IBOutlet()
+    optCommentVisible = objc.IBOutlet()
+    optHLines = objc.IBOutlet()
+    optNameVisible = objc.IBOutlet()
+    optTypeVisible = objc.IBOutlet()
+    optValueVisible = objc.IBOutlet()
+    optVariableRow = objc.IBOutlet()
+    optVLines = objc.IBOutlet()
+    txtOutlineType = objc.IBOutlet()
+
     """the actual base class is NSWindowController
 
     menRowLines
@@ -896,7 +917,8 @@ class CactusOutlineWindowController(AutoBaseClass):
     optVariableRow
     optVLines
     txtOutlineType
-    window
+
+    window # in NSWindowController
     """
 
     def dealloc(self):
@@ -1006,6 +1028,7 @@ class CactusOutlineWindowController(AutoBaseClass):
         defaults = NSUserDefaults.standardUserDefaults()
         self.rowLines = 2
         self.optValueVisible.setState_( True )
+
         try:
             self.rowLines = int(defaults.objectForKey_( u'txtNoOfMaxRowLines'))
             self.menRowLines.setTitle_( str(self.rowLines) )
@@ -1064,12 +1087,13 @@ class CactusOutlineWindowController(AutoBaseClass):
             print "CactusOutlineWindowController.reloadData_reloadChildren_(item, children)"
         self.outlineView.reloadItem_reloadChildren_( item, children )
 
+    @objc.IBAction
     def loadFile_(self, sender):
         if kwlog:
             print "-" * 80
             print "EMPTY CactusOutlineWindowController.loadFile_()"
 
-
+    @objc.IBAction
     def applySettings_(self, sender):
         """target of the document check boxes. sets some tableview settings.
         """

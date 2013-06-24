@@ -39,6 +39,9 @@ NSDocument = AppKit.NSDocument
 NSDocumentController = AppKit.NSDocumentController
 NSWorkspace = AppKit.NSWorkspace
 
+NSOutlineView = AppKit.NSOutlineView
+NSWindowController = AppKit.NSWindowController
+
 NSString = AppKit.NSString
 NSMutableString = AppKit.NSMutableString
 
@@ -47,10 +50,6 @@ NSTableViewGridNone = AppKit.NSTableViewGridNone
 NSTableViewSolidVerticalGridLineMask = AppKit.NSTableViewSolidVerticalGridLineMask
 NSTableViewSolidHorizontalGridLineMask = AppKit.NSTableViewSolidHorizontalGridLineMask
 
-import PyObjCTools
-import PyObjCTools.NibClassBuilder
-extractClasses = PyObjCTools.NibClassBuilder.extractClasses
-AutoBaseClass = PyObjCTools.NibClassBuilder.AutoBaseClass
 
 import outlinetypes
 typeOutline = outlinetypes.typeOutline
@@ -78,206 +77,20 @@ cachefolder = CactusVersion.cachefolder
 
 import opml
 
-extractClasses("MainMenu")
-extractClasses("OpenURL")
-extractClasses("OutlineEditor")
-extractClasses("OpenAsAccessoryView")
-extractClasses("Preferences")
-
 import CactusExceptions
 OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
 
-#
-# Open URL Delegate
-#
-class OpenURLWindowController(AutoBaseClass):
-    """Present a dialog for entering a URL for http document retrieval."""
 
-    # class defined in OpenURL.nib
-    # OpenURLWindowController(NSWindowController)
-    #
-    #
-    # actions
-    #
-    # OK:
-    # Cancel:
-    # clearMenu:
-    # lastVisitedMenuSelection:
-    #
-    # label
-    # textfield
-    #
-    #
-    # visitedURLs
-    # menuLastVisited
-    def __new__(cls):
-        return cls.alloc()
+import CactusOpenURLController
+OpenURLWindowController = CactusOpenURLController.OpenURLWindowController
 
-    def init(self):
-        self = self.initWithWindowNibName_("OpenURL")
-        window = self.window()
-        window.setDelegate_( self )
-        window.setTitle_( u"Open URL…" )
-        window.makeFirstResponder_(self.textfield)
+import CactusPreferenceController
+CactusPreferenceController = CactusPreferenceController.CactusPreferenceController
 
-        app = NSApplication.sharedApplication()
-        delg = app.delegate()
+import CactusAppDelegate
+CactusAppDelegate = CactusAppDelegate.CactusAppDelegate
+CactusDocumentController = CactusAppDelegate.CactusDocumentController
 
-        self.readAsType = CactusOPMLType
-        self.visitedURLs = delg.visitedURLs[:]
-        self.menuLastVisited.removeAllItems()
-
-        defaults = NSUserDefaults.standardUserDefaults()
-        self.noOfRecentURLs = 40
-        try:
-            self.noOfRecentURLs = int(defaults.objectForKey_( u'txtNoOfRecentURLs'))
-        except StandardError, err:
-            print "ERROR reading defaults.", repr(err)
-
-        # cap recentURLs to max size
-        if len(self.visitedURLs) > self.noOfRecentURLs:
-            self.visitedURLs = self.visitedURLs[:self.noOfRecentURLs]
-
-        for url in self.visitedURLs:
-            self.menuLastVisited.addItemWithTitle_( url )
-        self.showWindow_(self)
-        
-
-        self.retain()
-        return self
-
-    def clearMenu_(self, sender):
-        self.visitedURLs = []
-        app = NSApplication.sharedApplication()
-        delg = app.delegate()
-        delg.visitedURLs = self.visitedURLs
-        self.menuLastVisited.removeAllItems()
-
-    def lastVisitedMenuSelection_(self, sender):
-        urlSelected = self.menuLastVisited.title()
-        self.textfield.setStringValue_( urlSelected )
-
-    def openAsMenuSelection_(self, sender):
-        self.readAsType = self.menuOpenAs.title()
-
-    def windowWillClose_(self, notification):
-        # see comment in self.initWithObject_()
-        self.autorelease()
-
-    def OK_(self, sender):
-        "User pressed OK button. Get data and try to open that stuff."
-
-        app = NSApplication.sharedApplication()
-        delg = app.delegate()
-        t_url = self.textfield.stringValue()
-        url = NSURL.URLWithString_( t_url )
-        self.readAsType = self.menuOpenAs.title()
-        if t_url == u"":
-            self.close()
-            return
-        if t_url not in self.visitedURLs:
-            self.visitedURLs.insert( 0, t_url )
-            n = len(self.visitedURLs)
-            if n > self.noOfRecentURLs:
-                self.visitedURLs = self.visitedURLs[:self.noOfRecentURLs]
-        else:
-            # put visited url at top
-            self.visitedURLs.remove( t_url )
-            self.visitedURLs.insert( 0, t_url )
-            self.menuLastVisited.removeAllItems()
-            for menuItem in self.visitedURLs:
-                self.menuLastVisited.addItemWithTitle_( menuItem )
-        delg.visitedURLs = self.visitedURLs[:]
-        delg.newOutlineFromURL_Type_( url, str(self.readAsType) )
-        self.close()
-
-    def Cancel_(self, sender):
-        #pdb.set_trace()
-        self.close()
-
-####
-
-#
-# Open Preferences
-#
-class CactusPreferenceController(AutoBaseClass):
-    """Present a dialog for entering a URL for http document retrieval."""
-    def init(self):
-        self = self.initWithWindowNibName_("Preferences")
-
-        wnd = self.window()
-
-        wnd.setTitle_( u"Cactus Preferences" )
-        wnd.setDelegate_( self )
-
-        defaults = NSUserDefaults.standardUserDefaults()
-
-        self.optCache.setState_( defaults.objectForKey_( u'optCache') )
-        self.txtCacheFolder.setStringValue_( defaults.objectForKey_( u'txtCacheFolder') )
-        self.txtNoOfMaxRowLines.setStringValue_( defaults.objectForKey_( u'txtNoOfMaxRowLines') )
-        self.txtNoOfRecentURLs.setStringValue_( defaults.objectForKey_( u'txtNoOfRecentURLs') )
-        self.txtUserEmail.setStringValue_( defaults.objectForKey_( u'txtUserEmail') )
-        self.txtUserName.setStringValue_( defaults.objectForKey_( u'txtUserName') )
-
-        self.optAlternateLines.setState_( defaults.objectForKey_( u'optAlternateLines') )
-        self.optCommentColumn.setState_( defaults.objectForKey_( u'optCommentColumn') )
-        self.optTypeColumn.setState_( defaults.objectForKey_( u'optTypeColumn') )
-        self.optValueColumn.setState_( defaults.objectForKey_( u'optValueColumn') )
-
-        self.optHLines.setState_( defaults.objectForKey_( u'optHLines') )
-        self.optVLines.setState_( defaults.objectForKey_( u'optVLines') )
-        self.optVariableRowHeight.setState_( defaults.objectForKey_( u'optVariableRowHeight') )
-
-        self.menDoctype.setTitle_( defaults.objectForKey_( u'menDoctype') )
-        self.menEncoding.setTitle_( defaults.objectForKey_( u'menEncoding') )
-        self.txtIndent.setStringValue_( defaults.objectForKey_( u'txtIndent') )
-        
-        self.optIMLAutodetect.setState_( defaults.objectForKey_( u'optIMLAutodetect') )
-
-        self.optOPMLAutodetect.setState_( defaults.objectForKey_( u'optOPMLAutodetect') )
-        self.optRSSAutodetect.setState_( defaults.objectForKey_( u'optRSSAutodetect') )
-        self.optHTMLAutodetect.setState_( defaults.objectForKey_( u'optHTMLAutodetect') )
-        self.optPLISTAutodetect.setState_( defaults.objectForKey_( u'optPLISTAutodetect') )
-
-        self.optIMLImportSystemLibraries.setState_( defaults.objectForKey_( u'optIMLImportSystemLibraries') )
-        return self
-
-    def windowWillClose_(self, notification):
-        defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setObject_forKey_(self.optCache.state(),   u'optCache')
-        defaults.setObject_forKey_(self.txtCacheFolder.stringValue(),   u'txtCacheFolder')
-        defaults.setObject_forKey_(self.txtNoOfMaxRowLines.stringValue(),   u'txtNoOfMaxRowLines')
-        defaults.setObject_forKey_(self.txtNoOfRecentURLs.stringValue(),   u'txtNoOfRecentURLs')
-        defaults.setObject_forKey_(self.txtUserEmail.stringValue(),   u'txtUserEmail')
-        defaults.setObject_forKey_(self.txtUserName.stringValue(),   u'txtUserName')
-
-        defaults.setObject_forKey_(self.optAlternateLines.state(),   u'optAlternateLines')
-        defaults.setObject_forKey_(self.optCommentColumn.state(),   u'optCommentColumn')
-        defaults.setObject_forKey_(self.optTypeColumn.state(),   u'optTypeColumn')
-        defaults.setObject_forKey_(self.optValueColumn.state(),   u'optValueColumn')
-
-        defaults.setObject_forKey_(self.optHLines.state(),   u'optHLines')
-        defaults.setObject_forKey_(self.optVLines.state(),   u'optVLines')
-        defaults.setObject_forKey_(self.optVariableRowHeight.state(),   u'optVariableRowHeight')
-
-        defaults.setObject_forKey_(self.menDoctype.title(),   u'menDoctype')
-        defaults.setObject_forKey_(self.menEncoding.title(),   u'menEncoding')
-        defaults.setObject_forKey_(self.txtIndent.stringValue(),   u'txtIndent')
-
-        defaults.setObject_forKey_(self.optIMLAutodetect.state(),   u'optIMLAutodetect')
-
-        defaults.setObject_forKey_(self.optOPMLAutodetect.state(),   u'optOPMLAutodetect')
-        defaults.setObject_forKey_(self.optRSSAutodetect.state(),   u'optRSSAutodetect')
-        defaults.setObject_forKey_(self.optHTMLAutodetect.state(),   u'optHTMLAutodetect')
-        defaults.setObject_forKey_(self.optPLISTAutodetect.state(),   u'optPLISTAutodetect')
-
-        defaults.setObject_forKey_(self.optIMLImportSystemLibraries.state(),   u'optIMLImportSystemLibraries')
-
-    def chooseFolder_(self, sender):
-        if sender == self.butSetCacheFolder:
-            folders = CactusTools.getFolderDialog()
-            if folders:
-                self.txtCacheFolder.setStringValue_( folders[0] )
 
 
 class Document(object):
@@ -291,7 +104,7 @@ class Document(object):
         self.parentNode = parentNode
 
 
-class CactusWindowController(AutoBaseClass):
+class CactusWindowController(NSWindowController):
     def init(self):
         if kwlog:
             print "XXXXXXXXXXXXXXXXXXXX               CactusWindowController.init()"
@@ -318,7 +131,7 @@ class CactusWindowController(AutoBaseClass):
 
     #
     # Can this be made for dual-use? outlines and tables?
-    
+
     # the actual base class is NSWindowController
     # outlineView
 
@@ -389,7 +202,7 @@ class CactusWindowController(AutoBaseClass):
         self.outlineView.setDoubleAction_("doubleClick:")
 
         self.window().makeFirstResponder_(self.outlineView)
-        
+
         # store them columns
         self.nameColumn = self.outlineView.tableColumnWithIdentifier_( "name" )
         self.typeColumn = self.outlineView.tableColumnWithIdentifier_( "type" )
@@ -450,7 +263,7 @@ class CactusWindowController(AutoBaseClass):
 
         # columns
         tableColumns = self.outlineView.tableColumns()
-        
+
         if self.optNameVisible.state():
             if not self.nameColumn in tableColumns:
                 self.outlineView.addTableColumn_(self.nameColumn)
@@ -503,9 +316,10 @@ class CactusWindowController(AutoBaseClass):
         self.outlineView.setNeedsDisplay_( True )
 
 
-class CactusOpenAsAccessoryController(AutoBaseClass):
+class CactusOpenAsAccessoryController(NSObject):
     """Just a holder for some values and an action for a open panel accessory."""
 
+    menuOpenAs = objc.IBOutlet()
     def __new__(cls):
         return cls.alloc()
 
@@ -513,417 +327,7 @@ class CactusOpenAsAccessoryController(AutoBaseClass):
         panel = NSBundle.loadNibNamed_owner_( u"OpenAsAccessoryView", self)
         return self
 
+    @objc.IBAction
     def menuOpenAsType_( self, sender ):
         return self.menuOpenAs.title()
 
-
-# instantiated in NIB
-class CactusDocumentController(NSDocumentController):
-    def init(self):
-        if kwlog:
-            print "CactusDocumentController.init()"
-        self = super( CactusDocumentController, self).init()
-        self.selectedType = u"automatic"
-        self.urllist = []
-        return self
-
-    def runModalOpenPanel_forTypes_( self, panel, types ):
-        if kwlog:
-            print "CactusDocumentController.runModalOpenPanel_forTypes_()"
-        self.selectedType = "automatic"
-        extensionCtrl = CactusOpenAsAccessoryController.alloc().init()
-
-        if extensionCtrl.menuOpenAs != None:
-            panel.setAccessoryView_( extensionCtrl.menuOpenAs )
-        result = super( CactusDocumentController, self).runModalOpenPanel_forTypes_( panel, None)
-
-        if result:
-            self.selectedType = extensionCtrl.menuOpenAs.title()
-            self.urllist = set([NSURL2str(t) for t in panel.URLs()])
-        return result
-
-    def makeDocumentWithContentsOfURL_ofType_error_(self, url, theType, err):
-        if kwlog:
-            print "CactusDocumentController.makeDocumentWithContentsOfURL_ofType_error_()"
-        if self.selectedType != "automatic" and len(self.urllist) > 0:
-            u = NSURL2str( url )
-            if u in self.urllist:
-                self.urllist.discard( u )
-                theType = self.selectedType
-        result, error = super( CactusDocumentController, self).makeDocumentWithContentsOfURL_ofType_error_( url, theType, err)
-        # self.selectedType = "automatic"
-        return (result, error)
-        
-
-class CactusAppDelegate(NSObject):
-    # defined in mainmenu
-
-    def initialize(self):
-        if kwlog:
-            print "CactusAppDelegate.initialize()"
-        self.visitedURLs = []
-        self.documentcontroller = None
-        # default settings for preferences
-        userdefaults = NSMutableDictionary.dictionary()
-
-        userdefaults.setObject_forKey_([],          u'lastURLsVisited')
-        userdefaults.setObject_forKey_(False,       u'optCache')
-        userdefaults.setObject_forKey_(cachefolder, u'txtCacheFolder')
-        userdefaults.setObject_forKey_("2",         u'txtNoOfMaxRowLines')
-        userdefaults.setObject_forKey_("40",        u'txtNoOfRecentURLs')
-        userdefaults.setObject_forKey_("",          u'txtUserEmail')
-        userdefaults.setObject_forKey_("",          u'txtUserName')
-
-        userdefaults.setObject_forKey_(True,        u'optAlternateLines')
-        userdefaults.setObject_forKey_(True,        u'optHLines')
-        userdefaults.setObject_forKey_(True,        u'optVLines')
-        userdefaults.setObject_forKey_(True,        u'optVariableRowHeight')
-
-        userdefaults.setObject_forKey_(False,       u'optCommentColumn')
-        userdefaults.setObject_forKey_(False,       u'optTypeColumn')
-        userdefaults.setObject_forKey_(True,        u'optValueColumn')
-
-        userdefaults.setObject_forKey_("<!DOCTYPE html>",   u'menDoctype')
-        userdefaults.setObject_forKey_("utf-8",     u'menEncoding')
-        userdefaults.setObject_forKey_("2",         u'txtIndent')
-
-        userdefaults.setObject_forKey_(False,        u'optIMLAutodetect')
-        userdefaults.setObject_forKey_(False,        u'optOPMLAutodetect')
-        userdefaults.setObject_forKey_(False,        u'optRSSAutodetect')
-        userdefaults.setObject_forKey_(False,        u'optHTMLAutodetect')
-        userdefaults.setObject_forKey_(False,        u'optPLISTAutodetect')
-
-        userdefaults.setObject_forKey_(False,        u'optIMLImportSystemLibraries')
-
-        NSUserDefaults.standardUserDefaults().registerDefaults_(userdefaults)
-        self.preferenceController = None
-
-
-    def awakeFromNib(self):
-        defaults = NSUserDefaults.standardUserDefaults()
-        self.visitedURLs = defaults.arrayForKey_( u"lastURLsVisited" )
-
-    def applicationDidFinishLaunching_(self, notification):
-        if kwlog:
-            print "CactusAppDelegate.applicationDidFinishLaunching_()"
-        self.documentcontroller = CactusDocumentController.alloc().init()
-        app = NSApplication.sharedApplication()
-        app.activateIgnoringOtherApps_(True)
-
-    def applicationShouldOpenUntitledFile_( self, sender ):
-        if kwlog:
-            print "CactusAppDelegate.applicationShouldOpenUntitledFile_()"
-        # this is neede to prevent creating an untitled document at startup
-        #
-        # should really be in the (not yet existent) preferences
-        return False
-
-    def applicationShouldHandleReopen_hasVisibleWindows_( self, theApplication, flag ):
-        if kwlog:
-            print "CactusAppDelegate.applicationShouldHandleReopen_hasVisibleWindows_()"
-        # this is neede to prevent creating an untitled document when clicking the dock
-        #
-        # should really be in the (not yet existent) preferences
-        return False
-
-    def applicationShouldTerminate_(self, aNotification):
-        """Store preferences before quitting
-        """
-
-        defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setObject_forKey_(self.visitedURLs,
-                                   u'lastURLsVisited')
-        return True
-
-    ####
-
-    def showPreferencePanel_(self, sender):
-        if self.preferenceController == None:
-            self.preferenceController = CactusPreferenceController.alloc().init()
-        self.preferenceController.showWindow_( self.preferenceController )
-
-    ####
-
-    def newTableWithRoot_(self, root):
-        if kwlog:
-            print "CactusAppDelegate.newTableWithRoot_()"
-        self.newTableWithRoot_title_(root, None)
-
-    def newTableWithRoot_title_(self, root, title):
-        if kwlog:
-            print "DEPRECATED CactusAppDelegate.newTableWithRoot_title_()"
-        # find owning controller here and pass on
-        if not title:
-            title = u"Table Editor"
-        doc = Document(title, root)
-        CactusWindowController.alloc().initWithObject_type_(doc, typeTable)
-
-    def newTableWithRoot_fromNode_(self, root, parentNode):
-        if kwlog:
-            print "DEPRECATED CactusAppDelegate.newTableWithRoot_fromNode_()"
-        title = "Unnamed"
-        if parentNode:
-            title = parentNode.name
-        doc = Document(title, root, parentNode)
-        CactusWindowController.alloc().initWithObject_type_(doc, typeTable)
-
-    # menu "New Table"
-    def newTable_(self, sender):
-        if kwlog:
-            print "DEPRECATED CactusAppDelegate.newTable_()"
-        doc = Document("Untitled Table", None)
-        CactusWindowController.alloc().initWithObject_type_(doc, typeTable)
-
-    ####
-
-    # menu "New Outline"
-    def newOutline_(self, sender):
-        if kwlog:
-            print "DEPRECATED CactusAppDelegate.newOutline_()"
-
-    # UNUSED
-    def newRoot_(self, sender):
-        pass
-
-    # menu "Open URL"
-    def openURL_(self, sender):
-        """Open new "URL opener". Currently no measures against opening multiple of those...
-        """
-        OpenURLWindowController().init()
-
-    ####
-
-    def openMailingList_(self, sender):
-        workspace= NSWorkspace.sharedWorkspace()
-        url = NSURL.URLWithString_( u"http://groups.google.com/group/cactus-outliner-dev" )
-        workspace.openURL_( url )
-
-    def openGithubPage_(self, sender):
-        workspace= NSWorkspace.sharedWorkspace()
-        url = NSURL.URLWithString_( u"https://github.com/karstenw/Cactus-opml-Outliner" )
-        workspace.openURL_( url )
-
-    def openDownloadsPage_(self, sender):
-        workspace= NSWorkspace.sharedWorkspace()
-        url = NSURL.URLWithString_( u"http://goo.gl/EALQi" )
-        workspace.openURL_( url )
-    
-    ####
-
-    def newOutlineFromURL_Type_(self, url, type_):
-        if not isinstance(url, NSURL):
-            url = NSURL.URLWithString_( url )
-        # just check for local files
-        docc = NSDocumentController.sharedDocumentController()
-        localurl = url.isFileURL()
-        loaded = True
-        if localurl:
-            loaded = docc.documentForURL_( url )
-        if not loaded or not localurl:
-            doc, err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
-                                                                       type_,
-                                                                       None)
-
-    # UNUSED but defined in class
-    def newBrowser_(self, sender):
-        if kwlog:
-            print "CactusAppDelegate.newBrowser_()"
-        # The CactusWindowController instance will retain itself,
-        # so we don't (have to) keep track of all instances here.
-        doc = Document("Untitled Outline", None)
-        CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
-
-    def openOutlineDocument_(self, sender):
-        if kwlog:
-            print "CactusAppDelegate.openOutlineDocument_()"
-        docctrl = NSDocumentController.sharedDocumentController()
-        docctrl.openDocument_(sender)
-
-    def openFile_(self, sender):
-        if kwlog:
-            print "DEPRECATED CactusAppDelegate.openFile_()"
-        # this is ugly
-        f = getFileDialog(multiple=True)
-        if f:
-            for opmlFile in f:
-                print "Reading OPML '%s'" % (opmlFile.encode("utf-8"),)
-                fob = open(opmlFile, 'r')
-                folder, filename = os.path.split(opmlFile)
-                s = fob.read()
-                fob.close()
-                d = opml.opml_from_string(s)
-                if d:
-                    root = CactusOutlineDoc.openOPML_( d )
-                    doc = Document(opmlFile, root)
-                    CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
-
-                    print "Reading OPML '%s' Done." % (opmlFile.encode("utf-8"),)
-                else:
-                    print "Reading OPML '%s' FAILED." % (opmlFile.encode("utf-8"),)
-
-    def openOPML_(self, rootOPML):
-        if kwlog:
-            print "CactusAppDelegate.openOPML_()"
-        """This builds the node tree and opens a window."""
-        #
-        #  Split this up.
-        def getChildrenforNode(node, children):
-            for c in children:
-                name = c.get('name', '')
-                childs = c.get('children', [])
-                content = c.get('attributes', "")
-                if content == "":
-                    content = {u'value': ""}
-                content.pop('text', None)
-                if content:
-                    l = []
-                    for k, v in content.items():
-                        l.append( (k, v) )
-                    content = l
-                else:
-                    content = u""
-
-                newnode = OutlineNode(name, content, node, typeOutline)
-                node.addChild_( newnode )
-                if len(childs) > 0:
-                    getChildrenforNode(newnode, childs)
-                del newnode
-
-        ######
-
-        # root node for document; never visible,
-        # always outline type (even for tables)
-        root = OutlineNode("__ROOT__", "", None, typeOutline)
-        
-        # get opml head section
-        if rootOPML['head']:
-            
-            # the outline head node
-            head = OutlineNode("head", "", root, typeOutline)
-            root.addChild_( head )
-            for headnode in rootOPML['head']:
-                k, v = headnode
-                #v = {'value': v}
-                
-                node = OutlineNode(k, v, head, typeOutline)
-                #print "HEAD:", node.name
-                head.addChild_( node )
-
-        # fill in missing opml attributes here
-        # created, modified
-        #
-        # how to propagate expansionstate, windowState?
-        # make a document object and pass that to docdelegate?
-        #
-        # get opml body section
-        if rootOPML['body']:
-
-            # the outline body node
-            body = OutlineNode("body", "", root, typeOutline)
-            root.addChild_( body )
-
-            for item in rootOPML['body']:
-                name = item['name']
-                children = item['children']
-
-                # make table here
-                content = item.get('attributes', "")
-                content.pop('text', None)
-                if content:
-                    l = []
-                    for k, v in content.items():
-                        l.append( (k, v) )
-                    content = l
-                else:
-                    content = u""
-
-                node = OutlineNode(name, content, body, typeOutline)
-                body.addChild_( node )
-                if len(children) > 0:
-                    try:
-                        getChildrenforNode( node, children )
-                    except Exception, err:
-                        print err
-                        # pdb.set_trace()
-                        pp(children)
-                        pp(item)
-        return root
-
-    def saveAs_(self, sender):
-        if kwlog:
-            print "DEPRECATED CactusAppDelegate.saveAs_()"
-        print "Save As..."
-        app = NSApplication.sharedApplication()
-        win = app.keyWindow()
-        if win:
-            print "Save As...", win.title()
-            windelg = win.delegate()
-            if windelg:
-                path = windelg.path
-                model = windelg.model
-                root = model.root
-    
-                f = saveAsDialog( path )
-                if f:
-                    rootOPML = opml.generateOPML( root, indent=1 )
-                    e = etree.ElementTree( rootOPML )
-                    fob = open(f, 'w')
-                    e.write(fob, encoding="utf-8", xml_declaration=True, method="xml" )
-                    fob.close()
-
-    def getCurrentAppWindow(self):
-        if kwlog:
-            print "CactusAppDelegate.getCurrentAppWindow()"
-        return NSApplication.sharedApplication().keyWindow()
-
-    def getCurrentDocument(self):
-        if kwlog:
-            print "CactusAppDelegate.getCurrentDocument()"
-        return NSDocumentController.sharedDocumentController().currentDocument()
-
-    def getCurrentOutlineView(self):
-        if kwlog:
-            print "CactusAppDelegate.getCurrentOutlineView()"
-        doc = self.getCurrentDocument()
-        if isinstance(doc, CactusOutlineDocument):
-            win = self.getCurrentAppWindow()
-            controllers = doc.windowControllers()
-            for controller in controllers:
-                if win == controller.window():
-                    return controller.outlineView
-        return False
-
-    def outlineMenuExpand_(self, sender):
-        if kwlog:
-            print "CactusAppDelegate.outlineMenuExpand_()"
-        ov = self.getCurrentOutlineView()
-        if ov:
-            ov.expandSelection_(sender)
-
-    def outlineMenuExpandAll_(self, sender):
-        if kwlog:
-            print "CactusAppDelegate.outlineMenuExpandAll_()"
-        ov = self.getCurrentOutlineView()
-        if ov:
-            ov.expandAllSelection_(sender)
-
-    def outlineMenuCollapse_(self, sender):
-        if kwlog:
-            print "CactusAppDelegate.outlineMenuCollapse_()"
-        ov = self.getCurrentOutlineView()
-        if ov:
-            ov.collapseSelection_(sender)
-
-    def outlineMenuCollapseAll_(self, sender):
-        if kwlog:
-            print "CactusAppDelegate.outlineMenuCollapseAll_()"
-        ov = self.getCurrentOutlineView()
-        if ov:
-            ov.collapseAllSelection_(sender)
-
-    def outlineMenuCollapseToParent_(self, sender):
-        if kwlog:
-            print "CactusAppDelegate.outlineMenuCollapseToParent_()"
-        ov = self.getCurrentOutlineView()
-        if ov:
-            ov.collapseToParent_(sender)
