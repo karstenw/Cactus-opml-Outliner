@@ -69,9 +69,6 @@ CactusOPMLType = CactusDocumentTypes.CactusOPMLType
 CactusRSSType = CactusDocumentTypes.CactusRSSType
 CactusXMLType = CactusDocumentTypes.CactusXMLType
 
-import CactusTools
-NSURL2str = CactusTools.NSURL2str
-
 import CactusVersion
 cachefolder = CactusVersion.cachefolder
 
@@ -84,13 +81,15 @@ OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
 import CactusOpenURLController
 OpenURLWindowController = CactusOpenURLController.OpenURLWindowController
 
+
 import CactusPreferenceController
 CactusPreferenceController = CactusPreferenceController.CactusPreferenceController
 
-import CactusAppDelegate
-CactusAppDelegate = CactusAppDelegate.CactusAppDelegate
-CactusDocumentController = CactusAppDelegate.CactusDocumentController
 
+# warning: CactusAppDelegate file/class name conflict; unresolved
+import CactusAppDelegate
+CactusDocumentController = CactusAppDelegate.CactusDocumentController
+CactusAppDelegate = CactusAppDelegate.CactusAppDelegate
 
 
 class Document(object):
@@ -314,20 +313,3 @@ class CactusWindowController(NSWindowController):
         #
         self.outlineView.reloadData()
         self.outlineView.setNeedsDisplay_( True )
-
-
-class CactusOpenAsAccessoryController(NSObject):
-    """Just a holder for some values and an action for a open panel accessory."""
-
-    menuOpenAs = objc.IBOutlet()
-    def __new__(cls):
-        return cls.alloc()
-
-    def init(self):
-        panel = NSBundle.loadNibNamed_owner_( u"OpenAsAccessoryView", self)
-        return self
-
-    @objc.IBAction
-    def menuOpenAsType_( self, sender ):
-        return self.menuOpenAs.title()
-

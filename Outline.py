@@ -55,7 +55,7 @@ datestring_nsdate = CactusTools.datestring_nsdate
 
 import CactusVersion
 
-import CactusOutlineDoc
+
 
 import CactusDocumentTypes
 CactusOPMLType = CactusDocumentTypes.CactusOPMLType
@@ -187,17 +187,6 @@ NSPrintOperation = AppKit.NSPrintOperation
 
 
 
-import PyObjCTools
-#import PyObjCTools.NibClassBuilder
-#extractClasses = PyObjCTools.NibClassBuilder.extractClasses
-#AutoBaseClass = PyObjCTools.NibClassBuilder.AutoBaseClass
-
-
-#extractClasses("OutlineEditor")
-#extractClasses("TableEditor")
-#extractClasses("NodeEditor")
-
-
 # simple dict for opening outline nodes
 
 # to be used, not now
@@ -220,7 +209,7 @@ g_opmplnodetypes = {
 
 g_preview_extensions = ("pdf ai ps epi eps epsf epsi "
                         "tiff tif "
-                        "crw cr2 nef raf orf mrw srf dcr arw pef raw mos"
+                        "crw cr2 nef raf orf mrw srf dcr arw pef raw mos "
                         "dng xbm exr bmp gif ico jpg jpeg jpe thm pict pct "
                         "png qtif tga targa sgi psd pntg fpx fax jfx jfax icns jp2 "
                         "pic hdr ")
@@ -460,11 +449,6 @@ class KWOutlineView(NSOutlineView):
         # check selection; if right-click in selectio: use selection
         # else use clicked row only
         row = self.clickedRow()
-        #print "CLICKED ROW:", repr(row)
-        #return
-        #if row >=0 and not self.isRowSelected_(row):
-        #    selection = [ self.itemAtRow_(row) ]
-        #else:
         selection = self.getSelectionItems()
 
         for contextItem in selection:
@@ -479,8 +463,9 @@ class KWOutlineView(NSOutlineView):
             theType = attributes.get("type", "")
             url = attributes.get("url", "")
             url = cleanupURL( url )
-            if theType in ( 'include', 'outline', 'thumbList', 'code', 'thumbListVarCol',
-                            'thumbList', 'blogpost', 'link'):
+            if theType in ( 'include', 'outline', 'thumbList', 'code',
+                            'thumbListVarCol', 'thumbList', 'blogpost',
+                            'link'):
 
                 d = None
                 try:
@@ -490,7 +475,11 @@ class KWOutlineView(NSOutlineView):
                     print err
 
                 if d:
-                    root = CactusOutlineDoc.openOPML_( d )
+                    #
+                    # TBD: import here to circumvent circular import
+                    #
+                    import CactusFileOpeners
+                    root = CactusFileOpeners.openOPML_( d )
                     for node in root.children:
                         if node.name == u"body":
                             for i in node.children:
@@ -715,7 +704,8 @@ class KWOutlineView(NSOutlineView):
 
             # while editing, will be handled elsewhere
             # outline: delete selection (saving to a pasteboard stack) TBD
-            # table: delete selection (saving to a pasteboard stack) Tables will be deleted in the future
+            # table: delete selection (saving to a pasteboard stack) Tables will be
+            #        deleted in the future
             deleteNodes(self, selection=True)
 
             # deselect all or find a good way to select the next item

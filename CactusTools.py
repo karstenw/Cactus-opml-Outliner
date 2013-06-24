@@ -12,6 +12,8 @@ import traceback
 import datetime
 import unicodedata
 
+import struct
+
 import mactypes
 import appscript
 asc = appscript
@@ -58,6 +60,13 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 # tools
 #
 
+def num2ostype( num ):
+    return struct.pack(">I", num)
+
+def ostype2num( ostype ):
+    return struct.pack('BBBB', list(ostype))
+
+
 def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
     try:
         s = unicode(s, srcencoding)
@@ -69,7 +78,7 @@ def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
 
 def detectFileType( nsfileurl ):
     """Not yet sure how to autodetect without reading some files twice.
-    
+
     So far the parsers used are:
         OPML: cElementTree (opens string)
         RSS: feedparser (opens string)
@@ -116,12 +125,12 @@ def readURL( nsurl, type_="" ):
     if type_ == CactusOPMLType:
         # this is a quick & dirty approach and should be applied much more carefully than
         # it is now...
-        
+
         # clear bogative xml declaration. OPML-Editor, I'looking at you
         if s.startswith("""<?xml encoding="ISO-8859-1" version="1.0"?>"""):
             s = s.replace("""<?xml encoding="ISO-8859-1" version="1.0"?>""",
                           """<?xml version="1.0" encoding="ISO-8859-1"?>""")
-    
+
             if kwlog:
                 print "\nBOGUS XML DELARATION REPLACED\n"
         # this error occurs up until now only combined with the previous one
@@ -148,7 +157,7 @@ def readURL( nsurl, type_="" ):
                 pre = s[:s1]
                 defectiveSnippet = s[s1:s2]
                 post = s[s2:]
-                
+
                 if kwlog:
                     print "\nOLD", repr(defectiveSnippet)
 
@@ -185,7 +194,7 @@ def readURL( nsurl, type_="" ):
 # UNUSED
 def classifyAndReadUrl( url ):
     """TBD
-    
+
     Read in an URL and try to classify it as opml, bogative opml, rss, xml.
     """
 
@@ -196,7 +205,7 @@ def classifyAndReadUrl( url ):
     if s.startswith("""<?xml encoding="ISO-8859-1" version="1.0"?>"""):
         pass
 
-    
+
     # the type should be determinable within the first 250 bytes
     checkpart = s[:250]
 
@@ -207,18 +216,18 @@ def classifyAndReadUrl( url ):
     if checkpart.startswith( "<?xml version" ):
         pass
         # we have a xml based document
-        
+
     if checkpart.startswith( "<?xml version" ):
         pass
         # check for opml
         # check for rss
-        
+
 #
 # dialogs
 #
 def cancelContinueAlert(title, message, butt1="OK", butt2=False):
     """Run a generic Alert with buttons "Weiter" & "Abbrechen".
-    
+
        Returns True if "Weiter"; False otherwise
     """
     alert = NSAlert.alloc().init()
@@ -357,7 +366,7 @@ def getDownloadFolder( nsurl ):
 
     if not os.path.exists(cacheFolder):
         os.makedirs( cacheFolder )
-    # 
+    #
     localpath = str( nsurl.relativePath() )
     s = nsurl.absoluteString()
     if '#' in s:
@@ -368,7 +377,7 @@ def getDownloadFolder( nsurl ):
             filename = l[-1]
             filename = urllib.unquote( filename )
             base , fname = os.path.split( localpath )
-            
+
             localpath = os.path.join( base, filename )
 
     if localpath.startswith('/'):
@@ -419,19 +428,19 @@ def cache_url( nsurl, fileextension ):
         folder, filename = os.path.split( localpath )
         if not os.path.exists(folder):
             os.makedirs( folder )
-    
+
         url = NSURL2str( nsurl )
-    
+
         if kwlog:
             print "CactusTools.cache_url( %s, %s )" % (url, fileextension)
-    
+
         dodownload = False
         if os.path.exists( localpath ):
             # file already downloaded; perhaps set file modification date
             lmodfdate = os.stat( localpath ).st_mtime
             lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
             rmodfdate = getRemotefilemodificationDate( url )
-            
+
             if rmodfdate and rmodfdate < lmodfdate:
                 setFileModificationDate( localpath, rmodfdate )
             elif rmodfdate and rmodfdate == lmodfdate:
@@ -440,7 +449,7 @@ def cache_url( nsurl, fileextension ):
                 dodownload = True
         else:
             dodownload = True
-    
+
         if dodownload:
             #
             if os.path.isdir( localpath ):
@@ -471,13 +480,13 @@ def cache_url( nsurl, fileextension ):
                 setFileModificationDate( localpath, rmodfdate )
             except TypeError, err:
                 print "Could not get remote file(%s) modification date." % fname
-        
+
         returnURL = NSURL.fileURLWithPath_( unicode(localpath) )
 
     except Exception, err:
         # pdb.set_trace()
         tb = unicode(traceback.format_exc())
         print tb
-        print 
+        print
 
     return returnURL

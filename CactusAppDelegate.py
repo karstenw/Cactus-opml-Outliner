@@ -20,6 +20,7 @@ NSMutableDictionary = Foundation.NSMutableDictionary
 NSUserDefaults = Foundation.NSUserDefaults
 NSURL = Foundation.NSURL
 
+
 import AppKit
 NSApplication = AppKit.NSApplication
 NSWindowController = AppKit.NSWindowController
@@ -28,6 +29,16 @@ NSWorkspace = AppKit.NSWorkspace
 
 import CactusVersion
 cachefolder = CactusVersion.cachefolder
+
+import CactusPreferenceController
+CactusPreferenceController = CactusPreferenceController.CactusPreferenceController
+
+import CactusAccessoryController
+CactusOpenAsAccessoryController = CactusAccessoryController.CactusOpenAsAccessoryController
+
+
+import CactusTools
+NSURL2str = CactusTools.NSURL2str
 
 
 # instantiated in NIB
