@@ -82,14 +82,10 @@ import CactusOpenURLController
 OpenURLWindowController = CactusOpenURLController.OpenURLWindowController
 
 
-import CactusPreferenceController
-CactusPreferenceController = CactusPreferenceController.CactusPreferenceController
 
-
-# warning: CactusAppDelegate file/class name conflict; unresolved
-import CactusAppDelegate
-CactusDocumentController = CactusAppDelegate.CactusDocumentController
-CactusAppDelegate = CactusAppDelegate.CactusAppDelegate
+import CactusAppDelegateClass
+CactusDocumentController = CactusAppDelegateClass.CactusDocumentController
+CactusAppDelegate = CactusAppDelegateClass.CactusAppDelegate
 
 
 class Document(object):
