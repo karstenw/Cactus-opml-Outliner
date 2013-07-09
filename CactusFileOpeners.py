@@ -16,9 +16,22 @@ pp = pprint.pprint
 kwdbg = False
 kwlog = True
 
+import time
+
+import feedparser
+
+import objc
+
+import AppKit
+NSString = AppKit.NSString
+NSMutableString = AppKit.NSMutableString
+NSUserDefaults = AppKit.NSUserDefaults
+
 import CactusTools
 num2ostype = CactusTools.num2ostype
 ostype2num = CactusTools.ostype2num
+
+import CactusVersion
 
 import outlinetypes
 typeOutline = outlinetypes.typeOutline
@@ -29,11 +42,16 @@ import CactusDocumentTypes
 CactusOPMLType = CactusDocumentTypes.CactusOPMLType
 CactusRSSType = CactusDocumentTypes.CactusRSSType
 CactusXMLType = CactusDocumentTypes.CactusXMLType
+CactusHTMLType = CactusDocumentTypes.CactusHTMLType
+CactusPLISTType = CactusDocumentTypes.CactusPLISTType
+CactusIMLType = CactusDocumentTypes.CactusIMLType
 
-
+import CactusTools
+NSURL2str = CactusTools.NSURL2str
 
 import Outline
 OutlineNode = Outline.OutlineNode
+
 
 
 def openOPML_(rootOPML):
