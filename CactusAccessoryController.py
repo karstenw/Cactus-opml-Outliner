@@ -27,4 +27,5 @@ class CactusOpenAsAccessoryController(NSObject):
 
     @objc.IBAction
     def menuOpenAsType_( self, sender ):
-        return self.menuOpenAs.title()
+        return None
+        # return self.menuOpenAs.title()
