@@ -7,9 +7,23 @@
 
 import objc
 
+import Foundation
+NSObject = Foundation.NSObject
+NSURL = Foundation.NSURL
+NSMutableDictionary = Foundation.NSMutableDictionary
+NSUserDefaults = Foundation.NSUserDefaults
+NSBundle = Foundation.NSBundle
+
+
 import AppKit
 NSApplication = AppKit.NSApplication
 NSWindowController = AppKit.NSWindowController
+
+
+import CactusDocumentTypes
+CactusOPMLType = CactusDocumentTypes.CactusOPMLType
+CactusRSSType = CactusDocumentTypes.CactusRSSType
+CactusXMLType = CactusDocumentTypes.CactusXMLType
 
 
 #
