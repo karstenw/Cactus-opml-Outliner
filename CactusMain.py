@@ -21,7 +21,7 @@ AppHelper = PyObjCTools.AppHelper
 
 import CactusVersion
 import Outline
-import Cactus
+import CactusAppDelegateClass
 
 import CactusOutlineDoc
 import CactusTableDocument
