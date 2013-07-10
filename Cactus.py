@@ -59,29 +59,6 @@ Document = CactusAppDelegateClass.Document
 
 
 class CactusWindowController_OLD(NSWindowController):
-    def init(self):
-        if kwlog:
-            print "XXXXXXXXXXXXXXXXXXXX               CactusWindowController.init()"
-        self = self.initWithWindowNibName_("OpenAsAccessoryView")
-        window = self.window()
-        window.setTitle_( u"Open URL…" )
-        # self.label.setStringValue_(u"URL:")
-        window.makeFirstResponder_(self.textfield)
-        app = NSApplication.sharedApplication()
-        delg = app.delegate()
-        self.readAsType = None
-        self.visitedURLs = delg.visitedURLs[:]
-        self.menuLastVisited.removeAllItems()
-        for url in self.visitedURLs:
-            self.menuLastVisited.addItemWithTitle_( url )
-        self.showWindow_(self)
-
-        # The window controller doesn't need to be retained (referenced)
-        # anywhere, so we pretend to have a reference to ourselves to avoid
-        # being garbage collected before the window is closed. The extra
-        # reference will be released in self.windowWillClose_()
-        self.retain()
-        return self
 
     #
     # Can this be made for dual-use? outlines and tables?
