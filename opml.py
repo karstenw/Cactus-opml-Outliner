@@ -752,6 +752,9 @@ def generateOPML( rootNode, indent=2, expansion={} ):
     return
      etree.Element of rootNode
     """
+    print "opml.generateOPML( %s, %s )" % (rootNode, repr(expansion))
+
+
 
     rootOPML = etree.Element("opml")
     rootOPML.attrib["version"] = "2.0"
