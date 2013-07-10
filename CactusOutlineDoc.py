@@ -428,7 +428,9 @@ class CactusOutlineDocument(NSDocument):
             print repr(url); print
 
         OK, err = self.readFromURL_ofType_error_( url, theType, err )
-        pdb.set_trace()
+
+        # pdb.set_trace()
+
         if OK:
             if not url.isFileURL():
                 #
@@ -617,9 +619,9 @@ class CactusOutlineDocument(NSDocument):
                     expanded = ', '.join( expanded )
                     if expanded == "":
                         expanded = "1"
-                    if kwlog:
+                    if 1: #kwlog:
                         print "CactusOutlineDocument.calculateExpansionState_()"
-                        print "'%s'" % expanded
+                        print "expansionState: ", repr(expanded)
                         print
                     winframe['expansionState'] = expanded
                     return winframe
@@ -663,7 +665,11 @@ class CactusOutlineDocument(NSDocument):
         # future scaffolding
         if theType == CactusOPMLType:
 
+            # pdb.set_trace()
+
             expansionState = self.calculateExpansionState_( self.rootNode )
+            if expansionState == None:
+                expansionState = {}
             rootOPML = opml.generateOPML( self.rootNode, indent=1, expansion=expansionState )
 
             e = etree.ElementTree( rootOPML )
@@ -809,9 +815,11 @@ class CactusOutlineDocument(NSDocument):
     def showWindows( self ):
         if kwlog:
             print "CactusOutlineDocument.showWindows()"
-        pdb.set_trace()
+        # pdb.set_trace()
         super( CactusOutlineDocument, self).showWindows()
         #
+
+
         # for expansionstate
         controllers = self.windowControllers()
         for controller in controllers:
@@ -913,6 +921,7 @@ class CactusOutlineWindowController(NSWindowController):
     optVariableRow = objc.IBOutlet()
     optVLines = objc.IBOutlet()
     txtOutlineType = objc.IBOutlet()
+    txtWindowStatus = objc.IBOutlet()
 
     """the actual base class is NSWindowController
 
@@ -950,7 +959,9 @@ class CactusOutlineWindowController(NSWindowController):
         """
         if kwlog:
             print "CactusOutlineWindowController.initWithObject_()"
-        pdb.set_trace()
+
+        # pdb.set_trace()
+
         self = self.initWithWindowNibName_("OutlineEditor")
         title = u"Unnamed Outline"
 
@@ -1063,6 +1074,8 @@ class CactusOutlineWindowController(NSWindowController):
             self.optCommentVisible.setState_( True )
 
         self.applySettings_(None)
+
+        self.showWindow_(self)
 
         self.retain()
         return self
