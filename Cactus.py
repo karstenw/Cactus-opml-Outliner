@@ -7,9 +7,7 @@ import sys
 import os
 
 import time
-import datetime
 
-import urllib
 
 import xml.etree.cElementTree
 etree = xml.etree.cElementTree
@@ -20,17 +18,13 @@ pp = pprint.pprint
 kwdbg = False
 kwlog = True
 
-import feedparser
-
 import objc
 
 import Foundation
 NSObject = Foundation.NSObject
 NSURL = Foundation.NSURL
 NSMutableDictionary = Foundation.NSMutableDictionary
-
 NSUserDefaults = Foundation.NSUserDefaults
-
 NSBundle = Foundation.NSBundle
 
 import AppKit
@@ -58,48 +52,13 @@ typeBrowser = outlinetypes.typeBrowser
 
 import Outline
 OutlineViewDelegateDatasource = Outline.OutlineViewDelegateDatasource
-OutlineNode = Outline.OutlineNode
-
-import CactusOutlineDoc
-boilerplateOPML = CactusOutlineDoc.boilerplateOPML
-CactusOutlineDocument = CactusOutlineDoc.CactusOutlineDocument
-
-import CactusDocumentTypes
-CactusOPMLType = CactusDocumentTypes.CactusOPMLType
-CactusRSSType = CactusDocumentTypes.CactusRSSType
-CactusXMLType = CactusDocumentTypes.CactusXMLType
-
-import CactusVersion
-cachefolder = CactusVersion.cachefolder
-
-import opml
-
-import CactusExceptions
-OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
-
-
-import CactusOpenURLController
-OpenURLWindowController = CactusOpenURLController.OpenURLWindowController
-
-
 
 import CactusAppDelegateClass
-CactusDocumentController = CactusAppDelegateClass.CactusDocumentController
-CactusAppDelegate = CactusAppDelegateClass.CactusAppDelegate
+Document = CactusAppDelegateClass.Document
 
 
-class Document(object):
-    # this should be replaced by NSDocument.
-    def __init__(self, fileorurl, rootNode, parentNode=None):
-        self.fileorurl = fileorurl
-        if not rootNode:
-            self.root = OutlineNode("__ROOT__", "", None, typeOutline)
-        else:
-            self.root = rootNode
-        self.parentNode = parentNode
 
-
-class CactusWindowController(NSWindowController):
+class CactusWindowController_OLD(NSWindowController):
     def init(self):
         if kwlog:
             print "XXXXXXXXXXXXXXXXXXXX               CactusWindowController.init()"
