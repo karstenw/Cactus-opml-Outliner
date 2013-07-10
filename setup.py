@@ -11,11 +11,7 @@ import py2app
 
 import CactusVersion
 
-# select different icons for my old dev system
-if 0: #CactusVersion.developmentversion:
-    iconpath = "+icon/small/"
-else:
-    iconpath = "+icon/large/"
+iconpath = "+icon/large/"
 
 import CactusDocumentTypes
 
