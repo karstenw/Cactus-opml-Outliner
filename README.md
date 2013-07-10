@@ -89,6 +89,8 @@ Downloads page: http://goo.gl/EALQi
 
 ## Latest changes ##
 
+Updated development environment to 10.6.
+
 Open iTunes Library.xml file as their own type since .xml is already used.
 
 XML and HTML writing are back.
@@ -174,10 +176,14 @@ http://goo.gl/EALQi
 + PyobjC
 + py2app
 + Apple developer tools
-+ lxml library
++ lxml library installed
 
 
 ## Recent versions ##
+
+v0.5.0 10.6 intel build
+
+v0.4.2 Reading iTunes XML Libraries
 
 v0.4.1 Status line, new select all subnodes (see shortcuts), better RSS write, reading and writing windowposition and expansionstate, maxRowHeight menu, better editing.
 
