@@ -230,7 +230,7 @@ class CactusAppDelegate(NSObject):
         if not title:
             title = u"Table Editor"
         doc = Document(title, root)
-        CactusWindowController.alloc().initWithObject_type_(doc, typeTable)
+        CactusWindowController_OLD.alloc().initWithObject_type_(doc, typeTable)
 
     def newTableWithRoot_fromNode_(self, root, parentNode):
         if kwlog:
@@ -239,7 +239,7 @@ class CactusAppDelegate(NSObject):
         if parentNode:
             title = parentNode.name
         doc = Document(title, root, parentNode)
-        CactusWindowController.alloc().initWithObject_type_(doc, typeTable)
+        CactusWindowController_OLD.alloc().initWithObject_type_(doc, typeTable)
 
     """ """
 
@@ -249,7 +249,7 @@ class CactusAppDelegate(NSObject):
         if kwlog:
             print "DEPRECATED CactusAppDelegate.newTable_()"
         doc = Document("Untitled Table", None)
-        CactusWindowController.alloc().initWithObject_type_(doc, typeTable)
+        CactusWindowController_OLD.alloc().initWithObject_type_(doc, typeTable)
 
     ####
 
@@ -313,10 +313,10 @@ class CactusAppDelegate(NSObject):
     def newBrowser_(self, sender):
         if kwlog:
             print "CactusAppDelegate.newBrowser_()"
-        # The CactusWindowController instance will retain itself,
+        # The CactusWindowController_OLD instance will retain itself,
         # so we don't (have to) keep track of all instances here.
         doc = Document("Untitled Outline", None)
-        CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
+        CactusWindowController_OLD.alloc().initWithObject_type_(doc, typeOutline)
 
     @objc.IBAction
     def openOutlineDocument_(self, sender):
@@ -342,7 +342,7 @@ class CactusAppDelegate(NSObject):
                 if d:
                     root = CactusOutlineDoc.openOPML_( d )
                     doc = Document(opmlFile, root)
-                    CactusWindowController.alloc().initWithObject_type_(doc, typeOutline)
+                    CactusWindowController_OLD.alloc().initWithObject_type_(doc, typeOutline)
 
                     print "Reading OPML '%s' Done." % (opmlFile.encode("utf-8"),)
                 else:
@@ -523,30 +523,20 @@ class CactusAppDelegate(NSObject):
 
 
 class CactusWindowController_OLD(NSWindowController):
-    def init(self):
-        if kwlog:
-            print "XXXXXXXXXXXXXXXXXXXX               CactusWindowController.init()"
-        self = self.initWithWindowNibName_("OpenAsAccessoryView")
-        window = self.window()
-        window.setTitle_( u"Open URL…" )
-        # self.label.setStringValue_(u"URL:")
-        window.makeFirstResponder_(self.textfield)
-        app = NSApplication.sharedApplication()
-        delg = app.delegate()
-        self.readAsType = None
-        self.visitedURLs = delg.visitedURLs[:]
-        self.menuLastVisited.removeAllItems()
-        for url in self.visitedURLs:
-            self.menuLastVisited.addItemWithTitle_( url )
-        self.showWindow_(self)
+    menRowLines = objc.IBOutlet()
+    outlineView = objc.IBOutlet()
+    optAlterLines = objc.IBOutlet()
+    optCommentVisible = objc.IBOutlet()
+    optHLines = objc.IBOutlet()
+    optNameVisible = objc.IBOutlet()
+    optTypeVisible = objc.IBOutlet()
+    optValueVisible = objc.IBOutlet()
+    optVariableRow = objc.IBOutlet()
+    optVLines = objc.IBOutlet()
+    txtOutlineType = objc.IBOutlet()
+    txtWindowStatus = objc.IBOutlet()
 
-        # The window controller doesn't need to be retained (referenced)
-        # anywhere, so we pretend to have a reference to ourselves to avoid
-        # being garbage collected before the window is closed. The extra
-        # reference will be released in self.windowWillClose_()
-        self.retain()
-        return self
-
+    
     #
     # Can this be made for dual-use? outlines and tables?
 
@@ -557,7 +547,7 @@ class CactusWindowController_OLD(NSWindowController):
         # outline or table here
         # tables are outlines with no children
         if kwlog:
-            print "DEPRECATED CactusWindowController.init()"
+            print "DEPRECATED CactusWindowController_OLD.init()"
         doc = Document("Untitled", None)
         return self.initWithObject_type_(doc, typeOutline)
 
@@ -565,7 +555,7 @@ class CactusWindowController_OLD(NSWindowController):
         """This controller is used for outline and table windows."""
 
         if kwlog:
-            print "DEPRECATED CactusWindowController.initWithObject_type_()"
+            print "DEPRECATED CactusWindowController_OLD.initWithObject_type_()"
 
         if theType == typeOutline:
             self = self.initWithWindowNibName_("OutlineEditor")
@@ -648,7 +638,7 @@ class CactusWindowController_OLD(NSWindowController):
 
     def windowWillClose_(self, notification):
         if kwlog:
-            print "DEPRECATED CactusWindowController.windowWillClose_()"
+            print "DEPRECATED CactusWindowController_OLD.windowWillClose_()"
         # see comment in self.initWithObject_()
         #
         # check model.dirty
@@ -665,6 +655,7 @@ class CactusWindowController_OLD(NSWindowController):
     def reloadData_Children_(self, item, children):
         self.outlineView.reloadItem_reloadChildren_( item, children )
 
+    @objc.IBAction
     def applySettings_(self, sender):
         """target of the apply button. sets some tableview settings.
         """

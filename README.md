@@ -3,11 +3,11 @@
 
 It is an outline editor based on the PythonBrowser example from PyObjC.
 
-Developed on OSX 10.4 with Python 2.7, Xcode 2.5, pyobjc 1.4 and py2app 0.53
+Developed on OSX 10.6 with Python 2.7, Xcode 3.2, pyobjc 2.5 and py2app 0.8
 
 It's still in development but gets better and better.
 
-Use it to explore OPML, RSS, XML, PLIST and HTML files. Nodes can be opened in the webbrowser, in Quicktime Player or in Cactus depending on node type. See the shortcuts section at the end.
+Use it to explore OPML, RSS, XML, PLIST, HTML and iTunes XMLfiles. Nodes can be opened in the webbrowser, in Quicktime Player or in Cactus depending on node type. See the shortcuts section at the end.
 
 
 ## A Warning ##
