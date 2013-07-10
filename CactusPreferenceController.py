@@ -15,6 +15,7 @@ import AppKit
 NSApplication = AppKit.NSApplication
 NSWindowController = AppKit.NSWindowController
 
+import CactusTools
 
 ####
 

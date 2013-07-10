@@ -8,6 +8,8 @@
 import sys
 import os
 
+import binascii
+
 import traceback
 
 import pdb
