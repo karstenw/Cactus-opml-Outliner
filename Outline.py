@@ -275,6 +275,7 @@ def open_photo( url, open_=True ):
                 [ nsurl ],
                 target,
                 0,
+                None,
                 None )
 
 
@@ -323,6 +324,7 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
                 [ nsurl ],
                 u'com.apple.itunes',
                 0,
+                None,
                 None )
     elif surl in g_qtplayer_extensions or nodeType == "QTPL":
         # qtplayer can do http:
@@ -333,6 +335,7 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
                 [ nsurl ],
                 u'com.apple.quicktimeplayer',
                 0,
+                None,
                 None )
 
     elif surl in g_preview_extensions:
@@ -342,6 +345,7 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
                     [ nsurl ],
                     u'com.apple.Preview',
                     0,
+                    None,
                     None )
         else:
             # preview can't do http so open it in the std browser:
@@ -620,28 +624,42 @@ class KWOutlineView(NSOutlineView):
         """Catch events for the outline and tableviews. """
 
         eventCharacters = theEvent.characters()
+        eventCharacter = ""
+        if eventCharacters:
+            eventCharacter = eventCharacters[0]
         eventModifiers = int(theEvent.modifierFlags())
         eventCharNum = ord(eventCharacters)
 
-        mykeys = (NSBackspaceCharacter,
-                  NSDeleteCharacter,
+        mykeys = (ord(NSBackspaceCharacter),
+                  ord(NSDeleteCharacter),
 
-                  NSCarriageReturnCharacter,
-                  NSEnterCharacter,
+                  ord(NSCarriageReturnCharacter),
+                  ord(NSEnterCharacter),
 
-                  NSTabCharacter,
-                  NSBackTabCharacter,
+                  ord(NSTabCharacter),
+                  ord(NSBackTabCharacter),
 
                   ord(NSUpArrowFunctionKey),
                   ord(NSDownArrowFunctionKey),
                   ord(NSLeftArrowFunctionKey),
                   ord(NSRightArrowFunctionKey) )
 
+        if 0:
+            print "mykeys"
+            pp(mykeys)
+
         # tab has       0x09/0x00100
         # shift tab has 0x19/0x20102
         # alt   tab has 0x09/0x80120
-        # shftalttab    0x19/0xa0122
+
+        # shftalttab    0x19/0xa0122 10.4
+        # shftalttab    0x19/0x20102 10.4
+        
         # ctrl up 0xf700 0xa40101
+
+        # ctrl opt enter 0x3 0x2c0121
+        # enter 0x3 0x200100
+
         # NSDownArrowFunctionKey
         # NSLeftArrowFunctionKey
         # NSRightArrowFunctionKey
@@ -674,12 +692,12 @@ class KWOutlineView(NSOutlineView):
             NSControlKeyMask: {}
         }
 
-        if kwlog and 0: #kwdbg:
-            print "Key: ", hex(eventCharNum), hex(eventModifiers)
-
         editor = self.currentEditor()
         if editor:
             print "EDITOR:", editor
+        
+        if 0:
+            print "eventCharNum", eventCharNum
 
         if eventCharNum not in mykeys:
             super(KWOutlineView, self).keyDown_( theEvent )
@@ -695,10 +713,16 @@ class KWOutlineView(NSOutlineView):
         # filter out other stuff
         eventModifiers &= NSDeviceIndependentModifierFlagsMask
 
+        if kwlog and 0: #kwdbg:
+            print "Key: ", hex(eventCharNum), hex(eventModifiers)
+
+        if 0: #eventCharNum in mykeys:
+            pdb.set_trace()
+
         ###########################################################################
         #
         # Deleting
-        if eventCharNum in (NSBackspaceCharacter, NSDeleteCharacter):
+        if eventCharacter in (NSBackspaceCharacter, NSDeleteCharacter):
             if kwlog and kwdbg:
                 print "DELETE KEY HANDLED"
 
@@ -715,7 +739,7 @@ class KWOutlineView(NSOutlineView):
         ###########################################################################
         #
         # Create new node
-        elif eventCharNum == NSCarriageReturnCharacter:
+        elif eventCharacter == NSCarriageReturnCharacter:
             if eventModifiers & NSShiftKeyMask:
                 if kwlog and kwdbg:
                     print "SHIFT Return"
@@ -734,7 +758,7 @@ class KWOutlineView(NSOutlineView):
         ###########################################################################
         #
         # Enter
-        elif eventCharNum == NSEnterCharacter:
+        elif eventCharacter == NSEnterCharacter:
             # cmd+alt enter
             # cmd enter
             # cmd shift enter
@@ -766,6 +790,7 @@ class KWOutlineView(NSOutlineView):
                     # A separate function that analyses the node, perhaps sets a menu,
                     # and opens it should do the trick.
                     #
+                    
                     if eventModifiers & NSAlternateKeyMask:
 
                         # get node selection
@@ -885,7 +910,10 @@ class KWOutlineView(NSOutlineView):
                                     # baseurl, ext = os.path.splitext(url)
                                     if '\n' in url:
                                         url = url.split('\n')[0]
-                                    open_node( url, "hook", supressCache=True)
+                                    open_node( url,
+                                               "hook",
+                                               open_=True,
+                                               supressCache=True)
 
                                 elif theType == "photo":
                                     url = v.get("xmlUrl", "")
@@ -961,7 +989,7 @@ class KWOutlineView(NSOutlineView):
                                 #
                                 # TBD: eliminate tables, move to outlines, reactivate next line
                                 #
-                                # appdelg.newTableWithRoot_fromNode_(root, item)
+                                appdelg.newTableWithRoot_fromNode_(root, item)
                         consumed = True
 
                 ###################################################################
@@ -1012,7 +1040,7 @@ class KWOutlineView(NSOutlineView):
         ###########################################################################
         #
         # Outdenting
-        elif eventCharNum == NSBackTabCharacter:
+        elif eventCharacter == NSBackTabCharacter:
             # shift tab has it's own character
             if eventModifiers & NSShiftKeyMask:
                 if kwdbg:
@@ -1036,7 +1064,7 @@ class KWOutlineView(NSOutlineView):
         ###########################################################################
         #
         # Indenting
-        elif eventCharNum == NSTabCharacter:
+        elif eventCharacter == NSTabCharacter:
             # indent selection
 
             # get selected rows
@@ -1069,7 +1097,7 @@ class KWOutlineView(NSOutlineView):
         ###########################################################################
         #
         # Move selection up
-        elif eventCharNum == ord(NSUpArrowFunctionKey):
+        elif eventCharacter == NSUpArrowFunctionKey:
             if eventModifiers & NSControlKeyMask:
                 # get selected rows
                 items = self.getSelectionItems()
@@ -1089,7 +1117,7 @@ class KWOutlineView(NSOutlineView):
         ###########################################################################
         #
         # Move selection up
-        elif eventCharNum == ord(NSDownArrowFunctionKey):
+        elif eventCharacter == NSDownArrowFunctionKey:
             if eventModifiers & NSControlKeyMask:
                 # get selected rows
                 items = self.getSelectionItems()
@@ -1112,7 +1140,7 @@ class KWOutlineView(NSOutlineView):
         # ctrl-alt-left
         # select parent node and colapse all
         #
-        elif eventCharNum == ord(NSLeftArrowFunctionKey):
+        elif eventCharacter == NSLeftArrowFunctionKey:
             if eventModifiers & NSControlKeyMask:
 
                 # get selected rows
@@ -1146,7 +1174,7 @@ class KWOutlineView(NSOutlineView):
         # ctrl-alt-right
         # select children and expand
         #
-        elif eventCharNum == ord(NSRightArrowFunctionKey):
+        elif eventCharacter == NSRightArrowFunctionKey:
             if eventModifiers & NSControlKeyMask:
 
                 # get selected rows
