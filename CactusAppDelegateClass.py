@@ -164,6 +164,8 @@ class CactusAppDelegate(NSObject):
         userdefaults.setObject_forKey_(False,        u'optHTMLAutodetect')
         userdefaults.setObject_forKey_(False,        u'optPLISTAutodetect')
 
+        userdefaults.setObject_forKey_(False,        u'optRSSOpenEnclosure')
+
         userdefaults.setObject_forKey_(False,        u'optIMLImportSystemLibraries')
 
         NSUserDefaults.standardUserDefaults().registerDefaults_(userdefaults)

@@ -63,6 +63,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 def num2ostype( num ):
     return struct.pack(">I", num)
 
+
 def ostype2num( ostype ):
     return struct.pack('BBBB', list(ostype))
 
@@ -87,6 +88,7 @@ def detectFileType( nsfileurl ):
         PLIST: NSDictionary.dictionaryWithContentsOfURL_ (opens URL)
     """
     pass
+
 
 def readURL( nsurl, type_="" ):
     """Read a file. May be local, may be http"""
@@ -191,6 +193,7 @@ def readURL( nsurl, type_="" ):
             s = t
     return s
 
+
 # UNUSED
 def classifyAndReadUrl( url ):
     """TBD
@@ -221,6 +224,7 @@ def classifyAndReadUrl( url ):
         pass
         # check for opml
         # check for rss
+
 
 #
 # dialogs

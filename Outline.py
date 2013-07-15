@@ -56,7 +56,6 @@ datestring_nsdate = CactusTools.datestring_nsdate
 import CactusVersion
 
 
-
 import CactusDocumentTypes
 CactusOPMLType = CactusDocumentTypes.CactusOPMLType
 CactusRSSType = CactusDocumentTypes.CactusRSSType
@@ -69,7 +68,6 @@ CactusDocumentXMLBasedTypesSet = CactusDocumentTypes.CactusDocumentXMLBasedTypes
 
 import CactusExceptions
 OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
-
 
 
 import Foundation
@@ -283,8 +281,8 @@ def open_photo( url, open_=True ):
 def open_node( url, nodeType=None, open_=True, supressCache=False ):
     print "Outline.open_node()"
 
-
     # pdb.set_trace()
+
     defaults = NSUserDefaults.standardUserDefaults()
     cache = False
     try:
@@ -796,6 +794,8 @@ class KWOutlineView(NSOutlineView):
                         # get node selection
                         items = self.getSelectionItems()
 
+                        # pdb.set_trace()
+
                         # do the selection
                         for item in items:
                             name = item.name
@@ -921,17 +921,30 @@ class KWOutlineView(NSOutlineView):
                                     open_photo( url )
 
                                 elif theType == "rssentry":
+                                
+                                    # find pref for opening enclosures
+                                    defaults = NSUserDefaults.standardUserDefaults()
+                                    openAttach = False
+                                    try:
+                                        openAttach = bool(defaults.objectForKey_( u'optRSSOpenEnclosure'))
+                                    except Exception ,err:
+                                        print "Error reading defaults:", err
+
+                                    # extract enclosure URL
                                     enc = v.get("enclosure", "")
                                     url1 = ""
                                     if enc:
                                         url1, rest = enc.split('<<<')
 
+                                    # extract webpage url
                                     url2 = v.get("link", "")
                                     url2 = cleanupURL( url2 )
-                                    if url1:
+
+                                    # open the stuff
+                                    if url1 and openAttach:
                                         open_node( url1 )
                                     if url2:
-                                        open_node( url2 )
+                                        open_node( url2, nodeType="HTML" )
 
                                 elif theType == "river":
                                     opmlUrl = v.get("opmlUrl", "")
@@ -941,6 +954,7 @@ class KWOutlineView(NSOutlineView):
                                                                          CactusOPMLType )
 
                                 elif theType == "rss":
+
                                     # open website
                                     htmlUrl = v.get("htmlUrl", "")
                                     htmlUrl = cleanupURL( htmlUrl )

@@ -36,6 +36,7 @@ class CactusPreferenceController(NSWindowController):
     optOPMLAutodetect = objc.IBOutlet()
     optPLISTAutodetect = objc.IBOutlet()
     optRSSAutodetect = objc.IBOutlet()
+    optRSSOpenEnclosure = objc.IBOutlet()
     optTypeColumn = objc.IBOutlet()
     optVLines = objc.IBOutlet()
     optValueColumn = objc.IBOutlet()
@@ -86,6 +87,8 @@ class CactusPreferenceController(NSWindowController):
         self.optHTMLAutodetect.setState_( defaults.objectForKey_( u'optHTMLAutodetect') )
         self.optPLISTAutodetect.setState_( defaults.objectForKey_( u'optPLISTAutodetect') )
 
+        self.optRSSOpenEnclosure.setState_( defaults.objectForKey_( u'optRSSOpenEnclosure') )
+
         self.optIMLImportSystemLibraries.setState_( defaults.objectForKey_( u'optIMLImportSystemLibraries') )
         return self
 
@@ -117,6 +120,8 @@ class CactusPreferenceController(NSWindowController):
         defaults.setObject_forKey_(self.optRSSAutodetect.state(),   u'optRSSAutodetect')
         defaults.setObject_forKey_(self.optHTMLAutodetect.state(),   u'optHTMLAutodetect')
         defaults.setObject_forKey_(self.optPLISTAutodetect.state(),   u'optPLISTAutodetect')
+
+        defaults.setObject_forKey_(self.optRSSOpenEnclosure.state(),   u'optRSSOpenEnclosure')
 
         defaults.setObject_forKey_(self.optIMLImportSystemLibraries.state(),   u'optIMLImportSystemLibraries')
 
