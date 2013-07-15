@@ -165,7 +165,7 @@ Updated feedparser to V5.1.1.
 Will build the app in the dist folder.
 
 
-#### A compiled universal binary can be downloaded from my dropbox. ####
+#### A compiled binary can be downloaded from my dropbox. Versions >= 0.5.0 need Intel Macs and 10.6.####
 http://goo.gl/EALQi
 
 
@@ -173,13 +173,15 @@ http://goo.gl/EALQi
 
 
 + python 2.7 - older versions may work
-+ PyobjC
++ PyObjC
 + py2app
 + Apple developer tools
-+ lxml library installed
++ lxml library installed (sudo pip install lxml)
 
 
 ## Recent versions ##
+
+v0.5.1 Open enclosure in RSS items preference
 
 v0.5.0 10.6 intel build
 
