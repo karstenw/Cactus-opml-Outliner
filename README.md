@@ -9,6 +9,14 @@ It's still in development but gets better and better.
 
 Use it to explore OPML, RSS, XML, PLIST, HTML and iTunes XMLfiles. Nodes can be opened in the webbrowser, in Quicktime Player or in Cactus depending on node type. See the shortcuts section at the end.
 
+## Pointers ##
+
+Mailing list: http://groups.google.com/group/cactus-outliner-dev
+
+Downloads page: http://goo.gl/EALQi
+
+
+
 
 ## A Warning ##
 
@@ -77,15 +85,7 @@ RSS and XML types can be saved but currently I would advise against using the re
 
 OPML should be stable. If you find a bug, please report it on the mailing list.
 
-With the new "Open As..." option in the file dialogs, it is now possible to load an OPML or RSS file as XML. OPML as RSS and vice versa makes no sense but try to see why. Some files can only be openened as opmlbecause they are buggy and opening as OPML does some repairs. Opening as XML needs a clean XML file.
-
-## Pointers ##
-
-Mailing list: http://groups.google.com/group/cactus-outliner-dev
-
-Downloads page: http://goo.gl/EALQi
-
-
+With the new "Open As..." option in the file dialogs, it is now possible to load an OPML or RSS file as XML. OPML as RSS and vice versa makes no sense but try to see why. Some files can only be openened as opml because they are buggy and opening as OPML does some repairs. Opening as XML needs a clean XML file.
 
 ## Latest changes ##
 
