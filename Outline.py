@@ -332,6 +332,7 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
             workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
                 [ nsurl ],
                 u'com.apple.quicktimeplayer',
+                # u'com.apple.QuickTimePlayerX',
                 0,
                 None,
                 None )
@@ -870,6 +871,8 @@ class KWOutlineView(NSOutlineView):
                                     url = v.get("link", "")
                                 elif 'URL' in v:
                                     url = v.get("URL", "")
+
+                                # pdb.set_trace()
 
                                 url = cleanupURL( url )
                                 if theType == "blogpost":
@@ -2299,7 +2302,9 @@ def cleanupURL( url ):
 
     url = NSURL2str(url)
 
-    purl = urlparse.urlparse( url )
+    # purl = urlparse.urlparse( url )
+    purl = urlparse.urlsplit( url, allow_fragments=False )
+
     purl = list(purl)
     path = purl[2]
     path = urllib.unquote( 'http://' + path )
@@ -2311,6 +2316,8 @@ def cleanupURL( url ):
         print err
     path = path[9:]
     purl[2] = path
+    #
+    purl.append("")
     purl = urlparse.urlunparse( purl )
     purl = unicode(purl)
     return purl

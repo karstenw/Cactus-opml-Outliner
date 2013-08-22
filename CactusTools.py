@@ -354,6 +354,8 @@ def datestring_nsdate( dt=datetime.datetime.now() ):
 
 def getDownloadFolder( nsurl ):
 
+    # pdb.set_trace()
+
     defaults = NSUserDefaults.standardUserDefaults()
     cacheFolder = CactusVersion.cachefolder
     try:

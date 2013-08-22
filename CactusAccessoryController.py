@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
+"""This is the controller for the "Open as..." menu inside the open file dialog.
 """
 
 import sys
