@@ -122,10 +122,9 @@ class MakeCalendarController(NSWindowController):
             if not m in cur:
                 cur[m] = {}
             cur = cur[m]
+            
             if not d in cur:
-                cur[d] = {
-                    'tag': date.strftime("%A, %d. %B %Y")
-                }
+                cur[d] = {'tag': date}
             cur = cur[d]
             
             if isinstance(date, datetime.datetime):
@@ -134,13 +133,6 @@ class MakeCalendarController(NSWindowController):
                 s = u"%s:%s" % (h,m)
                 if not s in cur:
                     cur[s] = s
-                
-
-
-
-        template = {
-            'children': []
-        }
 
         dateFrom = datetime.datetime.strptime(
                         str(self.dateFrom.dateValue())[:10],
@@ -164,7 +156,11 @@ class MakeCalendarController(NSWindowController):
         separateYear = bool(int(self.separateYear.state()))
         weekMonday = bool(int(self.weekMonday.state()))
         weekNumber = bool(int(self.weekNumber.state()))
-
+        params = {
+            "separateMonth": separateMonth,
+            "separateWeek": separateWeek,
+            "separateYear": separateYear
+            }
         # pdb.set_trace()
 
         days = daterange(dateFrom, dateUntil, step_days=1)
@@ -193,7 +189,7 @@ class MakeCalendarController(NSWindowController):
         delg = app.delegate()
         # delg.makeCalendarCurrentOrNewDoc_( cal )
         self.close()
-        delg.makeCalendarCurrentOrNewDoc_( cal )
+        delg.makeCalendarCurrentOrNewDoc_( (cal, params) )
 
     def windowWillClose_(self, notification):
         # see comment in self.initWithObject_()

@@ -169,7 +169,7 @@
 							<reference key="NSSuperview" ref="308375103"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="589679075">
-								<int key="NSCellFlags">-1543373312</int>
+								<int key="NSCellFlags">-2080244224</int>
 								<int key="NSCellFlags2">0</int>
 								<string key="NSContents">separate by year</string>
 								<reference key="NSSupport" ref="904129284"/>
@@ -191,7 +191,7 @@
 							<reference key="NSSuperview" ref="308375103"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="874044680">
-								<int key="NSCellFlags">-1543373312</int>
+								<int key="NSCellFlags">-2080244224</int>
 								<int key="NSCellFlags2">0</int>
 								<string key="NSContents">separate by month</string>
 								<reference key="NSSupport" ref="904129284"/>
@@ -213,7 +213,7 @@
 							<reference key="NSSuperview" ref="308375103"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="330816866">
-								<int key="NSCellFlags">604110336</int>
+								<int key="NSCellFlags">-2080244224</int>
 								<int key="NSCellFlags2">0</int>
 								<string key="NSContents">separate by week</string>
 								<reference key="NSSupport" ref="904129284"/>
@@ -407,7 +407,7 @@
 								<int key="NSCellFlags">71433728</int>
 								<int key="NSCellFlags2">0</int>
 								<object class="NSDate" key="NSContents">
-									<double key="NS.time">2678400</double>
+									<double key="NS.time">2592000</double>
 								</object>
 								<reference key="NSSupport" ref="904129284"/>
 								<reference key="NSControlView" ref="72455278"/>

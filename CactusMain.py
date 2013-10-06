@@ -17,10 +17,9 @@ import CactusTableDocument
 
 
 
-if 0: #CactusVersion.developmentversion:
-    pass
-    #import PyObjCTools.Debugging
-    #PyObjCTools.Debugging.installVerboseExceptionHandler()
+if CactusVersion.developmentversion:
+    import PyObjCTools.Debugging
+    PyObjCTools.Debugging.installVerboseExceptionHandler()
 
 if __name__ == "__main__":
     AppHelper.runEventLoop()

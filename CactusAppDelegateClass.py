@@ -106,6 +106,9 @@ class CactusDocumentController(NSDocumentController):
         self.urllist = []
         return self
 
+    def newDocument_(self, sender):
+        return super( CactusDocumentController, self).newDocument_(sender)
+
     def runModalOpenPanel_forTypes_( self, panel, types ):
         if kwlog:
             print "CactusDocumentController.runModalOpenPanel_forTypes_()"
@@ -546,11 +549,19 @@ class CactusAppDelegate(NSObject):
     def appendNode_CurrentDoc_(self, node, doc):
         pass
 
-    def makeCalendarCurrentOrNewDoc_(self, cal):
+    def makeCalendarCurrentOrNewDoc_(self, params):
         if kwlog:
             print "CactusAppDelegate.makeCalendarCurrentOrNewDoc_()"
         doc = self.getCurrentDocument()
-        # pdb.set_trace()
+
+        if not doc:
+            app = NSApplication.sharedApplication()
+            delg = app.delegate()
+            docctrl = delg.documentcontroller
+            docctrl.newDocument_(None)
+
+        doc = self.getCurrentDocument()
+
         if doc and isinstance(doc, CactusOutlineDocument):
             # pdb.set_trace()
             win = self.getCurrentAppWindow()
@@ -576,8 +587,17 @@ class CactusAppDelegate(NSObject):
             
             rootNode.addChild_( calRoot )
             
+            cal, conf = params
+            separateMonth = conf["separateMonth"]
+            separateWeek = conf["separateWeek"]
+            separateYear = conf["separateYear"]
+
+            
+            
             years = cal.keys()
             years.sort()
+            
+            # pdb.set_trace()
             
             for year in years:
                 yearNode = OutlineNode(str(year), "", calRoot, typeOutline, theRoot)
@@ -596,13 +616,42 @@ class CactusAppDelegate(NSObject):
                     
                     days = dayd.keys()
                     days.sort()
+                    
+                    currWeeks = set()
+                    currWeek = None
+
                     for day in days:
                         dayName = str(day)
+                        dayDate = None
+                        dayWeek = None
+                        
                         if "tag" in dayd[day]:
-                            dayName = dayd[day].get('tag', str(day))
+                            #pdb.set_trace()
+                            dayDate = dayd[day].get('tag', None)
+                            dayName = dayDate.strftime("%A, %d. %B %Y")
+                            isoYear, isoWeek, isoDay = dayDate.isocalendar()
                             dayd[day].pop("tag", None)
-                        dayNode = OutlineNode( dayName, "", monthNode, typeOutline, theRoot)
-                        monthNode.addChild_( dayNode )
+
+                        parentNode = monthNode
+                        if separateWeek:
+                            if not isoWeek in currWeeks:
+                                currWeeks.add( isoWeek)
+                                currWeek = OutlineNode( "Week: " + str(isoWeek),
+                                                        "",
+                                                        parentNode,
+                                                        typeOutline,
+                                                        theRoot)
+                                parentNode.addChild_( currWeek )
+                            parentNode = currWeek
+                            # pdb.set_trace()
+
+                        
+                        dayNode = OutlineNode( dayName,
+                                               "",
+                                               parentNode,
+                                               typeOutline,
+                                               theRoot)
+                        parentNode.addChild_( dayNode )
                         
                         dayItemsd = dayd[day]
                         dayItems = dayItemsd.keys()
