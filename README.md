@@ -9,11 +9,13 @@ It's still in development but gets better and better.
 
 Use it to explore OPML, RSS, XML, PLIST, HTML and iTunes XMLfiles. Nodes can be opened in the webbrowser, in Quicktime Player or in Cactus depending on node type. See the shortcuts section at the end.
 
-## Pointers ##
+## Mailing list ##
 
-Mailing list: http://groups.google.com/group/cactus-outliner-dev
+<http://groups.google.com/group/cactus-outliner-dev>
 
-Downloads page: http://goo.gl/EALQi
+## Downloads ##
+
+<http://goo.gl/EALQi>
 
 
 
@@ -180,6 +182,8 @@ http://goo.gl/EALQi
 
 
 ## Recent versions ##
+
+v0.5.4 More calendar options working
 
 v0.5.3 Calendar outline generator
 
