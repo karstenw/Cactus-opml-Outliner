@@ -54,12 +54,17 @@ typeBrowser = outlinetypes.typeBrowser
 import Outline
 OutlineViewDelegateDatasource = Outline.OutlineViewDelegateDatasource
 
+import CactusOutlineDoc
+CactusOutlineDocument = CactusOutlineDoc.CactusOutlineDocument
+OutlineNode = CactusOutlineDoc.OutlineNode
+
 
 import CactusVersion
 cachefolder = CactusVersion.cachefolder
 
 import CactusPreferenceController
 CactusPreferenceController = CactusPreferenceController.CactusPreferenceController
+
 
 import CactusAccessoryController
 CactusOpenAsAccessoryController = CactusAccessoryController.CactusOpenAsAccessoryController
@@ -68,8 +73,14 @@ CactusOpenAsAccessoryController = CactusAccessoryController.CactusOpenAsAccessor
 import CactusTools
 NSURL2str = CactusTools.NSURL2str
 
+
 import CactusOpenURLController
 OpenURLWindowController = CactusOpenURLController.OpenURLWindowController
+
+
+import CactusMakeCalendarController
+MakeCalendarController = CactusMakeCalendarController.MakeCalendarController
+
 
 
 
@@ -297,6 +308,10 @@ class CactusAppDelegate(NSObject):
 
 
     def newOutlineFromURL_Type_(self, url, type_):
+        if kwlog:
+            print "CactusAppDelegate.newOutlineFromURL_Type_(\n\t%s\m\t%s )" % (
+                repr(url), repr(type_))
+
         if not isinstance(url, NSURL):
             url = NSURL.URLWithString_( url )
         # just check for local files
@@ -476,11 +491,10 @@ class CactusAppDelegate(NSObject):
             print "CactusAppDelegate.getCurrentOutlineView()"
         doc = self.getCurrentDocument()
         if isinstance(doc, CactusOutlineDocument):
+            # pdb.set_trace()
             win = self.getCurrentAppWindow()
-            controllers = doc.windowControllers()
-            for controller in controllers:
-                if win == controller.window():
-                    return controller.outlineView
+            ctrl = win.windowController()
+            return ctrl.outlineView
         return False
 
     @objc.IBAction
@@ -523,6 +537,87 @@ class CactusAppDelegate(NSObject):
         if ov:
             ov.collapseToParent_(sender)
 
+    @objc.IBAction
+    def makeCalendar_(self, sender):
+        if kwlog:
+            print "CactusAppDelegate.makeCalendar_()"
+        MakeCalendarController().init()
+
+    def appendNode_CurrentDoc_(self, node, doc):
+        pass
+
+    def makeCalendarCurrentOrNewDoc_(self, cal):
+        if kwlog:
+            print "CactusAppDelegate.makeCalendarCurrentOrNewDoc_()"
+        doc = self.getCurrentDocument()
+        # pdb.set_trace()
+        if doc and isinstance(doc, CactusOutlineDocument):
+            # pdb.set_trace()
+            win = self.getCurrentAppWindow()
+            ctrl = win.windowController()
+            ov = ctrl.outlineView
+            
+            # either selection or child append to body
+            rootNode = ov.getSelectedRow()
+            if rootNode == -1:
+                r = ctrl.rootNode
+                children = r.children
+                head = body = False
+                for child in children:
+                    if child.name == u"body":
+                        rootNode = body = child
+                        break
+                if not body:
+                    rootNode = OutlineNode("body", "", r, typeOutline)
+                    r.addChild_( rootNode )
+
+            theRoot = rootNode.rootNode
+            calRoot = OutlineNode("Calendar", "", rootNode, typeOutline, theRoot)
+            
+            rootNode.addChild_( calRoot )
+            
+            years = cal.keys()
+            years.sort()
+            
+            for year in years:
+                yearNode = OutlineNode(str(year), "", calRoot, typeOutline, theRoot)
+                calRoot.addChild_( yearNode )
+
+                monthd = cal[year]
+
+                months = monthd.keys()
+                months.sort()
+
+                for month in months:
+                    monthNode = OutlineNode(str(month), "", yearNode, typeOutline, theRoot)
+                    yearNode.addChild_( monthNode )
+                    
+                    dayd = monthd[month]
+                    
+                    days = dayd.keys()
+                    days.sort()
+                    for day in days:
+                        dayName = str(day)
+                        if "tag" in dayd[day]:
+                            dayName = dayd[day].get('tag', str(day))
+                            dayd[day].pop("tag", None)
+                        dayNode = OutlineNode( dayName, "", monthNode, typeOutline, theRoot)
+                        monthNode.addChild_( dayNode )
+                        
+                        dayItemsd = dayd[day]
+                        dayItems = dayItemsd.keys()
+                        dayItems.sort()
+                        
+                        for dayItem in dayItems:
+                            dayItemName = str(dayItem)
+                            if "tag" in dayItemsd[dayItem]:
+                                dayItemName = dayItemsd[dayItem].get('tag', str(dayItem))
+                                dayItemsd[dayItem].pop("tag", None)
+                            itemNode = OutlineNode( dayItemName, "", dayNode, typeOutline, theRoot)
+                            dayNode.addChild_( itemNode )
+            ov.expandItem_( rootNode )
+            ov.expandItem_( calRoot )
+            ov.reloadData()
 
 class CactusWindowController_OLD(NSWindowController):
     menRowLines = objc.IBOutlet()
@@ -576,10 +671,10 @@ class CactusWindowController_OLD(NSWindowController):
         if not obj:
             obj = Document(title, None)
 
-        self.path = ""
-        self.root = None
-        self.parentNode = None
-        self.variableRowHeight = True
+        self.path = objc.ivar()
+        self.root = objc.ivar()
+        self.parentNode = objc.ivar()
+        self.variableRowHeight = objc.ivar()
 
         if isinstance(obj, Document):
             self.path = obj.fileorurl

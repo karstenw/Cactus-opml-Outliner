@@ -39,7 +39,7 @@ The mappings are:
 
 
 
-RSS, XML PLIST and HTML files are new and still in the make so please be cautious with Cactus generated files of these kinds. For example Cactus doesn't know about namespaces in RSS. They sure get lost if you save a RSS file in Cactus.
+RSS, XML PLIST and HTML document types are new and still in the make so please be cautious with Cactus generated files of these kinds. For example Cactus doesn't know about namespaces in RSS. They sure get lost if you save a RSS file in Cactus.
 
 XML and HTML Files had writing errors which are fixed now. Be cautios anyway.
 
@@ -248,7 +248,7 @@ v0.2.0 Initial release.
 - error messages can currently only be seen if Cactus is started from the command line: ```./Cactus.app/Contents/MacOS/Cactus```
 - saving when outline structure does not conform to OPML (head & body element)
 - cut, copy & paste
-- nodetypes
+- OPML nodetypes
 - header nodes are saved untouched, no automatic data update
 - honoring expansionstate, windowstate (I don't intend to)
 - freeing memory

@@ -716,7 +716,8 @@ class KWOutlineView(NSOutlineView):
             print "Key: ", hex(eventCharNum), hex(eventModifiers)
 
         if 0: #eventCharNum in mykeys:
-            pdb.set_trace()
+            pass
+            # pdb.set_trace()
 
         ###########################################################################
         #
@@ -1263,8 +1264,7 @@ class KWOutlineView(NSOutlineView):
         return item
 
     def getSelectedRowIndex(self):
-        sel = self.selectedRow()
-        return sel
+        return self.selectedRow()
 
     def selectItemRows_( self, itemIndices ):
         s = NSMutableIndexSet.indexSet()
@@ -1965,7 +1965,7 @@ class OutlineNode(NSObject):
     def addChild_(self, child):
         # retain: child+1
         if isinstance(child, OutlineNode):
-            if kwlog and False:
+            if kwlog and 0:
                 print "OutlineNode.addChild_", child
             child.setParent_(self)
             self.children.addObject_( child )

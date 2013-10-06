@@ -57,11 +57,13 @@ OutlineNode = Outline.OutlineNode
 
 
 def openOPML_(rootOPML):
+    if kwlog:
+        print "openOPML_()"
     return openOPML_withURLTag_(rootOPML, False)
 
 def openOPML_withURLTag_(rootOPML, urltag):
     if kwlog:
-        print "openOPML_()"
+        print "openOPML_withURLTag_()"
     """This builds the node tree and returns the root node."""
     #
     #  Split this up.

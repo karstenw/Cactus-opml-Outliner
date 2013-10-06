@@ -101,6 +101,7 @@ setup(
                 "English.lproj/TableEditor.nib",
                 "English.lproj/NodeEditor.nib",
                 "English.lproj/OpenURL.nib",
+                "English.lproj/CalendarCreator.nib",
                 "English.lproj/OpenAsAccessoryView.nib",
                 "English.lproj/Preferences.nib",
                 iconpath + "OPMLDocument.icns",

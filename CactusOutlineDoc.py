@@ -63,6 +63,7 @@ NSMutableData = Foundation.NSMutableData
 NSKeyedArchiver = Foundation.NSKeyedArchiver
 
 import AppKit
+NSApplication = AppKit.NSApplication
 NSDocument = AppKit.NSDocument
 NSDocumentController = AppKit.NSDocumentController
 NSWorkspace = AppKit.NSWorkspace
@@ -352,6 +353,7 @@ class CactusOutlineDocument(NSDocument):
         elif theType == CactusPLISTType:
             d = None
             try:
+                # pdb.set_trace()
                 d = opml.parse_plist( url )
             except PLISTParseErrorException, v:
                 tb = unicode(traceback.format_exc())
@@ -361,7 +363,9 @@ class CactusOutlineDocument(NSDocument):
                 return (False, None)
 
             # may return ttheType=CactusPLISTType
-            root, theType = openPLIST_( d )
+            root, theType = None, None
+            if d:
+                root, theType = openPLIST_( d )
             del d
 
             if root:
@@ -554,106 +558,99 @@ class CactusOutlineDocument(NSDocument):
     def windowControllerDidLoadNib_( self, aController):
         # do nothing the superclass wouldn't do
         if kwlog:
-            print "SUPER CactusOutlineDocument.windowControllerDidLoadNib_()"
+            print "SUPER CactusOutlineDocument.windowControllerDidLoadNib_( %s )" % repr(aController)
         super( CactusOutlineDocument, self).windowControllerDidLoadNib_(aController)
 
 
     def calculateExpansionState_( self, rootNode ):
-        # for expansionstate
-        # pdb.set_trace()
-        # controllers = self.windowControllers()
-        n = self.windowControllers().count()
 
-        for i in range(n):
-            controller = self.windowControllers().objectAtIndex_(i)
-            print controller, controller.retainCount()
-            winframe = {}
-            rootNode = controller.rootNode
-            ov = controller.outlineView
-            win = ov.window()
-            frame = win.frame()
-            if frame:
-                winframe = {
-                    'windowLeft': int(frame.origin.x),
-                    'windowTop': int(frame.origin.y),
-                    'windowRight': int(frame.origin.x + frame.size.width),
-                    'windowBottom': int(frame.origin.y + frame.size.height)
-                }
+        winframe = {}
+        rootNode = self.rootNode
+        ov = self.outlineView
+        win = ov.window()
+        frame = win.frame()
+        if frame:
+            winframe = {
+                'windowLeft': int(frame.origin.x),
+                'windowTop': int(frame.origin.y),
+                'windowRight': int(frame.origin.x + frame.size.width),
+                'windowBottom': int(frame.origin.y + frame.size.height)
+            }
 
-            # parse root down to head
-            children = rootNode.children
-            head = body = False
-            for child in children:
-                if child.name == u"head":
-                    head = child
-                if child.name == u"body":
-                    body = child
-            #if head:
-            #    ov.collapseItem_collapseChildren_( head, True )
+        # parse root down to head
+        children = rootNode.children
+        head = body = False
+        for child in children:
+            if child.name == u"head":
+                head = child
+            if child.name == u"body":
+                body = child
+        #if head:
+        #    ov.collapseItem_collapseChildren_( head, True )
 
-            # start at first child of body
-            if body:
-                if len(body.children) > 0:
-                    expanded = []
-                    item = body.children[0]
-                    # expandable item 1
-                    idx = 1
-                    # is at row
-                    row = ov.rowForItem_( item )
+        # start at first child of body
+        if body:
+            if len(body.children) > 0:
+                expanded = []
+                item = body.children[0]
+                # expandable item 1
+                idx = 1
+                # is at row
+                row = ov.rowForItem_( item )
 
+                if ov.isItemExpanded_( item ):
+                    expanded.append( idx )
+
+                while True:
+                    idx += 1
+                    row += 1
+                    item = ov.itemAtRow_( row )
+                    if not item:
+                        break
                     if ov.isItemExpanded_( item ):
                         expanded.append( idx )
+                    if idx % 1000 == 0:
+                        print "idx, items", idx, len(expanded)
 
-                    while True:
-                        idx += 1
-                        row += 1
-                        item = ov.itemAtRow_( row )
-                        if not item:
-                            break
-                        if ov.isItemExpanded_( item ):
-                            expanded.append( idx )
-                        if idx % 1000 == 0:
-                            print "idx, items", idx, len(expanded)
+                expanded = [str(i) for i in expanded]
+                expanded = ', '.join( expanded )
+                if expanded == "":
+                    expanded = "1"
+                if 1: #kwlog:
+                    print "CactusOutlineDocument.calculateExpansionState_()"
+                    print "expansionState: ", repr(expanded)
+                    print
+                winframe['expansionState'] = expanded
+                return winframe
 
-                    expanded = [str(i) for i in expanded]
-                    expanded = ', '.join( expanded )
-                    if expanded == "":
-                        expanded = "1"
-                    if 1: #kwlog:
-                        print "CactusOutlineDocument.calculateExpansionState_()"
-                        print "expansionState: ", repr(expanded)
-                        print
-                    winframe['expansionState'] = expanded
-                    return winframe
+        # scavenge document metadata
+        searchKeys = ( 'dateCreated dateModified ownerName ownerEmail '
+                       'expansionState windowTop windowLeft windowBottom '
+                       'windowRight'.split() )
+        meta = {}
 
-            # scavenge document metadata
-            searchKeys = ( 'dateCreated dateModified ownerName ownerEmail '
-                           'expansionState windowTop windowLeft windowBottom '
-                           'windowRight'.split() )
-            meta = {}
+        if len(children) == 1:
+            ov.expandItem_expandChildren_(children[0], False)
 
-            if len(children) == 1:
-                ov.expandItem_expandChildren_(children[0], False)
+        if head and body: # ;-)
+            children = head.children
 
-            if head and body: # ;-)
-                children = head.children
+            for child in children:
+                k = child.name
+                v = child.displayValue
+                if k in searchKeys:
+                    if v:
+                        meta[k] = v
 
-                for child in children:
-                    k = child.name
-                    v = child.displayValue
-                    if k in searchKeys:
-                        if v:
-                            meta[k] = v
+            # start - collapse head - expand body
+            ov.collapseItem_collapseChildren_(head, True)
+            ov.collapseItem_collapseChildren_(body, True)
+            ov.expandItem_expandChildren_(body, False)
 
-                # start - collapse head - expand body
-                ov.collapseItem_collapseChildren_(head, True)
-                ov.collapseItem_collapseChildren_(body, True)
-                ov.expandItem_expandChildren_(body, False)
-
-                # first row is 2
-                rows = False
-                if "expansionState" in meta:
-                    rows = meta[ 'expansionState' ]
+            # first row is 2
+            rows = False
+            if "expansionState" in meta:
+                rows = meta[ 'expansionState' ]
 
 
     def dataRepresentationOfType_( self, theType ):
@@ -779,6 +776,7 @@ class CactusOutlineDocument(NSDocument):
 
 
     def readFromData_ofType_error_(self, data, typeName, err):
+        # This should be deleted
         if kwlog:
             print "X" * 80
             print "CactusOutlineDocument.readFromData_ofType_error_()"
@@ -816,90 +814,116 @@ class CactusOutlineDocument(NSDocument):
         if kwlog:
             print "CactusOutlineDocument.showWindows()"
         # pdb.set_trace()
-        super( CactusOutlineDocument, self).showWindows()
+        c = super( CactusOutlineDocument, self).showWindows()
         #
 
 
+        # TBD: self.windowControllers() always returns NOTHING
+        # pdb.set_trace()
+
         # for expansionstate
-        controllers = self.windowControllers()
-        for controller in controllers:
-            print controller, controller.retainCount()
-            rootNode = controller.rootNode
-            outlineView = controller.outlineView
-            # parse root down to head
-            children = rootNode.children
-            head = body = False
+        # controllers = self.windowControllers()
+        # win = self.window
+        
+        #
+        # DIRTY HACK - but self.windowControllers() still refuses to work
+        #
+        win = NSApplication.sharedApplication().keyWindow()
+        controller = win.windowController()
+
+        print controller, controller.retainCount()
+        rootNode = controller.rootNode
+        outlineView = controller.outlineView
+        # parse root down to head
+        children = rootNode.children
+        head = body = False
+        for child in children:
+            if child.name == u"head":
+                head = child
+            if child.name == u"body":
+                body = child
+        # scavenge document metadata
+        #
+        # not used for now
+        #
+        # 'dateCreated dateModified ownerName ownerEmail '
+        #
+        searchKeys = ('expansionState windowTop windowLeft '
+                      'windowBottom windowRight'.split() )
+        meta = {}
+
+        if len(children) == 1:
+            outlineView.expandItem_expandChildren_(children[0], False)
+
+        if head and body: # ;-)
+            children = head.children
+
             for child in children:
-                if child.name == u"head":
-                    head = child
-                if child.name == u"body":
-                    body = child
-            # scavenge document metadata
-            #
-            # not used for now
-            #
-            # 'dateCreated dateModified ownerName ownerEmail '
-            #
-            searchKeys = ('expansionState windowTop windowLeft '
-                          'windowBottom windowRight'.split() )
-            meta = {}
+                k = child.name
+                v = child.displayValue
+                if k in searchKeys:
+                    if v:
+                        meta[k] = v
 
-            if len(children) == 1:
-                outlineView.expandItem_expandChildren_(children[0], False)
+            # start - collapse head - expand body
+            outlineView.collapseItem_collapseChildren_(head, True)
+            outlineView.collapseItem_collapseChildren_(body, True)
+            outlineView.expandItem_expandChildren_(body, False)
 
-            if head and body: # ;-)
-                children = head.children
-
-                for child in children:
-                    k = child.name
-                    v = child.displayValue
-                    if k in searchKeys:
-                        if v:
-                            meta[k] = v
-
-                # start - collapse head - expand body
-                outlineView.collapseItem_collapseChildren_(head, True)
-                outlineView.collapseItem_collapseChildren_(body, True)
-                outlineView.expandItem_expandChildren_(body, False)
-
-                # first row is 2
-                rows = meta.get("expansionState", [])
-                # pdb.set_trace()
-                if rows:
-                    try:
-                        rows = rows.split(',')
-                        rows = [int(i)+1 for i in rows if i]
-                    except Exception, err:
-                        print "\nERROR: expansionState reading failed.\n", err
-                        print
-                    if rows:
-                        for row in rows:
-                            item = outlineView.itemAtRow_( row )
-                            outlineView.expandItem_expandChildren_(item, False)
-                keys = 'windowLeft windowTop windowRight windowBottom'.split()
-                coords = []
-                # pdb.set_trace()
+            # first row is 2
+            rows = meta.get("expansionState", [])
+            # pdb.set_trace()
+            if rows:
                 try:
-                    for key in keys:
-                        coords.append( float( meta[key] ))
-                    window = outlineView.window()
-                    s = NSMakeRect(coords[0], coords[1], coords[2] - coords[0], coords[3] - coords[1])
-                    window.setFrame_display_animate_(s, True, True)
-                except StandardError, err:
-                    print err
-                    print "No window setting for you."
-                break
-            outlineView.setNeedsDisplay_( True )
+                    rows = rows.split(',')
+                    rows = [int(i)+1 for i in rows if i]
+                except Exception, err:
+                    print "\nERROR: expansionState reading failed.\n", err
+                    print
+                if rows:
+                    for row in rows:
+                        item = outlineView.itemAtRow_( row )
+                        outlineView.expandItem_expandChildren_(item, False)
+            keys = 'windowLeft windowTop windowRight windowBottom'.split()
+            coords = []
+            # pdb.set_trace()
+            try:
+                for key in keys:
+                    coords.append( float( meta[key] ))
+                window = outlineView.window()
+                s = NSMakeRect(coords[0], coords[1], coords[2] - coords[0], coords[3] - coords[1])
+                window.setFrame_display_animate_(s, True, True)
+            except StandardError, err:
+                print err
+                print "No window setting for you."
+        outlineView.setNeedsDisplay_( True )
 
     def makeWindowControllers(self):
         if kwlog:
             print "CactusOutlineDocument.makeWindowControllers()"# , c.retainCount()
-        self.addWindowController_( CactusOutlineWindowController.alloc().initWithObject_( self ) )
+
+        #
+        # Here be dragons.
+        #
+        # This has stopped working and I have no idea why.
+        #
         # pdb.set_trace()
-        #c = CactusOutlineWindowController.alloc().initWithObject_( self )
-        #self.addWindowController_( c )
-        #c.release()
-        #del c
+        c = CactusOutlineWindowController.alloc().initWithObject_( self )
+        self.addWindowController_( c )
+        if kwlog:
+            pp( self.windowControllers() )
+
+
+    def XXXwindowControllers(self):
+        if kwlog:
+            print "CactusOutlineDocument.windowControllers()"
+        return super( CactusOutlineDocument, self).windowControllers()
+
+    def windowControllerDidLoadNib_(self, theController):
+        if kwlog:
+            print "CactusOutlineDocument.windowControllerDidLoadNib_( %s )" % repr(theController)
+        return super( CactusOutlineDocument, self).windowControllerDidLoadNib_(theController)
+        
 
 
     def printShowingPrintPanel_(self, show):
@@ -1019,13 +1043,15 @@ class CactusOutlineWindowController(NSWindowController):
         # self.rootNode.model = self.model
 
         # TBD: make this accesssor
-        self.model.document = document
+        # self.model.document = document
 
         self.model.setController_( self )
 
         # this will become very dangerous when a document gets more than 1 window
-        s = self.document()
-        s.outlineView = self.outlineView
+        #s = self.document()
+        #s.outlineView = self.outlineView
+        
+        document.outlineView = self.outlineView
 
         self.outlineView.setDataSource_(self.model)
         self.outlineView.setDelegate_(self.model)
