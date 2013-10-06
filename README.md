@@ -181,6 +181,8 @@ http://goo.gl/EALQi
 
 ## Recent versions ##
 
+v0.5.3 Calendar outline generator
+
 v0.5.1 Open enclosure in RSS items preference
 
 v0.5.0 10.6 intel build
