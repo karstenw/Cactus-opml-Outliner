@@ -81,8 +81,13 @@ class MakeCalendarController(NSWindowController):
     separateYear = objc.IBOutlet()
     weekMonday = objc.IBOutlet()
     weekNumber = objc.IBOutlet()
-    
-    
+    calDayFormat = objc.IBOutlet()
+    calHourFormat = objc.IBOutlet()
+    calMonthFormat = objc.IBOutlet()
+    calTitle = objc.IBOutlet()
+    calWeekFormat = objc.IBOutlet()
+    calYearFormat = objc.IBOutlet()
+
     def __new__(cls):
         return cls.alloc()
 
@@ -117,22 +122,27 @@ class MakeCalendarController(NSWindowController):
             
             cur = cal
             if not y in cur:
-                cur[y] = {}
-            cur = cur[y]
+                cur[y] = {'dt':date,
+                          'months':{}}
+            cur = cur[y]['months']
+
             if not m in cur:
-                cur[m] = {}
-            cur = cur[m]
+                cur[m] = {'dt':date,
+                          'days': {}}
+            cur = cur[m]['days']
             
             if not d in cur:
-                cur[d] = {'tag': date}
-            cur = cur[d]
+                cur[d] = {'dt': date,
+                          'day': set()}
+            cur = cur[d]['day']
             
             if isinstance(date, datetime.datetime):
-                h = str(date.hour).zfill(2)
-                m = str(date.minute).zfill(2)
-                s = u"%s:%s" % (h,m)
-                if not s in cur:
-                    cur[s] = s
+                #h = str(date.hour).zfill(2)
+                #m = str(date.minute).zfill(2)
+                #s = u"%s:%s" % (h,m)
+                #if not date in cur:
+                #    cur[s] = date
+                cur.add( date )
 
         dateFrom = datetime.datetime.strptime(
                         str(self.dateFrom.dateValue())[:10],
@@ -151,17 +161,23 @@ class MakeCalendarController(NSWindowController):
         includeHoursFrom = getInt(str(self.includeHoursFrom.stringValue()))
         includeHoursIntervall = getInt(str(self.includeHoursIntervall.stringValue()))
         includeHoursUntil = getInt(str(self.includeHoursUntil.stringValue()))
-        separateMonth = bool(int(self.separateMonth.state()))
-        separateWeek = bool(int(self.separateWeek.state()))
-        separateYear = bool(int(self.separateYear.state()))
-        weekMonday = bool(int(self.weekMonday.state()))
-        weekNumber = bool(int(self.weekNumber.state()))
+
         params = {
-            "separateMonth": separateMonth,
-            "separateWeek": separateWeek,
-            "separateYear": separateYear
+            "separateMonth": bool(int(self.separateMonth.state())),
+            "separateWeek": bool(int(self.separateWeek.state())),
+            "separateYear": bool(int(self.separateYear.state())),
+            "weekMonday": bool(int(self.weekMonday.state())),
+            "weekNumber": bool(int(self.weekNumber.state())),
+
+            "includeDays": bool(int(self.includeDays.state())),
+            "calDayFormat": self.calDayFormat.stringValue(),
+            "calHourFormat": self.calHourFormat.stringValue(),
+            "calMonthFormat": self.calMonthFormat.stringValue(),
+            "calTitle": self.calTitle.stringValue(),
+            "calWeekFormat": self.calWeekFormat.stringValue(),
+            "calYearFormat": self.calYearFormat.stringValue(),
+            "includeHours": bool(int(self.includeHours.state()))
             }
-        # pdb.set_trace()
 
         days = daterange(dateFrom, dateUntil, step_days=1)
         result = []
@@ -179,11 +195,8 @@ class MakeCalendarController(NSWindowController):
                     calInsert( cal, dayItem)
             else:
                 # result.append( day.date() )
+                # pp( cal )
                 calInsert( cal, day.date())
-        # pdb.set_trace()
-
-        #pp(cal)
-        #print len(cal), "Items."
 
         app = NSApplication.sharedApplication()
         delg = app.delegate()
