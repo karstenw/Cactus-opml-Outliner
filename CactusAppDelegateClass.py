@@ -111,7 +111,8 @@ class CactusDocumentController(NSDocumentController):
 
     def runModalOpenPanel_forTypes_( self, panel, types ):
         if kwlog:
-            print "CactusDocumentController.runModalOpenPanel_forTypes_()"
+            print
+            print "CactusDocumentController.runModalOpenPanel_forTypes_()",
         self.selectedType = "automatic"
         extensionCtrl = CactusOpenAsAccessoryController.alloc().init()
 
@@ -122,6 +123,9 @@ class CactusDocumentController(NSDocumentController):
         if result:
             self.selectedType = extensionCtrl.menuOpenAs.title()
             self.urllist = set([NSURL2str(t) for t in panel.URLs()])
+        if kwlog:
+            pp(result) 
+            print
         return result
 
     def makeDocumentWithContentsOfURL_ofType_error_(self, url, theType, err):
