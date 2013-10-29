@@ -8,6 +8,8 @@
 import sys
 import os
 
+import re
+
 import traceback
 
 import time
@@ -852,6 +854,49 @@ class KWOutlineView(NSOutlineView):
                                     print repr(urlbase)
                                 open_node( url, nodetype )
 
+                            elif name in ('script'):
+                                d = item.getValueDict()
+                                href = d.get('src', '')
+                                url = cleanupURL( href )
+
+                                # code duplication
+                                if not url.startswith( 'http' ) :
+                                    root = item.rootNode
+                                    ctrl = root.controller
+                                    urlbase = "NONE"
+                                    if ctrl != None:
+                                        urlbase = ctrl.nsurl.baseURL()
+                                        if not urlbase:
+                                            urlbase = ctrl.nsurl.absoluteString()
+                                        else:
+                                            urlbase = urlbase.absoluteString()
+                                        urlbase = urlbase + url
+                                        url = urlbase
+                                    print repr(urlbase)
+
+                                open_node(url)
+
+                            elif name in ('a'):
+                                d = item.getValueDict()
+                                href = d.get('href', '')
+                                url = cleanupURL( href )
+
+                                # code duplication
+                                if not url.startswith( 'http' ) :
+                                    root = item.rootNode
+                                    ctrl = root.controller
+                                    urlbase = "NONE"
+                                    if ctrl != None:
+                                        urlbase = ctrl.nsurl.baseURL()
+                                        if not urlbase:
+                                            urlbase = ctrl.nsurl.absoluteString()
+                                        else:
+                                            urlbase = urlbase.absoluteString()
+                                        urlbase = urlbase + url
+                                        url = urlbase
+                                    print repr(urlbase)
+                                open_node(url, 'HTML')
+
                             elif name in ('url', 'htmlUrl', 'xmlUrl', 'xmlurl'):
                                 #
                                 # FIXING HACK
@@ -876,6 +921,7 @@ class KWOutlineView(NSOutlineView):
                                 # pdb.set_trace()
 
                                 url = cleanupURL( url )
+
                                 if theType == "blogpost":
                                     if not url:
                                         url = v.get("urlTemplate", "")
@@ -2301,23 +2347,48 @@ def cleanupURL( url ):
     # lots of URLs contain spaces, &, '
 
     url = NSURL2str(url)
+    if '#' in url:
+        # pdb.set_trace()
+        # escape OS9 mangled filenames; Frontier produces such links
+        os9namepart = re.compile( r"(.*)#([0-9A-F]{5,8}\..*)" )
+        while True:
+            m = os9namepart.match( url )
+            if m:
+                l = m.groups()
+                url = "%s%%23%s" % l
+                # url = re.sub(os9namepart, "\1%23\2.\3", url)
+            else:
+                break
 
-    # purl = urlparse.urlparse( url )
     purl = urlparse.urlsplit( url, allow_fragments=False )
+    path = purl.path
 
-    purl = list(purl)
-    path = purl[2]
-    path = urllib.unquote( 'http://' + path )
-    try:
-        path = urllib.quote( path )
-    except KeyError, err:
-        print "ERROR"
-        print repr(path)
-        print err
-    path = path[9:]
-    purl[2] = path
-    #
-    purl.append("")
-    purl = urlparse.urlunparse( purl )
-    purl = unicode(purl)
-    return purl
+
+
+    return url
+
+    if 0:
+        # what did i smoke when i wrote that?
+        #
+        # this mess needs serious cleaning
+        #
+
+        # purl = urlparse.urlparse( url )
+        purl = urlparse.urlsplit( url, allow_fragments=False )
+
+        purl = list(purl)
+        path = purl[2]
+        path = urllib.unquote( 'http://' + path )
+        try:
+            path = urllib.quote( path )
+        except KeyError, err:
+            print "ERROR"
+            print repr(path)
+            print err
+        path = path[9:]
+        purl[2] = path
+        #
+        purl.append("")
+        purl = urlparse.urlunparse( purl )
+        purl = unicode(purl)
+        return purl

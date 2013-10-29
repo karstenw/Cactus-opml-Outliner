@@ -7,6 +7,7 @@
 
 import sys
 import os
+
 import traceback
 
 import datetime
@@ -426,6 +427,7 @@ def setFileModificationDate( filepath, modfdt ):
 
 def cache_url( nsurl, fileextension ):
     returnURL = nsurl
+    # pdb.set_trace()
     try:
         localpath, localname = getDownloadFolder(nsurl)
         if not localpath:
@@ -463,8 +465,6 @@ def cache_url( nsurl, fileextension ):
                     localname = "file"
                     localpath = os.path.join( localpath, localname + "." + fileextension )
 
-            if '#' in url:
-                url = url.replace('#', '%23')
             if fileextension:
                 if not localpath.endswith( "." + fileextension ):
                     localpath = localpath + '.' + fileextension
