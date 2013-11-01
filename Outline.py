@@ -283,7 +283,9 @@ def open_photo( url, open_=True ):
 def open_node( url, nodeType=None, open_=True, supressCache=False ):
     print "Outline.open_node()"
 
-    # pdb.set_trace()
+    if 0:
+        pdb.set_trace()
+        pp( (url,nodeType,open_, supressCache) )
 
     defaults = NSUserDefaults.standardUserDefaults()
     cache = False
@@ -2346,6 +2348,7 @@ def moveSelectionRight(ov, selection):
 def cleanupURL( url ):
     # lots of URLs contain spaces, &, '
 
+    mangled = False
     url = NSURL2str(url)
     if '#' in url:
         # pdb.set_trace()
@@ -2354,20 +2357,16 @@ def cleanupURL( url ):
         while True:
             m = os9namepart.match( url )
             if m:
+                mangled = True
                 l = m.groups()
                 url = "%s%%23%s" % l
                 # url = re.sub(os9namepart, "\1%23\2.\3", url)
             else:
                 break
+        if mangled:
+            return url
 
-    purl = urlparse.urlsplit( url, allow_fragments=False )
-    path = purl.path
-
-
-
-    return url
-
-    if 0:
+    if not mangled:
         # what did i smoke when i wrote that?
         #
         # this mess needs serious cleaning
@@ -2375,9 +2374,9 @@ def cleanupURL( url ):
 
         # purl = urlparse.urlparse( url )
         purl = urlparse.urlsplit( url, allow_fragments=False )
+        path = purl.path
+        purl = list( purl )
 
-        purl = list(purl)
-        path = purl[2]
         path = urllib.unquote( 'http://' + path )
         try:
             path = urllib.quote( path )
