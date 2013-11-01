@@ -566,127 +566,136 @@ class CactusAppDelegate(NSObject):
 
         doc = self.getCurrentDocument()
 
-        if doc and isinstance(doc, CactusOutlineDocument):
-            # pdb.set_trace()
-            win = self.getCurrentAppWindow()
-            ctrl = win.windowController()
-            ov = ctrl.outlineView
-            
-            # either selection or child append to body
-            rootNode = ov.getSelectedRow()
-            if rootNode == -1:
-                r = ctrl.rootNode
-                children = r.children
-                head = body = False
-                for child in children:
-                    if child.name == u"body":
-                        rootNode = body = child
-                        break
-                if not body:
-                    rootNode = OutlineNode("body", "", r, typeOutline)
-                    r.addChild_( rootNode )
+        if not doc:
+            return
 
-            cal, conf = params
+        if not isinstance(doc, CactusOutlineDocument):
+            return
 
-            separateMonth = conf["separateMonth"]
-            separateWeek = conf["separateWeek"]
-            separateYear = conf["separateYear"]
-            weekMonday = conf["weekMonday"]
-            weekNumber = conf["weekNumber"]
+        # pdb.set_trace()
+        win = self.getCurrentAppWindow()
+        ctrl = win.windowController()
+        ov = ctrl.outlineView
+        
+        # find the root for the calendar
+        # either the current selected node or append after last body child
+        rootNode = ov.getSelectedRow()
+        if rootNode == -1:
+            r = ctrl.rootNode
+            children = r.children
+            head = body = False
+            for child in children:
+                if child.name == u"body":
+                    rootNode = body = child
+                    break
+            if not body:
+                rootNode = OutlineNode("body", "", r, typeOutline)
+                r.addChild_( rootNode )
 
-            includeDays = conf["includeDays"]
-            calDayFormat = conf["calDayFormat"]
-            calHourFormat = conf["calHourFormat"]
-            calMonthFormat = conf["calMonthFormat"]
-            calTitle = conf["calTitle"]
-            calWeekFormat = conf["calWeekFormat"]
-            calYearFormat = conf["calYearFormat"]
-            includeHours = conf["includeHours"]
+        pdb.set_trace()
 
-            theRoot = rootNode.rootNode
-            calRoot = OutlineNode(calTitle, "", rootNode, typeOutline, theRoot)
-            
-            rootNode.addChild_( calRoot )
-            
-            years = cal.keys()
-            
-            try:    years.remove('year')
-            except  Exception:  pass
-            
-            years.sort()
-            
-            for yearNumber in years:
-                monthd = cal[yearNumber]['months']
-                yearDT = cal[yearNumber]['dt']
-                yearString = yearDT.strftime(calYearFormat)
+        # 
+        cal, conf = params
 
-                yearNode = OutlineNode(yearString, "", calRoot, typeOutline, theRoot)
-                calRoot.addChild_( yearNode )
+        separateMonth = conf["separateMonth"]
+        separateWeek = conf["separateWeek"]
+        separateYear = conf["separateYear"]
+        weekMonday = conf["weekMonday"]
+        weekNumber = conf["weekNumber"]
 
-                months = monthd.keys()
-                months.sort()
+        includeDays = conf["includeDays"]
+        calDayFormat = conf["calDayFormat"]
+        calHourFormat = conf["calHourFormat"]
+        calMonthFormat = conf["calMonthFormat"]
+        calTitle = conf["calTitle"]
+        calWeekFormat = conf["calWeekFormat"]
+        calYearFormat = conf["calYearFormat"]
+        includeHours = conf["includeHours"]
 
-                for monthNumber in months:
-                    daysd = monthd[monthNumber]['days']
-                    monthDT = monthd[monthNumber]['dt']
-                    monthString = monthDT.strftime(calMonthFormat)
+        theRoot = rootNode.rootNode
+        calRoot = OutlineNode(calTitle, "", rootNode, typeOutline, theRoot)
+        
+        rootNode.addChild_( calRoot )
+        
+        years = cal.keys()
+        
+        try:    years.remove('year')
+        except  Exception:  pass
+        
+        years.sort()
+        
+        for yearNumber in years:
+            monthd = cal[yearNumber]['months']
+            yearDT = cal[yearNumber]['dt']
+            yearString = yearDT.strftime(calYearFormat)
 
-                    monthNode = OutlineNode(monthString, "", yearNode, typeOutline, theRoot)
-                    yearNode.addChild_( monthNode )
+            yearNode = OutlineNode(yearString, "", calRoot, typeOutline, theRoot)
+            calRoot.addChild_( yearNode )
 
-                    days = daysd.keys()
-                    days.sort()
+            months = monthd.keys()
+            months.sort()
+
+            for monthNumber in months:
+                daysd = monthd[monthNumber]['days']
+                monthDT = monthd[monthNumber]['dt']
+                monthString = monthDT.strftime(calMonthFormat)
+
+                monthNode = OutlineNode(monthString, "", yearNode, typeOutline, theRoot)
+                yearNode.addChild_( monthNode )
+
+                days = daysd.keys()
+                days.sort()
+                
+                currWeeks = set()
+                currWeek = None
+
+                for day in days:
+                    dayItemss = daysd[day]['day']
+                    dayDT = daysd[day]['dt']
+                    dayString = dayDT.strftime(calDayFormat)
+
+                    isoYear, isoWeek, isoDay = dayDT.isocalendar()
+
+                    parentNode = monthNode
+
+                    if separateWeek:
+                        if not isoWeek in currWeeks:
+                            currWeeks.add( isoWeek)
+                            weekString = dayDT.strftime(calWeekFormat)
+                            currWeek = OutlineNode( weekString,
+                                                    # "Week: " + str(isoWeek),
+                                                    "",
+                                                    parentNode,
+                                                    typeOutline,
+                                                    theRoot)
+                            parentNode.addChild_( currWeek )
+                        parentNode = currWeek
+                        # pdb.set_trace()
+
                     
-                    currWeeks = set()
-                    currWeek = None
+                    dayNode = OutlineNode( dayString,
+                                           "",
+                                           parentNode,
+                                           typeOutline,
+                                           theRoot)
+                    parentNode.addChild_( dayNode )
 
-                    for day in days:
-                        dayItemss = daysd[day]['day']
-                        dayDT = daysd[day]['dt']
-                        dayString = dayDT.strftime(calDayFormat)
+                    dayItems = list(dayItemss)
+                    dayItems.sort()
+                    
+                    if includeHours:
+                        for dayItemDT in dayItems:
+                            dayItemName = dayItemDT.strftime(calHourFormat)
 
-                        isoYear, isoWeek, isoDay = dayDT.isocalendar()
-
-                        parentNode = monthNode
-
-                        if separateWeek:
-                            if not isoWeek in currWeeks:
-                                currWeeks.add( isoWeek)
-                                weekString = dayDT.strftime(calWeekFormat)
-                                currWeek = OutlineNode( weekString,
-                                                        # "Week: " + str(isoWeek),
-                                                        "",
-                                                        parentNode,
-                                                        typeOutline,
-                                                        theRoot)
-                                parentNode.addChild_( currWeek )
-                            parentNode = currWeek
-                            # pdb.set_trace()
-
-                        
-                        dayNode = OutlineNode( dayString,
-                                               "",
-                                               parentNode,
-                                               typeOutline,
-                                               theRoot)
-                        parentNode.addChild_( dayNode )
-
-                        dayItems = list(dayItemss)
-                        dayItems.sort()
-                        
-                        if includeHours:
-                            for dayItemDT in dayItems:
-                                dayItemName = dayItemDT.strftime(calHourFormat)
-
-                                itemNode = OutlineNode( dayItemName,
-                                                        "",
-                                                        dayNode,
-                                                        typeOutline,
-                                                        theRoot)
-                                dayNode.addChild_( itemNode )
-            ov.expandItem_( rootNode )
-            ov.expandItem_( calRoot )
-            ov.reloadData()
+                            itemNode = OutlineNode( dayItemName,
+                                                    "",
+                                                    dayNode,
+                                                    typeOutline,
+                                                    theRoot)
+                            dayNode.addChild_( itemNode )
+        ov.expandItem_( rootNode )
+        ov.expandItem_( calRoot )
+        ov.reloadData()
 
 class CactusWindowController_OLD(NSWindowController):
     menRowLines = objc.IBOutlet()
