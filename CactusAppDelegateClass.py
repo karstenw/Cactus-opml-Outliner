@@ -592,7 +592,7 @@ class CactusAppDelegate(NSObject):
                 rootNode = OutlineNode("body", "", r, typeOutline)
                 r.addChild_( rootNode )
 
-        pdb.set_trace()
+        # pdb.set_trace()
 
         # 
         cal, conf = params

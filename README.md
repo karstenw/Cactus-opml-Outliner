@@ -5,7 +5,7 @@ It is an outline editor based on the PythonBrowser example from PyObjC.
 
 Developed on OSX 10.6 with Python 2.7, Xcode 3.2, pyobjc 2.5 and py2app 0.8
 
-It's still in development but gets better and better.
+It's still in development but it gets better.
 
 Use it to explore OPML, RSS, XML, PLIST, HTML and iTunes XMLfiles. Nodes can be opened in the webbrowser, in Quicktime Player or in Cactus depending on node type. See the shortcuts section at the end.
 
@@ -24,7 +24,7 @@ Use it to explore OPML, RSS, XML, PLIST, HTML and iTunes XMLfiles. Nodes can be 
 
 During the OSX 10.4 to 10.6 transition a subtle and not yet localized bug was introduced which keeps me hassling with the window controllers. For the user it manifests in the absence of a "Do you want to save" dialog for changed windows most of the time. So if you need your edited files, don't forget to save.
 
-Due to the way how Cactus writes it's files you might be surprised at what you get after a save. For example, the RSS file type writes only RSS 2.0 files even though you perhaps read in an atom feed.
+Due to the way how Cactus writes it's documents you might be surprised at what you get after a save. For example, the RSS file type writes only RSS 2.0 files even though you opened an atom feed.
 
 Each file write generates a new file. If your HTML file had a doctype of HTML3 or XHTML, after saving it will have the doctype selected in the HTML preferences and an utf-8 encoding.
 
