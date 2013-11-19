@@ -782,7 +782,7 @@ class CactusWindowController_OLD(NSWindowController):
         self.outlineView.setDelegate_(self.model)
 
         self.outlineView.setTarget_(self)
-        self.outlineView.setDoubleAction_("doubleClick:")
+        # self.outlineView.setDoubleAction_("doubleClick:")
 
         self.window().makeFirstResponder_(self.outlineView)
 
@@ -814,7 +814,7 @@ class CactusWindowController_OLD(NSWindowController):
     def windowWillClose_(self, notification):
         if kwlog:
             print "DEPRECATED CactusWindowController_OLD.windowWillClose_()"
-        # see comment in self.initWithObject_()
+        # see comment in self.initWithObject_type_()
         #
         # check model.dirty
         #
