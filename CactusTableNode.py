@@ -1,4 +1,4 @@
-
+# UNUSED
 class CactusTableNode(NSObject):
     def __new__(cls, *args, **kwargs):
         return cls.alloc().init()
@@ -26,6 +26,7 @@ class CactusTableNode(NSObject):
         self.children = NSMutableArray.arrayWithCapacity_( 0 )
         self.editable = True
 
-        self.maxHeight = self.setMaxLineHeight()
+        self.maxHeight = 1
+        self.setMaxLineHeight()
 
         self.retain

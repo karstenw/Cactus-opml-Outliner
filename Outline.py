@@ -1815,7 +1815,8 @@ class OutlineNode(NSObject):
         self.children = NSMutableArray.arrayWithCapacity_( 0 )
         self.editable = True
 
-        self.maxHeight = self.setMaxLineHeight()
+        self.maxHeight = 1
+        self.setMaxLineHeight()
 
         self.controller = None
         if rootNode != None:
@@ -1848,7 +1849,7 @@ class OutlineNode(NSObject):
         l = self.lineHeight( self.comment )
         if l > maxVal:
             maxVal = l
-        return maxVal
+        self.maxHeight = maxVal
 
     def setAttributes_(self, attrs):
         d = {}
@@ -2003,7 +2004,7 @@ class OutlineNode(NSObject):
     def setComment_(self, comment):
         self.comment = comment
         self.displayComment = unicode( self.comment )
-        self.maxHeight = self.setMaxLineHeight()
+        self.setMaxLineHeight()
 
     #
     def noOfChildren(self):
