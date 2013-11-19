@@ -205,7 +205,6 @@ class MakeCalendarController(NSWindowController):
         delg.makeCalendarCurrentOrNewDoc_( (cal, params) )
 
     def windowWillClose_(self, notification):
-        # see comment in self.initWithObject_()
         self.autorelease()
 
     @objc.IBAction
