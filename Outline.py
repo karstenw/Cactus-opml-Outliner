@@ -284,7 +284,7 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
     print "Outline.open_node()"
 
     if 0:
-        pdb.set_trace()
+        # pdb.set_trace()
         pp( (url,nodeType,open_, supressCache) )
 
     defaults = NSUserDefaults.standardUserDefaults()
@@ -522,7 +522,7 @@ class KWOutlineView(NSOutlineView):
 
 
     def textDidChange_(self, aNotification):
-        # print "KWOutlineView.textDidChange_()"
+        print "KWOutlineView.textDidChange_()"
         """Notification."""
         self.editSession = True
         userInfo = aNotification.userInfo()
@@ -538,7 +538,7 @@ class KWOutlineView(NSOutlineView):
     def textDidEndEditing_(self, aNotification):
         """Notification. Text editing ended."""
 
-        # print "KWOutlineView.textDidEndEditing_()"
+        print "KWOutlineView.textDidEndEditing_()"
 
         if kwlog and kwdbg:
             print "Edit END"
@@ -605,6 +605,7 @@ class KWOutlineView(NSOutlineView):
                 return
         if cancelled:
             self.editSession = False
+            # pdb.set_trace()
             self.reloadData()
             self.window().makeFirstResponder_(self)
 
@@ -647,9 +648,13 @@ class KWOutlineView(NSOutlineView):
                   ord(NSLeftArrowFunctionKey),
                   ord(NSRightArrowFunctionKey) )
 
-        if 0:
+        if 0: #eventCharNum in mykeys:
+            # pass
             print "mykeys"
             pp(mykeys)
+            print "Event characters:", repr(eventCharacters), eventCharNum
+            # pdb.set_trace()
+
 
         # tab has       0x09/0x00100
         # shift tab has 0x19/0x20102
@@ -718,10 +723,6 @@ class KWOutlineView(NSOutlineView):
 
         if kwlog and 0: #kwdbg:
             print "Key: ", hex(eventCharNum), hex(eventModifiers)
-
-        if 0: #eventCharNum in mykeys:
-            pass
-            # pdb.set_trace()
 
         ###########################################################################
         #
@@ -846,9 +847,10 @@ class KWOutlineView(NSOutlineView):
                                     ctrl = root.controller
                                     urlbase = "NONE"
                                     if ctrl != None:
-                                        urlbase = ctrl.nsurl.baseURL()
+                                        # urlbase = ctrl.nsurl.baseURL()
+                                        urlbase = ctrl.nsurl().baseURL()
                                         if not urlbase:
-                                            urlbase = ctrl.nsurl.absoluteString()
+                                            urlbase = ctrl.nsurl().absoluteString()
                                         else:
                                             urlbase = urlbase.absoluteString()
                                         urlbase = urlbase + url
@@ -867,9 +869,9 @@ class KWOutlineView(NSOutlineView):
                                     ctrl = root.controller
                                     urlbase = "NONE"
                                     if ctrl != None:
-                                        urlbase = ctrl.nsurl.baseURL()
+                                        urlbase = ctrl.nsurl().baseURL()
                                         if not urlbase:
-                                            urlbase = ctrl.nsurl.absoluteString()
+                                            urlbase = ctrl.nsurl().absoluteString()
                                         else:
                                             urlbase = urlbase.absoluteString()
                                         urlbase = urlbase + url
@@ -889,9 +891,9 @@ class KWOutlineView(NSOutlineView):
                                     ctrl = root.controller
                                     urlbase = "NONE"
                                     if ctrl != None:
-                                        urlbase = ctrl.nsurl.baseURL()
+                                        urlbase = ctrl.nsurl().baseURL()
                                         if not urlbase:
-                                            urlbase = ctrl.nsurl.absoluteString()
+                                            urlbase = ctrl.nsurl().absoluteString()
                                         else:
                                             urlbase = urlbase.absoluteString()
                                         urlbase = urlbase + url
@@ -1134,6 +1136,7 @@ class KWOutlineView(NSOutlineView):
             # indent selection
 
             # get selected rows
+            # pdb.set_trace()
             if delg.typ in outlinetypes.hierarchicalTypes:
                 sel = self.getSelectionItems()
                 # indent each row one level
@@ -1149,14 +1152,15 @@ class KWOutlineView(NSOutlineView):
                         parent.removeChild_(item)
                         item.release()
                         postselect.add(item)
-                        self.expandItem_( previous )
                         self.reloadItem_reloadChildren_( previous, True )
+                        self.expandItem_( previous )
                         self.reloadItem_reloadChildren_( parent, True )
                 postselect = [self.rowForItem_(i) for i in postselect]
                 self.selectItemRows_( postselect )
 
                 consumed = True
                 delg.markDirty()
+                # pdb.set_trace()
                 self.reloadData()
 
 
@@ -1636,7 +1640,10 @@ class OutlineViewDelegateDatasource(NSObject):
                 next = sel.firstIndex()
                 item = ov.itemAtRow_(next)
                 level = ov.levelForRow_( next )
-                s = "%i  %s  rowHeight: %i" % (level, item.name, item.maxHeight)
+                name = item.name
+                if len(name) > 33:
+                    name = name[:30] + "..."
+                s = "Lev: %i  height: %i %s" % (level, item.maxHeight, name)
             else:
                 # show selection info
                 s = u"%i nodes selected" % (n,)

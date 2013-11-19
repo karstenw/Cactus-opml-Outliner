@@ -485,38 +485,39 @@ class CactusOutlineDocument(NSDocument):
 
 
     def displayName(self):
-
         if kwlog:
             print "CactusOutlineDocument.displayName() ->",
+        title = super( CactusOutlineDocument, self).displayName()
 
-        title = self.title
-        fullpath = self.fileURL()
-        if fullpath:
-            fullpath = fullpath.path()
+        if 0:
+            title = self.title
+            fullpath = self.fileURL()
+            if fullpath:
+                fullpath = fullpath.path()
 
-        if not fullpath:
-            fullpath = self.url
-        else:
-            self.url = fullpath
+            if not fullpath:
+                fullpath = self.url
+            else:
+                self.url = fullpath
 
-        fullpath = NSURL2str(fullpath)
+            fullpath = NSURL2str(fullpath)
 
-        try:
-            t = os.path.split( fullpath )[1]
-            if t:
-                title = t
-        except Exception, err:
-            print
-            print "displayName CRASHED!"
-            print err
-            print
-        finally:
-            pass
+            try:
+                t = os.path.split( fullpath )[1]
+                if t:
+                    title = t
+            except Exception, err:
+                print
+                print "displayName CRASHED!"
+                print err
+                print
+            finally:
+                pass
 
         if kwlog:
             print repr(title)
         self.title = title
-        return self.title
+        return title
 
 
     def awakeFromNib(self):
@@ -544,8 +545,11 @@ class CactusOutlineDocument(NSDocument):
             theURL = NSURL.URLWithString_( theURL )
         # do nothing the superclass wouldn't do
         if kwlog:
-            print "SUPER CactusOutlineDocument.setFileURL()"
+            print "SUPER CactusOutlineDocument.setFileURL()", repr(NSURL2str(theURL))
         super( CactusOutlineDocument, self).setFileURL_( theURL )
+        self.url = theURL
+
+
 
 
     def windowControllerWillLoadNib_( self, aController):
@@ -900,18 +904,31 @@ class CactusOutlineDocument(NSDocument):
 
     def makeWindowControllers(self):
         if kwlog:
-            print "CactusOutlineDocument.makeWindowControllers()"# , c.retainCount()
+            print
+            print "CactusOutlineDocument.makeWindowControllers()"
+            print
 
         #
         # Here be dragons.
         #
         # This has stopped working and I have no idea why.
         #
+        # It stopped because addWindowController_ changed behaviour and refused controllers
+        # where the document was already set.
+        #
+        #
+        # 
         # pdb.set_trace()
-        c = CactusOutlineWindowController.alloc().initWithObject_( self )
+        c = CactusOutlineWindowController.alloc().init()
         self.addWindowController_( c )
+        
+        # c.document is set after addWindowController_
+        c.finishControllerInit()
         if kwlog:
+            print
+            print "controllers:"
             pp( self.windowControllers() )
+            print
 
 
     def XXXwindowControllers(self):
@@ -974,8 +991,14 @@ class CactusOutlineWindowController(NSWindowController):
         self.model.release()
         super(CactusOutlineWindowController, self).dealloc()
 
+    def init(self):
+        # pdb.set_trace()
+        self = self.initWithWindowNibName_("OutlineEditor")
+        self.retain()
+        return self
 
-    def initWithObject_(self, document):
+
+    def finishControllerInit(self):
         """This controller is used for outline and table windows.
 
         document is a CactusOutlineDocument
@@ -986,7 +1009,7 @@ class CactusOutlineWindowController(NSWindowController):
 
         # pdb.set_trace()
 
-        self = self.initWithWindowNibName_("OutlineEditor")
+        # self = self.initWithWindowNibName_("OutlineEditor")
         title = u"Unnamed Outline"
 
         # self.path = ""
@@ -994,11 +1017,9 @@ class CactusOutlineWindowController(NSWindowController):
         self.parentNode = None
         self.variableRowHeight = True
         self.rowLines = 2
-        self.nsurl = None
         self.url = None
 
-        # check if needed
-        self.setDocument_( document )
+        document = self.document()
 
         if not isinstance(document, CactusOutlineDocument):
             print "FAKE document"
@@ -1006,7 +1027,7 @@ class CactusOutlineWindowController(NSWindowController):
             print "FAKE document"
 
         if document.url:
-            self.nsurl = document.url
+            # self.nsurl = document.url
             if document.url.isFileURL():
                 self.url = unicode(document.url.path())
             else:
@@ -1021,18 +1042,20 @@ class CactusOutlineWindowController(NSWindowController):
         self.parentNode = document.parentNode
         title = document.title
 
-        # get window name from url or path
-        if self.nsurl:
-            if os.path.exists( self.url ):
-                fld, fle = os.path.split( self.url )
-                title = fle
+        if 0:
+            # get window name from url or path
+            if self.nsurl:
+                if os.path.exists( self.url ):
+                    fld, fle = os.path.split( self.url )
+                    title = fle
+                else:
+                    title = self.url
             else:
-                title = self.url
-        else:
-            # keep unnamed title
-            pass
+                # keep unnamed title
+                pass
 
-        self.window().setTitle_( title )
+        window = self.window()
+        window.setTitle_( self.displayName() )
 
         self.model = OutlineViewDelegateDatasource.alloc().initWithObject_type_parentNode_(
                                                 self.rootNode,
@@ -1057,7 +1080,7 @@ class CactusOutlineWindowController(NSWindowController):
         self.outlineView.setDelegate_(self.model)
 
         self.outlineView.setTarget_(self)
-        self.outlineView.setDoubleAction_("doubleClick:")
+        # self.outlineView.setDoubleAction_("doubleClick:")
 
         self.window().makeFirstResponder_(self.outlineView)
 
@@ -1103,8 +1126,41 @@ class CactusOutlineWindowController(NSWindowController):
 
         self.showWindow_(self)
 
-        self.retain()
-        return self
+        #self.retain()
+        #return self
+
+    def nsurl(self):
+        result = None
+        doc = self.document()
+        
+        if doc:
+            return doc.fileURL()
+
+
+    def displayName(self):
+        # get window name
+        if kwlog:
+            print "CactusOutlineWindowController.displayName() ->",
+        doc = self.document()
+        if not doc:
+            return ""
+
+        title = doc.title
+        url = doc.fileURL()
+        
+        if url:
+            path = unicode(url.path())
+            if os.path.exists( path ):
+                fld, fle = os.path.split( path )
+                title = fle
+            else:
+                title = path
+        else:
+            # keep unnamed title
+            pass
+        if kwlog:
+            print repr(title)
+        return title
 
 
     def windowWillClose_(self, notification):
@@ -1120,6 +1176,7 @@ class CactusOutlineWindowController(NSWindowController):
     def doubleClick_(self, sender):
         if kwlog:
             print "CactusOutlineWindowController.doubleClick_()"
+        #super(CactusOutlineWindowController, self).doubleClick_(sender)
 
     def reloadData(self):
         if kwlog:
@@ -1131,7 +1188,7 @@ class CactusOutlineWindowController(NSWindowController):
             print "CactusOutlineWindowController.reloadData_(item)"
         self.outlineView.reloadItem_reloadChildren_( item, True )
 
-    def reloadData_reloadChildren(self, item, children):
+    def reloadData_reloadChildren_(self, item, children):
         if kwlog:
             print "CactusOutlineWindowController.reloadData_reloadChildren_(item, children)"
         self.outlineView.reloadItem_reloadChildren_( item, children )
