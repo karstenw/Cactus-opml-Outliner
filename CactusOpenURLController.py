@@ -85,8 +85,6 @@ class OpenURLWindowController(NSWindowController):
         for url in self.visitedURLs:
             self.menuLastVisited.addItemWithTitle_( url )
         self.showWindow_(self)
-
-
         self.retain()
         return self
 
@@ -108,7 +106,6 @@ class OpenURLWindowController(NSWindowController):
         self.readAsType = self.menuOpenAs.title()
 
     def windowWillClose_(self, notification):
-        # see comment in self.initWithObject_()
         self.autorelease()
 
     @objc.IBAction
