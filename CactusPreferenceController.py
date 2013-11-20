@@ -47,7 +47,7 @@ class CactusPreferenceController(NSWindowController):
     txtNoOfRecentURLs = objc.IBOutlet()
     txtUserEmail = objc.IBOutlet()
     txtUserName = objc.IBOutlet()
-
+    optAnimateOPMLOpen = objc.IBOutlet()
 
     """Present a dialog for entering a URL for http document retrieval."""
     def init(self):
@@ -66,6 +66,7 @@ class CactusPreferenceController(NSWindowController):
         self.txtNoOfRecentURLs.setStringValue_( defaults.objectForKey_( u'txtNoOfRecentURLs') )
         self.txtUserEmail.setStringValue_( defaults.objectForKey_( u'txtUserEmail') )
         self.txtUserName.setStringValue_( defaults.objectForKey_( u'txtUserName') )
+        self.optAnimateOPMLOpen.setState_( defaults.objectForKey_( u'optAnimateOPMLOpen') )
 
         self.optAlternateLines.setState_( defaults.objectForKey_( u'optAlternateLines') )
         self.optCommentColumn.setState_( defaults.objectForKey_( u'optCommentColumn') )
@@ -100,6 +101,7 @@ class CactusPreferenceController(NSWindowController):
         defaults.setObject_forKey_(self.txtNoOfRecentURLs.stringValue(),   u'txtNoOfRecentURLs')
         defaults.setObject_forKey_(self.txtUserEmail.stringValue(),   u'txtUserEmail')
         defaults.setObject_forKey_(self.txtUserName.stringValue(),   u'txtUserName')
+        defaults.setObject_forKey_(self.optAnimateOPMLOpen.state(),   u'optAnimateOPMLOpen')
 
         defaults.setObject_forKey_(self.optAlternateLines.state(),   u'optAlternateLines')
         defaults.setObject_forKey_(self.optCommentColumn.state(),   u'optCommentColumn')

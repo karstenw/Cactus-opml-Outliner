@@ -824,6 +824,13 @@ class CactusOutlineDocument(NSDocument):
         #
         controllers = self.windowControllers()
 
+        defaults = NSUserDefaults.standardUserDefaults()
+        doanimate = True
+        try:
+            doanimate = bool(defaults.objectForKey_( u'optAnimateOPMLOpen'))
+        except Exception, err:
+            pass
+
         for controller in controllers:
             rootNode = controller.rootNode
             outlineView = controller.outlineView
@@ -886,6 +893,7 @@ class CactusOutlineDocument(NSDocument):
                     for key in keys:
                         coords.append( float( meta[key] ))
                     window = outlineView.window()
+
                     # this makes the found rect the minimum size of the nib
                     # can the nib values be queried?
                     w = coords[2] - coords[0]
@@ -896,7 +904,7 @@ class CactusOutlineDocument(NSDocument):
 
                     # animation is too slow, ca 0.5s per file
                     # print "ANIME:", window.animationResizeTime_( s )
-                    window.setFrame_display_animate_(s, True, True)
+                    window.setFrame_display_animate_(s, True, doanimate)
 
                     # window.setFrame_display_(s, True)
                     redisplay = False

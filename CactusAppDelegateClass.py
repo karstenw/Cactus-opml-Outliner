@@ -167,6 +167,7 @@ class CactusAppDelegate(NSObject):
         userdefaults.setObject_forKey_(True,        u'optHLines')
         userdefaults.setObject_forKey_(True,        u'optVLines')
         userdefaults.setObject_forKey_(True,        u'optVariableRowHeight')
+        userdefaults.setObject_forKey_(True,        u'optAnimateOPMLOpen')
 
         userdefaults.setObject_forKey_(False,       u'optCommentColumn')
         userdefaults.setObject_forKey_(False,       u'optTypeColumn')

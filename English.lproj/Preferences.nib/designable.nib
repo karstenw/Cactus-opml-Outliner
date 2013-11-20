@@ -419,7 +419,7 @@
 								</object>
 								<object class="NSTabViewItem" id="371213382">
 									<object class="NSView" key="NSView" id="835093141">
-										<nil key="NSNextResponder"/>
+										<reference key="NSNextResponder" ref="520557454"/>
 										<int key="NSvFlags">256</int>
 										<array class="NSMutableArray" key="NSSubviews">
 											<object class="NSTextField" id="943123123">
@@ -427,6 +427,7 @@
 												<int key="NSvFlags">268</int>
 												<string key="NSFrame">{{30, 335}, {114, 17}}</string>
 												<reference key="NSSuperview" ref="835093141"/>
+												<reference key="NSWindow"/>
 												<bool key="NSEnabled">YES</bool>
 												<object class="NSTextFieldCell" key="NSCell" id="119047818">
 													<int key="NSCellFlags">67239424</int>
@@ -441,8 +442,9 @@
 											<object class="NSTextField" id="827764528">
 												<reference key="NSNextResponder" ref="835093141"/>
 												<int key="NSvFlags">266</int>
-												<string key="NSFrame">{{157, 333}, {270, 22}}</string>
+												<string key="NSFrame">{{157, 333}, {418, 22}}</string>
 												<reference key="NSSuperview" ref="835093141"/>
+												<reference key="NSWindow"/>
 												<bool key="NSEnabled">YES</bool>
 												<object class="NSTextFieldCell" key="NSCell" id="634972994">
 													<int key="NSCellFlags">-1804468671</int>
@@ -460,6 +462,7 @@
 												<int key="NSvFlags">268</int>
 												<string key="NSFrame">{{30, 305}, {114, 17}}</string>
 												<reference key="NSSuperview" ref="835093141"/>
+												<reference key="NSWindow"/>
 												<bool key="NSEnabled">YES</bool>
 												<object class="NSTextFieldCell" key="NSCell" id="107081907">
 													<int key="NSCellFlags">67239424</int>
@@ -474,8 +477,9 @@
 											<object class="NSTextField" id="940726118">
 												<reference key="NSNextResponder" ref="835093141"/>
 												<int key="NSvFlags">266</int>
-												<string key="NSFrame">{{157, 303}, {270, 22}}</string>
+												<string key="NSFrame">{{157, 303}, {418, 22}}</string>
 												<reference key="NSSuperview" ref="835093141"/>
+												<reference key="NSWindow"/>
 												<bool key="NSEnabled">YES</bool>
 												<object class="NSTextFieldCell" key="NSCell" id="972747564">
 													<int key="NSCellFlags">-1804468671</int>
@@ -488,8 +492,55 @@
 													<reference key="NSTextColor" ref="502064300"/>
 												</object>
 											</object>
+											<object class="NSButton" id="856251925">
+												<reference key="NSNextResponder" ref="835093141"/>
+												<int key="NSvFlags">266</int>
+												<string key="NSFrame">{{155, 279}, {422, 18}}</string>
+												<reference key="NSSuperview" ref="835093141"/>
+												<reference key="NSWindow"/>
+												<bool key="NSEnabled">YES</bool>
+												<object class="NSButtonCell" key="NSCell" id="855156379">
+													<int key="NSCellFlags">-2080244224</int>
+													<int key="NSCellFlags2">0</int>
+													<string key="NSContents">animate OPML file open window</string>
+													<reference key="NSSupport" ref="781483016"/>
+													<reference key="NSControlView" ref="856251925"/>
+													<int key="NSButtonFlags">1211912703</int>
+													<int key="NSButtonFlags2">2</int>
+													<reference key="NSNormalImage" ref="667054608"/>
+													<reference key="NSAlternateImage" ref="430442958"/>
+													<string key="NSAlternateContents"/>
+													<string key="NSKeyEquivalent"/>
+													<int key="NSPeriodicDelay">200</int>
+													<int key="NSPeriodicInterval">25</int>
+												</object>
+											</object>
+											<object class="NSTextField" id="111668805">
+												<reference key="NSNextResponder" ref="835093141"/>
+												<int key="NSvFlags">266</int>
+												<string key="NSFrame">{{154, 209}, {424, 64}}</string>
+												<reference key="NSSuperview" ref="835093141"/>
+												<reference key="NSWindow"/>
+												<bool key="NSEnabled">YES</bool>
+												<object class="NSTextFieldCell" key="NSCell" id="337737838">
+													<int key="NSCellFlags">69336577</int>
+													<int key="NSCellFlags2">1346371584</int>
+													<string type="base64-UTF8" key="NSContents">VG8gaW5jcmVhc2UgYW5pbWF0aW9uIHNwZWVkIGRvIGluIFRlcm1pbmFsOgpkZWZhdWx0cyB3cml0ZSBO
+U0dsb2JhbERvbWFpbiBOU1dpbmRvd1Jlc2l6ZVRpbWUgLjA1CgpUaGUgZGVmYXVsdCBpcyAwLjI</string>
+													<object class="NSFont" key="NSSupport">
+														<string key="NSName">LucidaGrande</string>
+														<double key="NSSize">12</double>
+														<int key="NSfFlags">16</int>
+													</object>
+													<reference key="NSControlView" ref="111668805"/>
+													<reference key="NSBackgroundColor" ref="783810746"/>
+													<reference key="NSTextColor" ref="910989336"/>
+												</object>
+											</object>
 										</array>
 										<string key="NSFrame">{{10, 33}, {609, 358}}</string>
+										<reference key="NSSuperview" ref="520557454"/>
+										<reference key="NSWindow"/>
 									</object>
 									<string key="NSLabel">opml</string>
 									<reference key="NSColor" ref="783810746"/>
@@ -497,7 +548,7 @@
 								</object>
 								<object class="NSTabViewItem" id="961693700">
 									<object class="NSView" key="NSView" id="977587511">
-										<reference key="NSNextResponder" ref="520557454"/>
+										<nil key="NSNextResponder"/>
 										<int key="NSvFlags">256</int>
 										<array class="NSMutableArray" key="NSSubviews">
 											<object class="NSButton" id="238984530">
@@ -505,7 +556,6 @@
 												<int key="NSvFlags">266</int>
 												<string key="NSFrame">{{31, 335}, {384, 20}}</string>
 												<reference key="NSSuperview" ref="977587511"/>
-												<reference key="NSWindow"/>
 												<bool key="NSEnabled">YES</bool>
 												<object class="NSButtonCell" key="NSCell" id="730642511">
 													<int key="NSCellFlags">67239424</int>
@@ -525,8 +575,6 @@
 											</object>
 										</array>
 										<string key="NSFrame">{{10, 33}, {609, 358}}</string>
-										<reference key="NSSuperview" ref="520557454"/>
-										<reference key="NSWindow"/>
 									</object>
 									<string key="NSLabel">rss</string>
 									<reference key="NSColor" ref="783810746"/>
@@ -886,13 +934,13 @@ L3d3dy53My5vcmcvVFIvaHRtbDQvc3RyaWN0LmR0ZCI+A</string>
 									<reference key="NSTabView" ref="520557454"/>
 								</object>
 							</array>
-							<reference key="NSSelectedTabViewItem" ref="961693700"/>
+							<reference key="NSSelectedTabViewItem" ref="371213382"/>
 							<reference key="NSFont" ref="781483016"/>
 							<int key="NSTvFlags">0</int>
 							<bool key="NSAllowTruncatedLabels">YES</bool>
 							<bool key="NSDrawsBackground">YES</bool>
 							<array class="NSMutableArray" key="NSSubviews">
-								<reference ref="977587511"/>
+								<reference ref="835093141"/>
 							</array>
 						</object>
 					</array>
@@ -1114,6 +1162,14 @@ L3d3dy53My5vcmcvVFIvaHRtbDQvc3RyaWN0LmR0ZCI+A</string>
 						<reference key="destination" ref="238984530"/>
 					</object>
 					<int key="connectionID">154</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">optAnimateOPMLOpen</string>
+						<reference key="source" ref="31534774"/>
+						<reference key="destination" ref="856251925"/>
+					</object>
+					<int key="connectionID">159</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1349,6 +1405,8 @@ L3d3dy53My5vcmcvVFIvaHRtbDQvc3RyaWN0LmR0ZCI+A</string>
 							<reference ref="827764528"/>
 							<reference ref="240953625"/>
 							<reference ref="940726118"/>
+							<reference ref="856251925"/>
+							<reference ref="111668805"/>
 						</array>
 						<reference key="parent" ref="371213382"/>
 					</object>
@@ -1780,6 +1838,32 @@ L3d3dy53My5vcmcvVFIvaHRtbDQvc3RyaWN0LmR0ZCI+A</string>
 						<reference key="object" ref="730642511"/>
 						<reference key="parent" ref="238984530"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">155</int>
+						<reference key="object" ref="856251925"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="855156379"/>
+						</array>
+						<reference key="parent" ref="835093141"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">156</int>
+						<reference key="object" ref="855156379"/>
+						<reference key="parent" ref="856251925"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">160</int>
+						<reference key="object" ref="111668805"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="337737838"/>
+						</array>
+						<reference key="parent" ref="835093141"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">161</int>
+						<reference key="object" ref="337737838"/>
+						<reference key="parent" ref="111668805"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1816,8 +1900,15 @@ L3d3dy53My5vcmcvVFIvaHRtbDQvc3RyaWN0LmR0ZCI+A</string>
 					<bytes key="NSTransformStruct">P4AAAL+AAABCSAAAw6cAAA</bytes>
 				</object>
 				<string key="152.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="155.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="156.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="16.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="16.ImportedFromIB2"/>
+				<string key="160.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<object class="NSAffineTransform" key="160.IBViewBoundsToFrameTransform">
+					<bytes key="NSTransformStruct">P4AAAL+AAADBwAAAw2EAAA</bytes>
+				</object>
+				<string key="161.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="17.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="17.ImportedFromIB2"/>
 				<string key="18.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1856,11 +1947,11 @@ L3d3dy53My5vcmcvVFIvaHRtbDQvc3RyaWN0LmR0ZCI+A</string>
 				<boolean value="YES" key="34.ImportedFromIB2"/>
 				<string key="35.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="35.ImportedFromIB2"/>
-				<string key="5.IBEditorWindowLastContentRect">{{115, 92}, {655, 420}}</string>
+				<string key="5.IBEditorWindowLastContentRect">{{243, 248}, {655, 420}}</string>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="5.IBViewEditorWindowController.showingBoundsRectangles"/>
 				<boolean value="YES" key="5.IBViewEditorWindowController.showingLayoutRectangles"/>
-				<string key="5.IBWindowTemplateEditedContentRect">{{115, 92}, {655, 420}}</string>
+				<string key="5.IBWindowTemplateEditedContentRect">{{243, 248}, {655, 420}}</string>
 				<boolean value="YES" key="5.ImportedFromIB2"/>
 				<boolean value="YES" key="5.windowTemplate.hasMinSize"/>
 				<string key="5.windowTemplate.minSize">{480, 360}</string>
@@ -1913,7 +2004,7 @@ L3d3dy53My5vcmcvVFIvaHRtbDQvc3RyaWN0LmR0ZCI+A</string>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">154</int>
+			<int key="maxID">161</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2076,6 +2167,154 @@ L3d3dy53My5vcmcvVFIvaHRtbDQvc3RyaWN0LmR0ZCI+A</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBDocumentRelativeSource</string>
 						<string key="minorKey">../CactusPreferenceController.py</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">CactusPreferenceController</string>
+					<string key="superclassName">NSWindowController</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">chooseFolder:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">chooseFolder:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">chooseFolder:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="butSetCacheFolder">id</string>
+						<string key="menDoctype">id</string>
+						<string key="menEncoding">id</string>
+						<string key="optAlternateLines">id</string>
+						<string key="optAnimateOPMLOpen">id</string>
+						<string key="optCache">id</string>
+						<string key="optCommentColumn">id</string>
+						<string key="optHLines">id</string>
+						<string key="optHTMLAutodetect">id</string>
+						<string key="optIMLAutodetect">id</string>
+						<string key="optIMLImportSystemLibraries">id</string>
+						<string key="optOPMLAutodetect">id</string>
+						<string key="optPLISTAutodetect">id</string>
+						<string key="optRSSAutodetect">id</string>
+						<string key="optRSSOpenEnclosure">id</string>
+						<string key="optTypeColumn">id</string>
+						<string key="optVLines">id</string>
+						<string key="optValueColumn">id</string>
+						<string key="optVariableRowHeight">id</string>
+						<string key="txtCacheFolder">id</string>
+						<string key="txtIndent">id</string>
+						<string key="txtNoOfMaxRowLines">id</string>
+						<string key="txtNoOfRecentURLs">id</string>
+						<string key="txtUserEmail">id</string>
+						<string key="txtUserName">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="butSetCacheFolder">
+							<string key="name">butSetCacheFolder</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="menDoctype">
+							<string key="name">menDoctype</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="menEncoding">
+							<string key="name">menEncoding</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="optAlternateLines">
+							<string key="name">optAlternateLines</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="optAnimateOPMLOpen">
+							<string key="name">optAnimateOPMLOpen</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="optCache">
+							<string key="name">optCache</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="optCommentColumn">
+							<string key="name">optCommentColumn</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="optHLines">
+							<string key="name">optHLines</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="optHTMLAutodetect">
+							<string key="name">optHTMLAutodetect</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="optIMLAutodetect">
+							<string key="name">optIMLAutodetect</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="optIMLImportSystemLibraries">
+							<string key="name">optIMLImportSystemLibraries</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="optOPMLAutodetect">
+							<string key="name">optOPMLAutodetect</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="optPLISTAutodetect">
+							<string key="name">optPLISTAutodetect</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="optRSSAutodetect">
+							<string key="name">optRSSAutodetect</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="optRSSOpenEnclosure">
+							<string key="name">optRSSOpenEnclosure</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="optTypeColumn">
+							<string key="name">optTypeColumn</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="optVLines">
+							<string key="name">optVLines</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="optValueColumn">
+							<string key="name">optValueColumn</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="optVariableRowHeight">
+							<string key="name">optVariableRowHeight</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="txtCacheFolder">
+							<string key="name">txtCacheFolder</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="txtIndent">
+							<string key="name">txtIndent</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="txtNoOfMaxRowLines">
+							<string key="name">txtNoOfMaxRowLines</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="txtNoOfRecentURLs">
+							<string key="name">txtNoOfRecentURLs</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="txtUserEmail">
+							<string key="name">txtUserEmail</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="txtUserName">
+							<string key="name">txtUserName</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBDocumentRelativeSource</string>
+						<string key="minorKey">../CactusPreferenceController_nib.py</string>
 					</object>
 				</object>
 			</array>
