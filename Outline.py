@@ -1624,11 +1624,6 @@ class OutlineViewDelegateDatasource(NSObject):
 
     # delegate method
 
-    # see below
-    def XXXXoutlineView_shouldEditTableColumn_item_(self, view, col, item):
-        return item.editable
-
-
     def outlineView_heightOfRowByItem_(self, ov, item):
         lineheight = 14
         maxLines = self.controller.rowLines
@@ -1847,7 +1842,6 @@ class OutlineNode(NSObject):
         self.setComment_( "" )
 
         self.children = NSMutableArray.arrayWithCapacity_( 0 )
-        self.editable = True
 
         self.maxHeight = 1
         self.setMaxLineHeight()
@@ -2080,9 +2074,6 @@ class OutlineNode(NSObject):
             self.children.removeObjectAtIndex_( index )
             return index
         return False
-
-    def isEditable(self):
-        return self.editable
 
     def isExpandable(self):
         return self.children.count() > 0
