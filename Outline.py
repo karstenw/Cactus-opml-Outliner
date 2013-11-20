@@ -522,7 +522,7 @@ class KWOutlineView(NSOutlineView):
 
 
     def textDidChange_(self, aNotification):
-        print "KWOutlineView.textDidChange_()"
+        # print "KWOutlineView.textDidChange_()"
         """Notification."""
         self.editSession = True
         userInfo = aNotification.userInfo()
@@ -1480,8 +1480,10 @@ class OutlineViewDelegateDatasource(NSObject):
 
 
     def markDirty(self):
-        if self.document != None:
-            self.document.updateChangeCount_( NSChangeDone )
+        doc = self.controller.document()
+        if doc:
+            doc.updateChangeCount_( NSChangeDone )
+
 
     def setController_(self, controller):
         self.controller = controller
