@@ -63,7 +63,7 @@ def openOPML_(rootOPML):
 
 def openOPML_withURLTag_(rootOPML, urltag):
     if kwlog:
-        print "openOPML_withURLTag_()"
+        print "CactusFileOpeners.openOPML_withURLTag_()"
     """This builds the node tree and returns the root node."""
     #
     #  Split this up.

@@ -817,135 +817,106 @@ class CactusOutlineDocument(NSDocument):
     def showWindows( self ):
         if kwlog:
             print "CactusOutlineDocument.showWindows()"
-        # pdb.set_trace()
+
         c = super( CactusOutlineDocument, self).showWindows()
         #
-
-
-        # TBD: self.windowControllers() always returns NOTHING
-        # pdb.set_trace()
-
-        # for expansionstate
-        # controllers = self.windowControllers()
-        # win = self.window
-        
+        # extract data for expansionstate & window size
         #
-        # DIRTY HACK - but self.windowControllers() still refuses to work
-        #
-        win = NSApplication.sharedApplication().keyWindow()
-        controller = win.windowController()
+        controllers = self.windowControllers()
 
-        print controller, controller.retainCount()
-        rootNode = controller.rootNode
-        outlineView = controller.outlineView
-        # parse root down to head
-        children = rootNode.children
-        head = body = False
-        for child in children:
-            if child.name == u"head":
-                head = child
-            if child.name == u"body":
-                body = child
-        # scavenge document metadata
-        #
-        # not used for now
-        #
-        # 'dateCreated dateModified ownerName ownerEmail '
-        #
-        searchKeys = ('expansionState windowTop windowLeft '
-                      'windowBottom windowRight'.split() )
-        meta = {}
-
-        if len(children) == 1:
-            outlineView.expandItem_expandChildren_(children[0], False)
-        
-        redisplay = True
-        if head and body: # ;-)
-            children = head.children
-
+        for controller in controllers:
+            rootNode = controller.rootNode
+            outlineView = controller.outlineView
+            # parse root down to head
+            children = rootNode.children
+            head = body = False
             for child in children:
-                k = child.name
-                v = child.displayValue
-                if k in searchKeys:
-                    if v:
-                        meta[k] = v
+                if child.name == u"head":
+                    head = child
+                if child.name == u"body":
+                    body = child
+            # scavenge document metadata
+            #
+            # not used for now
+            #
+            # 'dateCreated dateModified ownerName ownerEmail '
+            #
+            searchKeys = ('expansionState windowTop windowLeft '
+                          'windowBottom windowRight'.split() )
+            meta = {}
 
-            # start - collapse head - expand body
-            outlineView.collapseItem_collapseChildren_(head, True)
-            outlineView.collapseItem_collapseChildren_(body, True)
-            outlineView.expandItem_expandChildren_(body, False)
+            if len(children) == 1:
+                outlineView.expandItem_expandChildren_(children[0], False)
+        
+            redisplay = True
+            if head and body: # ;-)
+                children = head.children
 
-            # first row is 2
-            rows = meta.get("expansionState", [])
-            # pdb.set_trace()
-            if rows:
-                try:
-                    rows = rows.split(',')
-                    rows = [int(i)+1 for i in rows if i]
-                except Exception, err:
-                    print "\nERROR: expansionState reading failed.\n", err
-                    print
+                for child in children:
+                    k = child.name
+                    v = child.displayValue
+                    if k in searchKeys:
+                        if v:
+                            meta[k] = v
+
+                # start - collapse head - expand body
+                outlineView.collapseItem_collapseChildren_(head, True)
+                outlineView.collapseItem_collapseChildren_(body, True)
+                outlineView.expandItem_expandChildren_(body, False)
+
+                # first row is 2
+                rows = meta.get("expansionState", [])
+                # pdb.set_trace()
                 if rows:
-                    for row in rows:
-                        item = outlineView.itemAtRow_( row )
-                        outlineView.expandItem_expandChildren_(item, False)
+                    try:
+                        rows = rows.split(',')
+                        rows = [int(i)+1 for i in rows if i]
+                    except Exception, err:
+                        print "\nERROR: expansionState reading failed.\n", err
+                        print
+                    if rows:
+                        for row in rows:
+                            item = outlineView.itemAtRow_( row )
+                            outlineView.expandItem_expandChildren_(item, False)
 
-            keys = 'windowLeft windowTop windowRight windowBottom'.split()
-            coords = []
-            # pdb.set_trace()
-            try:
-                for key in keys:
-                    coords.append( float( meta[key] ))
-                window = outlineView.window()
-                # this makes the found rect the minimum size of the nib
-                # can the nib values be queried?
-                w = coords[2] - coords[0]
-                h = coords[3] - coords[1]
-                h = max(h, 260.0)
-                w = max(w, 590.0)
-                s = NSMakeRect(coords[0], coords[1], w, h)
+                keys = 'windowLeft windowTop windowRight windowBottom'.split()
+                coords = []
+                # pdb.set_trace()
+                try:
+                    for key in keys:
+                        coords.append( float( meta[key] ))
+                    window = outlineView.window()
+                    # this makes the found rect the minimum size of the nib
+                    # can the nib values be queried?
+                    w = coords[2] - coords[0]
+                    h = coords[3] - coords[1]
+                    h = max(h, 260.0)
+                    w = max(w, 590.0)
+                    s = NSMakeRect(coords[0], coords[1], w, h)
 
-                # animation is too slow, ca 0.5s per file
-                # print "ANIME:", window.animationResizeTime_( s )
-                # window.setFrame_display_animate_(s, True, False)
+                    # animation is too slow, ca 0.5s per file
+                    # print "ANIME:", window.animationResizeTime_( s )
+                    window.setFrame_display_animate_(s, True, True)
 
-                window.setFrame_display_(s, True)
-                redisplay = False
-            except StandardError, err:
-                print err
-                print "No window setting for you."
-        outlineView.setNeedsDisplay_( redisplay )
+                    # window.setFrame_display_(s, True)
+                    redisplay = False
+                except StandardError, err:
+                    print err
+                    print "No window setting for you."
+            outlineView.setNeedsDisplay_( redisplay )
 
     def makeWindowControllers(self):
         if kwlog:
-            print
             print "CactusOutlineDocument.makeWindowControllers()"
-            print
 
-        #
-        # Here be dragons.
-        #
-        # This has stopped working and I have no idea why.
-        #
-        # It stopped because addWindowController_ changed behaviour and refused controllers
-        # where the document was already set.
-        #
-        #
-        # 
-        # pdb.set_trace()
         c = CactusOutlineWindowController.alloc().init()
         self.addWindowController_( c )
         
-        # c.document is set after addWindowController_
+        # c.document is set by addWindowController_
         c.finishControllerInit()
-        if kwlog:
-            print
-            print "controllers:"
-            pp( self.windowControllers() )
-            print
 
 
-    def XXXwindowControllers(self):
+    def windowControllers(self):
         if kwlog:
             print "CactusOutlineDocument.windowControllers()"
         return super( CactusOutlineDocument, self).windowControllers()
@@ -954,8 +925,6 @@ class CactusOutlineDocument(NSDocument):
         if kwlog:
             print "CactusOutlineDocument.windowControllerDidLoadNib_( %s )" % repr(theController)
         return super( CactusOutlineDocument, self).windowControllerDidLoadNib_(theController)
-        
-
 
     def printShowingPrintPanel_(self, show):
         printInfo = self.printInfo()

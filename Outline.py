@@ -376,36 +376,47 @@ class KWOutlineView(NSOutlineView):
         self.clipboardRoot = OutlineNode("Clipboard root", "", None, typeOutline, None)
         menu = NSMenu.alloc().initWithTitle_( u"" )
         menu.setDelegate_(self)
-        menu.addItemWithTitle_action_keyEquivalent_( u"Include", "contextMenuInclude:", u"")
-        menu.addItemWithTitle_action_keyEquivalent_( u"Python Copy", "copySelectionPython:", u"")
-        menu.addItemWithTitle_action_keyEquivalent_( u"Node Copy", "copySelectionNodes:", u"")
-        menu.addItemWithTitle_action_keyEquivalent_( u"Node paste", "pasteSelectionNodes:", u"")
+        menu.addItemWithTitle_action_keyEquivalent_( u"Include",
+                                                      "contextMenuInclude:", u"")
+        menu.addItemWithTitle_action_keyEquivalent_( u"Python Copy",
+                                                      "copySelectionPython:", u"")
+        menu.addItemWithTitle_action_keyEquivalent_( u"Node Copy",
+                                                      "copySelectionNodes:", u"")
+        menu.addItemWithTitle_action_keyEquivalent_( u"Node paste",
+                                                      "pasteSelectionNodes:", u"")
 
         # copySelectionPython_
         menu.setAutoenablesItems_(False)
         self.setMenu_(menu)
 
     #
-    # context menu
+    # context menu handlers
     #
+    # The initial and currently static context menu is defined in awakeFromNib
+    #
+    
     def menuForEvent_(self, theEvent):
         """This makes the selection include the right-click row"""
-        row = self.rowAtPoint_( self.convertPoint_fromView_(theEvent.locationInWindow(), None ))
+        row = self.rowAtPoint_( self.convertPoint_fromView_(
+                                theEvent.locationInWindow(),
+                                None ))
         if row != -1:
             self.selectRow_byExtendingSelection_(row, True)
         return super( KWOutlineView, self).menuForEvent_(theEvent)
 
     def validateMenuItem_(self, sender):
-        row = self.selectedRow()
-        print "KWOutlineView.validateMenuItem_( %s )   row(%s)" % (repr(sender), repr(row))
+        # row = self.selectedRow()
+        if kwlog:
+            print "KWOutlineView.validateMenuItem_( %s )" % repr(sender)
         return True
 
     def menuNeedsUpdate_(self, sender):
-        print "KWOutlineView.menuNeedsUpdate_()" % repr(sender)
+        if kwlog:
+            print "KWOutlineView.menuNeedsUpdate_( %s )" % repr(sender)
 
     def copySelectionPython_(self, sender):
-        print "KWOutlineView.copySelectionPython_()"
-        # pdb.set_trace()
+        if kwlog:
+            print "KWOutlineView.copySelectionPython_()"
         row = self.clickedRow()
         selection = self.getSelectionItems()
         result = []
@@ -422,7 +433,8 @@ class KWOutlineView(NSOutlineView):
         selection = self.getSelectionItems()
         result = []
         for contextItem in selection:
-            self.clipboardRoot.addChild_( contextItem.copyNodesWithRoot_(self.clipboardRoot) )
+            self.clipboardRoot.addChild_(
+                    contextItem.copyNodesWithRoot_(self.clipboardRoot) )
 
     def pasteSelectionNodes_(self, sender):
         # pdb.set_trace()
@@ -452,12 +464,19 @@ class KWOutlineView(NSOutlineView):
 
 
     def contextMenuInclude_(self, sender):
-        print "KWOutlineView.contextMenuInclude_()"
-        # check selection; if right-click in selectio: use selection
-        # else use clicked row only
+        if kwlog:
+            print "KWOutlineView.contextMenuInclude_()"
+
+        # TBD: check selection
+        # if right-click in selection:
+        #   use selection
+        # else
+        #   use clicked row only
+
         row = self.clickedRow()
         selection = self.getSelectionItems()
 
+        importedNodes = 0
         for contextItem in selection:
 
             if not contextItem:
@@ -471,12 +490,14 @@ class KWOutlineView(NSOutlineView):
             url = attributes.get("url", "")
             url = cleanupURL( url )
             if theType in ( 'include', 'outline', 'thumbList', 'code',
-                            'thumbListVarCol', 'thumbList', 'blogpost',
-                            'link'):
+                             'thumbListVarCol', 'thumbList', 'blogpost', 'link'):
 
                 d = None
                 try:
-                    d = opml.opml_from_string( readURL( NSURL.URLWithString_( url ), CactusOPMLType ) )
+                    d = opml.opml_from_string(
+                                readURL( NSURL.URLWithString_( url ),
+                                         CactusOPMLType ) )
+
                 except OPMLParseErrorException, err:
                     print traceback.format_exc()
                     print err
@@ -486,12 +507,13 @@ class KWOutlineView(NSOutlineView):
                     # TBD: import here to circumvent circular import
                     #
                     import CactusFileOpeners
-                    root = CactusFileOpeners.openOPML_( d )
+                    root, type_ = CactusFileOpeners.openOPML_( d )
                     for node in root.children:
                         if node.name == u"body":
                             for i in node.children:
                                 contextItem.addChild_(i)
                                 node.removeChild_(i)
+                                importedNodes += 1
                             break
                     # do I really need to kill the link?
                     #
@@ -502,6 +524,9 @@ class KWOutlineView(NSOutlineView):
                     #
                     del root
                     del d
+        if importedNodes > 0:
+            self.delegate().markDirty()
+
         self.reloadData()
         self.setNeedsDisplay_( True )
 
@@ -1987,8 +2012,10 @@ class OutlineNode(NSObject):
         self.setValue_( self.value )
 
         r = self.findRoot()
-        m = r.model
-        m.reloadData(self)
+        try:
+            r.controller.model.reloadData(self)
+        except Exception, err:
+            pass
 
     # essential
     def getValueDict(self):
