@@ -54,6 +54,8 @@ readURL = CactusTools.readURL
 getFileProperties = CactusTools.getFileProperties
 setFileProperties = CactusTools.setFileProperties
 datestring_nsdate = CactusTools.datestring_nsdate
+makeunicode = CactusTools.makeunicode
+
 
 import CactusVersion
 
@@ -93,6 +95,7 @@ NSNumber = Foundation.NSNumber
 NSURL = Foundation.NSURL
 
 NSMakePoint = Foundation.NSMakePoint
+
 
 import AppKit
 NSUserDefaults = AppKit.NSUserDefaults
@@ -1541,7 +1544,7 @@ class OutlineViewDelegateDatasource(NSObject):
         elif c == u"value":
             return item.displayValue
         elif c == u"name":
-            return item.displayName
+            return item.name
         elif c == u"comment":
             return item.displayComment
 
@@ -1590,7 +1593,6 @@ class OutlineViewDelegateDatasource(NSObject):
         elif c == u"value":
             return item.displayValue
         elif c == u"name":
-            # return item.displayName
             return item.name
         elif c == u"comment":
             # return item.displayComment
@@ -1598,13 +1600,13 @@ class OutlineViewDelegateDatasource(NSObject):
 
 
     def outlineView_setObjectValue_forTableColumn_byItem_(self, view, value, col, item):
-        c = col.identifier()
+        columnName = col.identifier()
         if not item:
             # item = self.root
             return
-        if c == u"type":
+        if columnName == u"type":
             pass #return item.displayType
-        elif c == u"value":
+        elif columnName == u"value":
             if value != item.displayValue:
                 # if it has a parentNode it's edited attributes
                 if self.parentNode != None:
@@ -1612,11 +1614,11 @@ class OutlineViewDelegateDatasource(NSObject):
                     self.parentNode.updateValue_( (name, unicode(value)) )
                 item.setValue_( value )
                 self.markDirty()
-        elif c == u"name":
+        elif columnName == u"name":
             if value != item.name:
                 item.setName_(value)
                 self.markDirty()
-        elif c == u"comment":
+        elif columnName == u"comment":
             if value != item.comment:
                 item.setComment_(value)
                 self.markDirty()
@@ -1636,8 +1638,8 @@ class OutlineViewDelegateDatasource(NSObject):
         return lines * lineheight
 
     def outlineView_shouldEditTableColumn_item_(self, ov, col, item):
-        c = col.identifier()
-        if c == u"type":
+        columnName = col.identifier()
+        if columnName == u"type":
             return False
         return True
 
@@ -1808,7 +1810,6 @@ class OutlineNode(NSObject):
     # parent
     # children
     #
-    # displayName
     # displayValue
     # displayComment
     # displayType
@@ -1934,12 +1935,7 @@ class OutlineNode(NSObject):
 
     #
     def setName_(self, value):
-        self.name = value
-        s = unicode(value)
-        if kwdbg:
-            self.displayName = u"(%i)  - %s" % (self.nodenr, s)
-        else:
-            self.displayName = u"%s" % (s,)
+        self.name = makeunicode(value)
 
     def setValue_(self, value):
         if value in (u"", {}, [], None, False):

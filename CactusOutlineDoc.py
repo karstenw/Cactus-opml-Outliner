@@ -1141,11 +1141,12 @@ class CactusOutlineWindowController(NSWindowController):
         
         if url:
             path = unicode(url.path())
+            urslstring = NSURL2str( url )
             if os.path.exists( path ):
                 fld, fle = os.path.split( path )
                 title = fle
             else:
-                title = path
+                title = urslstring
         else:
             # keep unnamed title
             pass
