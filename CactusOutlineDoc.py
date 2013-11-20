@@ -858,7 +858,8 @@ class CactusOutlineDocument(NSDocument):
 
         if len(children) == 1:
             outlineView.expandItem_expandChildren_(children[0], False)
-
+        
+        redisplay = True
         if head and body: # ;-)
             children = head.children
 
@@ -888,6 +889,7 @@ class CactusOutlineDocument(NSDocument):
                     for row in rows:
                         item = outlineView.itemAtRow_( row )
                         outlineView.expandItem_expandChildren_(item, False)
+
             keys = 'windowLeft windowTop windowRight windowBottom'.split()
             coords = []
             # pdb.set_trace()
@@ -895,12 +897,24 @@ class CactusOutlineDocument(NSDocument):
                 for key in keys:
                     coords.append( float( meta[key] ))
                 window = outlineView.window()
-                s = NSMakeRect(coords[0], coords[1], coords[2] - coords[0], coords[3] - coords[1])
-                window.setFrame_display_animate_(s, True, True)
+                # this makes the found rect the minimum size of the nib
+                # can the nib values be queried?
+                w = coords[2] - coords[0]
+                h = coords[3] - coords[1]
+                h = max(h, 260.0)
+                w = max(w, 590.0)
+                s = NSMakeRect(coords[0], coords[1], w, h)
+
+                # animation is too slow, ca 0.5s per file
+                # print "ANIME:", window.animationResizeTime_( s )
+                # window.setFrame_display_animate_(s, True, False)
+
+                window.setFrame_display_(s, True)
+                redisplay = False
             except StandardError, err:
                 print err
                 print "No window setting for you."
-        outlineView.setNeedsDisplay_( True )
+        outlineView.setNeedsDisplay_( redisplay )
 
     def makeWindowControllers(self):
         if kwlog:
