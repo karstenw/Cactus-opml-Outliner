@@ -114,7 +114,7 @@ def readURL( nsurl, type_="" ):
         cache = bool(defaults.objectForKey_( u'optCache'))
     except StandardError, err:
         print "ERROR reading defaults.", repr(err)
-
+    
     if cache:
         if not nsurl.isFileURL():
             nsurl = cache_url(nsurl, fileext)
@@ -355,8 +355,6 @@ def datestring_nsdate( dt=datetime.datetime.now() ):
 
 def getDownloadFolder( nsurl ):
 
-    # pdb.set_trace()
-
     defaults = NSUserDefaults.standardUserDefaults()
     cacheFolder = CactusVersion.cachefolder
     try:
@@ -377,7 +375,6 @@ def getDownloadFolder( nsurl ):
     localpath = str( nsurl.relativePath() )
     s = nsurl.absoluteString()
     if '#' in s:
-        # pdb.set_trace()
         n = s.count( '/' )
         if n >= 3:
             l = s.split( '/' )
@@ -399,6 +396,7 @@ def getDownloadFolder( nsurl ):
 
 
 def getRemotefilemodificationDate( url ):
+
     try:
         f = urllib.urlopen( url )
     except IOError, err:
@@ -408,13 +406,16 @@ def getRemotefilemodificationDate( url ):
     rinfo = f.info()
     f.close()
 
-    try:
-        rmodfdate = datetime.datetime( *rinfo.getdate('last-modified')[:6] )
-    except TypeError, err:
-        print "Could not get remote file(%s) modification date." % url
-        return False
-    return rmodfdate
-
+    remotemodfdate = rinfo.getdate('last-modified')
+    if remotemodfdate:
+        try:
+            rmodfdate = datetime.datetime( *remotemodfdate[:6] )
+            #rmodfdate = datetime.datetime( *rinfo.getdate('last-modified')[:6] )
+        except TypeError, err:
+            print "Could not get remote file(%s) modification date." % url
+            return False
+        return rmodfdate
+    return False
 
 def setFileModificationDate( filepath, modfdt ):
     l = getFileProperties( filepath )
@@ -427,7 +428,6 @@ def setFileModificationDate( filepath, modfdt ):
 
 def cache_url( nsurl, fileextension ):
     returnURL = nsurl
-    # pdb.set_trace()
     try:
         localpath, localname = getDownloadFolder(nsurl)
         if not localpath:
@@ -449,7 +449,10 @@ def cache_url( nsurl, fileextension ):
             lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
             rmodfdate = getRemotefilemodificationDate( url )
 
-            if rmodfdate and rmodfdate < lmodfdate:
+            if not rmodfdate:
+                # remote modification date could not be determined
+                pass
+            elif rmodfdate and rmodfdate < lmodfdate:
                 setFileModificationDate( localpath, rmodfdate )
             elif rmodfdate and rmodfdate == lmodfdate:
                 pass
@@ -474,7 +477,6 @@ def cache_url( nsurl, fileextension ):
             try:
                 finder = asc.app(u'Finder.app')
                 hfspath = mactypes.File( localpath ).hfspath
-                # .files[u'Terra:Users:karstenwo:Desktop:Neuer Ordner:Untitled 2'].comment.set('Hello World')
                 finder.files[hfspath].comment.set( url )
             except StadardError, v:
                 print "SET COMMENT FAILED ON '%s'" % localpath
@@ -485,12 +487,12 @@ def cache_url( nsurl, fileextension ):
                 rmodfdate = datetime.datetime( *info.getdate('last-modified')[:6] )
                 setFileModificationDate( localpath, rmodfdate )
             except TypeError, err:
-                print "Could not get remote file(%s) modification date." % fname
+                # do not cache if modification date cannot be determined
+                print "NOCACHE: Could not get remote file(%s) modification date." % fname
 
         returnURL = NSURL.fileURLWithPath_( unicode(localpath) )
 
     except Exception, err:
-        # pdb.set_trace()
         tb = unicode(traceback.format_exc())
         print tb
         print
