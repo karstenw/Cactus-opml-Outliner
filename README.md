@@ -22,8 +22,6 @@ Use it to explore OPML, RSS, XML, PLIST, HTML and iTunes XMLfiles. Nodes can be 
 
 ## A Warning ##
 
-During the OSX 10.4 to 10.6 transition a subtle and not yet localized bug was introduced which keeps me hassling with the window controllers. For the user it manifests in the absence of a "Do you want to save" dialog for changed windows most of the time. So if you need your edited files, don't forget to save.
-
 Due to the way how Cactus writes it's documents you might be surprised at what you get after a save. For example, the RSS file type writes only RSS 2.0 files even though you opened an atom feed.
 
 Each file write generates a new file. If your HTML file had a doctype of HTML3 or XHTML, after saving it will have the doctype selected in the HTML preferences and an utf-8 encoding.
