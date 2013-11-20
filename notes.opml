@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<opml version="2.0">
+  <!--Created by Cactus Outline-Editor 0.5.6 on 2013-11-20_01:24:13.-->
+ <head>
+   <dateCreated>Tue, 19 Nov 2013 12:26:34 UTC</dateCreated>
+  <dateModified>Tue, 19 Nov 2013 12:26:34 UTC</dateModified>
+  <ownerName>Karsten Wolf</ownerName>
+  <expansionState>1, 2, 4, 8, 10, 13, 16</expansionState>
+  <vertScrollState />
+  <windowTop>4</windowTop>
+  <windowLeft>429</windowLeft>
+  <windowBottom>878</windowBottom>
+  <windowRight>1302</windowRight>
+  <cactusUrl>file://localhost/Users/karstenw/python/pyobjc/+ideen/outliner_kw/Cactus-Outline-Editor-git/devnotes.opml</cactusUrl>
+ </head>
+ <body>
+   <outline text="To do">
+    <outline text="Finish Calendar">
+     <outline text="Fill in the flesh for those already existing format save menus." />
+   </outline>
+   <outline text="Unify node opening">
+     <outline text="node opening grew out of opening rss items. New types were added as needed and now it's a big confusing case statement." />
+    <outline text="opennode should get a url dict with baseURL, path &amp; query" />
+    <outline text="Nodes should be pre-loaded anyway. That's the only way to determine the file type. CactusOutlineDocument should get a cacheURL attribute." />
+   </outline>
+   <outline text="NSText">
+     <outline text="The current event handling during text entry is a mess. It kind of works but is counter intuitive and ugly. Vision needed." />
+   </outline>
+   <outline text="row height calculation">
+     <outline text="More accuracy without getting slow. The calculation should include column width." />
+   </outline>
+   <outline text="OPML: cactus needs/should have a head property to store it's own settings like column widths, columns enabled, max row lines." />
+  </outline>
+  <outline text="Bugs">
+    <outline text="Saving a document while in editing mode does not save the edited cell." />
+   <outline text="Update &quot;head&quot; section after save. This is not critical but things like expansion state calculated while writing and the head section should reflect that." />
+  </outline>
+  <outline text="Ideas">
+    <outline text="Minimize memory usage for nodes" />
+   <outline text="The idea is to minimize the ObjC OutlineNode to functions and a pointer to the at import created python dict." />
+  </outline>
+ </body>
+</opml>
