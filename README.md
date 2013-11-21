@@ -22,9 +22,13 @@ Use it to explore OPML, RSS, XML, PLIST, HTML and iTunes XMLfiles. Nodes can be 
 
 ## A Warning ##
 
+I consider this my outline exploration vehicle. There is no clear vision what the result should look like nor what it will be. Currently it's new file formats since they are easy to implement. It takes usually 1-2 days to implement a new one.
+
+With those new formats comes the need for far more efficient memory usage. Opening a 50MB iTunes XML document can bring a 4GB machine to it's knees. So the next big thing will be bringing those memory costs down.
+
 Major features one would expect are missing:
 + find/replace
-+ cut/copy/paste
++ cut/copy/paste (but inside a document copy (not cut) & paste work via context menu)
 
 Due to the way how Cactus writes it's documents you might be surprised at what you get after a save. For example, the RSS file type writes only RSS 2.0 files even though you opened an atom feed.
 
@@ -42,8 +46,6 @@ The mappings are:
 <tr><td>HTML</td><td>&#x21d2;</td><td>HTML 4.1strict or html5</td></tr>
 
 </table>
-
-
 
 RSS, XML PLIST and HTML document types are new and still in the make so please be cautious with Cactus generated files of these kinds. For example Cactus doesn't know about namespaces in RSS. They sure get lost if you save a RSS file in Cactus.
 
