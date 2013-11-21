@@ -1122,10 +1122,11 @@ class CactusOutlineWindowController(NSWindowController):
 
     def nsurl(self):
         result = None
-        doc = self.document()
-        
-        if doc:
-            return doc.fileURL()
+        try:
+            result = self.document().fileURL()
+        except Exception, err:
+            pass
+        return result
 
 
     def displayName(self):
