@@ -38,7 +38,9 @@ AutoBaseClass = PyObjCTools.NibClassBuilder.AutoBaseClass
 
 import Outline
 OutlineViewDelegateDatasource = Outline.OutlineViewDelegateDatasource
-OutlineNode = Outline.OutlineNode
+
+import CactusOutlineNode
+OutlineNode = CactusOutlineNode.OutlineNode
 
 
 '''

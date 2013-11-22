@@ -71,9 +71,11 @@ def ostype2num( ostype ):
 
 def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
     try:
-        s = unicode(s, srcencoding)
+        if type(s) not in (unicode,):
+            s = unicode(s, srcencoding)
     except TypeError:
-        print type(s)
+        print "makeunicode type conversion error"
+        print "FAILED converting", type(s), "to unicode"
     s = unicodedata.normalize(normalizer, s)
     return s
 

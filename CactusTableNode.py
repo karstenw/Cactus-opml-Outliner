@@ -4,7 +4,7 @@ class CactusTableNode(NSObject):
         return cls.alloc().init()
 
     def __repr__(self):
-        return "<OutlineNode(%i, name='%s')" % (self.nodenr, self.name)
+        return "<CactusTableNode(%i, name='%s')" % (self.nodenr, self.name)
 
     def __init__(self, name, obj, parent, rootNode):
         self.initphase = True

@@ -98,7 +98,9 @@ typeBrowser = outlinetypes.typeBrowser
 
 import Outline
 OutlineViewDelegateDatasource = Outline.OutlineViewDelegateDatasource
-OutlineNode = Outline.OutlineNode
+
+import CactusOutlineNode
+OutlineNode = CactusOutlineNode.OutlineNode
 
 import CactusDocumentTypes
 CactusOPMLType = CactusDocumentTypes.CactusOPMLType

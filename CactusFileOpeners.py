@@ -51,8 +51,8 @@ CactusIMLType = CactusDocumentTypes.CactusIMLType
 import CactusTools
 NSURL2str = CactusTools.NSURL2str
 
-import Outline
-OutlineNode = Outline.OutlineNode
+import CactusOutlineNode
+OutlineNode = CactusOutlineNode.OutlineNode
 
 
 
@@ -252,6 +252,8 @@ def openXML_( rootXML):
     try:
         n = len(children)
     except Exception, err:
+        print "CactusFileOpeners.openXML_() ERROR"
+        print "childen has no length attribute!"
         print type(children)
         # pdb.set_trace()
         print err

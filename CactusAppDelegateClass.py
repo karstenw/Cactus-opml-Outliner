@@ -56,8 +56,9 @@ OutlineViewDelegateDatasource = Outline.OutlineViewDelegateDatasource
 
 import CactusOutlineDoc
 CactusOutlineDocument = CactusOutlineDoc.CactusOutlineDocument
-OutlineNode = CactusOutlineDoc.OutlineNode
 
+import CactusOutlineNode
+OutlineNode = CactusOutlineNode.OutlineNode
 
 import CactusVersion
 cachefolder = CactusVersion.cachefolder
