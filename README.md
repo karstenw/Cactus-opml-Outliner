@@ -96,6 +96,7 @@ OPML should be stable. If you find a bug, please report it on the mailing list.
 With the new "Open As..." option in the file dialogs, it is now possible to load an OPML or RSS file as XML. OPML as RSS and vice versa makes no sense but try to see why. Some files can only be openened as opml because they are buggy and opening as OPML does some repairs. Opening as XML needs a clean XML file.
 
 ## Latest changes ##
+The "Node" menu has been partially wired. Additionally to TAB, SHIFT-TAB, ctrl-up/down nodes can now also be moved with cmd-U/D/L/R and directly from the menu.
 
 Updated development environment to 10.6.
 
