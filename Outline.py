@@ -407,7 +407,7 @@ class KWOutlineView(NSOutlineView):
         return True
 
     def menuNeedsUpdate_(self, sender):
-        if kwlog:
+        if 0: #kwlog:
             print "KWOutlineView.menuNeedsUpdate_( %s )" % repr(sender)
 
     def copySelectionPython_(self, sender):
