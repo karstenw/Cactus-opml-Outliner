@@ -296,6 +296,38 @@ class CactusAppDelegate(NSObject):
     ####
 
     @objc.IBAction
+    def handleNodeMenu_(self, sender):
+        if kwlog:
+            print "CactusAppDelegate.handleNodeMenu_(%s)" % repr(sender)
+        app = NSApplication.sharedApplication()
+        win = app.keyWindow()
+        if win:
+            print "Save As...", win.title()
+            windelg = win.delegate()
+            if windelg:
+                ov = windelg.outlineView
+                name = sender.title()
+                print name
+                if name == u"Move up":
+                    ov.moveSelectionUp()
+                elif name == u"Move down":
+                    ov.moveSelectionDown()
+                elif name == u"Move left":
+                    ov.outdentSelection()
+                elif name == u"Move right":
+                    ov.indentSelection()
+
+                elif name == u"Include":
+                    pass
+                elif name == u"Open in Browser":
+                    pass
+                elif name == u"Open in QT-Player":
+                    pass
+                elif name == u"Open linked opml":
+                    pass
+
+
+    @objc.IBAction
     def openMailingList_(self, sender):
         workspace= NSWorkspace.sharedWorkspace()
         url = NSURL.URLWithString_( u"http://groups.google.com/group/cactus-outliner-dev" )

@@ -438,7 +438,7 @@
 											<object class="NSMenuItem" id="327926594">
 												<reference key="NSMenu" ref="369097973"/>
 												<string key="NSTitle">Find Previous</string>
-												<string key="NSKeyEquiv">d</string>
+												<string key="NSKeyEquiv">G</string>
 												<int key="NSKeyEquivModMask">1048576</int>
 												<int key="NSMnemonicLoc">2147483647</int>
 												<reference key="NSOnImage" ref="398934649"/>
@@ -589,8 +589,7 @@
 								<object class="NSMenuItem" id="392342111">
 									<reference key="NSMenu" ref="860738563"/>
 									<string key="NSTitle">Underline</string>
-									<string key="NSKeyEquiv">u</string>
-									<int key="NSKeyEquivModMask">1048576</int>
+									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="398934649"/>
 									<reference key="NSMixedImage" ref="421386446"/>
@@ -1352,6 +1351,9 @@
 			<object class="NSCustomObject" id="803590856">
 				<string key="NSClassName">CactusDocumentController</string>
 			</object>
+			<object class="NSCustomObject" id="663128256">
+				<string key="NSClassName">NSObject</string>
+			</object>
 		</array>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<array class="NSMutableArray" key="connectionRecords">
@@ -1962,6 +1964,38 @@
 						<reference key="destination" ref="1035951387"/>
 					</object>
 					<int key="connectionID">550</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">handleNodeMenu:</string>
+						<reference key="source" ref="25748157"/>
+						<reference key="destination" ref="508191849"/>
+					</object>
+					<int key="connectionID">553</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">handleNodeMenu:</string>
+						<reference key="source" ref="25748157"/>
+						<reference key="destination" ref="549750214"/>
+					</object>
+					<int key="connectionID">554</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">handleNodeMenu:</string>
+						<reference key="source" ref="25748157"/>
+						<reference key="destination" ref="881349532"/>
+					</object>
+					<int key="connectionID">555</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">handleNodeMenu:</string>
+						<reference key="source" ref="25748157"/>
+						<reference key="destination" ref="704194379"/>
+					</object>
+					<int key="connectionID">560</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2940,12 +2974,17 @@
 						<reference key="object" ref="1035951387"/>
 						<reference key="parent" ref="561984262"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">551</int>
+						<reference key="object" ref="663128256"/>
+						<reference key="parent" ref="0"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
 				<string key="103.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="103.ImportedFromIB2"/>
-				<string key="106.IBEditorWindowLastContentRect">{{699, 753}, {223, 83}}</string>
+				<string key="106.IBEditorWindowLastContentRect">{{479, 703}, {223, 83}}</string>
 				<string key="106.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="106.ImportedFromIB2"/>
 				<string key="111.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2990,6 +3029,7 @@
 				<boolean value="YES" key="198.ImportedFromIB2"/>
 				<string key="199.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="199.ImportedFromIB2"/>
+				<string key="200.IBEditorWindowLastContentRect">{{295, 543}, {259, 63}}</string>
 				<string key="200.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="200.ImportedFromIB2"/>
 				<string key="201.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3000,6 +3040,7 @@
 				<boolean value="YES" key="203.ImportedFromIB2"/>
 				<string key="204.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="204.ImportedFromIB2"/>
+				<string key="205.IBEditorWindowLastContentRect">{{144, 563}, {151, 223}}</string>
 				<string key="205.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="205.ImportedFromIB2"/>
 				<string key="206.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3014,6 +3055,7 @@
 				<boolean value="YES" key="210.ImportedFromIB2"/>
 				<string key="211.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="211.ImportedFromIB2"/>
+				<string key="212.IBEditorWindowLastContentRect">{{295, 543}, {163, 43}}</string>
 				<string key="212.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="212.ImportedFromIB2"/>
 				<string key="213.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3030,19 +3072,20 @@
 				<boolean value="YES" key="218.ImportedFromIB2"/>
 				<string key="219.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="219.ImportedFromIB2"/>
+				<string key="220.IBEditorWindowLastContentRect">{{295, 523}, {238, 103}}</string>
 				<string key="220.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="220.ImportedFromIB2"/>
 				<string key="221.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="221.ImportedFromIB2"/>
 				<string key="23.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="23.ImportedFromIB2"/>
-				<string key="24.IBEditorWindowLastContentRect">{{628, 783}, {194, 53}}</string>
+				<string key="24.IBEditorWindowLastContentRect">{{408, 733}, {194, 53}}</string>
 				<string key="24.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="24.ImportedFromIB2"/>
 				<boolean value="YES" key="247.ImportedFromIB2"/>
 				<string key="256.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="256.ImportedFromIB2"/>
-				<string key="257.IBEditorWindowLastContentRect">{{579, 683}, {165, 153}}</string>
+				<string key="257.IBEditorWindowLastContentRect">{{359, 633}, {165, 153}}</string>
 				<string key="257.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="257.ImportedFromIB2"/>
 				<string key="258.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3061,11 +3104,12 @@
 				<boolean value="YES" key="264.ImportedFromIB2"/>
 				<string key="265.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="265.ImportedFromIB2"/>
-				<string key="29.IBEditorWindowLastContentRect">{{243, 836}, {517, 20}}</string>
+				<string key="29.IBEditorWindowLastContentRect">{{23, 786}, {517, 20}}</string>
 				<string key="29.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="29.ImportedFromIB2"/>
 				<string key="309.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="309.ImportedFromIB2"/>
+				<string key="310.IBEditorWindowLastContentRect">{{188, 503}, {175, 283}}</string>
 				<string key="310.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="310.ImportedFromIB2"/>
 				<string key="311.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3078,6 +3122,7 @@
 				<boolean value="YES" key="314.ImportedFromIB2"/>
 				<string key="315.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="315.ImportedFromIB2"/>
+				<string key="316.IBEditorWindowLastContentRect">{{363, 503}, {145, 103}}</string>
 				<string key="316.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="316.ImportedFromIB2"/>
 				<string key="317.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3098,6 +3143,7 @@
 				<boolean value="YES" key="324.ImportedFromIB2"/>
 				<string key="325.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="325.ImportedFromIB2"/>
+				<string key="326.IBEditorWindowLastContentRect">{{363, 563}, {145, 63}}</string>
 				<string key="326.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="326.ImportedFromIB2"/>
 				<string key="327.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3118,6 +3164,7 @@
 				<boolean value="YES" key="334.ImportedFromIB2"/>
 				<string key="335.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="335.ImportedFromIB2"/>
+				<string key="336.IBEditorWindowLastContentRect">{{363, 563}, {145, 83}}</string>
 				<string key="336.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="336.ImportedFromIB2"/>
 				<string key="337.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3133,7 +3180,7 @@
 				<boolean value="YES" key="344.ImportedFromIB2"/>
 				<string key="437.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="437.ImportedFromIB2"/>
-				<string key="438.IBEditorWindowLastContentRect">{{641, 543}, {248, 293}}</string>
+				<string key="438.IBEditorWindowLastContentRect">{{237, 493}, {248, 293}}</string>
 				<string key="438.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="438.ImportedFromIB2"/>
 				<string key="439.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3181,7 +3228,7 @@
 				<boolean value="YES" key="508.ImportedFromIB2"/>
 				<string key="530.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="530.ImportedFromIB2"/>
-				<string key="531.IBEditorWindowLastContentRect">{{525, 623}, {202, 213}}</string>
+				<string key="531.IBEditorWindowLastContentRect">{{305, 573}, {202, 213}}</string>
 				<string key="531.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="531.ImportedFromIB2"/>
 				<string key="532.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3210,6 +3257,7 @@
 				<boolean value="YES" key="543.ImportedFromIB2"/>
 				<string key="545.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="547.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="551.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="56.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="56.ImportedFromIB2"/>
 				<string key="57.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3232,7 +3280,7 @@
 				<boolean value="YES" key="79.ImportedFromIB2"/>
 				<string key="80.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="80.ImportedFromIB2"/>
-				<string key="81.IBEditorWindowLastContentRect">{{79, 591}, {179, 223}}</string>
+				<string key="81.IBEditorWindowLastContentRect">{{102, 563}, {179, 223}}</string>
 				<string key="81.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="81.ImportedFromIB2"/>
 				<string key="83.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3244,7 +3292,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">550</int>
+			<int key="maxID">560</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3270,33 +3318,50 @@
 					<string key="className">CactusAppDelegate</string>
 					<string key="superclassName">NSObject</string>
 					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="applicationShouldOpenUntitledFile:">id</string>
+						<string key="handleNodeMenu:">id</string>
 						<string key="makeCalendar:">id</string>
+						<string key="newBrowser:">id</string>
 						<string key="newOutline:">id</string>
+						<string key="newRoot:">id</string>
 						<string key="newTable:">id</string>
 						<string key="openDownloadsPage:">id</string>
 						<string key="openFile:">id</string>
 						<string key="openGithubPage:">id</string>
 						<string key="openMailingList:">id</string>
-						<string key="openOPML:">id</string>
 						<string key="openOutlineDocument:">id</string>
-						<string key="openRSS:">id</string>
 						<string key="openURL:">id</string>
 						<string key="outlineMenuCollapse:">id</string>
 						<string key="outlineMenuCollapseAll:">id</string>
 						<string key="outlineMenuCollapseToParent:">id</string>
 						<string key="outlineMenuExpand:">id</string>
 						<string key="outlineMenuExpandAll:">id</string>
-						<string key="outlineMenuExpandEverything:">id</string>
 						<string key="saveAs:">id</string>
 						<string key="showPreferencePanel:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="applicationShouldOpenUntitledFile:">
+							<string key="name">applicationShouldOpenUntitledFile:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="handleNodeMenu:">
+							<string key="name">handleNodeMenu:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="makeCalendar:">
 							<string key="name">makeCalendar:</string>
 							<string key="candidateClassName">id</string>
 						</object>
+						<object class="IBActionInfo" key="newBrowser:">
+							<string key="name">newBrowser:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="newOutline:">
 							<string key="name">newOutline:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="newRoot:">
+							<string key="name">newRoot:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="newTable:">
@@ -3319,16 +3384,8 @@
 							<string key="name">openMailingList:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="openOPML:">
-							<string key="name">openOPML:</string>
-							<string key="candidateClassName">id</string>
-						</object>
 						<object class="IBActionInfo" key="openOutlineDocument:">
 							<string key="name">openOutlineDocument:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="openRSS:">
-							<string key="name">openRSS:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="openURL:">
@@ -3355,10 +3412,6 @@
 							<string key="name">outlineMenuExpandAll:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="outlineMenuExpandEverything:">
-							<string key="name">outlineMenuExpandEverything:</string>
-							<string key="candidateClassName">id</string>
-						</object>
 						<object class="IBActionInfo" key="saveAs:">
 							<string key="name">saveAs:</string>
 							<string key="candidateClassName">id</string>
@@ -3370,15 +3423,7 @@
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBDocumentRelativeSource</string>
-						<string key="minorKey">../../../../../../Desktop/cactus__/CactusAppDelegate.py</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">CactusDocumentController</string>
-					<string key="superclassName">NSDocumentController</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBDocumentRelativeSource</string>
-						<string key="minorKey">../../../../../../Desktop/cactus__/CactusDocumentController.py</string>
+						<string key="minorKey">../CactusAppDelegate_nib.py</string>
 					</object>
 				</object>
 			</array>

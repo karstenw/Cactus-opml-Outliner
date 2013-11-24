@@ -1132,97 +1132,28 @@ class KWOutlineView(NSOutlineView):
         elif eventCharacter == NSBackTabCharacter:
             # shift tab has it's own character
             if eventModifiers & NSShiftKeyMask:
-                if kwdbg:
-                    print "SHIFT Tab"
-                # dedent selection
-
-                if delg.typ in outlinetypes.hierarchicalTypes:
-                    # get selected rows
-                    sel = self.getSelectionItems()
-
-                    # working from the end
-                    sel.reverse()
-
-                    # dedent each row one level
-                    for item in sel:
-                        item.moveLeft()
-                    consumed = True
-                    delg.markDirty()
-                    self.reloadData()
+                consumed = self.outdentSelection()
 
         ###########################################################################
         #
         # Indenting
         elif eventCharacter == NSTabCharacter:
             # indent selection
-
-            # get selected rows
-            # pdb.set_trace()
-            if delg.typ in outlinetypes.hierarchicalTypes:
-                sel = self.getSelectionItems()
-                # indent each row one level
-                postselect = set()
-                for item in sel:
-                    parent = item.parent
-                    previous = item.previous()
-
-                    # ignore command if item is first Child
-                    if previous != -1:
-                        item.retain()
-                        previous.addChild_( item )
-                        parent.removeChild_(item)
-                        item.release()
-                        postselect.add(item)
-                        self.reloadItem_reloadChildren_( previous, True )
-                        self.expandItem_( previous )
-                        self.reloadItem_reloadChildren_( parent, True )
-                postselect = [self.rowForItem_(i) for i in postselect]
-                self.selectItemRows_( postselect )
-
-                consumed = True
-                delg.markDirty()
-                # pdb.set_trace()
-                self.reloadData()
-
+            consumed = self.indentSelection()
 
         ###########################################################################
         #
         # Move selection up
         elif eventCharacter == NSUpArrowFunctionKey:
             if eventModifiers & NSControlKeyMask:
-                # get selected rows
-                items = self.getSelectionItems()
-                moveSelectionUp(self, items)
-                #
-                delg.markDirty()
-                self.reloadData()
-
-                selection = [self.rowForItem_(i) for i in items]
-                if selection:
-                    self.selectItemRows_( selection )
-
-                self.setNeedsDisplay_( True )
-                consumed = True
-
+                consumed = self.moveSelectionUp()
 
         ###########################################################################
         #
-        # Move selection up
+        # Move selection down
         elif eventCharacter == NSDownArrowFunctionKey:
             if eventModifiers & NSControlKeyMask:
-                # get selected rows
-                items = self.getSelectionItems()
-                moveSelectionDown(self, items)
-                #
-                delg.markDirty()
-                self.reloadData()
-
-                selection = [self.rowForItem_(i) for i in items]
-                if selection:
-                    self.selectItemRows_( selection )
-
-                self.setNeedsDisplay_( True )
-                consumed = True
+                consumed = self.moveSelectionDown()
 
         ###########################################################################
         # ctrl-left
@@ -1310,7 +1241,107 @@ class KWOutlineView(NSOutlineView):
         if not consumed:
             super(KWOutlineView, self).keyDown_( theEvent )
 
+    #
+    # key event handlers
+    #
+    def moveSelectionDown(self):
+        delegate = self.delegate()
+        # get selected rows
+        items = self.getSelectionItems()
+        moveSelectionDown(self, items)
+        #
+        delegate.markDirty()
+        self.reloadData()
 
+        selection = [self.rowForItem_(i) for i in items]
+        if selection:
+            self.selectItemRows_( selection )
+
+        self.setNeedsDisplay_( True )
+        consumed = True
+
+    def moveSelectionUp(self):
+        delegate = self.delegate()
+        # get selected rows
+        items = self.getSelectionItems()
+        moveSelectionUp(self, items)
+        #
+        delegate.markDirty()
+        self.reloadData()
+
+        selection = [self.rowForItem_(i) for i in items]
+        if selection:
+            self.selectItemRows_( selection )
+
+        self.setNeedsDisplay_( True )
+        consumed = True
+
+
+    def indentSelection(self):
+
+        delegate = self.delegate()
+
+        # get selected rows
+        consumed = False
+        if delegate.typ in outlinetypes.hierarchicalTypes:
+            sel = self.getSelectionItems()
+            # indent each row one level
+            postselect = set()
+            for item in sel:
+                parent = item.parent
+                previous = item.previous()
+
+                # ignore command if item is first Child
+                if previous != -1:
+                    item.retain()
+                    previous.addChild_( item )
+                    parent.removeChild_(item)
+                    item.release()
+                    postselect.add(item)
+                    self.reloadItem_reloadChildren_( previous, True )
+                    self.expandItem_( previous )
+                    self.reloadItem_reloadChildren_( parent, True )
+
+            # restore selection
+            postselect = [self.rowForItem_(i) for i in postselect]
+            if postselect:
+                self.selectItemRows_( postselect )
+
+            consumed = True
+            delegate.markDirty()
+            # pdb.set_trace()
+            self.reloadData()
+            return consumed
+
+    def outdentSelection(self):
+        if kwlog:
+            print "SHIFT Tab"
+
+        delegate = self.delegate()
+
+        consumed = False
+        if delegate.typ in outlinetypes.hierarchicalTypes:
+            # get selected rows
+            sel = self.getSelectionItems()
+            if not sel:
+                return
+
+            # working from the end
+            sel.reverse()
+
+            # dedent each row one level
+            for item in sel:
+                item.moveLeft()
+
+            # restore selection
+            postselect = [self.rowForItem_(i) for i in sel]
+            if postselect:
+                self.selectItemRows_( postselect )
+
+            consumed = True
+            delegate.markDirty()
+            self.reloadData()
+        return consumed
     #
     # utilities
     #
