@@ -455,6 +455,7 @@ def generateHTML( rootNode, doctype, encoding, indent=0 ):
     baseOP = rootNode.children[0]
 
     # pdb.set_trace()
+    
     rootElement = lxmletree.Element("html")
     rootElement.tail = u"\n"
 
@@ -467,7 +468,13 @@ def generateHTML( rootNode, doctype, encoding, indent=0 ):
     c = lxmletree.Comment( CactusVersion.document_creator + " on %s." % (now,))
     c.tail = u"\n"
     
-    rootElement.append(c)
+    if 0:
+        # deactivated for now
+        # creates a new comment each time and what's needed is setting
+        # the same comment over and over again
+        #
+        # OTOH leaving it in leaves a save trail...
+        rootElement.append(c)
 
     rootElement.attrib.update( baseOP.getValueDict() )
 
@@ -520,7 +527,8 @@ def generateXML( rootNode, indent=False ):
     now = now.replace(" ", "_")
 
     c = etree.Comment( CactusVersion.document_creator + " on %s." % (now,))
-    rootXML.append(c)
+    if 0:
+        rootXML.append(c)
 
     rootXML.attrib = baseOP.getValueDict()
 
@@ -576,7 +584,8 @@ def generateRSS( rootNode, indent=2 ):
     now = now[:19]
     now = now.replace(" ", "_")
 
-    creator = "Created by Cactus v0.2.0 on %s." % (now,)
+    # unused
+    creator = CactusVersion.document_creator + " on %s." % (now,)
 
     # defaults
     head_d = {
@@ -764,7 +773,8 @@ def generateOPML( rootNode, indent=2, expansion={} ):
     now = now.replace(" ", "_")
 
     c = etree.Comment( CactusVersion.document_creator + " on %s." % (now,))
-    rootOPML.append(c)
+    if 0:
+        rootOPML.append(c)
 
     headOP = rootNode.findFirstChildWithName_( "head" )
 

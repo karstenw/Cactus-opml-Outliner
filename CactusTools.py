@@ -43,6 +43,8 @@ import CactusVersion
 
 import feedparser
 
+import objc
+
 import Foundation
 NSURL = Foundation.NSURL
 NSFileManager = Foundation.NSFileManager
@@ -71,7 +73,7 @@ def ostype2num( ostype ):
 
 def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
     try:
-        if type(s) not in (unicode,):
+        if type(s) not in (unicode, objc.pyobjc_unicode):
             s = unicode(s, srcencoding)
     except TypeError:
         print "makeunicode type conversion error"

@@ -179,7 +179,9 @@ class OutlineNode(NSObject):
 
         # this is outlinetype, not valueType
         self.typ = typ
-
+        self.attributes = ""
+        self.name = ""
+        self.comment = ""
         self.maxHeight = 1
         self.setParent_(parent)
         self.rootNode = rootNode
@@ -187,20 +189,22 @@ class OutlineNode(NSObject):
         # debugging
         self.nodenr = counter.next()
 
+        # these must exists before any name/value is set
+        self.children = NSMutableArray.arrayWithCapacity_( 0 )
+        self.maxHeight = 1
+
         self.setName_( name )
         self.setValue_( obj )
+
 
         self.setAttributes_( obj )
         self.setComment_( "" )
 
-        self.children = NSMutableArray.arrayWithCapacity_( 0 )
-
-        self.maxHeight = 1
-        self.setMaxLineHeight()
+        # self.setMaxLineHeight()
 
         self.controller = None
-        if rootNode != None:
-            self.controller = rootNode.controller
+        #if rootNode != None:
+        #    self.controller = rootNode.controller
 
         # leave this here or bad things will happen
         self.retain()
@@ -222,14 +226,11 @@ class OutlineNode(NSObject):
 
 
     def setMaxLineHeight(self):
-        maxVal = self.calcAttributesHeight()
-        l = self.lineHeight( self.name )
-        if l > maxVal:
-            maxVal = l
-        l = self.lineHeight( self.comment )
-        if l > maxVal:
-            maxVal = l
-        self.maxHeight = maxVal
+        items = [
+            self.calcAttributesHeight(),
+            self.lineHeight( self.name ),
+            self.lineHeight( self.comment )]
+        self.maxHeight = max(items)
 
     def setAttributes_(self, attrs):
         d = {}
@@ -254,6 +255,7 @@ class OutlineNode(NSObject):
             # ???
             pass
         self.attributes = d
+        self.setMaxLineHeight()
 
 
     def lineHeight(self, val):
@@ -287,6 +289,7 @@ class OutlineNode(NSObject):
     #
     def setName_(self, value):
         self.name = makeunicode(value)
+        self.setMaxLineHeight()
 
     def setValue_(self, value):
         if value in (u"", {}, [], None, False):
@@ -309,8 +312,8 @@ class OutlineNode(NSObject):
         self.value.append( nameValue )
         self.setValue_( self.value )
         r = self.findRoot()
-        m = r.model
-        m.reloadData(self)
+        c = r.controller
+        c.outlineView.reloadData()
 
     # used in attribute editor
     def removeValue_(self, nameValue):
@@ -329,8 +332,8 @@ class OutlineNode(NSObject):
         if updated:
             self.setValue_( self.value )
             r = self.findRoot()
-            m = r.model
-            m.reloadData(self)
+            c = r.controller
+            c.outlineView.reloadData()
         return updated
 
     # used in attribute editor
@@ -354,7 +357,8 @@ class OutlineNode(NSObject):
 
         r = self.findRoot()
         try:
-            r.controller.model.reloadData(self)
+            c = r.controller
+            c.outlineView.reloadData()
         except Exception, err:
             pass
 

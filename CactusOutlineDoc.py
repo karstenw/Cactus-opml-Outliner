@@ -129,6 +129,8 @@ def boilerplateOPML( rootNode ):
     rootNode - the node under which the structure will be created
 
     """
+    if kwlog:
+        print "boilerplateOPML()"
 
     ZERO = datetime.timedelta(0)
     HOUR = datetime.timedelta(hours=1)
@@ -176,9 +178,10 @@ def boilerplateOPML( rootNode ):
     body.addChild_( OutlineNode("", "", body, typeOutline, root) )
     #head.release()
     #body.release()
-    print "root:", root.retainCount()
-    print "head:", head.retainCount()
-    print "body:", body.retainCount()
+    if 0:
+        print "root:", root.retainCount()
+        print "head:", head.retainCount()
+        print "body:", body.retainCount()
     return
 
 
@@ -243,8 +246,8 @@ class CactusOutlineDocument(NSDocument):
 
     def readFromURL_ofType_error_(self, url, theType, err):
         if kwlog:
-            print ("CactusOutlineDocument.readFromURL_ofType_error_( %s, %s )\n"
-                   % (repr(url), repr(theType),))
+            msg = "CactusOutlineDocument.readFromURL_ofType_error_( %s, %s )\n"
+            print msg % (repr(url), repr(theType))
 
         OK = True
         s = None
@@ -422,16 +425,15 @@ class CactusOutlineDocument(NSDocument):
 
     def initWithContentsOfURL_ofType_error_(self, url, theType, err):
         """Main entry point for opening documents."""
+        if kwlog:
+            msg = "\nCactusOutlineDocument.initWithContentsOfURL_ofType_error_( %s, %s )\n"
+            print msg % ( repr(theType), repr(url))
+
 
         self, err = self.initWithType_error_( theType, err )
 
         if not self:
             return( None, None)
-
-        if kwlog:
-            print "\nCactusOutlineDocument.initWithContentsOfURL_ofType_error_( %s )" % (
-                                                                        repr(theType),)
-            print repr(url); print
 
         OK, err = self.readFromURL_ofType_error_( url, theType, err )
 
@@ -716,6 +718,8 @@ class CactusOutlineDocument(NSDocument):
                 print "ERROR reading defaults.", repr(err)
 
             etHTML = opml.generateHTML( self.rootNode, doctype, encoding, indent )
+
+            # pdb.set_trace()
 
             if etHTML:
                 # e = etree.ElementTree( rootHTML )

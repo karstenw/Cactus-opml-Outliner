@@ -638,8 +638,8 @@ class KWOutlineView(NSOutlineView):
         self.window().makeFirstResponder_(self)
 
     def setWindowStatus_(self, status):
-        model = self.delegate().controller
-        model.txtWindowStatus.setStringValue_( unicode(status) )
+        ctrl = self.delegate().controller
+        ctrl.txtWindowStatus.setStringValue_( unicode(status) )
 
 
     #
@@ -708,7 +708,8 @@ class KWOutlineView(NSOutlineView):
 
         # unused, just a scribbled idea
         dispatch ={
-
+            # NSCarriageReturnCharacter + SHIFT | ALT | CTRL
+            # make a key consisting of char+modifiers
             None: {
                 NSBackspaceCharacter: (),
                 NSDeleteCharacter: (),
@@ -777,6 +778,7 @@ class KWOutlineView(NSOutlineView):
                 # TODO: if already editing, start new line, continue editing
 
                 #
+                # pdb.set_trace()
                 sel = self.getSelectedRow()
                 createNode(self, sel)
                 consumed = True
@@ -1118,6 +1120,7 @@ class KWOutlineView(NSOutlineView):
                         if kwdbg:
                             print "Edit START"
                         self.editColumn_row_withEvent_select_(0, index, None, True)
+                        consumed = True
                     else:
                         # empty selection
                         pass
@@ -1248,8 +1251,10 @@ class KWOutlineView(NSOutlineView):
         delegate = self.delegate()
         # get selected rows
         items = self.getSelectionItems()
-        moveSelectionDown(self, items)
+        if not items:
+            return False
         #
+        moveSelectionDown(self, items)
         delegate.markDirty()
         self.reloadData()
 
@@ -1258,12 +1263,14 @@ class KWOutlineView(NSOutlineView):
             self.selectItemRows_( selection )
 
         self.setNeedsDisplay_( True )
-        consumed = True
+        return True
 
     def moveSelectionUp(self):
         delegate = self.delegate()
         # get selected rows
         items = self.getSelectionItems()
+        if not items:
+            return False
         moveSelectionUp(self, items)
         #
         delegate.markDirty()
@@ -1274,7 +1281,8 @@ class KWOutlineView(NSOutlineView):
             self.selectItemRows_( selection )
 
         self.setNeedsDisplay_( True )
-        consumed = True
+        return True
+        
 
 
     def indentSelection(self):
@@ -1333,6 +1341,8 @@ class KWOutlineView(NSOutlineView):
             for item in sel:
                 item.moveLeft()
 
+            self.reloadData()
+
             # restore selection
             postselect = [self.rowForItem_(i) for i in sel]
             if postselect:
@@ -1340,7 +1350,7 @@ class KWOutlineView(NSOutlineView):
 
             consumed = True
             delegate.markDirty()
-            self.reloadData()
+            # self.reloadData()
         return consumed
     #
     # utilities
@@ -1543,6 +1553,9 @@ class OutlineViewDelegateDatasource(NSObject):
     def reloadData_(self, item):
         if self.controller:
             self.controller.reloadData_(item)
+        else:
+            if kwlog:
+                print "FAILED: reloadData_(%s)" % repr(item)
 
     def isSubEditor(self):
         return self.parentNode != None
@@ -1761,18 +1774,25 @@ def deleteNodes(ov, nodes=(), selection=False):
     ov.reloadData()
 
 def createNode(ov, selection, startEditing=True):
-    # pdb.set_trace()
     # create node at selection and start editing
 
     # open new line and start editing
     # if already editing, start new line, continue editing
     delg = ov.delegate()
     typ = delg.typ
+    root = delg.root
+
+    # no selection - make new node at end
     if selection == -1:
-        rowIndex = ov.delegate().appendToRoot_Value_(u"", u"")
+        node = OutlineNode( u"", u"", root, typ, root)
+        root.addChild_( node )
+        # need to reload all so the new node gets recognized
+        ov.reloadData()
+        rowIndex = ov.rowForItem_( node )
+
     else:
         p = selection.parent
-        root = p.rootNode
+        # root = p.rootNode
         node = OutlineNode(u"", "", p, typ, root)
         targetIdx = selection.nextIndex()
         if targetIdx == -1:
@@ -1782,7 +1802,6 @@ def createNode(ov, selection, startEditing=True):
         ov.reloadData()
         ov.selectRowItem_( node )
         rowIndex = ov.rowForItem_( node )
-        consumed = True
 
     if startEditing:
         s = NSIndexSet.indexSetWithIndex_( rowIndex )

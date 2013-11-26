@@ -6,7 +6,7 @@ appnameshort = "Cactus"
 
 copyright = 'Copyright 2011-2013 Karsten Wolf'
 
-version = "0.5.9"
+version = "0.5.A"
 
 # 
 user_agent = "%s/%s +https://github.com/karstenw/Cactus-opml-Outliner" % (appname, version)
