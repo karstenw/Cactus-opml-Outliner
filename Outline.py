@@ -1563,8 +1563,8 @@ class OutlineViewDelegateDatasource(NSObject):
     def appendToRoot_Value_(self, name, value):
         node = OutlineNode(name, value, self.root, self.typ, self.root)
         self.root.addChild_( node )
-        self.reloadData_( node )
         # need to reload all so the new node gets recognized
+        self.reloadData_( node )
         idx = self.controller.outlineView.rowForItem_( node )
         return idx
 

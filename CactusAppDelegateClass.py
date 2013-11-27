@@ -858,12 +858,6 @@ class CactusWindowController_OLD(NSWindowController):
         # Open a new browser window for each selected expandable item
         print "DEPRECATED doubleClick_()"
 
-    def reloadData_(self, item):
-            self.outlineView.reloadItem_reloadChildren_( item, True )
-
-    def reloadData_Children_(self, item, children):
-        self.outlineView.reloadItem_reloadChildren_( item, children )
-
     @objc.IBAction
     def applySettings_(self, sender):
         """target of the apply button. sets some tableview settings.

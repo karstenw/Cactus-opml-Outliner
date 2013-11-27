@@ -946,6 +946,11 @@ class CactusOutlineDocument(NSDocument):
         printOp.setShowPanel_(show)
         self.runModalPrintOperation_delegate_didRunSelector_contextInfo_( printOp, None, None, None, None)
 
+    #
+    # methods to do:
+    #
+    # writeSafelyToURL_ofType_forSaveOperation_error_
+
 
 class CactusOutlineWindowController(NSWindowController):
     menRowLines = objc.IBOutlet()
