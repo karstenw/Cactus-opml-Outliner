@@ -1583,7 +1583,7 @@ class OutlineViewDelegateDatasource(NSObject):
         elif c == u"name":
             return item.name
         elif c == u"comment":
-            return item.displayComment
+            return item.comment
 
 
     def numberOfRowsInTableView_(self, tv):
@@ -1632,7 +1632,6 @@ class OutlineViewDelegateDatasource(NSObject):
         elif c == u"name":
             return item.name
         elif c == u"comment":
-            # return item.displayComment
             return item.comment
 
 

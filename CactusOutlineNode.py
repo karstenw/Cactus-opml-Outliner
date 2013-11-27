@@ -162,7 +162,6 @@ class OutlineNode(NSObject):
     # children
     #
     # displayValue
-    # displayComment
     # displayType
     #
 
@@ -383,8 +382,7 @@ class OutlineNode(NSObject):
             return d
 
     def setComment_(self, comment):
-        self.comment = comment
-        self.displayComment = unicode( self.comment )
+        self.comment = makeunicode( comment )
         self.setMaxLineHeight()
 
     #
