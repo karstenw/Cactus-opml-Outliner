@@ -162,7 +162,6 @@ class OutlineNode(NSObject):
     # children
     #
     # displayValue
-    # displayType
     #
 
     #
@@ -304,7 +303,6 @@ class OutlineNode(NSObject):
             else:
                 self.type = u"String"
             self.displayValue = nv.displayValue()
-        self.displayType = self.type
 
     # UNUSED
     def addValue_(self, nameValue):

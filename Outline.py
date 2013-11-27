@@ -1576,8 +1576,7 @@ class OutlineViewDelegateDatasource(NSObject):
         c = col.identifier()
         item = self.root.childAtIndex_( row )
         if c == u"type":
-            # return item.displayType
-            return item.displayType
+            return item.type
         elif c == u"value":
             return item.displayValue
         elif c == u"name":
@@ -1625,7 +1624,6 @@ class OutlineViewDelegateDatasource(NSObject):
         if not item:
             item = self.root
         if c == u"type":
-            # return item.displayType
             return item.type
         elif c == u"value":
             return item.displayValue
@@ -1637,11 +1635,13 @@ class OutlineViewDelegateDatasource(NSObject):
 
     def outlineView_setObjectValue_forTableColumn_byItem_(self, view, value, col, item):
         columnName = col.identifier()
+
         if not item:
-            # item = self.root
             return
+
         if columnName == u"type":
-            pass #return item.displayType
+            pass
+
         elif columnName == u"value":
             if value != item.displayValue:
                 # if it has a parentNode it's edited attributes
@@ -1650,10 +1650,12 @@ class OutlineViewDelegateDatasource(NSObject):
                     self.parentNode.updateValue_( (name, unicode(value)) )
                 item.setValue_( value )
                 self.markDirty()
+
         elif columnName == u"name":
             if value != item.name:
                 item.setName_(value)
                 self.markDirty()
+
         elif columnName == u"comment":
             if value != item.comment:
                 item.setComment_(value)
