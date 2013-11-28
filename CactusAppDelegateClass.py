@@ -215,7 +215,7 @@ class CactusAppDelegate(NSObject):
     def applicationShouldHandleReopen_hasVisibleWindows_( self, theApplication, flag ):
         if kwlog:
             print "CactusAppDelegate.applicationShouldHandleReopen_hasVisibleWindows_()"
-        # this is neede to prevent creating an untitled document when clicking the dock
+        # this is needed to prevent creating an untitled document when clicking the dock
         #
         # should really be in the (not yet existent) preferences
         return False
