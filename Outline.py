@@ -315,7 +315,6 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
             appdelg.newOutlineFromURL_Type_( nsurl, CactusHTMLType )
             workspace.openURL_( nsurl )
 
-        # workspace.openURL_( nsurl )
     elif nodeType == "hook":
         if open_:
             workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
@@ -903,9 +902,11 @@ class KWOutlineView(NSOutlineView):
 
                                 open_node(url)
 
-                            elif name in ('a'):
+                            elif name in ('a', 'img'):
                                 d = item.getValueDict()
                                 href = d.get('href', '')
+                                if name == 'img':
+                                    href = d.get('src', '')
                                 url = cleanupURL( href )
 
                                 # code duplication
@@ -922,8 +923,16 @@ class KWOutlineView(NSOutlineView):
                                         urlbase = urlbase + url
                                         url = urlbase
                                     print repr(urlbase)
-                                open_node(url, 'HTML')
-
+                                extension = os.path.splitext(url)[1]
+                                if extension:
+                                    extension = extension.replace('.', '')
+                                if extension in g_qtplayer_extensions:
+                                    open_node(url, 'QTPL')
+                                elif  extension in g_preview_extensions:
+                                    open_node(url)
+                                else:
+                                    open_node(url, 'HTML')
+                            
                             elif name in ('url', 'htmlUrl', 'xmlUrl', 'xmlurl'):
                                 #
                                 # FIXING HACK

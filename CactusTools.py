@@ -434,6 +434,8 @@ def cache_url( nsurl, fileextension ):
     returnURL = nsurl
     try:
         localpath, localname = getDownloadFolder(nsurl)
+        if not localpath.endswith(localname):
+            localfullpath = os.path.join(localpath, localname)
         if not localpath:
             return nsurl
 
@@ -478,6 +480,7 @@ def cache_url( nsurl, fileextension ):
             print "LOAD: %s..." % url
             fname, info = urllib.urlretrieve(url, localpath)
             print "LOAD: %s...done" % url
+
             try:
                 finder = asc.app(u'Finder.app')
                 hfspath = mactypes.File( localpath ).hfspath
@@ -492,7 +495,7 @@ def cache_url( nsurl, fileextension ):
                 setFileModificationDate( localpath, rmodfdate )
             except TypeError, err:
                 # do not cache if modification date cannot be determined
-                print "NOCACHE: Could not get remote file(%s) modification date." % fname
+                print "NOCACHE: Could not get remote file(%s) modification date." % url
 
         returnURL = NSURL.fileURLWithPath_( unicode(localpath) )
 
