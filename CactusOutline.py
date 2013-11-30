@@ -221,7 +221,7 @@ g_qtplayer_extensions = g_qtplayer_extensions.split()
 
 def open_photo( url, open_=True ):
     """opens 2nd biggest picture"""
-    print "Outline.open_photo( %s )" % repr(url)
+    print "CactusOutline.open_photo( %s )" % repr(url)
 
     defaults = NSUserDefaults.standardUserDefaults()
     cache = False
@@ -277,7 +277,7 @@ def open_photo( url, open_=True ):
 
 # TODO: change parameter to node!
 def open_node( url, nodeType=None, open_=True, supressCache=False ):
-    print "Outline.open_node()"
+    print "CactusOutline.open_node()"
 
     if 0:
         # pdb.set_trace()

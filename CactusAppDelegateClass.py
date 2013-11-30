@@ -51,8 +51,8 @@ typeTable = CactusOutlineTypes.typeTable
 typeBrowser = CactusOutlineTypes.typeBrowser
 
 
-import Outline
-OutlineViewDelegateDatasource = Outline.OutlineViewDelegateDatasource
+import CactusOutline
+OutlineViewDelegateDatasource = CactusOutline.OutlineViewDelegateDatasource
 
 import CactusOutlineDoc
 CactusOutlineDocument = CactusOutlineDoc.CactusOutlineDocument

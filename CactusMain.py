@@ -9,7 +9,7 @@ AppHelper = PyObjCTools.AppHelper
 
 
 import CactusVersion
-import Outline
+import CactusOutline
 import CactusAppDelegateClass
 
 import CactusOutlineDoc
