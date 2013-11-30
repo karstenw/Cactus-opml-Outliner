@@ -31,7 +31,7 @@ pp = pprint.pprint
 
 
 
-import opml
+import CactusOPML
 
 import CactusOutlineTypes
 typeOutline = CactusOutlineTypes.typeOutline
@@ -233,7 +233,7 @@ def open_photo( url, open_=True ):
     s = CactusTools.readURL( NSURL.URLWithString_( url ) )
 
     #
-    d = opml.photo_from_string( s )
+    d = CactusOPML.photo_from_string( s )
 
     # sortedSizes contains all picture sizes in descensing order
     # first pict will be max size. size large is usually good but
@@ -489,7 +489,7 @@ class KWOutlineView(NSOutlineView):
 
                 d = None
                 try:
-                    d = opml.opml_from_string(
+                    d = CactusOPML.opml_from_string(
                                 readURL( NSURL.URLWithString_( url ),
                                          CactusOPMLType ) )
 

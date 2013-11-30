@@ -28,7 +28,7 @@ kwlog = True
 
 import feedparser
 
-import opml
+import CactusOPML
 
 import CactusVersion
 
@@ -259,7 +259,7 @@ class CactusOutlineDocument(NSDocument):
             # pdb.set_trace()
             d = None
             try:
-                d = opml.opml_from_string( readURL( url, CactusOPMLType ) )
+                d = CactusOPML.opml_from_string( readURL( url, CactusOPMLType ) )
             except OPMLParseErrorException, v:
                 tb = unicode(traceback.format_exc())
                 v = unicode( repr(v) )
@@ -303,7 +303,7 @@ class CactusOutlineDocument(NSDocument):
         elif theType == CactusXMLType:
             d = None
             try:
-                d = opml.xml_from_string( readURL( url, CactusXMLType ) )
+                d = CactusOPML.xml_from_string( readURL( url, CactusXMLType ) )
             except XMLParseErrorException, v:
                 tb = unicode(traceback.format_exc())
                 v = unicode( repr(v) )
@@ -331,7 +331,7 @@ class CactusOutlineDocument(NSDocument):
         elif theType == CactusHTMLType:
             d = None
             try:
-                d = opml.html_from_url( url )
+                d = CactusOPML.html_from_url( url )
             except HTMLParseErrorException, v:
                 tb = unicode(traceback.format_exc())
                 v = unicode( repr(v) )
@@ -359,7 +359,7 @@ class CactusOutlineDocument(NSDocument):
             d = None
             try:
                 # pdb.set_trace()
-                d = opml.parse_plist( url )
+                d = CactusOPML.parse_plist( url )
             except PLISTParseErrorException, v:
                 tb = unicode(traceback.format_exc())
                 v = unicode( repr(v) )
@@ -389,7 +389,7 @@ class CactusOutlineDocument(NSDocument):
             d = None
             # pdb.set_trace()
             try:
-                d = opml.parse_plist( url )
+                d = CactusOPML.parse_plist( url )
             except PLISTParseErrorException, v:
                 tb = unicode(traceback.format_exc())
                 v = unicode( repr(v) )
@@ -675,7 +675,7 @@ class CactusOutlineDocument(NSDocument):
             expansionState = self.calculateExpansionState_( self.rootNode )
             if expansionState == None:
                 expansionState = {}
-            rootOPML = opml.generateOPML( self.rootNode, indent=1, expansion=expansionState )
+            rootOPML = CactusOPML.generateOPML( self.rootNode, indent=1, expansion=expansionState )
 
             e = etree.ElementTree( rootOPML )
 
@@ -686,13 +686,13 @@ class CactusOutlineDocument(NSDocument):
             return NSData.dataWithBytes_length_(t, len(t))
 
         elif theType == CactusRSSType:
-            t = opml.generateRSS( self.rootNode, indent=1 )
+            t = CactusOPML.generateRSS( self.rootNode, indent=1 )
             return NSData.dataWithBytes_length_(t, len(t))
 
         elif theType == CactusXMLType:
             # closed after finding the trailing text bug/misconception
             # return None
-            rootXML = opml.generateXML( self.rootNode) #, indent=1 )
+            rootXML = CactusOPML.generateXML( self.rootNode) #, indent=1 )
 
             e = etree.ElementTree( rootXML )
 
@@ -717,7 +717,7 @@ class CactusOutlineDocument(NSDocument):
             except StandardError, err:
                 print "ERROR reading defaults.", repr(err)
 
-            etHTML = opml.generateHTML( self.rootNode, doctype, encoding, indent )
+            etHTML = CactusOPML.generateHTML( self.rootNode, doctype, encoding, indent )
 
             # pdb.set_trace()
 
@@ -733,7 +733,7 @@ class CactusOutlineDocument(NSDocument):
                 return NSData.dataWithBytes_length_(etHTML, len(etHTML))
 
         elif theType == CactusDocumentTypes.CactusPLISTType:
-            return opml.serializePLISTOutline_( self.rootNode )
+            return CactusOPML.serializePLISTOutline_( self.rootNode )
 
         # these are just ideas
         elif theType == CactusDocumentTypes.CactusTEXTType:
@@ -797,7 +797,7 @@ class CactusOutlineDocument(NSDocument):
 
         s = str(data.bytes())
         if typeName == CactusOPMLType:
-            d = opml.opml_from_string( s )
+            d = CactusOPML.opml_from_string( s )
             if d:
                 root, typeName = openOPML_( d )
                 if self.rootNode:
