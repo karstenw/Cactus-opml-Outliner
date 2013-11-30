@@ -45,10 +45,10 @@ NSTableViewSolidVerticalGridLineMask = AppKit.NSTableViewSolidVerticalGridLineMa
 NSTableViewSolidHorizontalGridLineMask = AppKit.NSTableViewSolidHorizontalGridLineMask
 
 
-import outlinetypes
-typeOutline = outlinetypes.typeOutline
-typeTable = outlinetypes.typeTable
-typeBrowser = outlinetypes.typeBrowser
+import CactusOutlineTypes
+typeOutline = CactusOutlineTypes.typeOutline
+typeTable = CactusOutlineTypes.typeTable
+typeBrowser = CactusOutlineTypes.typeBrowser
 
 
 import Outline

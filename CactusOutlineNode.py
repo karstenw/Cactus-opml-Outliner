@@ -34,8 +34,8 @@ import itertools
 counter = itertools.count()
 
 
-import outlinetypes
-typeOutline = outlinetypes.typeOutline
+import CactusOutlineTypes
+typeOutline = CactusOutlineTypes.typeOutline
 
 import objc
 
@@ -557,7 +557,7 @@ class OutlineNode(NSObject):
     def moveLeft(self):
         # noveAfterParent
         """For dedenting."""
-        if not self.typ in outlinetypes.hierarchicalTypes:
+        if not self.typ in CactusOutlineTypes.hierarchicalTypes:
             return
         parent = self.parent
         if parent == None:
@@ -578,7 +578,7 @@ class OutlineNode(NSObject):
 
     def moveRight(self):
         # make self child of previous
-        if not self.typ in outlinetypes.hierarchicalTypes:
+        if not self.typ in CactusOutlineTypes.hierarchicalTypes:
             return
 
         previous = self.previous()

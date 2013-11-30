@@ -33,8 +33,8 @@ pp = pprint.pprint
 
 import opml
 
-import outlinetypes
-typeOutline = outlinetypes.typeOutline
+import CactusOutlineTypes
+typeOutline = CactusOutlineTypes.typeOutline
 
 import objc
 
@@ -1071,19 +1071,19 @@ class KWOutlineView(NSOutlineView):
                                 title = item.name
 
                                 # stop it if we are in a table
-                                if item.typ not in outlinetypes.hierarchicalTypes:
+                                if item.typ not in CactusOutlineTypes.hierarchicalTypes:
                                     continue
 
                                 # build a new document from current attributes
                                 root = OutlineNode(u"__root__", u"", None,
-                                                   outlinetypes.typeOutline, None)
+                                                   CactusOutlineTypes.typeOutline, None)
                                 for t in item.value:
                                     if isinstance(t, tuple):
                                         name, value = t
                                     elif isinstance(t, str):
                                         name = u"value"
                                         value = t
-                                    node = OutlineNode(name, value, root, outlinetypes.typeTable, root)
+                                    node = OutlineNode(name, value, root, CactusOutlineTypes.typeTable, root)
                                     root.addChild_(node)
 
                                 #
@@ -1300,7 +1300,7 @@ class KWOutlineView(NSOutlineView):
 
         # get selected rows
         consumed = False
-        if delegate.typ in outlinetypes.hierarchicalTypes:
+        if delegate.typ in CactusOutlineTypes.hierarchicalTypes:
             sel = self.getSelectionItems()
             # indent each row one level
             postselect = set()
@@ -1337,7 +1337,7 @@ class KWOutlineView(NSOutlineView):
         delegate = self.delegate()
 
         consumed = False
-        if delegate.typ in outlinetypes.hierarchicalTypes:
+        if delegate.typ in CactusOutlineTypes.hierarchicalTypes:
             # get selected rows
             sel = self.getSelectionItems()
             if not sel:
@@ -1545,7 +1545,7 @@ class OutlineViewDelegateDatasource(NSObject):
         self.parentNode = parentNode
 
         if not isinstance(obj, OutlineNode):
-            obj = OutlineNode(unicode(obj), "", None, outlinetypes.typeOutline, None)
+            obj = OutlineNode(unicode(obj), "", None, CactusOutlineTypes.typeOutline, None)
         self.root = obj
         return self
 
@@ -1624,7 +1624,7 @@ class OutlineViewDelegateDatasource(NSObject):
         return item.childAtIndex_( child )
 
     def outlineView_isItemExpandable_(self, view, item):
-        if not self.typ in outlinetypes.hierarchicalTypes:
+        if not self.typ in CactusOutlineTypes.hierarchicalTypes:
             return False
         return item.noOfChildren() > 0
 

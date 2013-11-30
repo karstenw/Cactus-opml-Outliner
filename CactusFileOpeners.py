@@ -35,10 +35,10 @@ ostype2num = CactusTools.ostype2num
 
 import CactusVersion
 
-import outlinetypes
-typeOutline = outlinetypes.typeOutline
-typeTable = outlinetypes.typeTable
-typeBrowser = outlinetypes.typeBrowser
+import CactusOutlineTypes
+typeOutline = CactusOutlineTypes.typeOutline
+typeTable = CactusOutlineTypes.typeTable
+typeBrowser = CactusOutlineTypes.typeBrowser
 
 import CactusDocumentTypes
 CactusOPMLType = CactusDocumentTypes.CactusOPMLType
