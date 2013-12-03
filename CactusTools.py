@@ -27,6 +27,8 @@ import re
 
 import urllib
 
+import urlparse
+
 import CactusDocumentTypes
 CactusOPMLType = CactusDocumentTypes.CactusOPMLType
 CactusRSSType = CactusDocumentTypes.CactusRSSType
@@ -431,7 +433,15 @@ def setFileModificationDate( filepath, modfdt ):
 
 
 def cache_url( nsurl, fileextension ):
+    if kwlog:
+        print "CactusTools.cache_url( %s, %s )" % (nsurl, fileextension)
+
+    if not nsurl:
+        return False
+
     returnURL = nsurl
+    url = NSURL2str( nsurl )
+
     try:
         localpath, localname = getDownloadFolder(nsurl)
 
@@ -445,11 +455,6 @@ def cache_url( nsurl, fileextension ):
         folder, filename = os.path.split( localpath )
         if not os.path.exists(folder):
             os.makedirs( folder )
-
-        url = NSURL2str( nsurl )
-
-        if kwlog:
-            print "CactusTools.cache_url( %s, %s )" % (url, fileextension)
 
         dodownload = False
         if os.path.exists( localpath ):
@@ -508,3 +513,30 @@ def cache_url( nsurl, fileextension ):
         print
 
     return returnURL
+
+def mergeURLs( base, rel ):
+    """create an url with base as the base, updated by existing parts of rel."""
+    s = "CactusTools.mergeURLs(%s, %s) ->  %s"
+    pbase = urlparse.urlparse( base )
+    prel = urlparse.urlparse( rel )
+
+    target = urlparse.ParseResult(
+        scheme = pbase.scheme,
+        netloc = prel.netloc if (prel.netloc) else pbase.netloc,
+        path = prel.path if (prel.path) else pbase.path,
+        params = prel.params if (prel.params) else pbase.params,
+        query = prel.query if (prel.query) else pbase.query,
+        fragment = prel.fragment if (prel.fragment) else pbase.fragment)
+
+    target = urlparse.urlunparse( target )
+    print s % ( base, rel, target)
+    return target
+
+
+def getURLExtension( url ):
+    purl = urlparse.urlparse( url )
+    path = purl.path
+    folder, filename = os.path.split( path )
+    basename, ext = os.path.splitext( filename )
+    print "CactusTools.getURLExtension(%s) -> '%s' . '%s'" % ( url, basename, ext )
+    return (basename, ext)

@@ -165,7 +165,8 @@ getFileProperties = CactusTools.getFileProperties
 setFileProperties = CactusTools.setFileProperties
 datestring_nsdate = CactusTools.datestring_nsdate
 makeunicode = CactusTools.makeunicode
-
+mergeURLs = CactusTools.mergeURLs
+getURLExtension = CactusTools.getURLExtension
 
 import CactusVersion
 
@@ -282,8 +283,7 @@ def open_photo( url, open_=True ):
 def open_node( url, nodeType=None, open_=True, supressCache=False ):
     print "CactusOutline.open_node()"
 
-    if 0:
-        # pdb.set_trace()
+    if 1:
         pp( (url,nodeType,open_, supressCache) )
 
     defaults = NSUserDefaults.standardUserDefaults()
@@ -297,23 +297,24 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
     appdelg = appl.delegate()
     workspace= NSWorkspace.sharedWorkspace()
 
-    url = cleanupURL( url )
-    surl = os.path.splitext( url )[1]
-    surl = surl.replace( '.', '', 1)
-    surl = surl.lower()
+    basename, ext = getURLExtension( url )
+    ext = ext.replace( '.', '', 1)
+    ext = ext.lower()
 
+    # pdb.set_trace()
+    # url = url.replace(" ", "%20")
     nsurl = NSURL.URLWithString_( url )
 
-    if nodeType == "OPML" or url.endswith(".opml"):
+    if nodeType == "OPML" or ext == "opml":
         if open_:
             appdelg.newOutlineFromURL_Type_( nsurl, CactusOPMLType )
-    elif nodeType == "RSS" or url.endswith(".rss"):
+    elif nodeType == "RSS" or ext == "rss":
         if open_:
             appdelg.newOutlineFromURL_Type_( nsurl, CactusRSSType )
-    elif nodeType == "XML" or url.endswith(".xml"):
+    elif nodeType == "XML" or ext == "xml":
         if open_:
             appdelg.newOutlineFromURL_Type_( nsurl, CactusXMLType )
-    elif nodeType == "HTML" or url.endswith(".html"):
+    elif nodeType == "HTML" or ext == "html":
         if open_:
             appdelg.newOutlineFromURL_Type_( nsurl, CactusHTMLType )
             workspace.openURL_( nsurl )
@@ -326,10 +327,10 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
                 0,
                 None,
                 None )
-    elif surl in g_qtplayer_extensions or nodeType == "QTPL":
+    elif ext in g_qtplayer_extensions or nodeType == "QTPL":
         # qtplayer can do http:
         if cache and not supressCache:
-            nsurl = CactusTools.cache_url( nsurl, surl )
+            nsurl = CactusTools.cache_url( nsurl, ext )
         if open_:
             workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
                 [ nsurl ],
@@ -339,7 +340,7 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
                 None,
                 None )
 
-    elif surl in g_preview_extensions:
+    elif ext in g_preview_extensions:
         if nsurl.isFileURL():
             if open_:
                 workspace.openURLs_withAppBundleIdentifier_options_additionalEventParamDescriptor_launchIdentifiers_(
@@ -351,12 +352,12 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
         else:
             # preview can't do http so open it in the std browser:
             if cache:
-                nsurl = CactusTools.cache_url( nsurl, surl )
+                nsurl = CactusTools.cache_url( nsurl, ext )
             if open_:
                 workspace.openURL_( nsurl )
     else:
         if cache:
-            nsurl = CactusTools.cache_url( nsurl, surl )
+            nsurl = CactusTools.cache_url( nsurl, ext )
         if open_:
             workspace.openURL_( nsurl )
 
@@ -449,8 +450,6 @@ class KWOutlineView(NSOutlineView):
         listroot = OutlineNode(url, "", parent, typeOutline, item.rootNode)
         parent.addChild_atIndex_( listroot, idx+1 )
 
-        # pdb.set_trace()
-
         for link in links:
             d = { 'type': 'link' }
             dest = link.get('href', False)
@@ -459,22 +458,8 @@ class KWOutlineView(NSOutlineView):
             name = link.text
             d['name'] = name
             pdest = urlparse.urlparse( dest )
-            #
-            # Ugly ahead
-            #
-            if not pdest.scheme:
-                site = urlparse.urlparse( url )
-                target = urlparse.ParseResult(
-                    scheme = site.scheme,
-                    netloc = pdest.netloc if (pdest.netloc) else site.netloc,
-                    path = pdest.path if (pdest.path) else site.path,
-                    params = pdest.params if (pdest.params) else site.params,
-                    query = pdest.query if (pdest.query) else site.query,
-                    fragment = pdest.fragment if (pdest.fragment) else site.fragment)
-                target = urlparse.urlunparse( target )
-                d['url'] = target
-            else:
-                d['url'] = dest
+            target = mergeURLs( url, dest )
+            d['url'] = target
 
             node = OutlineNode(name, d, listroot, typeOutline, item.rootNode)
             listroot.addChild_( node )
@@ -937,23 +922,17 @@ class KWOutlineView(NSOutlineView):
                                         nodetype = "OPML"
                                     else:
                                         nodetype = "XML"
-                                if not url.startswith( 'http' ) :
+
+                                if not url.startswith( 'http' ):
+                                    # get base url via controller
                                     root = item.rootNode
                                     ctrl = root.controller
-                                    urlbase = "NONE"
+                                    urlbase = False
                                     if ctrl != None:
-                                        # urlbase = ctrl.nsurl.baseURL()
-                                        #
-                                        # TBD Siehe safari links
-                                        #
-                                        urlbase = ctrl.nsurl().baseURL()
-                                        if not urlbase:
-                                            urlbase = ctrl.nsurl().absoluteString()
-                                        else:
-                                            urlbase = urlbase.absoluteString()
-                                        urlbase = urlbase + url
-                                        url = urlbase
-                                    print repr(urlbase)
+                                        urlbase = ctrl.nsurl()
+                                        if urlbase:
+                                            target = NSURL2str(urlbase.absoluteString())
+                                            url = mergeURLs( target, url )
                                 open_node( url, nodetype )
 
                             elif name in ('script'):
@@ -962,20 +941,16 @@ class KWOutlineView(NSOutlineView):
                                 url = cleanupURL( href )
 
                                 # code duplication
-                                if not url.startswith( 'http' ) :
+                                if not url.startswith( 'http' ):
+                                    # get base url via controller
                                     root = item.rootNode
                                     ctrl = root.controller
-                                    urlbase = "NONE"
+                                    urlbase = False
                                     if ctrl != None:
-                                        urlbase = ctrl.nsurl().baseURL()
-                                        if not urlbase:
-                                            urlbase = ctrl.nsurl().absoluteString()
-                                        else:
-                                            urlbase = urlbase.absoluteString()
-                                        urlbase = urlbase + url
-                                        url = urlbase
-                                    print repr(urlbase)
-
+                                        urlbase = ctrl.nsurl()
+                                        if urlbase:
+                                            target = NSURL2str(urlbase.absoluteString())
+                                            url = mergeURLs( target, url )
                                 open_node(url)
 
                             elif name in ('a', 'img'):
@@ -986,20 +961,18 @@ class KWOutlineView(NSOutlineView):
                                 url = cleanupURL( href )
 
                                 # code duplication
-                                if not url.startswith( 'http' ) :
+                                if not url.startswith( 'http' ):
+                                    # get base url via controller
                                     root = item.rootNode
                                     ctrl = root.controller
-                                    urlbase = "NONE"
+                                    urlbase = False
                                     if ctrl != None:
-                                        urlbase = ctrl.nsurl().baseURL()
-                                        if not urlbase:
-                                            urlbase = ctrl.nsurl().absoluteString()
-                                        else:
-                                            urlbase = urlbase.absoluteString()
-                                        urlbase = urlbase + url
-                                        url = urlbase
-                                    print repr(urlbase)
-                                extension = os.path.splitext(url)[1]
+                                        urlbase = ctrl.nsurl()
+                                        if urlbase:
+                                            target = NSURL2str(urlbase.absoluteString())
+                                            url = mergeURLs( target, url )
+
+                                basename, extension = getURLExtension(url)
                                 if extension:
                                     extension = extension.replace('.', '')
                                 if extension in g_qtplayer_extensions:
@@ -1955,24 +1928,41 @@ def moveSelectionLeft(ov, selection):
 def moveSelectionRight(ov, selection):
     pass
 
+
+def unmangleFSSPecURL( url ):
+    orgurl = url
+    # clean up fsspec mangled names in URLs
+    # pdb.set_trace()
+    if '#' in url:
+        # pdb.set_trace()
+        # escape OS9 mangled filenames; Frontier produces such links
+        os9namepart = re.compile( r"^(.+)#([0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F]\....)$" )
+        m = os9namepart.match( url )
+        if m:
+            pre, post = m.groups()
+            pre = urllib.quote( pre, "/:?" )
+            post = urllib.quote( post, "/:?" )
+            url = "%s%%23%s" % (pre, post)
+    print "CactusOutline.unmangleFSSPecURL(%s) -> %s" % (orgurl, url)
+    return url
+
+
 def cleanupURL( url ):
     # lots of URLs contain spaces, &, '
+    return unmangleFSSPecURL( url )
 
     mangled = False
     url = NSURL2str(url)
     if '#' in url:
         # pdb.set_trace()
         # escape OS9 mangled filenames; Frontier produces such links
-        os9namepart = re.compile( r"(.*)#([0-9A-F]{5,8}\..*)" )
-        while True:
-            m = os9namepart.match( url )
-            if m:
-                mangled = True
-                l = m.groups()
-                url = "%s%%23%s" % l
-                # url = re.sub(os9namepart, "\1%23\2.\3", url)
-            else:
-                break
+        os9namepart = re.compile( r"(.*)#([0-9A-F]{7,7}\.{3,3}]*)" )
+        m = os9namepart.match( url )
+        if m:
+            mangled = True
+            l = m.groups()
+            url = "%s%%23%s" % l
+            # url = re.sub(os9namepart, "\1%23\2.\3", url)
         if mangled:
             return url
 
