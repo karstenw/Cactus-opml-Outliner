@@ -29,7 +29,10 @@ import pdb
 import pprint
 pp = pprint.pprint
 
+import bs4
+BeautifulSoup = bs4.BeautifulSoup
 
+import appscript
 
 import CactusOPML
 
@@ -380,6 +383,9 @@ class KWOutlineView(NSOutlineView):
         menu.addItemWithTitle_action_keyEquivalent_( u"Node paste",
                                                       "pasteSelectionNodes:", u"")
 
+        menu.addItemWithTitle_action_keyEquivalent_( u"Insert Safari links",
+                                                      "insertSafariLinks:", u"")
+
         # copySelectionPython_
         menu.setAutoenablesItems_(False)
         self.setMenu_(menu)
@@ -408,6 +414,73 @@ class KWOutlineView(NSOutlineView):
     def menuNeedsUpdate_(self, sender):
         if 0: #kwlog:
             print "KWOutlineView.menuNeedsUpdate_( %s )" % repr(sender)
+
+    def insertSafariLinks_(self, sender):
+        if kwlog:
+            print "KWOutlineView.copySelectionPython_()"
+        row = self.clickedRow()
+        selection = self.getSelectionItems()
+        if not selection:
+            return
+        result = []
+
+        item = selection[0]
+        idx = item.siblingIndex()
+
+        parent = item.parent
+
+        safari = appscript.app("Safari.app")
+        if not safari.isrunning():
+            return
+
+        src = ""
+        try:
+            src = safari.windows[1].current_tab.source()
+            url = safari.windows[1].current_tab.URL()
+        except Exception, err:
+            print err
+        if not src:
+            return
+        soup = BeautifulSoup( src )
+        links = soup.find_all( 'a' )
+
+        purl = urlparse.urlparse( url )
+
+        listroot = OutlineNode(url, "", parent, typeOutline, item.rootNode)
+        parent.addChild_atIndex_( listroot, idx+1 )
+
+        # pdb.set_trace()
+
+        for link in links:
+            d = { 'type': 'link' }
+            dest = link.get('href', False)
+            if not dest:
+                continue
+            name = link.text
+            d['name'] = name
+            pdest = urlparse.urlparse( dest )
+            #
+            # Ugly ahead
+            #
+            if not pdest.scheme:
+                site = urlparse.urlparse( url )
+                target = urlparse.ParseResult(
+                    scheme = site.scheme,
+                    netloc = pdest.netloc if (pdest.netloc) else site.netloc,
+                    path = pdest.path if (pdest.path) else site.path,
+                    params = pdest.params if (pdest.params) else site.params,
+                    query = pdest.query if (pdest.query) else site.query,
+                    fragment = pdest.fragment if (pdest.fragment) else site.fragment)
+                target = urlparse.urlunparse( target )
+                d['url'] = target
+            else:
+                d['url'] = dest
+
+            node = OutlineNode(name, d, listroot, typeOutline, item.rootNode)
+            listroot.addChild_( node )
+        self.reloadData()
+        self.setNeedsDisplay_( True )
+
 
     def copySelectionPython_(self, sender):
         if kwlog:
@@ -870,6 +943,9 @@ class KWOutlineView(NSOutlineView):
                                     urlbase = "NONE"
                                     if ctrl != None:
                                         # urlbase = ctrl.nsurl.baseURL()
+                                        #
+                                        # TBD Siehe safari links
+                                        #
                                         urlbase = ctrl.nsurl().baseURL()
                                         if not urlbase:
                                             urlbase = ctrl.nsurl().absoluteString()

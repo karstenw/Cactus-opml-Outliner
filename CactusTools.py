@@ -434,10 +434,13 @@ def cache_url( nsurl, fileextension ):
     returnURL = nsurl
     try:
         localpath, localname = getDownloadFolder(nsurl)
-        if not localpath.endswith(localname):
-            localfullpath = os.path.join(localpath, localname)
+
+        # perhaps we are not caching
         if not localpath:
             return nsurl
+
+        if not localpath.endswith(localname):
+            localfullpath = os.path.join(localpath, localname)
 
         folder, filename = os.path.split( localpath )
         if not os.path.exists(folder):

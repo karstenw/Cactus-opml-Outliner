@@ -393,7 +393,8 @@ class OutlineNode(NSObject):
         if isinstance(child, OutlineNode):
             if kwlog and 0:
                 print "OutlineNode.addChild_", child
-            child.setParent_(self)
+            if child.parent != self:
+                child.setParent_(self)
             self.children.addObject_( child )
             # child.release()
 

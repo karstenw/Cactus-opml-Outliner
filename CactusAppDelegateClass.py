@@ -60,6 +60,8 @@ CactusOutlineDocument = CactusOutlineDoc.CactusOutlineDocument
 import CactusOutlineNode
 OutlineNode = CactusOutlineNode.OutlineNode
 
+import CactusOPML
+
 import CactusVersion
 cachefolder = CactusVersion.cachefolder
 
@@ -169,6 +171,7 @@ class CactusAppDelegate(NSObject):
         userdefaults.setObject_forKey_(True,        u'optVLines')
         userdefaults.setObject_forKey_(True,        u'optVariableRowHeight')
         userdefaults.setObject_forKey_(True,        u'optAnimateOPMLOpen')
+        userdefaults.setObject_forKey_(False,       u'optMergeComment')
 
         userdefaults.setObject_forKey_(False,       u'optCommentColumn')
         userdefaults.setObject_forKey_(False,       u'optTypeColumn')
@@ -396,7 +399,7 @@ class CactusAppDelegate(NSObject):
                 folder, filename = os.path.split(opmlFile)
                 s = fob.read()
                 fob.close()
-                d = opml.opml_from_string(s)
+                d = CactusOPML.opml_from_string(s)
                 if d:
                     root = CactusOutlineDoc.openOPML_( d )
                     doc = Document(opmlFile, root)

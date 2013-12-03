@@ -65,6 +65,12 @@ def openOPML_withURLTag_(rootOPML, urltag):
     if kwlog:
         print "CactusFileOpeners.openOPML_withURLTag_()"
     """This builds the node tree and returns the root node."""
+
+    defaults = NSUserDefaults.standardUserDefaults()
+    optMergeComment = defaults.objectForKey_( u'optMergeComment')
+
+    # pdb.set_trace()
+
     #
     #  Split this up.
     def getChildrenforNode(node, children, root):
@@ -77,10 +83,25 @@ def openOPML_withURLTag_(rootOPML, urltag):
                 content = {u'value': ""}
             content.pop('text', None)
             if content:
+                if optMergeComment:
+                    c = content.get('comment', u'')
+                    n = content.get('_note', u'')
+                    if 'comment' in content:
+                        if '_note' in content:
+                            content['_note'] = u"%s\n%s" % (n, c)
+                        else:
+                            content['_note'] = c
+                        content.pop('comment', None)
+
+                        
                 l = []
                 for k, v in content.items():
                     if k == "comment":
-                        comment = v
+                        if not optMergeComment:
+                            comment = v
+                    elif k == "_note":
+                        if optMergeComment:
+                            comment = v
                     else:
                         l.append( (k, v) )
                 content = l
@@ -140,11 +161,30 @@ def openOPML_withURLTag_(rootOPML, urltag):
             content.pop('text', None)
             if content:
                 l = []
+
+                if optMergeComment:
+
+                    # pdb.set_trace()
+
+                    c = content.get('comment', u'')
+                    n = content.get('_note', u'')
+                    if 'comment' in content:
+                        if '_note' in content:
+                            content['_note'] = u"%s\n%s" % (n, c)
+                        else:
+                            content['_note'] = c
+                        content.pop('comment', None)
+
                 for k, v in content.items():
                     if k == "comment":
-                        comment = v
+                        if not optMergeComment:
+                            comment = v
+                    elif k == "_note":
+                        if optMergeComment:
+                            comment = v
                     else:
                         l.append( (k, v) )
+
                 content = l
             else:
                 content = u""

@@ -182,7 +182,7 @@ def indentXML(elem, level=0, width=2):
             elem.tail = i
 
 
-def createSubNodesOPML(OPnode, ETnode, level):
+def createSubNodesOPML(OPnode, ETnode, level, merge=False):
     # do attributes
     name = OPnode.name
     value = OPnode.getValueDict()
@@ -205,15 +205,19 @@ def createSubNodesOPML(OPnode, ETnode, level):
                 value = {}
 
         ETnode.attrib.update( value )
+
         if comment != "":
-            ETnode.attrib['comment'] = comment
+            if merge:
+                ETnode.attrib['_note'] = comment
+            else:
+                ETnode.attrib['comment'] = comment
 
     if len(OPnode.children) > 0:
         
         # do children
         for child in OPnode.children:
             ETSub = etree.SubElement( ETnode, "outline")
-            s = createSubNodesOPML( child, ETSub, level+1 )
+            s = createSubNodesOPML( child, ETSub, level+1, merge=merge )
     return ETnode
 
 
@@ -288,7 +292,7 @@ def getXMLNodes( node ):
 
 def getXML_( etRootnode ):
     d = []
-    # pdb.set_trace()
+
     keys = etRootnode.attrib.keys()
 
     b = {
@@ -311,7 +315,7 @@ def getXML_( etRootnode ):
 
 def getHTML_( etRootnode ):
     d = []
-    # pdb.set_trace()
+
     docinfokeys = (
         'doctype',
         'encoding',
@@ -362,7 +366,7 @@ def getHTML_( etRootnode ):
 
 # these should be unified
 def xml_from_string(xml_text):
-    # pdb.set_trace()
+
     try:
         s = etree.fromstring(xml_text)
     except StandardError, v:
@@ -454,8 +458,6 @@ def generateHTML( rootNode, doctype, encoding, indent=0 ):
 
     baseOP = rootNode.children[0]
 
-    # pdb.set_trace()
-    
     rootElement = lxmletree.Element("html")
     rootElement.tail = u"\n"
 
@@ -763,6 +765,8 @@ def generateOPML( rootNode, indent=2, expansion={} ):
     """
     print "opml.generateOPML( %s, %s )" % (rootNode, repr(expansion))
 
+    defaults = NSUserDefaults.standardUserDefaults()
+    merge = defaults.objectForKey_( u'optMergeComment')
 
 
     rootOPML = etree.Element("opml")
@@ -804,7 +808,10 @@ def generateOPML( rootNode, indent=2, expansion={} ):
                 node.text = unicode(v)
             
             if comment != "":
-                node.attrib["comment"] = comment
+                if merge:
+                    node.attrib["_note"] = comment
+                else:
+                    node.attrib["comment"] = comment
             print "HEAD: '%s': '%s' " % (repr(name), repr(v))
         # add missing keys
         if expansion:
@@ -826,18 +833,16 @@ def generateOPML( rootNode, indent=2, expansion={} ):
 
     try:
         if bodyOP:
-            nodes = createSubNodesOPML(bodyOP, body, 1)
+            nodes = createSubNodesOPML(bodyOP, body, 1, merge=merge)
         else:
             # an outline without body
-            nodes = createSubNodesOPML(rootNode, body, 1)
+            nodes = createSubNodesOPML(rootNode, body, 1, merge=merge)
     except Exception, err:
-        # pdb.set_trace()
         tb = unicode(traceback.format_exc())
         print tb
         print 
 
     if indent:
-        # pdb.set_trace()
         indentXML(rootOPML, 0, indent)
 
     return rootOPML
