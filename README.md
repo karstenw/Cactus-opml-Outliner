@@ -28,7 +28,7 @@ With those new formats comes the need for far more efficient memory usage. Openi
 
 Major features one would expect are missing:
 + find/replace
-+ cut/copy/paste (but inside a document copy (not cut) & paste work via context menu)
+
 
 Due to the way how Cactus writes it's documents you might be surprised at what you get after a save. For example, the RSS file type writes only RSS 2.0 files even though you opened an atom feed.
 
@@ -96,6 +96,11 @@ OPML should be stable. If you find a bug, please report it on the mailing list.
 With the new "Open As..." option in the file dialogs, it is now possible to load an OPML or RSS file as XML. OPML as RSS and vice versa makes no sense but try to see why. Some files can only be openened as opml because they are buggy and opening as OPML does some repairs. Opening as XML needs a clean XML file.
 
 ## Latest changes ##
+
+Cut, copy and paste are working
+
+Cactus can insert via context menu all the links from the frontmost Safari document
+
 The "Node" menu has been partially wired. Additionally to TAB, SHIFT-TAB, ctrl-up/down nodes can now also be moved with cmd-U/D/L/R and directly from the menu.
 
 Updated development environment to 10.6.
@@ -241,6 +246,7 @@ v0.2.0 Initial release.
 ## Things that work: ##
 
 ### files, outlines and tables ###
+- cut, copy & paste
 - open file (OPML, RSS, XML, HTML, PLIST)
 - some sub types:
 -- open iTunes Library.xml as iXML
@@ -260,10 +266,7 @@ v0.2.0 Initial release.
 
 - error messages can currently only be seen if Cactus is started from the command line: ```./Cactus.app/Contents/MacOS/Cactus```
 - saving when outline structure does not conform to OPML (head & body element)
-- cut, copy & paste
 - OPML nodetypes
-- header nodes are saved untouched, no automatic data update
-- honoring expansionstate, windowstate (I don't intend to)
 - freeing memory
 
 
