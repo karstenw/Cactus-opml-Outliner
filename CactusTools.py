@@ -360,12 +360,12 @@ def datestring_nsdate( dt=datetime.datetime.now() ):
 
 
 def getDownloadFolder( nsurl ):
-
     defaults = NSUserDefaults.standardUserDefaults()
     cacheFolder = CactusVersion.cachefolder
     try:
         cacheFolder = unicode(defaults.objectForKey_( u'txtCacheFolder'))
     except StandardError, err:
+        print "CactusTools.getDownloadFolder(%s) -> False" % NSURL2str(nsurl)
         print "ERROR reading defaults.", repr(err)
 
     cacheFolder = os.path.expanduser( cacheFolder )
@@ -373,6 +373,7 @@ def getDownloadFolder( nsurl ):
     # parent folder must exists; minimal plausibility
     parent, foldername = os.path.split( cacheFolder )
     if not os.path.exists( parent ):
+        print "CactusTools.getDownloadFolder(%s) -> False" % NSURL2str(nsurl)
         return False, False
 
     if not os.path.exists(cacheFolder):
@@ -397,6 +398,7 @@ def getDownloadFolder( nsurl ):
     if localpath:
         localrelfolder, localname = os.path.split( localpath )
         localpath = os.path.join( cacheFolder, localpath )
+        print "CactusTools.getDownloadFolder(%s) -> %s" % (NSURL2str(nsurl), localpath)
         return localpath, localname
     return False, False
 

@@ -25,3 +25,6 @@ release:
 	rm -Rf ./Cactus_v000/Cactus.app
 	
 	mv ./dist/Cactus.app ./Cactus_v000/
+
+edit:
+	edit Cactus*.py

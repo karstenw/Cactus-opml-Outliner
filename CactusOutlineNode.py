@@ -21,6 +21,7 @@ import urlparse
 import math
 import feedparser
 
+import cPickle
 
 kwdbg = False
 kwlog = True
@@ -448,7 +449,7 @@ class OutlineNode(NSObject):
             if s.parent == None:
                 return l
             s = s.parent
-            l.append( s.name )
+            l.append( s )
 
     #
     # node math
@@ -589,13 +590,14 @@ class OutlineNode(NSObject):
     def copyPython(self):
         result = []
         start = {
-            'name': self.name,
+            'name': unicode(self.name),
             'value': self.getValueDict(),
-            'comment': self.comment,
+            'typ': self.typ,
             'children': result}
         for i in self.children:
             result.append( i.copyPython() )
         return start
+
 
     def copyNodesWithRoot_(self, root):
         # pdb.set_trace()

@@ -929,16 +929,10 @@ class CactusOutlineDocument(NSDocument):
         # c.document is set by addWindowController_
         c.finishControllerInit()
 
-
     def windowControllers(self):
         if kwlog:
             print "CactusOutlineDocument.windowControllers()"
         return super( CactusOutlineDocument, self).windowControllers()
-
-    def windowControllerDidLoadNib_(self, theController):
-        if kwlog:
-            print "CactusOutlineDocument.windowControllerDidLoadNib_( %s )" % repr(theController)
-        return super( CactusOutlineDocument, self).windowControllerDidLoadNib_(theController)
 
     def printShowingPrintPanel_(self, show):
         printInfo = self.printInfo()
@@ -1064,6 +1058,9 @@ class CactusOutlineWindowController(NSWindowController):
                                                 typeOutline,
                                                 self.parentNode )
 
+        # needed for drag and drop
+        self.model.setOutlineView_( self.outlineView )
+
         # this is evil, and doesn't work
         # self.rootNode.model = self.model
 
@@ -1142,7 +1139,7 @@ class CactusOutlineWindowController(NSWindowController):
 
     def displayName(self):
         # get window name
-        if kwlog:
+        if 0: #kwlog:
             print "CactusOutlineWindowController.displayName() ->",
         doc = self.document()
         if not doc:
@@ -1162,7 +1159,7 @@ class CactusOutlineWindowController(NSWindowController):
         else:
             # keep unnamed title
             pass
-        if kwlog:
+        if 0: #kwlog:
             print repr(title)
         return title
 

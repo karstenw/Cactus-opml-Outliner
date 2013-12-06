@@ -10,6 +10,8 @@ import os
 
 import re
 
+import cPickle
+
 import traceback
 
 import time
@@ -70,6 +72,8 @@ NSOpenPanel = AppKit.NSOpenPanel
 NSDocumentController = AppKit.NSDocumentController
 NSOutlineView = AppKit.NSOutlineView
 NSWindowController = AppKit.NSWindowController
+
+NSData = AppKit.NSData
 
 NSMenu = AppKit.NSMenu
 
@@ -151,6 +155,21 @@ NSChangeCleared = AppKit.NSChangeCleared
 NSChangeReadOtherContents = AppKit.NSChangeReadOtherContents
 NSChangeAutosaved = AppKit.NSChangeAutosaved
 
+# drag and drop
+NSDragOperationNone = AppKit.NSDragOperationNone
+NSDragOperationCopy = AppKit.NSDragOperationCopy
+NSDragOperationLink = AppKit.NSDragOperationLink
+NSDragOperationGeneric = AppKit.NSDragOperationGeneric
+NSDragOperationMove = AppKit.NSDragOperationMove
+NSDragOperationEvery = AppKit.NSDragOperationEvery
+NSDragOperationAll_Obsolete = AppKit.NSDragOperationAll_Obsolete
+
+NSOutlineViewDropOnItemIndex = AppKit.NSOutlineViewDropOnItemIndex
+
+NSStringPboardType = AppKit.NSStringPboardType
+NSFilenamesPboardType = AppKit.NSFilenamesPboardType
+NSFilesPromisePboardType = AppKit.NSFilesPromisePboardType
+
 # printing
 NSPrintOperation = AppKit.NSPrintOperation
 
@@ -186,6 +205,12 @@ OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
 
 
 import CactusFileOpeners
+
+
+DragDropCactusPboardType = "CactusKWOutlineViewPboardType"
+
+
+
 
 # simple dict for opening outline nodes
 
@@ -377,18 +402,25 @@ class KWOutlineView(NSOutlineView):
         menu.setDelegate_(self)
         menu.addItemWithTitle_action_keyEquivalent_( u"Include",
                                                       "contextMenuInclude:", u"")
-        menu.addItemWithTitle_action_keyEquivalent_( u"Python Copy",
-                                                      "copySelectionPython:", u"")
-        menu.addItemWithTitle_action_keyEquivalent_( u"Node Copy",
-                                                      "copySelectionNodes:", u"")
-        menu.addItemWithTitle_action_keyEquivalent_( u"Node paste",
-                                                      "pasteSelectionNodes:", u"")
+        #
+        # deactivated since regular cut, copy and paste have arrived
+        #
+        #menu.addItemWithTitle_action_keyEquivalent_( u"Python Copy",
+        #                                              "copySelectionPython:", u"")
+        #menu.addItemWithTitle_action_keyEquivalent_( u"Node Copy",
+        #                                              "copySelectionNodes:", u"")
+        #menu.addItemWithTitle_action_keyEquivalent_( u"Node paste",
+        #                                              "pasteSelectionNodes:", u"")
 
         menu.addItemWithTitle_action_keyEquivalent_( u"Insert Safari links",
                                                       "insertSafariLinks:", u"")
-
         # copySelectionPython_
         menu.setAutoenablesItems_(False)
+        self.registerForDraggedTypes_([DragDropCactusPboardType])
+        self.setVerticalMotionCanBeginDrag_( False )
+        #self.setDraggingSourceOperationMask_forLocal_( NSDragOperationEvery, True )
+        #self.setDraggingSourceOperationMask_forLocal_( NSDragOperationAll_Obsolete, False )
+        
         self.setMenu_(menu)
 
     #
@@ -418,7 +450,7 @@ class KWOutlineView(NSOutlineView):
 
     def insertSafariLinks_(self, sender):
         if kwlog:
-            print "KWOutlineView.copySelectionPython_()"
+            print "KWOutlineView.insertSafariLinks_()"
         row = self.clickedRow()
         selection = self.getSelectionItems()
         if not selection:
@@ -582,6 +614,202 @@ class KWOutlineView(NSOutlineView):
 
         self.reloadData()
         self.setNeedsDisplay_( True )
+    
+    #
+    # drag and drop
+    #
+
+    #
+    # drag destination
+    #
+
+    def draggingEntered_( self, draginfo ):
+        print "draggingEntered_"
+        pboard = draginfo.draggingPasteboard()
+        mask = draginfo.draggingSourceOperationMask()
+        types = pboard.types()
+        opType = NSDragOperationNone
+
+        if DragDropCactusPboardType in types:
+            opType = NSDragOperationMove
+            
+            return NSDragOperationMove
+
+        elif NSFilenamesPboardType in types:
+            print "NSFilenamesPboardType entered"
+            return NSDragOperationNone
+
+            if mask & NSDragOperationLink:
+                return  NSDragOperationLink
+
+            elif mask & NSDragOperationCopy:
+                return  NSDragOperationCopy
+        self.setNeedsDisplay_(True)
+        return NSDragOperationNone
+
+    
+    def draggingUpdated_( self, draginfo ):
+        #print "draggingUpdated_",
+        if draginfo.draggingSource():
+            print "internal"
+            return NSDragOperationMove
+        else:
+            print "external"
+            return NSDragOperationCopy
+    
+    @objc.IBAction
+    def draggingExited_( self, draginfo ):
+        print "draggingExited_"
+    
+    def prepareForDragOperation_( self, sender ):
+        print "KWOutlineView.prepareForDragOperation_"
+        self.setNeedsDisplay_(True)
+        
+        return True
+    
+    def performDragOperation_( self, draginfo ):
+        print "KWOutlineView.performDragOperation_"
+        pboard = draginfo.draggingPasteboard()
+        successful = False
+        types = pboard.types()
+        sender = draginfo.draggingSource()
+        #print "draggingSource()", sender
+        #print "dragged types:"
+        #pp(types)
+        if sender != self:
+            if NSFilenamesPboardType in types:
+                print "NSFilenamesPboardType drag"
+                files = pboard.propertyListForType_( NSFilenamesPboardType )
+                numberOfFiles = files.count()
+
+                # Perform operation using the list of files
+                # self.appDelegate.addFiles_( files )
+                pp(files)
+                successful = True
+        else:
+            if DragDropCactusPboardType in types:
+                print "DragDropCactusPboardType drag"
+                # pp(draginfo)
+                successful = True
+        return successful
+
+    @objc.IBAction
+    def concludeDragOPeration_( self, draginfo ):
+        print "concludeDragOPeration_", repr(draginfo)
+        self.setNeedsDisplay_(True)
+
+
+    def setDropItem_dropChildIndex_(self, item, index):
+        print "KWOutlineView.setDropItem_dropChildIndex_(%s), %s" % (repr(item), repr(index))
+        # get's called if updateDrop_ is not defined
+        
+        
+
+    
+    #def wantsPeriodicDraggingUpdates(self):
+    #    # if present crashes at startup
+    #    # perhaps try it when methods are fleshed out
+    #    return False
+    
+    #
+    # drag source
+    #
+    
+    def XXXmouseDragged_(self, event):
+        # from hillegass book
+        pass
+    
+    @objc.IBAction
+    def cut_(self, sender):
+        self.copy_(sender)
+        deleteNodes(self, selection=True)
+    
+    @objc.IBAction
+    def copy_(self, sender):
+        pb = NSPasteboard.generalPasteboard()
+        self.copyNodesToPasteboard_( pb )
+
+    @objc.IBAction
+    def paste_(self, sender):
+        pb = NSPasteboard.generalPasteboard()
+        self.readNodesFromPasteboard_( pb )
+    
+    
+    def copyNodesToPasteboard_( self, pb ):
+        print "KWOutlineView.copyNodesToPasteboard_"
+        #pdb.set_trace()
+        pb.declareTypes_owner_( [DragDropCactusPboardType,
+                                 NSStringPboardType],
+                                 # NSFilenamesPboardType],
+                                self)
+
+        items = self.getSelectionItems()
+
+        # pack items
+        result = []
+        names = []
+        noduplicates = set(items)
+        for item in items:
+            ancestors = set(item.pathFromRoot())
+            if ancestors.isdisjoint(noduplicates):
+                result.append( item.copyPython())
+            row = self.rowForItem_( item )
+            level = self.levelForRow_( row )
+            indent = u"\t" * level
+            s = u"%s%s" % (indent, item.name)
+            names.append( s )
+        # pdb.set_trace()
+        data = cPickle.dumps( result )
+        l = len(data)
+        nsdata = NSData.dataWithBytes_length_(data, l)
+
+        pb.setData_forType_( nsdata, DragDropCactusPboardType)
+
+        t = u"\n".join( names )
+        s = NSString.stringWithCharacters_length_(t, len(t))
+        pb.setString_forType_( s, NSStringPboardType)
+
+
+    def readNodesFromPasteboard_(self, pb):
+        types = pb.types()
+        if not DragDropCactusPboardType in types:
+            return False
+        print "DragDropCactusPboardType paste"
+
+        delg = self.delegate()
+        typ = delg.typ
+        root = delg.root
+
+        # pdb.set_trace()
+        data = pb.dataForType_(DragDropCactusPboardType)
+        nodes = cPickle.loads( data.bytes().tobytes() )
+
+        selection = self.getSelectionItems()
+        itemsPasted = 0
+        if selection:
+            item = selection[-1]
+            pasteParent = item.parent
+        else:
+            # append to root.children
+            pasteParent = root
+
+        def doChildren( item, children ):
+            for node in children:
+                n = OutlineNode(node['name'], node['value'], item, node['typ'], root)
+                item.addChild_( n )
+                doChildren( n, node['children'])
+            
+        for node in nodes:
+            # a dict per node
+            n = OutlineNode(node['name'], node['value'], pasteParent, node['typ'], root)
+            pasteParent.addChild_( n )
+            doChildren( n, node['children'])
+
+
+        self.reloadData()
+        self.setNeedsDisplay_( True )
+
+        delg.markDirty()
 
 
     #
@@ -1550,6 +1778,8 @@ class OutlineViewDelegateDatasource(NSObject):
     #   parentNode
     #   root
     #   controller
+    #   document
+    #   outlineView
     #   restricted
 
     def init(self):
@@ -1561,6 +1791,7 @@ class OutlineViewDelegateDatasource(NSObject):
         self.root = None
         self.controller = None
         self.document = None
+        self.outlineView = None
 
         # not yet used; it's an idea for rss documents to constrain node movements.
         self.restricted = False
@@ -1571,6 +1802,7 @@ class OutlineViewDelegateDatasource(NSObject):
         #if self.parentNode:
         #    self.parentNode.release()
         if self.root:
+            # this is evil and does not work
             n = self.root.retainCount()
             for i in range(n):
                 self.root.release()
@@ -1596,8 +1828,13 @@ class OutlineViewDelegateDatasource(NSObject):
         if not isinstance(obj, OutlineNode):
             obj = OutlineNode(unicode(obj), "", None, CactusOutlineTypes.typeOutline, None)
         self.root = obj
+
         return self
 
+    def setOutlineView_(self, ov):
+        if self.outlineView:
+            self.outlineView.release()
+        self.outlineView = ov
 
     def markDirty(self):
         doc = self.controller.document()
@@ -1718,6 +1955,59 @@ class OutlineViewDelegateDatasource(NSObject):
             if value != item.comment:
                 item.setComment_(value)
                 self.markDirty()
+
+    # drag and drop
+    def outlineView_acceptDrop_item_childIndex_(self, ov, info, targetItem, index):
+        print "DELG.outlineView_acceptDrop_item_childIndex_"
+        parent = targetNode.parent
+        targetIndex = targetNode.siblingIndex()
+        if target and not target.isExpandable():
+            target = target.parentNode
+        pp(info)
+        outlineView.reloadItem_reloadChildren_(None, True)
+        return True
+
+
+    def outlineView_validateDrop_proposedItem_proposedChildIndex_(self, ov, draginfo, item, index):
+        print "DELG.outlineView_validateDrop_proposedItem_proposedChildIndex_"
+        if 0: #draginfo.draggingSource() == self.outlineView:
+            print "drag in outlineView()!"
+            # self.setDropItem_dropChildIndex_(item, NSOutlineViewDropOnItemIndex)
+            return NSDragOperationMove
+        # return NSDragOperationNone
+        return NSDragOperationEvery
+
+
+
+
+
+
+    def outlineView_writeItems_toPasteboard_(self, ov, items, pb):
+        print "DELG.outlineView_writeItems_toPasteboard_"
+        #pdb.set_trace()
+        pb.declareTypes_owner_( [DragDropCactusPboardType],
+                                self)
+        # items = ov.getSelectionItems()
+
+        # pack items
+        result = []
+        names = []
+        for item in items:
+            result.append( item.copyPython())
+            names.append( item.name )
+
+        data = cPickle.dumps( result )
+        l = len(data)
+        nsdata = NSData.dataWithBytes_length_(data, l)
+        pb.setData_forType_(
+            nsdata,
+            DragDropCactusPboardType)
+        
+        #pb.setString_forType_(
+        #    u"\n".join(names),
+        #    NSStringPboardType)
+        
+        return True
 
 
     # delegate method

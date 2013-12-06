@@ -213,7 +213,7 @@ class CactusAppDelegate(NSObject):
         # this is neede to prevent creating an untitled document at startup
         #
         # should really be in the (not yet existent) preferences
-        return False
+        return True
 
     def applicationShouldHandleReopen_hasVisibleWindows_( self, theApplication, flag ):
         if kwlog:

@@ -12,6 +12,8 @@ import CactusVersion
 import CactusOutline
 import CactusAppDelegateClass
 
+import CactusOutlineWindow
+
 import CactusOutlineDoc
 import CactusTableDocument
 
