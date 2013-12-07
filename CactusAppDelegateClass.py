@@ -158,37 +158,46 @@ class CactusAppDelegate(NSObject):
         # default settings for preferences
         userdefaults = NSMutableDictionary.dictionary()
 
+        # application tab
         userdefaults.setObject_forKey_([],          u'lastURLsVisited')
         userdefaults.setObject_forKey_(False,       u'optCache')
         userdefaults.setObject_forKey_(cachefolder, u'txtCacheFolder')
         userdefaults.setObject_forKey_("2",         u'txtNoOfMaxRowLines')
         userdefaults.setObject_forKey_("40",        u'txtNoOfRecentURLs')
-        userdefaults.setObject_forKey_("",          u'txtUserEmail')
-        userdefaults.setObject_forKey_("",          u'txtUserName')
+        userdefaults.setObject_forKey_(False,       u'optNewDocumentOnStart')
 
+        # outline tab
         userdefaults.setObject_forKey_(True,        u'optAlternateLines')
         userdefaults.setObject_forKey_(True,        u'optHLines')
         userdefaults.setObject_forKey_(True,        u'optVLines')
         userdefaults.setObject_forKey_(True,        u'optVariableRowHeight')
-        userdefaults.setObject_forKey_(True,        u'optAnimateOPMLOpen')
-        userdefaults.setObject_forKey_(False,       u'optMergeComment')
-
         userdefaults.setObject_forKey_(False,       u'optCommentColumn')
         userdefaults.setObject_forKey_(False,       u'optTypeColumn')
         userdefaults.setObject_forKey_(True,        u'optValueColumn')
 
+
+        # opml tab
+        userdefaults.setObject_forKey_("",          u'txtUserEmail')
+        userdefaults.setObject_forKey_("",          u'txtUserName')
+        userdefaults.setObject_forKey_(True,        u'optAnimateOPMLOpen')
+        userdefaults.setObject_forKey_(False,       u'optMergeComment')
+
+        # html tab
         userdefaults.setObject_forKey_("<!DOCTYPE html>",   u'menDoctype')
         userdefaults.setObject_forKey_("utf-8",     u'menEncoding')
         userdefaults.setObject_forKey_("2",         u'txtIndent')
 
+        # xml tab
         userdefaults.setObject_forKey_(False,        u'optIMLAutodetect')
         userdefaults.setObject_forKey_(False,        u'optOPMLAutodetect')
         userdefaults.setObject_forKey_(False,        u'optRSSAutodetect')
         userdefaults.setObject_forKey_(False,        u'optHTMLAutodetect')
         userdefaults.setObject_forKey_(False,        u'optPLISTAutodetect')
 
+        # rss tab
         userdefaults.setObject_forKey_(False,        u'optRSSOpenEnclosure')
 
+        # itunes tab
         userdefaults.setObject_forKey_(False,        u'optIMLImportSystemLibraries')
 
         NSUserDefaults.standardUserDefaults().registerDefaults_(userdefaults)
@@ -210,10 +219,8 @@ class CactusAppDelegate(NSObject):
     def applicationShouldOpenUntitledFile_( self, sender ):
         if kwlog:
             print "CactusAppDelegate.applicationShouldOpenUntitledFile_()"
-        # this is neede to prevent creating an untitled document at startup
-        #
-        # should really be in the (not yet existent) preferences
-        return True
+        defaults = NSUserDefaults.standardUserDefaults()
+        return defaults.objectForKey_( u"optNewDocumentOnStart" )
 
     def applicationShouldHandleReopen_hasVisibleWindows_( self, theApplication, flag ):
         if kwlog:
