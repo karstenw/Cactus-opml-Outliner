@@ -519,9 +519,21 @@ def cache_url( nsurl, fileextension ):
 def mergeURLs( base, rel ):
     """create an url with base as the base, updated by existing parts of rel."""
     s = "CactusTools.mergeURLs(%s, %s) ->  %s"
+    
+    if type(base ) in (NSURL,):
+        base = NSURL2str(base)
     pbase = urlparse.urlparse( base )
     prel = urlparse.urlparse( rel )
-
+    
+    if not pbase:
+        print
+        print
+        print
+        print "ERROR: CactusTools.mergeURLs: base is nil: %s" % repr(base)
+        print "-" * 80
+        # pdb.set_trace()
+        print
+        print
     target = urlparse.ParseResult(
         scheme = pbase.scheme,
         netloc = prel.netloc if (prel.netloc) else pbase.netloc,
