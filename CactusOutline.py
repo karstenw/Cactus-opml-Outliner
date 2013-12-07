@@ -307,7 +307,7 @@ def open_photo( url, open_=True ):
 # TODO: change parameter to node!
 def open_node( url, nodeType=None, open_=True, supressCache=False ):
     print "CactusOutline.open_node()"
-
+    # pdb.set_trace()
     if 1:
         pp( (url,nodeType,open_, supressCache) )
 
@@ -327,9 +327,12 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
     ext = ext.lower()
 
     # pdb.set_trace()
-    # url = url.replace(" ", "%20")
-    nsurl = NSURL.URLWithString_( url )
-
+    if ' ' in url:
+        # url = url.replace(" ", "%20")
+        
+        nsurl = NSURL.URLWithString_( url.replace(" ", "%20" ))
+    else:
+        nsurl = NSURL.URLWithString_( url )
     if nodeType == "OPML" or ext == "opml":
         if open_:
             appdelg.newOutlineFromURL_Type_( nsurl, CactusOPMLType )
@@ -660,11 +663,12 @@ class KWOutlineView(NSOutlineView):
     @objc.IBAction
     def draggingExited_( self, draginfo ):
         print "draggingExited_"
-    
+        super(KWOutlineView, self).draggingExited_(draginfo)
+
     def prepareForDragOperation_( self, sender ):
         print "KWOutlineView.prepareForDragOperation_"
         self.setNeedsDisplay_(True)
-        
+        x = super(KWOutlineView, self).prepareForDragOperation_(sender)
         return True
     
     def performDragOperation_( self, draginfo ):
@@ -1970,12 +1974,15 @@ class OutlineViewDelegateDatasource(NSObject):
 
     def outlineView_validateDrop_proposedItem_proposedChildIndex_(self, ov, draginfo, item, index):
         print "DELG.outlineView_validateDrop_proposedItem_proposedChildIndex_"
-        if 0: #draginfo.draggingSource() == self.outlineView:
+        if draginfo.draggingSource() == self.outlineView:
             print "drag in outlineView()!"
+            isOnDropTypeProposal = childIndex == NSOutlineViewDropOnItemIndex
+            if not targetNode:
+                pass
             # self.setDropItem_dropChildIndex_(item, NSOutlineViewDropOnItemIndex)
             return NSDragOperationMove
         # return NSDragOperationNone
-        return NSDragOperationEvery
+        return NSDragOperationGeneric
 
 
 
