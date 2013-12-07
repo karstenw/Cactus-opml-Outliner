@@ -28,6 +28,7 @@ class CactusPreferenceController(NSWindowController):
     menEncoding = objc.IBOutlet()
     optAlternateLines = objc.IBOutlet()
     optCache = objc.IBOutlet()
+    optNewDocumentOnStart = objc.IBOutlet()
     optCommentColumn = objc.IBOutlet()
     optHLines = objc.IBOutlet()
     optHTMLAutodetect = objc.IBOutlet()
@@ -67,6 +68,8 @@ class CactusPreferenceController(NSWindowController):
         self.txtNoOfRecentURLs.setStringValue_( defaults.objectForKey_( u'txtNoOfRecentURLs') )
         self.txtUserEmail.setStringValue_( defaults.objectForKey_( u'txtUserEmail') )
         self.txtUserName.setStringValue_( defaults.objectForKey_( u'txtUserName') )
+        self.optNewDocumentOnStart.setState_( defaults.objectForKey_( u'optNewDocumentOnStart') )
+
         self.optAnimateOPMLOpen.setState_( defaults.objectForKey_( u'optAnimateOPMLOpen') )
         self.optMergeComment.setState_( defaults.objectForKey_( u'optMergeComment') )
 
@@ -103,6 +106,8 @@ class CactusPreferenceController(NSWindowController):
         defaults.setObject_forKey_(self.txtNoOfRecentURLs.stringValue(),   u'txtNoOfRecentURLs')
         defaults.setObject_forKey_(self.txtUserEmail.stringValue(),   u'txtUserEmail')
         defaults.setObject_forKey_(self.txtUserName.stringValue(),   u'txtUserName')
+        defaults.setObject_forKey_(self.optNewDocumentOnStart.state(),   u'optNewDocumentOnStart')
+
         defaults.setObject_forKey_(self.optAnimateOPMLOpen.state(),   u'optAnimateOPMLOpen')
         defaults.setObject_forKey_(self.optMergeComment.state(),   u'optMergeComment')
 
