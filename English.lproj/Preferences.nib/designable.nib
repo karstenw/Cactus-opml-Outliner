@@ -11,7 +11,7 @@
 			<string key="NS.object.0">851</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="15"/>
+			<integer value="7"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -145,6 +145,27 @@
 													<object class="NSButtonImageSource" key="NSAlternateImage" id="430442958">
 														<string key="NSImageName">NSSwitch</string>
 													</object>
+													<string key="NSAlternateContents"/>
+													<string key="NSKeyEquivalent"/>
+													<int key="NSPeriodicDelay">200</int>
+													<int key="NSPeriodicInterval">25</int>
+												</object>
+											</object>
+											<object class="NSButton" id="70344119">
+												<reference key="NSNextResponder" ref="448256674"/>
+												<int key="NSvFlags">268</int>
+												<string key="NSFrame">{{31, 217}, {284, 18}}</string>
+												<reference key="NSSuperview" ref="448256674"/>
+												<bool key="NSEnabled">YES</bool>
+												<object class="NSButtonCell" key="NSCell" id="621642495">
+													<int key="NSCellFlags">-2080244224</int>
+													<int key="NSCellFlags2">0</int>
+													<string key="NSContents">Open new document on start </string>
+													<reference key="NSSupport" ref="781483016"/>
+													<reference key="NSControlView" ref="70344119"/>
+													<int key="NSButtonFlags">1211912703</int>
+													<int key="NSButtonFlags2">2</int>
+													<reference key="NSAlternateImage" ref="430442958"/>
 													<string key="NSAlternateContents"/>
 													<string key="NSKeyEquivalent"/>
 													<int key="NSPeriodicDelay">200</int>
@@ -1211,6 +1232,14 @@ L3d3dy53My5vcmcvVFIvaHRtbDQvc3RyaWN0LmR0ZCI+A</string>
 					</object>
 					<int key="connectionID">167</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">optNewDocumentOnStart</string>
+						<reference key="source" ref="31534774"/>
+						<reference key="destination" ref="70344119"/>
+					</object>
+					<int key="connectionID">170</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -1282,6 +1311,7 @@ L3d3dy53My5vcmcvVFIvaHRtbDQvc3RyaWN0LmR0ZCI+A</string>
 							<reference ref="626538372"/>
 							<reference ref="439134474"/>
 							<reference ref="96651854"/>
+							<reference ref="70344119"/>
 						</array>
 						<reference key="parent" ref="342615516"/>
 					</object>
@@ -1932,6 +1962,19 @@ L3d3dy53My5vcmcvVFIvaHRtbDQvc3RyaWN0LmR0ZCI+A</string>
 						<reference key="object" ref="189396964"/>
 						<reference key="parent" ref="729273645"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">168</int>
+						<reference key="object" ref="70344119"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="621642495"/>
+						</array>
+						<reference key="parent" ref="448256674"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">169</int>
+						<reference key="object" ref="621642495"/>
+						<reference key="parent" ref="70344119"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1990,6 +2033,11 @@ L3d3dy53My5vcmcvVFIvaHRtbDQvc3RyaWN0LmR0ZCI+A</string>
 				</object>
 				<string key="165.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="166.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="168.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<object class="NSAffineTransform" key="168.IBViewBoundsToFrameTransform">
+					<bytes key="NSTransformStruct">P4AAAL+AAABB+AAAw2kAAA</bytes>
+				</object>
+				<boolean value="YES" key="168.ImportedFromIB2"/>
 				<string key="17.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="17.ImportedFromIB2"/>
 				<string key="18.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2001,6 +2049,9 @@ L3d3dy53My5vcmcvVFIvaHRtbDQvc3RyaWN0LmR0ZCI+A</string>
 				<string key="21.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="21.ImportedFromIB2"/>
 				<string key="22.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<object class="NSAffineTransform" key="22.IBViewBoundsToFrameTransform">
+					<bytes key="NSTransformStruct">P4AAAL+AAABB+AAAw7AAAA</bytes>
+				</object>
 				<boolean value="YES" key="22.ImportedFromIB2"/>
 				<string key="23.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="23.ImportedFromIB2"/>
@@ -2083,7 +2134,7 @@ L3d3dy53My5vcmcvVFIvaHRtbDQvc3RyaWN0LmR0ZCI+A</string>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">167</int>
+			<int key="maxID">170</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2093,6 +2144,7 @@ L3d3dy53My5vcmcvVFIvaHRtbDQvc3RyaWN0LmR0ZCI+A</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="optAnimateOPMLOpen">id</string>
 						<string key="optMergeComment">id</string>
+						<string key="optNewDocumentOnStart">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="optAnimateOPMLOpen">
@@ -2101,6 +2153,10 @@ L3d3dy53My5vcmcvVFIvaHRtbDQvc3RyaWN0LmR0ZCI+A</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="optMergeComment">
 							<string key="name">optMergeComment</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="optNewDocumentOnStart">
+							<string key="name">optNewDocumentOnStart</string>
 							<string key="candidateClassName">id</string>
 						</object>
 					</dictionary>
