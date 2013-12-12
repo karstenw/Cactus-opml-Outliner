@@ -162,6 +162,8 @@ NSDragOperationLink = AppKit.NSDragOperationLink
 NSDragOperationGeneric = AppKit.NSDragOperationGeneric
 NSDragOperationMove = AppKit.NSDragOperationMove
 NSDragOperationEvery = AppKit.NSDragOperationEvery
+NSDragOperationDelete = AppKit.NSDragOperationDelete
+
 NSDragOperationAll_Obsolete = AppKit.NSDragOperationAll_Obsolete
 
 NSOutlineViewDropOnItemIndex = AppKit.NSOutlineViewDropOnItemIndex
@@ -306,10 +308,11 @@ def open_photo( url, open_=True ):
 
 # TODO: change parameter to node!
 def open_node( url, nodeType=None, open_=True, supressCache=False ):
-    print "CactusOutline.open_node()"
-    # pdb.set_trace()
-    if 1:
+    if kwdbg:
+        print "CactusOutline.open_node()"
         pp( (url,nodeType,open_, supressCache) )
+
+    # pdb.set_trace()
 
     defaults = NSUserDefaults.standardUserDefaults()
     cache = False
@@ -396,6 +399,8 @@ def handleEventReturnKeyOV_Event_( ov, event ):
 class KWOutlineView(NSOutlineView):
     """Subclass of NSOutlineView; to catch keys."""
 
+    lastDrag = []
+
     def awakeFromNib(self):
         self.editSession = False
         # manual en- & disabling menu items
@@ -438,7 +443,9 @@ class KWOutlineView(NSOutlineView):
                                 theEvent.locationInWindow(),
                                 None ))
         if row != -1:
-            self.selectRow_byExtendingSelection_(row, True)
+            s = NSIndexSet.indexSetWithIndex_( row )
+            self.selectRowIndexes_byExtendingSelection_(s, True)
+            # self.selectRow_byExtendingSelection_(row, True)
         return super( KWOutlineView, self).menuForEvent_(theEvent)
 
     def validateMenuItem_(self, sender):
@@ -626,13 +633,13 @@ class KWOutlineView(NSOutlineView):
     # drag destination
     #
 
-    def draggingEntered_( self, draginfo ):
+    def XdraggingEntered_( self, dragInfo ):
         print "draggingEntered_"
-        pboard = draginfo.draggingPasteboard()
-        mask = draginfo.draggingSourceOperationMask()
+        pboard = dragInfo.draggingPasteboard()
+        mask = dragInfo.draggingSourceOperationMask()
         types = pboard.types()
         opType = NSDragOperationNone
-
+        self.setDraggingDestinationFeedbackStyle_(1)
         if DragDropCactusPboardType in types:
             opType = NSDragOperationMove
             
@@ -651,59 +658,43 @@ class KWOutlineView(NSOutlineView):
         return NSDragOperationNone
 
     
-    def draggingUpdated_( self, draginfo ):
+    def XdraggingUpdated_( self, dragInfo ):
         #print "draggingUpdated_",
-        if draginfo.draggingSource():
-            print "internal"
+        if dragInfo.draggingSource():
+            pp(dragInfo)
             return NSDragOperationMove
         else:
             print "external"
             return NSDragOperationCopy
     
     @objc.IBAction
-    def draggingExited_( self, draginfo ):
+    def XdraggingExited_( self, dragInfo ):
         print "draggingExited_"
-        super(KWOutlineView, self).draggingExited_(draginfo)
+        super(KWOutlineView, self).draggingExited_(dragInfo)
 
-    def prepareForDragOperation_( self, sender ):
+    def XprepareForDragOperation_( self, dragInfo ):
         print "KWOutlineView.prepareForDragOperation_"
-        self.setNeedsDisplay_(True)
-        x = super(KWOutlineView, self).prepareForDragOperation_(sender)
-        return True
+        self.currentDragItems = self.getSelectionItems()
+        pp( self.currentDragItems )
+        # self.setNeedsDisplay_(True)
+        return 1
     
-    def performDragOperation_( self, draginfo ):
+    def XperformDragOperation_( self, dragInfo ):
         print "KWOutlineView.performDragOperation_"
-        pboard = draginfo.draggingPasteboard()
-        successful = False
+        pboard = dragInfo.draggingPasteboard()
+        successful = 0
         types = pboard.types()
-        sender = draginfo.draggingSource()
-        #print "draggingSource()", sender
-        #print "dragged types:"
-        #pp(types)
-        if sender != self:
-            if NSFilenamesPboardType in types:
-                print "NSFilenamesPboardType drag"
-                files = pboard.propertyListForType_( NSFilenamesPboardType )
-                numberOfFiles = files.count()
-
-                # Perform operation using the list of files
-                # self.appDelegate.addFiles_( files )
-                pp(files)
-                successful = True
-        else:
-            if DragDropCactusPboardType in types:
-                print "DragDropCactusPboardType drag"
-                # pp(draginfo)
-                successful = True
+        sender = dragInfo.draggingSource()
+        pp(dragInfo)
         return successful
 
     @objc.IBAction
-    def concludeDragOPeration_( self, draginfo ):
-        print "concludeDragOPeration_", repr(draginfo)
+    def XconcludeDragOPeration_( self, dragInfo ):
+        print "concludeDragOPeration_", repr(dragInfo)
         self.setNeedsDisplay_(True)
 
 
-    def setDropItem_dropChildIndex_(self, item, index):
+    def XsetDropItem_dropChildIndex_(self, item, index):
         print "KWOutlineView.setDropItem_dropChildIndex_(%s), %s" % (repr(item), repr(index))
         # get's called if updateDrop_ is not defined
         
@@ -719,7 +710,7 @@ class KWOutlineView(NSOutlineView):
     # drag source
     #
     
-    def XXXmouseDragged_(self, event):
+    def XmouseDragged_(self, event):
         # from hillegass book
         pass
     
@@ -736,7 +727,7 @@ class KWOutlineView(NSOutlineView):
     @objc.IBAction
     def paste_(self, sender):
         pb = NSPasteboard.generalPasteboard()
-        self.readNodesFromPasteboard_( pb )
+        self.readNodesFromPasteboard_parent_index_( pb, False, False )
     
     
     def copyNodesToPasteboard_( self, pb ):
@@ -774,11 +765,11 @@ class KWOutlineView(NSOutlineView):
         pb.setString_forType_( s, NSStringPboardType)
 
 
-    def readNodesFromPasteboard_(self, pb):
+    def readNodesFromPasteboard_parent_index_(self, pb, insertParent, afterIndex):
+        print "KWOutlineView.readNodesFromPasteboard_parent_index_"
         types = pb.types()
         if not DragDropCactusPboardType in types:
             return False
-        print "DragDropCactusPboardType paste"
 
         delg = self.delegate()
         typ = delg.typ
@@ -788,33 +779,66 @@ class KWOutlineView(NSOutlineView):
         data = pb.dataForType_(DragDropCactusPboardType)
         nodes = cPickle.loads( data.bytes().tobytes() )
 
-        selection = self.getSelectionItems()
-        itemsPasted = 0
-        if selection:
-            item = selection[-1]
-            pasteParent = item.parent
+        if not insertParent:
+            selection = self.getSelectionItems()
+            if selection:
+                item = selection[-1]
+                pasteParent = item.parent
+            else:
+                # append to root.children
+                pasteParent = root
         else:
-            # append to root.children
-            pasteParent = root
+            pasteParent = insertParent
+
+        itemsPasted = 0
 
         def doChildren( item, children ):
             for node in children:
                 n = OutlineNode(node['name'], node['value'], item, node['typ'], root)
                 item.addChild_( n )
                 doChildren( n, node['children'])
-            
+
+        pastedItems = set()
+
         for node in nodes:
             # a dict per node
             n = OutlineNode(node['name'], node['value'], pasteParent, node['typ'], root)
             pasteParent.addChild_( n )
             doChildren( n, node['children'])
+            itemsPasted += 1
+            pastedItems.add( n )
 
-
+        self.expandItem_( pasteParent )
+        self.deselectAll_( None )
         self.reloadData()
+
+        for item in pastedItems:
+            index = self.rowForItem_( item )
+            print "selectionIndex:", index, item
+            if index != -1:
+                s = NSIndexSet.indexSetWithIndex_( index )
+                self.selectRowIndexes_byExtendingSelection_(s, True)
+
         self.setNeedsDisplay_( True )
+        if itemsPasted > 0:
+            delg.markDirty()
 
-        delg.markDirty()
 
+    def draggingSourceOperationMaskForLocal_(self, isLocal):
+        print "KWoutlineView.draggingSourceOperationMaskForLocal_(%s)" % repr(isLocal)
+        if isLocal:
+            return NSDragOperationMove
+        else:
+            return NSDragOperationCopy
+
+    def draggedImage_endedAt_operation_( self, theImage, theLocation, theOperation):
+        print "KWoutlineView.draggedImage_endedAt_operation_(%s)" % theOperation
+        if theOperation in (NSDragOperationDelete, NSDragOperationMove):
+            # print "lastDrag:"
+            # pp(KWOutlineView.lastDrag)
+            #deleteNodes(self, nodes=KWOutlineView.lastDrag)
+            pass
+        # KWOutlineView.lastDrag = []
 
     #
     # cell editor notifications
@@ -908,8 +932,6 @@ class KWOutlineView(NSOutlineView):
                     createNode(self, item, startEditing=True)
                 else:
                     row = self.rowForItem_( item.next() )
-                    # s = NSIndexSet.indexSetWithIndex_( row )
-                    #self.selectRowIndexes_byExtendingSelection_(s, False)
                     self.reloadData()
                     self.editColumn_row_withEvent_select_(0, row, None, True)
                 return
@@ -1646,12 +1668,15 @@ class KWOutlineView(NSOutlineView):
     # utilities
     #
     def getSelectionItems(self):
+        print "getSelectionItems"
         """The actual nodes of the current selection are returned."""
         sel = self.selectedRowIndexes()
-        n = sel.count()
         result = []
-        if not n:
-            return result
+        n = 0
+        if sel:
+            n = sel.count()
+            if not n:
+                return result
         next = sel.firstIndex()
         result.append( self.itemAtRow_(next) )
 
@@ -1885,6 +1910,7 @@ class OutlineViewDelegateDatasource(NSObject):
 
 
     def numberOfRowsInTableView_(self, tv):
+        print "numberOfRowsInTableView_"
         return self.root.children.count()
 
 
@@ -1960,37 +1986,70 @@ class OutlineViewDelegateDatasource(NSObject):
                 item.setComment_(value)
                 self.markDirty()
 
+
+    #
     # drag and drop
+    #
     def outlineView_acceptDrop_item_childIndex_(self, ov, info, targetItem, index):
         print "DELG.outlineView_acceptDrop_item_childIndex_"
-        parent = targetNode.parent
-        targetIndex = targetNode.siblingIndex()
-        if target and not target.isExpandable():
-            target = target.parentNode
-        pp(info)
-        outlineView.reloadItem_reloadChildren_(None, True)
+        parent = targetItem.parent
+        targetIndex = targetItem.siblingIndex()
+        pb = info.draggingPasteboard()
+
+        print "targetItem:", targetItem
+        print "index", index
+        print "info", info
+
+        # delete origin - feels hackish accessing a class variable
+        deleteNodes(ov, nodes=KWOutlineView.lastDrag)
+        KWOutlineView.lastDrag = []
+        
+        ov.readNodesFromPasteboard_parent_index_(pb, targetItem, index)
+        if targetItem:
+            # drop on item
+            if index >= 0:
+                pass
+            else:
+                pass
+        else:
+            # drop in view
+            # append to last
+            if index >= 0:
+                pass
+            else:
+                pass
+
+        ov.reloadItem_reloadChildren_(None, True)
         return True
 
 
-    def outlineView_validateDrop_proposedItem_proposedChildIndex_(self, ov, draginfo, item, index):
-        print "DELG.outlineView_validateDrop_proposedItem_proposedChildIndex_"
-        if draginfo.draggingSource() == self.outlineView:
-            print "drag in outlineView()!"
-            isOnDropTypeProposal = childIndex == NSOutlineViewDropOnItemIndex
-            if not targetNode:
+    def outlineView_validateDrop_proposedItem_proposedChildIndex_(self, ov, dragInfo, item, index):
+        if kwdbg:
+            print "DELG.outlineView_validateDrop_proposedItem_proposedChildIndex_"
+        if dragInfo.draggingSource() == self.outlineView:
+            # print "drag in outlineView()!"
+            # print item
+            # pp(dragInfo)
+            if index == NSOutlineViewDropOnItemIndex:
+                return NSDragOperationMove
+            else:
+                return NSDragOperationNone
+
+            if not item:
                 pass
             # self.setDropItem_dropChildIndex_(item, NSOutlineViewDropOnItemIndex)
             return NSDragOperationMove
-        # return NSDragOperationNone
-        return NSDragOperationGeneric
+        else:
+            # external drop - not now
+            print "souce:", dragInfo.draggingSource()
+            return NSDragOperationCopy
 
-
-
-
+        return NSDragOperationNone
 
 
     def outlineView_writeItems_toPasteboard_(self, ov, items, pb):
-        print "DELG.outlineView_writeItems_toPasteboard_"
+        if kwdbg:
+            print "DELG.outlineView_writeItems_toPasteboard_"
         #pdb.set_trace()
         pb.declareTypes_owner_( [DragDropCactusPboardType],
                                 self)
@@ -2009,7 +2068,7 @@ class OutlineViewDelegateDatasource(NSObject):
         pb.setData_forType_(
             nsdata,
             DragDropCactusPboardType)
-        
+        KWOutlineView.lastDrag = list(items)
         #pb.setString_forType_(
         #    u"\n".join(names),
         #    NSStringPboardType)
@@ -2042,9 +2101,11 @@ class OutlineViewDelegateDatasource(NSObject):
         pass
 
     def outlineViewSelectionDidChange_( self, aNotification ):
-        # print "outlineViewSelectionDidChange_()"
-
+        if kwdbg:
+            print "outlineViewSelectionDidChange_()"
+        ov = None
         if aNotification:
+            #print aNotification
             ov = aNotification.object()
             if not isinstance(ov, KWOutlineView):
                 ov = False
@@ -2113,6 +2174,8 @@ class OutlineViewDelegateDatasource(NSObject):
 # line stays visible in parent view. needsRedraw_?
 #
 def deleteNodes(ov, nodes=(), selection=False):
+    if kwdbg:
+        print "CactusOutline.deleteNodes()"
     if selection:
         sel = ov.getSelectionItems()
     else:
@@ -2130,6 +2193,8 @@ def deleteNodes(ov, nodes=(), selection=False):
     ov.reloadData()
 
 def createNode(ov, selection, startEditing=True):
+    if kwdbg:
+        print "CactusOutline.createNode()"
     # create node at selection and start editing
 
     # open new line and start editing
@@ -2168,6 +2233,8 @@ def createNode(ov, selection, startEditing=True):
 
 
 def moveSelectionUp(ov, items):
+    if kwdbg:
+        print "CactusOutline.moveSelectionUp()"
     delg = ov.delegate()
     for item in items:
         # move item before previous
@@ -2191,6 +2258,8 @@ def moveSelectionUp(ov, items):
 
 
 def moveSelectionDown(ov, items):
+    if kwdbg:
+        print "CactusOutline.moveSelectionDown()"
     #
     # this really needs to be sorted down; use indices
     # otherwise there will be overlapping moves destroying
@@ -2220,9 +2289,13 @@ def moveSelectionDown(ov, items):
 
 
 def moveSelectionLeft(ov, selection):
+    if kwdbg:
+        print "EMPTY: CactusOutline.moveSelectionLeft()"
     pass
 
 def moveSelectionRight(ov, selection):
+    if kwdbg:
+        print "EMPTY: CactusOutline.moveSelectionRight()"
     pass
 
 
@@ -2240,11 +2313,14 @@ def unmangleFSSPecURL( url ):
             pre = urllib.quote( pre, "/:?" )
             post = urllib.quote( post, "/:?" )
             url = "%s%%23%s" % (pre, post)
-    print "CactusOutline.unmangleFSSPecURL(%s) -> %s" % (orgurl, url)
+    if kwdbg:
+        print "CactusOutline.unmangleFSSpecURL(%s) -> %s" % (orgurl, url)
     return url
 
 
 def cleanupURL( url ):
+    if kwdbg:
+        print "CactusOutline.cleanupURL()"
     # lots of URLs contain spaces, &, '
     return unmangleFSSPecURL( url )
 
