@@ -70,6 +70,7 @@ NSWorkspace = AppKit.NSWorkspace
 NSString = AppKit.NSString
 NSMutableString = AppKit.NSMutableString
 NSWindowController = AppKit.NSWindowController
+NSPrintOperation = AppKit.NSPrintOperation
 
 # grid styles
 NSTableViewGridNone = AppKit.NSTableViewGridNone
@@ -936,9 +937,12 @@ class CactusOutlineDocument(NSDocument):
 
     def printShowingPrintPanel_(self, show):
         printInfo = self.printInfo()
-        printOp =NSPrintOperation.printOperationWithView_printInfo_(self, printInfo )
-        printOp.setShowPanel_(show)
-        self.runModalPrintOperation_delegate_didRunSelector_contextInfo_( printOp, None, None, None, None)
+        printOp = NSPrintOperation.printOperationWithView_printInfo_(
+                            self.outlineView, printInfo )
+        printOp.setShowPanels_( show )
+        self.runModalPrintOperation_delegate_didRunSelector_contextInfo_(
+                            printOp, None, None, None )
+
 
     #
     # methods to do:
