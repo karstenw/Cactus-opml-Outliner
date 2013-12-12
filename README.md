@@ -28,6 +28,7 @@ With those new formats comes the need for far more efficient memory usage. Openi
 
 Major features one would expect are missing:
 + find/replace
++ Undo
 
 
 Due to the way how Cactus writes it's documents you might be surprised at what you get after a save. For example, the RSS file type writes only RSS 2.0 files even though you opened an atom feed.
