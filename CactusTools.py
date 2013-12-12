@@ -398,7 +398,8 @@ def getDownloadFolder( nsurl ):
     if localpath:
         localrelfolder, localname = os.path.split( localpath )
         localpath = os.path.join( cacheFolder, localpath )
-        print "CactusTools.getDownloadFolder(%s) -> %s" % (NSURL2str(nsurl), localpath)
+        if kwdbg:
+            print "CactusTools.getDownloadFolder(%s) -> %s" % (NSURL2str(nsurl), localpath)
         return localpath, localname
     return False, False
 
@@ -435,7 +436,7 @@ def setFileModificationDate( filepath, modfdt ):
 
 
 def cache_url( nsurl, fileextension ):
-    if kwlog:
+    if 0: #kwlog:
         print "CactusTools.cache_url( %s, %s )" % (nsurl, fileextension)
 
     if not nsurl:
@@ -552,5 +553,6 @@ def getURLExtension( url ):
     path = purl.path
     folder, filename = os.path.split( path )
     basename, ext = os.path.splitext( filename )
-    print "CactusTools.getURLExtension(%s) -> '%s' . '%s'" % ( url, basename, ext )
+    if kwdbg:
+        print "CactusTools.getURLExtension(%s) -> '%s' . '%s'" % ( url, basename, ext )
     return (basename, ext)
