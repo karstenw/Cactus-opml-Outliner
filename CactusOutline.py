@@ -866,8 +866,8 @@ class KWOutlineView(NSOutlineView):
         self.editSession = True
 
         userInfo = aNotification.userInfo()
-
-        # textMovement = userInfo.valueForKey_( str("NSTextMovement") ).intValue()
+        if userInfo:
+            pp(userInfo)
         super( KWOutlineView, self).textDidBeginEditing_(aNotification)
         #self.window().makeFirstResponder_(self)
 
@@ -877,29 +877,30 @@ class KWOutlineView(NSOutlineView):
         """Notification."""
         self.editSession = True
         userInfo = aNotification.userInfo()
-        textMovement = userInfo.valueForKey_( u"NSTextMovement" ).intValue()
+        if userInfo:
+            textMovement = userInfo.valueForKey_( u"NSTextMovement" ).intValue()
 
-        # NSCancelTextMovement
-        if textMovement == NSReturnTextMovement:
-            print "RETURN MOVEMENT"
-        elif textMovement == NSCancelTextMovement:
-            print "CANCEL MOVEMENT"
-        elif textMovement == NSTabTextMovement:
-            print "NSTabTextMovement"
-        elif textMovement == NSBacktabTextMovement:
-            print "NSBacktabTextMovement"
-        elif textMovement == NSLeftTextMovement:
-            print "NSLeftTextMovement"
-        elif textMovement == NSRightTextMovement:
-            print "NSRightTextMovement"
-        elif textMovement == NSUpTextMovement:
-            print "NSUpTextMovement"
-        elif textMovement == NSDownTextMovement:
-            print "NSDownTextMovement"
-        elif textMovement == NSOtherTextMovement:
-            print "NSOtherTextMovement"
-        elif textMovement == NSIllegalTextMovement:
-            print "NSIllegalTextMovement"
+            # NSCancelTextMovement
+            if textMovement == NSReturnTextMovement:
+                print "RETURN MOVEMENT"
+            elif textMovement == NSCancelTextMovement:
+                print "CANCEL MOVEMENT"
+            elif textMovement == NSTabTextMovement:
+                print "NSTabTextMovement"
+            elif textMovement == NSBacktabTextMovement:
+                print "NSBacktabTextMovement"
+            elif textMovement == NSLeftTextMovement:
+                print "NSLeftTextMovement"
+            elif textMovement == NSRightTextMovement:
+                print "NSRightTextMovement"
+            elif textMovement == NSUpTextMovement:
+                print "NSUpTextMovement"
+            elif textMovement == NSDownTextMovement:
+                print "NSDownTextMovement"
+            elif textMovement == NSOtherTextMovement:
+                print "NSOtherTextMovement"
+            elif textMovement == NSIllegalTextMovement:
+                print "NSIllegalTextMovement"
 
         super( KWOutlineView, self).textDidChange_(aNotification)
         #self.window().makeFirstResponder_(self)
