@@ -390,20 +390,23 @@ class OutlineNode(NSObject):
 
     #
     def addChild_(self, child):
+        if kwlog and 0:
+            print "OutlineNode.addChild_", child
         # retain: child+1
         if isinstance(child, OutlineNode):
-            if kwlog and 0:
-                print "OutlineNode.addChild_", child
             if child.parent != self:
                 child.setParent_(self)
             self.children.addObject_( child )
             # child.release()
 
     def addChild_atIndex_(self, child, index):
-        # retain: child+1
-        self.children.insertObject_atIndex_( child, index)
         if kwdbg:
             print "addChild_atIndex_setParent", child
+        # retain: child+1
+
+        self.children.insertObject_atIndex_( child, index)
+        if child.parent != self:
+            child.setParent_(self)
         child.setParent_(self)
         # child.release()
 

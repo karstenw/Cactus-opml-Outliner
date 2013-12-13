@@ -775,7 +775,6 @@ class KWOutlineView(NSOutlineView):
         typ = delg.typ
         root = delg.root
 
-        # pdb.set_trace()
         data = pb.dataForType_(DragDropCactusPboardType)
         nodes = cPickle.loads( data.bytes().tobytes() )
 
@@ -799,18 +798,24 @@ class KWOutlineView(NSOutlineView):
                 doChildren( n, node['children'])
 
         pastedItems = set()
+        
+        # pdb.set_trace()
 
         for node in nodes:
             # a dict per node
             n = OutlineNode(node['name'], node['value'], pasteParent, node['typ'], root)
-            pasteParent.addChild_( n )
+            if afterIndex >= 0:
+                pasteParent.addChild_atIndex_( n, afterIndex )
+                afterIndex += 1
+            else:
+                pasteParent.addChild_( n )
             doChildren( n, node['children'])
             itemsPasted += 1
             pastedItems.add( n )
 
         self.expandItem_( pasteParent )
         self.deselectAll_( None )
-        self.reloadData()
+        #self.reloadData()
 
         for item in pastedItems:
             index = self.rowForItem_( item )
@@ -819,9 +824,12 @@ class KWOutlineView(NSOutlineView):
                 s = NSIndexSet.indexSetWithIndex_( index )
                 self.selectRowIndexes_byExtendingSelection_(s, True)
 
-        self.setNeedsDisplay_( True )
+        #self.reloadData()
+
+        #self.setNeedsDisplay_( True )
         if itemsPasted > 0:
             delg.markDirty()
+        return pastedItems
 
 
     def draggingSourceOperationMaskForLocal_(self, isLocal):
@@ -2000,11 +2008,6 @@ class OutlineViewDelegateDatasource(NSObject):
         print "index", index
         print "info", info
 
-        # delete origin - feels hackish accessing a class variable
-        deleteNodes(ov, nodes=KWOutlineView.lastDrag)
-        KWOutlineView.lastDrag = []
-        
-        ov.readNodesFromPasteboard_parent_index_(pb, targetItem, index)
         if targetItem:
             # drop on item
             if index >= 0:
@@ -2018,8 +2021,26 @@ class OutlineViewDelegateDatasource(NSObject):
                 pass
             else:
                 pass
+        insertedItems = ov.readNodesFromPasteboard_parent_index_(pb, targetItem, index)
 
+        # delete origin - feels hackish accessing a class variable
+        # originals must be deleted after insertion
+        # 
+        deleteNodes(ov, nodes=KWOutlineView.lastDrag)
+        KWOutlineView.lastDrag = []
+
+        for item in insertedItems:
+            index = ov.rowForItem_( item )
+            print "selectionIndex:", index, item
+            if index != -1:
+                s = NSIndexSet.indexSetWithIndex_( index )
+                ov.selectRowIndexes_byExtendingSelection_(s, True)
+
+        ov.reloadData()
+        ov.setNeedsDisplay_( True )
         ov.reloadItem_reloadChildren_(None, True)
+
+
         return True
 
 
@@ -2030,19 +2051,19 @@ class OutlineViewDelegateDatasource(NSObject):
             # print "drag in outlineView()!"
             # print item
             # pp(dragInfo)
-            if index == NSOutlineViewDropOnItemIndex:
-                return NSDragOperationMove
-            else:
-                return NSDragOperationNone
+            #if index == NSOutlineViewDropOnItemIndex:
+            #    return NSDragOperationMove
+            #else:
+            #    return NSDragOperationNone
 
-            if not item:
-                pass
+            #if not item:
+            #    pass
             # self.setDropItem_dropChildIndex_(item, NSOutlineViewDropOnItemIndex)
             return NSDragOperationMove
         else:
             # external drop - not now
             print "souce:", dragInfo.draggingSource()
-            return NSDragOperationCopy
+            return NSDragOperationLink
 
         return NSDragOperationNone
 
