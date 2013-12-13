@@ -23,13 +23,17 @@ import urlparse
 import math
 import feedparser
 
+import CactusVersion
 
-kwdbg = False
-kwlog = True
+
+kwdbg = CactusVersion.developmentversion
+kwlog = CactusVersion.developmentversion
 
 import pdb
 import pprint
 pp = pprint.pprint
+
+
 
 import bs4
 BeautifulSoup = bs4.BeautifulSoup
@@ -123,7 +127,11 @@ NSTabTextMovement = AppKit.NSTabTextMovement
 NSBacktabTextMovement = AppKit.NSBacktabTextMovement
 NSIllegalTextMovement = AppKit.NSIllegalTextMovement
 NSCancelTextMovement = AppKit.NSCancelTextMovement
+NSLeftTextMovement = AppKit.NSLeftTextMovement
+NSRightTextMovement = AppKit.NSRightTextMovement
+NSUpTextMovement = AppKit.NSUpTextMovement
 NSDownTextMovement = AppKit.NSDownTextMovement
+NSOtherTextMovement = AppKit.NSOtherTextMovement
 
 
 # modifiers
@@ -188,8 +196,6 @@ datestring_nsdate = CactusTools.datestring_nsdate
 makeunicode = CactusTools.makeunicode
 mergeURLs = CactusTools.mergeURLs
 getURLExtension = CactusTools.getURLExtension
-
-import CactusVersion
 
 
 import CactusDocumentTypes
@@ -329,7 +335,6 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
     ext = ext.replace( '.', '', 1)
     ext = ext.lower()
 
-    # pdb.set_trace()
     if ' ' in url:
         # url = url.replace(" ", "%20")
         
@@ -524,7 +529,6 @@ class KWOutlineView(NSOutlineView):
 
     def copySelectionNodes_(self, sender):
         print "KWOutlineView.copySelectionPython_()"
-        # pdb.set_trace()
         selection = self.getSelectionItems()
         result = []
         for contextItem in selection:
@@ -532,7 +536,6 @@ class KWOutlineView(NSOutlineView):
                     contextItem.copyNodesWithRoot_(self.clipboardRoot) )
 
     def pasteSelectionNodes_(self, sender):
-        # pdb.set_trace()
         selection = self.getSelectionItems()
         if not selection:
             return
@@ -718,6 +721,7 @@ class KWOutlineView(NSOutlineView):
     def cut_(self, sender):
         self.copy_(sender)
         deleteNodes(self, selection=True)
+        self.deselectAll_( None )
     
     @objc.IBAction
     def copy_(self, sender):
@@ -727,8 +731,9 @@ class KWOutlineView(NSOutlineView):
     @objc.IBAction
     def paste_(self, sender):
         pb = NSPasteboard.generalPasteboard()
-        self.readNodesFromPasteboard_parent_index_( pb, False, False )
-    
+        pastedItems = self.readNodesFromPasteboard_parent_index_( pb, False, False )
+        self.reloadData()
+        self.selectItems_(pastedItems)
     
     def copyNodesToPasteboard_( self, pb ):
         print "KWOutlineView.copyNodesToPasteboard_"
@@ -753,7 +758,6 @@ class KWOutlineView(NSOutlineView):
             indent = u"\t" * level
             s = u"%s%s" % (indent, item.name)
             names.append( s )
-        # pdb.set_trace()
         data = cPickle.dumps( result )
         l = len(data)
         nsdata = NSData.dataWithBytes_length_(data, l)
@@ -766,7 +770,20 @@ class KWOutlineView(NSOutlineView):
 
 
     def readNodesFromPasteboard_parent_index_(self, pb, insertParent, afterIndex):
-        print "KWOutlineView.readNodesFromPasteboard_parent_index_"
+        """Insert NSData(pickle) nodes from a pasteboard.
+        
+        if insertParent:
+            make children of parent (append)
+        if afterIndex:
+            insert after index
+            
+        - deletion of original nodes (d&d) should occur after insertion to get the
+        selection right.
+        
+        return a set of inserted items.
+        """
+        if kwlog:
+            print "KWOutlineView.readNodesFromPasteboard_parent_index_"
         types = pb.types()
         if not DragDropCactusPboardType in types:
             return False
@@ -783,6 +800,7 @@ class KWOutlineView(NSOutlineView):
             if selection:
                 item = selection[-1]
                 pasteParent = item.parent
+                afterIndex = item.siblingIndex() + 1
             else:
                 # append to root.children
                 pasteParent = root
@@ -799,34 +817,25 @@ class KWOutlineView(NSOutlineView):
 
         pastedItems = set()
         
-        # pdb.set_trace()
-
         for node in nodes:
             # a dict per node
             n = OutlineNode(node['name'], node['value'], pasteParent, node['typ'], root)
+
             if afterIndex >= 0:
                 pasteParent.addChild_atIndex_( n, afterIndex )
                 afterIndex += 1
-            else:
+            elif afterIndex == -1:
                 pasteParent.addChild_( n )
+            elif afterIndex == False:
+                pasteParent.addChild_( n )
+
             doChildren( n, node['children'])
             itemsPasted += 1
             pastedItems.add( n )
 
         self.expandItem_( pasteParent )
         self.deselectAll_( None )
-        #self.reloadData()
 
-        for item in pastedItems:
-            index = self.rowForItem_( item )
-            print "selectionIndex:", index, item
-            if index != -1:
-                s = NSIndexSet.indexSetWithIndex_( index )
-                self.selectRowIndexes_byExtendingSelection_(s, True)
-
-        #self.reloadData()
-
-        #self.setNeedsDisplay_( True )
         if itemsPasted > 0:
             delg.markDirty()
         return pastedItems
@@ -864,15 +873,34 @@ class KWOutlineView(NSOutlineView):
 
 
     def textDidChange_(self, aNotification):
-        # print "KWOutlineView.textDidChange_()"
+        print "KWOutlineView.textDidChange_()"
         """Notification."""
         self.editSession = True
         userInfo = aNotification.userInfo()
-        # print "EDITOR:", self.currentEditor()
-        #textMovement = userInfo.valueForKey_( u"NSTextMovement" ).intValue()
-        #print "TextMovement: '%i'" % textMovement
+        textMovement = userInfo.valueForKey_( u"NSTextMovement" ).intValue()
 
-        # pp(aNotification)
+        # NSCancelTextMovement
+        if textMovement == NSReturnTextMovement:
+            print "RETURN MOVEMENT"
+        elif textMovement == NSCancelTextMovement:
+            print "CANCEL MOVEMENT"
+        elif textMovement == NSTabTextMovement:
+            print "NSTabTextMovement"
+        elif textMovement == NSBacktabTextMovement:
+            print "NSBacktabTextMovement"
+        elif textMovement == NSLeftTextMovement:
+            print "NSLeftTextMovement"
+        elif textMovement == NSRightTextMovement:
+            print "NSRightTextMovement"
+        elif textMovement == NSUpTextMovement:
+            print "NSUpTextMovement"
+        elif textMovement == NSDownTextMovement:
+            print "NSDownTextMovement"
+        elif textMovement == NSOtherTextMovement:
+            print "NSOtherTextMovement"
+        elif textMovement == NSIllegalTextMovement:
+            print "NSIllegalTextMovement"
+
         super( KWOutlineView, self).textDidChange_(aNotification)
         #self.window().makeFirstResponder_(self)
 
@@ -896,7 +924,8 @@ class KWOutlineView(NSOutlineView):
         # it looks like the cell editor handles return and enter as the same.
 
         textMovement = userInfo.valueForKey_( u"NSTextMovement" ).intValue()
-        print "TextMovement: '%i'" % textMovement,
+
+        print "TextMovement: %i" % textMovement,
 
         # check for table/outline editing modes here
 
@@ -922,14 +951,31 @@ class KWOutlineView(NSOutlineView):
                         aNotification.name(),
                         aNotification.object(),
                         returnInfo)
+
+        elif textMovement == NSTabTextMovement:
+            print "NSTabTextMovement"
+        elif textMovement == NSBacktabTextMovement:
+            print "NSBacktabTextMovement"
+        elif textMovement == NSLeftTextMovement:
+            print "NSLeftTextMovement"
+        elif textMovement == NSRightTextMovement:
+            print "NSRightTextMovement"
+        elif textMovement == NSUpTextMovement:
+            print "NSUpTextMovement"
+        elif textMovement == NSDownTextMovement:
+            print "NSDownTextMovement"
+        elif textMovement == NSOtherTextMovement:
+            print "NSOtherTextMovement"
+        elif textMovement == NSIllegalTextMovement:
+            print "NSIllegalTextMovement"
         else:
             print "UNHANDLED MOVEMENT"
+
         # finish current cell
         super( KWOutlineView, self).textDidEndEditing_(aNotification)
 
         if returnContinue:
             self.window().makeFirstResponder_(self)
-            # pdb.set_trace()
             selRow = self.getSelectedRowIndex()
             item = self.itemAtRow_(selRow)
 
@@ -945,11 +991,11 @@ class KWOutlineView(NSOutlineView):
                 return
         if cancelled:
             self.editSession = False
-            # pdb.set_trace()
             self.reloadData()
             self.window().makeFirstResponder_(self)
 
     def cancelOperation_(self, sender):
+        print "KWOutlineView.cancelOperation_()"
         if self.currentEditor():
             # self.abortEditing()
             self.validateEditing()
@@ -993,7 +1039,6 @@ class KWOutlineView(NSOutlineView):
             print "mykeys"
             pp(mykeys)
             print "Event characters:", repr(eventCharacters), eventCharNum
-            # pdb.set_trace()
 
 
         # tab has       0x09/0x00100
@@ -1097,7 +1142,6 @@ class KWOutlineView(NSOutlineView):
                 # TODO: if already editing, start new line, continue editing
 
                 #
-                # pdb.set_trace()
                 sel = self.getSelectedRow()
                 createNode(self, sel)
                 consumed = True
@@ -1142,8 +1186,6 @@ class KWOutlineView(NSOutlineView):
 
                         # get node selection
                         items = self.getSelectionItems()
-
-                        # pdb.set_trace()
 
                         # do the selection
                         for item in items:
@@ -1265,8 +1307,6 @@ class KWOutlineView(NSOutlineView):
                                 elif 'URL' in v:
                                     url = v.get("URL", "")
 
-                                # pdb.set_trace()
-
                                 url = cleanupURL( url )
 
                                 if theType == "blogpost":
@@ -1290,8 +1330,6 @@ class KWOutlineView(NSOutlineView):
                                     open_node( url, nodeType )
 
                                 elif theType in ('audio', ):
-                                    # pdb.set_trace()
-
                                     #
                                     # make this it's own function
                                     #
@@ -1314,7 +1352,6 @@ class KWOutlineView(NSOutlineView):
 
                                 elif theType == "photo":
                                     url = v.get("xmlUrl", "")
-                                    # pdb.set_trace()
                                     open_photo( url )
 
                                 elif theType == "rssentry":
@@ -1616,6 +1653,8 @@ class KWOutlineView(NSOutlineView):
             # indent each row one level
             postselect = set()
             for item in sel:
+                if not item:
+                    continue
                 parent = item.parent
                 previous = item.previous()
 
@@ -1634,10 +1673,8 @@ class KWOutlineView(NSOutlineView):
             postselect = [self.rowForItem_(i) for i in postselect]
             if postselect:
                 self.selectItemRows_( postselect )
-
-            consumed = True
-            delegate.markDirty()
-            # pdb.set_trace()
+                delegate.markDirty()
+                consumed = True
             self.reloadData()
             return consumed
 
@@ -1676,7 +1713,8 @@ class KWOutlineView(NSOutlineView):
     # utilities
     #
     def getSelectionItems(self):
-        print "getSelectionItems"
+        if kwlog:
+            print "getSelectionItems"
         """The actual nodes of the current selection are returned."""
         sel = self.selectedRowIndexes()
         result = []
@@ -1709,6 +1747,16 @@ class KWOutlineView(NSOutlineView):
             if i >= 0:
                 s.addIndex_( i )
         self.selectRowIndexes_byExtendingSelection_(s, False)
+
+    def selectItems_(self, items):
+        self.deselectAll_( None )
+        indexes = NSMutableIndexSet.alloc().init()
+        for item in items:
+            idx = self.rowForItem_( item )
+            if idx != -1:
+                indexes.addIndex_( idx )
+        self.selectRowIndexes_byExtendingSelection_(indexes, False)
+
 
     def selectRowItem_(self, item):
         index = self.rowForItem_( item )
@@ -2028,13 +2076,15 @@ class OutlineViewDelegateDatasource(NSObject):
         # 
         deleteNodes(ov, nodes=KWOutlineView.lastDrag)
         KWOutlineView.lastDrag = []
+        ov.selectItems_( insertedItems )
 
-        for item in insertedItems:
-            index = ov.rowForItem_( item )
-            print "selectionIndex:", index, item
-            if index != -1:
-                s = NSIndexSet.indexSetWithIndex_( index )
-                ov.selectRowIndexes_byExtendingSelection_(s, True)
+        if 0:
+            for item in insertedItems:
+                index = ov.rowForItem_( item )
+                print "selectionIndex:", index, item
+                if index != -1:
+                    s = NSIndexSet.indexSetWithIndex_( index )
+                    ov.selectRowIndexes_byExtendingSelection_(s, True)
 
         ov.reloadData()
         ov.setNeedsDisplay_( True )
@@ -2261,7 +2311,7 @@ def moveSelectionUp(ov, items):
         # move item before previous
         #  get grandparent
         #  insert at index of previous
-        # pdb.set_trace()
+
         previous = item.previous()
         if previous == -1:
             return
@@ -2323,9 +2373,8 @@ def moveSelectionRight(ov, selection):
 def unmangleFSSPecURL( url ):
     orgurl = url
     # clean up fsspec mangled names in URLs
-    # pdb.set_trace()
+
     if '#' in url:
-        # pdb.set_trace()
         # escape OS9 mangled filenames; Frontier produces such links
         os9namepart = re.compile( r"^(.+)#([0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F]\....)$" )
         m = os9namepart.match( url )
@@ -2348,7 +2397,6 @@ def cleanupURL( url ):
     mangled = False
     url = NSURL2str(url)
     if '#' in url:
-        # pdb.set_trace()
         # escape OS9 mangled filenames; Frontier produces such links
         os9namepart = re.compile( r"(.*)#([0-9A-F]{7,7}\.{3,3}]*)" )
         m = os9namepart.match( url )
