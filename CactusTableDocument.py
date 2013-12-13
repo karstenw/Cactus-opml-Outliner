@@ -67,7 +67,6 @@ class TableWindowController(AutoBaseClass):
             self = self.initWithWindowNibName_("OutlineEditor")
             title = u"Unnamed Outline"
         elif theType == typeTable:
-            # pdb.set_trace()
             self = self.initWithWindowNibName_("TableEditor")
             title = u"Unnamed Table"
         elif theType == typeBrowser:
@@ -163,7 +162,6 @@ class TableWindowController(AutoBaseClass):
             
 
     def applySettings_(self, sender):
-        # pdb.set_trace()
         """target of the apply button. sets some tableview settings.
         """
         # rowHeight

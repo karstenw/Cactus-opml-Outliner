@@ -145,7 +145,6 @@ def openOPML_withURLTag_(rootOPML, urltag):
     #
     # get opml body section
     if rootOPML['body']:
-        # pdb.set_trace()
         # the outline body node
         body = OutlineNode("body", "", root, typeOutline, root)
         root.addChild_( body )
@@ -163,8 +162,6 @@ def openOPML_withURLTag_(rootOPML, urltag):
                 l = []
 
                 if optMergeComment:
-
-                    # pdb.set_trace()
 
                     c = content.get('comment', u'')
                     n = content.get('_note', u'')
@@ -433,7 +430,6 @@ def openRSS_(url):
 
         # namespaces
         if 'namespaces' in d:
-            # pdb.set_trace()
             node = OutlineNode('namespaces', d.namespaces, head, typeOutline, root)
             head.addChild_( node )
 
@@ -899,7 +895,6 @@ def openPLIST_( nsdict ):
 
             # data
             elif hasattr(nsvalue, "bytes"):
-                # pdb.set_trace()
                 value = unicode( binascii.hexlify(nsvalue.bytes()) )
                 node.setValue_( [ ('cactusNodeType', "data") ] )
 

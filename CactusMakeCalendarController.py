@@ -51,7 +51,6 @@ def timerange( starttime, stoptime, increment):
     # generate the hourly entries per day
     # attn 22:00-02:00 becomes 2 ranges:
     # 00:00-02:00 and 22:00-00:00
-    # pdb.set_trace()
     current = starttime
     delta = datetime.timedelta(minutes=increment)
     if stoptime < starttime:
@@ -92,7 +91,6 @@ class MakeCalendarController(NSWindowController):
         return cls.alloc()
 
     def init(self):
-        # pdb.set_trace()
         self = self.initWithWindowNibName_("CalendarCreator")
         window = self.window()
         window.setDelegate_( self )

@@ -603,9 +603,7 @@ class OutlineNode(NSObject):
 
 
     def copyNodesWithRoot_(self, root):
-        # pdb.set_trace()
         result = []
-        # pdb.set_trace()
         node = OutlineNode(self.name, self.getValueDict(), root, typeOutline, None)
         node.setComment_( self.comment )
         for i in self.children:

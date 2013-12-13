@@ -135,8 +135,6 @@ class CactusDocumentController(NSDocumentController):
         if kwlog:
             print "CactusDocumentController.makeDocumentWithContentsOfURL_ofType_error_()"
 
-        # pdb.set_trace()
-
         if self.selectedType != "automatic" and len(self.urllist) > 0:
             u = NSURL2str( url )
             if u in self.urllist:
@@ -542,7 +540,6 @@ class CactusAppDelegate(NSObject):
             print "CactusAppDelegate.getCurrentOutlineView()"
         doc = self.getCurrentDocument()
         if isinstance(doc, CactusOutlineDocument):
-            # pdb.set_trace()
             win = self.getCurrentAppWindow()
             ctrl = win.windowController()
             return ctrl.outlineView
@@ -616,7 +613,6 @@ class CactusAppDelegate(NSObject):
         if not isinstance(doc, CactusOutlineDocument):
             return
 
-        # pdb.set_trace()
         win = self.getCurrentAppWindow()
         ctrl = win.windowController()
         ov = ctrl.outlineView
@@ -635,8 +631,6 @@ class CactusAppDelegate(NSObject):
             if not body:
                 rootNode = OutlineNode("body", "", r, typeOutline)
                 r.addChild_( rootNode )
-
-        # pdb.set_trace()
 
         # 
         cal, conf = params
@@ -714,9 +708,7 @@ class CactusAppDelegate(NSObject):
                                                     theRoot)
                             parentNode.addChild_( currWeek )
                         parentNode = currWeek
-                        # pdb.set_trace()
 
-                    
                     dayNode = OutlineNode( dayString,
                                            "",
                                            parentNode,

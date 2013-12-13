@@ -52,8 +52,6 @@ class CactusOutlineWindow(NSWindow):
             # self.appDelegate.addFiles_( files )
             pp(files)
 
-            # pdb.set_trace()
-
             successful = True
         return successful
     """

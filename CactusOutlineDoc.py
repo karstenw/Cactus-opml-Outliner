@@ -257,7 +257,6 @@ class CactusOutlineDocument(NSDocument):
 
         # read opml content
         if theType == CactusOPMLType:
-            # pdb.set_trace()
             d = None
             try:
                 d = CactusOPML.opml_from_string( readURL( url, CactusOPMLType ) )
@@ -359,7 +358,6 @@ class CactusOutlineDocument(NSDocument):
         elif theType == CactusPLISTType:
             d = None
             try:
-                # pdb.set_trace()
                 d = CactusOPML.parse_plist( url )
             except PLISTParseErrorException, v:
                 tb = unicode(traceback.format_exc())
@@ -388,7 +386,6 @@ class CactusOutlineDocument(NSDocument):
         # read itunes music xml
         elif theType == CactusIMLType:
             d = None
-            # pdb.set_trace()
             try:
                 d = CactusOPML.parse_plist( url )
             except PLISTParseErrorException, v:
@@ -438,8 +435,6 @@ class CactusOutlineDocument(NSDocument):
 
         OK, err = self.readFromURL_ofType_error_( url, theType, err )
 
-        # pdb.set_trace()
-
         if OK:
             if not url.isFileURL():
                 #
@@ -467,7 +462,6 @@ class CactusOutlineDocument(NSDocument):
 
 
     def initWithType_error_(self, theType, err):
-        # pdb.set_trace()
         if kwlog:
             print "CactusOutlineDocument.initWithType_error_( %s )" % (repr(theType),)
 
@@ -671,8 +665,6 @@ class CactusOutlineDocument(NSDocument):
         # future scaffolding
         if theType == CactusOPMLType:
 
-            # pdb.set_trace()
-
             expansionState = self.calculateExpansionState_( self.rootNode )
             if expansionState == None:
                 expansionState = {}
@@ -719,8 +711,6 @@ class CactusOutlineDocument(NSDocument):
                 print "ERROR reading defaults.", repr(err)
 
             etHTML = CactusOPML.generateHTML( self.rootNode, doctype, encoding, indent )
-
-            # pdb.set_trace()
 
             if etHTML:
                 # e = etree.ElementTree( rootHTML )
@@ -880,7 +870,7 @@ class CactusOutlineDocument(NSDocument):
 
                 # first row is 2
                 rows = meta.get("expansionState", [])
-                # pdb.set_trace()
+
                 if rows:
                     try:
                         rows = rows.split(',')
@@ -895,7 +885,7 @@ class CactusOutlineDocument(NSDocument):
 
                 keys = 'windowLeft windowTop windowRight windowBottom'.split()
                 coords = []
-                # pdb.set_trace()
+
                 try:
                     for key in keys:
                         coords.append( float( meta[key] ))
@@ -992,7 +982,6 @@ class CactusOutlineWindowController(NSWindowController):
         super(CactusOutlineWindowController, self).dealloc()
 
     def init(self):
-        # pdb.set_trace()
         self = self.initWithWindowNibName_("OutlineEditor")
         self.retain()
         return self
@@ -1007,8 +996,6 @@ class CactusOutlineWindowController(NSWindowController):
         if kwlog:
             print "CactusOutlineWindowController.initWithObject_()"
 
-        # pdb.set_trace()
-
         # self = self.initWithWindowNibName_("OutlineEditor")
         title = u"Unnamed Outline"
 
@@ -1022,8 +1009,6 @@ class CactusOutlineWindowController(NSWindowController):
         document = self.document()
 
         if not isinstance(document, CactusOutlineDocument):
-            print "FAKE document"
-            # pdb.set_trace()
             print "FAKE document"
 
         if document.url:
