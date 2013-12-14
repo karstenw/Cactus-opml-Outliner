@@ -2313,6 +2313,8 @@ def moveSelectionUp(ov, items):
         #  get grandparent
         #  insert at index of previous
 
+        if not item:
+            continue
         previous = item.previous()
         if previous == -1:
             return
@@ -2340,6 +2342,8 @@ def moveSelectionDown(ov, items):
     items.reverse()
     for item in items:
         # retain item 0
+        if not item:
+            continue
         parent = item.parent
         if parent == None:
             return
