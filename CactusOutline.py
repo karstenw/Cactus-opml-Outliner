@@ -732,8 +732,9 @@ class KWOutlineView(NSOutlineView):
     def paste_(self, sender):
         pb = NSPasteboard.generalPasteboard()
         pastedItems = self.readNodesFromPasteboard_parent_index_( pb, False, False )
-        self.reloadData()
-        self.selectItems_(pastedItems)
+        if pastedItems:
+            self.reloadData()
+            self.selectItems_(pastedItems)
     
     def copyNodesToPasteboard_( self, pb ):
         print "KWOutlineView.copyNodesToPasteboard_"
@@ -785,15 +786,41 @@ class KWOutlineView(NSOutlineView):
         if kwlog:
             print "KWOutlineView.readNodesFromPasteboard_parent_index_"
         types = pb.types()
-        if not DragDropCactusPboardType in types:
+        t = None
+        mystringtype = "public.utf8-plain-text"
+        if mystringtype in types:
+            t = mystringtype
+
+        if DragDropCactusPboardType in types:
+            t = DragDropCactusPboardType
+
+        if not t:
             return False
 
         delg = self.delegate()
         typ = delg.typ
         root = delg.root
 
-        data = pb.dataForType_(DragDropCactusPboardType)
-        nodes = cPickle.loads( data.bytes().tobytes() )
+        data = pb.dataForType_(t)
+        if t == DragDropCactusPboardType:
+            nodes = cPickle.loads( data.bytes().tobytes() )
+
+
+        elif t == mystringtype:
+            nodes = []
+            s = makeunicode(data.bytes().tobytes())
+            if u"\r" in s:
+                r = s.split( u"\r" )
+            else:
+                r = s.split( u"\n" )
+
+            for i in r:
+                i = i.strip(u"\r\n\t ")
+                nodes.append( { 
+                    'name': i,
+                    'value': u"",
+                    'typ': CactusOutlineTypes.typeOutline,
+                    'children': [] } )
 
         if not insertParent:
             selection = self.getSelectionItems()
