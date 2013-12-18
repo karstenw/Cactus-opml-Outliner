@@ -27,7 +27,9 @@ I consider this my outline exploration vehicle. There is no clear vision what th
 With those new formats comes the need for far more efficient memory usage. Opening a 50MB iTunes XML document can bring a 4GB machine to it's knees. So the next big thing will be bringing those memory costs down.
 
 Major features one would expect are missing:
+
 + find/replace
+
 + Undo
 
 
@@ -195,6 +197,23 @@ http://goo.gl/EALQi
 
 
 ## Recent versions ##
+
+For more details see the announcements on the dev-list <http://groups.google.com/group/cactus-outliner-dev>
+
+
+v0.6.3 Pasting text inserts nodes.
+
+v0.6.2 More drag & drop
+
+v0.6.1 Drag and drop
+
+v0.6.0 Cut, copy & paste
+
+v0.5.11 preference to merge the comment attribute into _node for better interoperability. Get Safari links from frontmost document via context menu.
+
+v0.5.8 Node menu activated
+
+v0.5.7 NSWindowController behavior back to normal
 
 v0.5.4 More calendar options working
 
