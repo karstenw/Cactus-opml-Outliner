@@ -100,11 +100,15 @@ With the new "Open As..." option in the file dialogs, it is now possible to load
 
 ## Latest changes ##
 
-Cut, copy and paste are working
+Drag and drop inside Cactus.
+
+Cut, copy and paste.
 
 Cactus can insert via context menu all the links from the frontmost Safari document
 
 The "Node" menu has been partially wired. Additionally to TAB, SHIFT-TAB, ctrl-up/down nodes can now also be moved with cmd-U/D/L/R and directly from the menu.
+
+A little bit of MORE sentimentality: Create a Calendar with the "Calendar..." command in the "Outline" menu.
 
 Updated development environment to 10.6.
 
