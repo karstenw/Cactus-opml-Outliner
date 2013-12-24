@@ -99,6 +99,10 @@ def detectFileType( nsfileurl ):
 
 def readURL( nsurl, type_="" ):
     """Read a file. May be local, may be http"""
+    url = NSURL2str(nsurl)
+    if kwlog:
+        print "CactusTools.readURL( '%s', '%s' )" % (url, type_)
+
 
     translateType = {
         CactusOPMLType: "opml",
@@ -110,9 +114,6 @@ def readURL( nsurl, type_="" ):
     }
 
     fileext = translateType.get( type_, "")
-
-    url = NSURL2str(nsurl)
-    print "CactusTools.readURL( '%s', '%s' )" % (url, type_)
 
     defaults = NSUserDefaults.standardUserDefaults()
     cache = False
@@ -132,16 +133,18 @@ def readURL( nsurl, type_="" ):
     fob.close()
 
     if type_ == CactusOPMLType:
-        # this is a quick & dirty approach and should be applied much more carefully than
-        # it is now...
+        # this is a quick & dirty approach and should be applied much more carefully
+        # than it is now... perhaps those errors get corrected and <directivecache>
+        # will be a propper node.
 
-        # clear bogative xml declaration. OPML-Editor, I'looking at you
+        # clean up bogative xml declaration. OPML-Editor, I'm looking at you...
         if s.startswith("""<?xml encoding="ISO-8859-1" version="1.0"?>"""):
             s = s.replace("""<?xml encoding="ISO-8859-1" version="1.0"?>""",
                           """<?xml version="1.0" encoding="ISO-8859-1"?>""")
 
             if kwlog:
                 print "\nBOGUS XML DELARATION REPLACED\n"
+
         # this error occurs up until now only combined with the previous one
         if "<directiveCache>" in s:
             s = s.replace( "<directiveCache>", "</outline>")
@@ -160,9 +163,12 @@ def readURL( nsurl, type_="" ):
                 print "BOGUS OPML RULE SECTION: %i SUBSTITUTIONS" % n
             idx = s1 = s2 = 0
             for i in range(1, n+1):
+                # get location o next start- ans endrule
                 s1 = s.find( startrule,s2 )
                 s2 = s.find( endrule, s1 )
                 s2 = s2 + len(endrule)
+
+                # save stuff before, location and after bogative rule
                 pre = s[:s1]
                 defectiveSnippet = s[s1:s2]
                 post = s[s2:]
@@ -194,6 +200,8 @@ def readURL( nsurl, type_="" ):
         # this apllies to all since cactus currently only reads xml files
         if s.startswith("<?xml ") or s.startswith("<opml") or s.startswith("<rss"):
             re_bogusCharacters = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f]')
+
+            # perhaps an effort to preserve the replaced character should be made here
             t = re.sub( re_bogusCharacters, "???", s)
             if s != t:
                 print "Bogus characters in XML..."
@@ -326,6 +334,8 @@ def saveAsDialog(path):
 
 
 def getFileProperties( theFile ):
+    """
+    """
     sfm = NSFileManager.defaultManager()
     props = sfm.fileAttributesAtPath_traverseLink_( theFile, True )
 
