@@ -429,7 +429,7 @@ class KWOutlineView(NSOutlineView):
                                                       "insertSafariLinks:", u"")
         # copySelectionPython_
         menu.setAutoenablesItems_(False)
-        self.registerForDraggedTypes_([DragDropCactusPboardType])
+        self.registerForDraggedTypes_([DragDropCactusPboardType,NSFilenamesPboardType,NSStringPboardType])
         self.setVerticalMotionCanBeginDrag_( False )
         #self.setDraggingSourceOperationMask_forLocal_( NSDragOperationEvery, True )
         #self.setDraggingSourceOperationMask_forLocal_( NSDragOperationAll_Obsolete, False )
@@ -783,16 +783,22 @@ class KWOutlineView(NSOutlineView):
         
         return a set of inserted items.
         """
-        if kwlog:
+        if 1: #kwlog:
             print "KWOutlineView.readNodesFromPasteboard_parent_index_"
+        #pdb.set_trace()
         types = pb.types()
         t = None
         mystringtype = "public.utf8-plain-text"
+        
+        
         if mystringtype in types:
             t = mystringtype
-
-        if DragDropCactusPboardType in types:
+        
+        elif DragDropCactusPboardType in types:
             t = DragDropCactusPboardType
+
+        elif NSFilenamesPboardType in types:
+            t = NSFilenamesPboardType
 
         if not t:
             return False
@@ -802,8 +808,18 @@ class KWOutlineView(NSOutlineView):
         root = delg.root
 
         data = pb.dataForType_(t)
+        nodes = []
         if t == DragDropCactusPboardType:
             nodes = cPickle.loads( data.bytes().tobytes() )
+        elif t == NSFilenamesPboardType:
+            paths = pb.propertyListForType_(NSFilenamesPboardType)
+            for path in paths:
+                folder, lastname = os.path.split( path )
+                nodes.append( { 
+                    'name': lastname,
+                    'value': {'path': path},
+                    'typ': CactusOutlineTypes.typeOutline,
+                    'children': [] } )
 
 
         elif t == mystringtype:
@@ -2076,9 +2092,11 @@ class OutlineViewDelegateDatasource(NSObject):
     #
     def outlineView_acceptDrop_item_childIndex_(self, ov, info, targetItem, index):
         print "DELG.outlineView_acceptDrop_item_childIndex_"
-        parent = targetItem.parent
-        targetIndex = targetItem.siblingIndex()
+        # pdb.set_trace()
+
+        
         pb = info.draggingPasteboard()
+        # pp(info)
 
         print "targetItem:", targetItem
         print "index", index
@@ -2086,17 +2104,23 @@ class OutlineViewDelegateDatasource(NSObject):
 
         if targetItem:
             # drop on item
+            targetIndex = targetItem.siblingIndex()
             if index >= 0:
+                # between two nodes
                 pass
             else:
+                # on a node
                 pass
         else:
+            targetIndex = None
             # drop in view
             # append to last
             if index >= 0:
                 pass
             else:
                 pass
+
+        # check source here
         insertedItems = ov.readNodesFromPasteboard_parent_index_(pb, targetItem, index)
 
         # delete origin - feels hackish accessing a class variable
@@ -2140,8 +2164,8 @@ class OutlineViewDelegateDatasource(NSObject):
             return NSDragOperationMove
         else:
             # external drop - not now
-            print "souce:", dragInfo.draggingSource()
-            return NSDragOperationLink
+            # print "source:", dragInfo.draggingSource()
+            return NSDragOperationCopy
 
         return NSDragOperationNone
 
