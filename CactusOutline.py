@@ -196,6 +196,7 @@ datestring_nsdate = CactusTools.datestring_nsdate
 makeunicode = CactusTools.makeunicode
 mergeURLs = CactusTools.mergeURLs
 getURLExtension = CactusTools.getURLExtension
+num2ostype = CactusTools.num2ostype
 
 
 import CactusDocumentTypes
@@ -812,15 +813,45 @@ class KWOutlineView(NSOutlineView):
         if t == DragDropCactusPboardType:
             nodes = cPickle.loads( data.bytes().tobytes() )
         elif t == NSFilenamesPboardType:
+            # list of paths
             paths = pb.propertyListForType_(NSFilenamesPboardType)
-            for path in paths:
-                folder, lastname = os.path.split( path )
-                nodes.append( { 
-                    'name': lastname,
-                    'value': {'path': path},
-                    'typ': CactusOutlineTypes.typeOutline,
-                    'children': [] } )
+            if 0:
+                # simple straight files and folders to nodes. no hierarchy
+                for path in paths:
+                    folder, lastname = os.path.split( path )
+                    nodes.append( { 
+                        'name': lastname,
+                        'value': {'path': path},
+                        'typ': CactusOutlineTypes.typeOutline,
+                        'children': [] } )
+            if 1:
+                # simple straight files and folders to nodes. no hierarchy
+                def doSubNodes( item, children ):
+                    for node in children:
+                        n = OutlineNode(node['name'], node['value'], item, node['typ'], root)
+                        item.addChild_( n )
+                        doChildren( n, node['children'])
 
+                for path in paths:
+                    folder, lastname = os.path.split( path )
+                    typ = "file"
+                    if os.path.isdir( path ):
+                        typ = "folder"
+                    prop = getFileProperties( path )
+                    nodes.append( { 
+                        'name': lastname,
+                        'value': {
+                            'path': path,
+                            'type': typ,
+                            'size': str(prop.get("NSFileSize", "")),
+                            'type': num2ostype(int(prop.get("NSFileHFSTypeCode", "0"))),
+                            'creator': num2ostype(int(prop.get("NSFileHFSCreatorCode", "0"))),
+                            'created': str(prop.get("NSFileCreationDate", "")),
+                            'modified': str(prop.get("NSFileModificationDate", ""))
+                            },
+                        'typ': CactusOutlineTypes.typeOutline,
+                        'children': [] } )
+                
 
         elif t == mystringtype:
             nodes = []
@@ -2489,3 +2520,37 @@ def cleanupURL( url ):
         purl = urlparse.urlunparse( purl )
         purl = unicode(purl)
         return purl
+
+
+def folder2Outline( folder, node, filter=None):
+    def doSubNodes( item, children ):
+        for node in children:
+            n = OutlineNode(node['name'], node['value'], item, node['typ'], root)
+            item.addChild_( n )
+            doChildren( n, node['children'])
+
+
+    root, dirs, files = os.walk( folder )
+    result = []
+
+    for f in files:
+        path = os.path.join( root, f)
+        folder, lastname = os.path.split( path )
+        typ = "file"
+        if os.path.isdir( path ):
+            typ = "folder"
+        prop = getFileProperties( path )
+        nodes.append({ 
+            'name': lastname,
+            'value': {
+                'path': path,
+                'type': typ,
+                'size': "",
+                'type': "",
+                'creator': "",
+                'created': "",
+                'modified': ""
+                },
+            'typ': CactusOutlineTypes.typeOutline,
+            'children': [] } )
+        

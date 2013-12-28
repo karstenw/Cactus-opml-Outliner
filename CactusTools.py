@@ -66,7 +66,10 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 #
 
 def num2ostype( num ):
-    return struct.pack(">I", num)
+    if num == 0:
+        return '????'
+    s = struct.pack(">I", num)
+    return makeunicode(s, "macroman")
 
 
 def ostype2num( ostype ):
@@ -348,12 +351,12 @@ def getFileProperties( theFile ):
         u"NSFileOwnerAccountName",
         u"NSFilePosixPermissions",
         u"NSFileReferenceCount",
-        u"NSFileSize",
+        # u"NSFileSize",
         u"NSFileSystemFileNumber",
         u"NSFileSystemNumber",
         u"NSFileType",
-        u"NSFileHFSCreatorCode",
-        u"NSFileHFSTypeCode",
+        # u"NSFileHFSCreatorCode",
+        # u"NSFileHFSTypeCode",
         #u"NSFileCreationDate"
         ] )
     return mtprops
