@@ -790,16 +790,15 @@ class KWOutlineView(NSOutlineView):
         types = pb.types()
         t = None
         mystringtype = "public.utf8-plain-text"
-        
-        
-        if mystringtype in types:
-            t = mystringtype
-        
-        elif DragDropCactusPboardType in types:
+
+        if DragDropCactusPboardType in types:
             t = DragDropCactusPboardType
 
         elif NSFilenamesPboardType in types:
             t = NSFilenamesPboardType
+
+        elif mystringtype in types:
+            t = mystringtype
 
         if not t:
             return False
@@ -807,6 +806,8 @@ class KWOutlineView(NSOutlineView):
         delg = self.delegate()
         typ = delg.typ
         root = delg.root
+
+        # pdb.set_trace()
 
         data = pb.dataForType_(t)
         nodes = []
@@ -847,7 +848,8 @@ class KWOutlineView(NSOutlineView):
                             'type': num2ostype(int(prop.get("NSFileHFSTypeCode", "0"))),
                             'creator': num2ostype(int(prop.get("NSFileHFSCreatorCode", "0"))),
                             'created': str(prop.get("NSFileCreationDate", "")),
-                            'modified': str(prop.get("NSFileModificationDate", ""))
+                            'modified': str(prop.get("NSFileModificationDate", "")),
+                            'fileID': str(prop.get("NSFileSystemFileNumber", "-1"))
                             },
                         'typ': CactusOutlineTypes.typeOutline,
                         'children': [] } )
