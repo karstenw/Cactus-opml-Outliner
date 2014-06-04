@@ -205,6 +205,8 @@ http://goo.gl/EALQi
 For more details see the announcements on the dev-list <http://groups.google.com/group/cactus-outliner-dev>
 
 
+v0.6.4 - v0.6.6 Bug fixes
+
 v0.6.3 Pasting text inserts nodes.
 
 v0.6.2 More drag & drop
