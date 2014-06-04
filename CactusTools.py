@@ -449,7 +449,7 @@ def setFileModificationDate( filepath, modfdt ):
 
 
 def cache_url( nsurl, fileextension ):
-    if 0: #kwlog:
+    if 1:
         print "CactusTools.cache_url( %s, %s )" % (nsurl, fileextension)
 
     if not nsurl:
@@ -457,6 +457,8 @@ def cache_url( nsurl, fileextension ):
 
     returnURL = nsurl
     url = NSURL2str( nsurl )
+
+    # pdb.set_trace()
 
     try:
         localpath, localname = getDownloadFolder(nsurl)

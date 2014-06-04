@@ -376,7 +376,6 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
                 0,
                 None,
                 None )
-
     elif ext in g_preview_extensions:
         if nsurl.isFileURL():
             if open_:
@@ -1242,7 +1241,7 @@ class KWOutlineView(NSOutlineView):
                 #
                 # Control (Alt) Enter
                 if eventModifiers & NSControlKeyMask:
-
+                    # pdb.set_trace()
 
                     ###############################################################
                     #
@@ -1279,7 +1278,12 @@ class KWOutlineView(NSOutlineView):
                             #
 
                             # in a table or in html
+                            
+                            #
+                            # CHECK DOCUMENT TYPE HERE
+                            #
 
+                            # TABLE, HTML
                             if name == 'link':
                                 d = item.getValueDict()
                                 type = d.get('type', '')
@@ -1316,7 +1320,7 @@ class KWOutlineView(NSOutlineView):
                                             url = mergeURLs( target, url )
                                 open_node( url, nodetype )
 
-                            elif name in ('script'):
+                            elif name in ('script', ):
                                 d = item.getValueDict()
                                 href = d.get('src', '')
                                 url = cleanupURL( href )
@@ -1371,9 +1375,35 @@ class KWOutlineView(NSOutlineView):
                                 url = cleanupURL( url )
                                 open_node( url )
 
+                            elif name[:3] in ("<im", "<ht", "<a " ):
+                                # for now this seems like a speciality of FC...
+                                # no attributes but a <img> in name
+                                d = item.getValueDict()
+                                if not d:
+                                    print name
+                                    soup = BeautifulSoup(name)
+                                    # pdb.set_trace()
+                                    for link in soup.find_all('img'):
+                                        dest = link.get('src')
+                                        # print dest
+                                        open_node(dest)
+                                    for link in soup.find_all('a'):
+                                        dest = link.get('href')
+                                        # print dest
+                                        open_node(dest)
+                                else:
+                                    type = d.get('type', '')
+                                    href = d.get('url', '')
+                                    open_node(href)
+                                    # http://example.com/elsie
+                                    # http://example.com/lacie
+
                             # in an outline
                             else:
                                 #
+
+                                # pdb.set_trace()
+
                                 v = item.getValueDict()
                                 theType = v.get("type", "")
                                 url = ""
@@ -1396,7 +1426,7 @@ class KWOutlineView(NSOutlineView):
                                     open_node( url, "HTML" )
 
                                 elif theType in ( 'howto', 'html', 'include', 'outline',
-                                                  'redirect', 'thumbList',
+                                                  'redirect', 'thumbList', 'import',
                                                   'thumbListVarCol', 'code'):
                                     open_node( url )
 
