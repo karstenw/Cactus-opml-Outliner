@@ -330,7 +330,7 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
 
     appl = NSApplication.sharedApplication()
     appdelg = appl.delegate()
-    workspace= NSWorkspace.sharedWorkspace()
+    workspace = NSWorkspace.sharedWorkspace()
 
     basename, ext = getURLExtension( url )
     ext = ext.replace( '.', '', 1)
@@ -343,15 +343,23 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
     else:
         nsurl = NSURL.URLWithString_( url )
     if nodeType == "OPML" or ext == "opml":
+        if cache and not supressCache:
+            dummy = CactusTools.cache_url( nsurl, ext )
         if open_:
             appdelg.newOutlineFromURL_Type_( nsurl, CactusOPMLType )
     elif nodeType == "RSS" or ext == "rss":
+        if cache and not supressCache:
+            dummy = CactusTools.cache_url( nsurl, ext )
         if open_:
             appdelg.newOutlineFromURL_Type_( nsurl, CactusRSSType )
     elif nodeType == "XML" or ext == "xml":
+        if cache and not supressCache:
+            dummy = CactusTools.cache_url( nsurl, ext )
         if open_:
             appdelg.newOutlineFromURL_Type_( nsurl, CactusXMLType )
     elif nodeType == "HTML" or ext == "html":
+        if cache and not supressCache:
+            dummy = CactusTools.cache_url( nsurl, ext )
         if open_:
             appdelg.newOutlineFromURL_Type_( nsurl, CactusHTMLType )
             workspace.openURL_( nsurl )
@@ -1320,7 +1328,7 @@ class KWOutlineView(NSOutlineView):
                                             url = mergeURLs( target, url )
                                 open_node( url, nodetype )
 
-                            elif name in ('script', ):
+                            elif name in ('script', 'source'):
                                 d = item.getValueDict()
                                 href = d.get('src', '')
                                 url = cleanupURL( href )
@@ -2161,9 +2169,10 @@ class OutlineViewDelegateDatasource(NSObject):
         pb = info.draggingPasteboard()
         # pp(info)
 
-        print "targetItem:", targetItem
-        print "index", index
-        print "info", info
+        if 1:
+            print "targetItem:", repr(targetItem)
+            print "index", repr(index)
+            print "info", repr(info)
 
         if targetItem:
             # drop on item
