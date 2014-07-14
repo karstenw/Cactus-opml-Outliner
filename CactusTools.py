@@ -534,7 +534,7 @@ def cache_url( nsurl, fileextension ):
 
 def mergeURLs( base, rel ):
     """create an url with base as the base, updated by existing parts of rel."""
-    s = "CactusTools.mergeURLs(%s, %s) ->  %s"
+    s = u"CactusTools.mergeURLs(%s, %s) ->  %s"
     
     if type(base ) in (NSURL,):
         base = NSURL2str(base)
@@ -559,7 +559,17 @@ def mergeURLs( base, rel ):
         fragment = prel.fragment if (prel.fragment) else pbase.fragment)
 
     target = urlparse.urlunparse( target )
-    print s % ( base, rel, target)
+    try:
+        s = s % ( base, rel, target)
+        print s.encode("utf-8")
+    except Exception, err:
+        print
+        print "ERROR in mergeURL"
+        print err
+        print "base:", repr(base)
+        print "rel:", repr(rel)
+        print "target:", repr(target)
+        print
     return target
 
 
