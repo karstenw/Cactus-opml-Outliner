@@ -31,9 +31,9 @@ NSDocumentController = AppKit.NSDocumentController
 NSWorkspace = AppKit.NSWorkspace
 
 import PyObjCTools
-import PyObjCTools.NibClassBuilder
-extractClasses = PyObjCTools.NibClassBuilder.extractClasses
-AutoBaseClass = PyObjCTools.NibClassBuilder.AutoBaseClass
+#import PyObjCTools.NibClassBuilder
+#extractClasses = PyObjCTools.NibClassBuilder.extractClasses
+#AutoBaseClass = PyObjCTools.NibClassBuilder.AutoBaseClass
 
 
 import CactusOutline
