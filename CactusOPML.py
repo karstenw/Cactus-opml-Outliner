@@ -478,8 +478,21 @@ def generateHTML( rootNode, doctype, encoding, indent=0 ):
         # OTOH leaving it in leaves a save trail...
         rootElement.append(c)
 
-    rootElement.attrib.update( baseOP.getValueDict() )
-
+    # throws up on html save
+    #rootElement.attrib.update( baseOP.getValueDict() )
+    
+    # so;
+    d = baseOP.getValueDict()
+    # pdb.set_trace()
+    for e in d:
+        if ':' in e:
+            continue
+        try:
+            rootElement.attrib[e] = d[e]
+        except ValueError, err:
+            print
+            print "ERROR ON ATTRIB UPDATE"
+            print err
     comment = baseOP.comment
     if comment:
         rootElement.text = comment
