@@ -3,7 +3,7 @@
 
 It is an outline editor based on the PythonBrowser example from PyObjC.
 
-Developed on OSX 10.6 with Python 2.7, Xcode 3.2, pyobjc 2.5 and py2app 0.8
+Developed on OSX 10.6 with Python 2.7, Xcode 3.2, pyobjc 3.1b1 and py2app 0.8
 
 It's still in development but it gets better.
 
@@ -204,6 +204,7 @@ http://goo.gl/EALQi
 
 For more details see the announcements on the dev-list <http://groups.google.com/group/cactus-outliner-dev>
 
+v0.7.0 - no functional changes. Python 2.7.9 and PyObjc 3.1b1
 
 v0.6.4 - v0.6.6 Bug fixes
 
