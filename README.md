@@ -204,6 +204,8 @@ http://goo.gl/EALQi
 
 For more details see the announcements on the dev-list <http://groups.google.com/group/cactus-outliner-dev>
 
+v0.7.1 - dragging a folder into an outline now recursively adds the folders content
+
 v0.7.0 - no functional changes. Python 2.7.9 and PyObjc 3.1b1
 
 v0.6.4 - v0.6.6 Bug fixes
