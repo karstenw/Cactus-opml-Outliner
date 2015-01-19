@@ -50,6 +50,7 @@ class CactusPreferenceController(NSWindowController):
     txtUserName = objc.IBOutlet()
     optAnimateOPMLOpen = objc.IBOutlet()
     optMergeComment = objc.IBOutlet()
+    optIgnoreDotFiles = objc.IBOutlet()
 
     """Present a dialog for entering a URL for http document retrieval."""
     def init(self):
@@ -72,6 +73,7 @@ class CactusPreferenceController(NSWindowController):
 
         self.optAnimateOPMLOpen.setState_( defaults.objectForKey_( u'optAnimateOPMLOpen') )
         self.optMergeComment.setState_( defaults.objectForKey_( u'optMergeComment') )
+        self.optIgnoreDotFiles.setState_( defaults.objectForKey_( u'optIgnoreDotFiles') )
 
         self.optAlternateLines.setState_( defaults.objectForKey_( u'optAlternateLines') )
         self.optCommentColumn.setState_( defaults.objectForKey_( u'optCommentColumn') )
@@ -110,6 +112,7 @@ class CactusPreferenceController(NSWindowController):
 
         defaults.setObject_forKey_(self.optAnimateOPMLOpen.state(),   u'optAnimateOPMLOpen')
         defaults.setObject_forKey_(self.optMergeComment.state(),   u'optMergeComment')
+        defaults.setObject_forKey_(self.optIgnoreDotFiles.state(),   u'optIgnoreDotFiles')
 
         defaults.setObject_forKey_(self.optAlternateLines.state(),   u'optAlternateLines')
         defaults.setObject_forKey_(self.optCommentColumn.state(),   u'optCommentColumn')

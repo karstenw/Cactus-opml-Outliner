@@ -179,6 +179,7 @@ class CactusAppDelegate(NSObject):
         userdefaults.setObject_forKey_("",          u'txtUserName')
         userdefaults.setObject_forKey_(True,        u'optAnimateOPMLOpen')
         userdefaults.setObject_forKey_(False,       u'optMergeComment')
+        userdefaults.setObject_forKey_(True,        u'optIgnoreDotFiles')
 
         # html tab
         userdefaults.setObject_forKey_("<!DOCTYPE html>",   u'menDoctype')
