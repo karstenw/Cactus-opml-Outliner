@@ -204,6 +204,8 @@ http://goo.gl/EALQi
 
 For more details see the announcements on the dev-list <http://groups.google.com/group/cactus-outliner-dev>
 
+v0.7.2 - file drag and drop more refined. Added preference to ignore files/folders starting with a '.'
+
 v0.7.1 - dragging a folder into an outline now recursively adds the folders content
 
 v0.7.0 - no functional changes. Python 2.7.9 and PyObjc 3.1b1
