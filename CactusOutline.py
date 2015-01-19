@@ -336,6 +336,10 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
     ext = ext.replace( '.', '', 1)
     ext = ext.lower()
 
+    # do not cache local files
+    if url.startswith('file://localhost/') or url.startswith('file:///'):
+        supressCache = True
+
     if ' ' in url:
         # url = url.replace(" ", "%20")
         
@@ -824,28 +828,14 @@ class KWOutlineView(NSOutlineView):
             # list of paths
             paths = pb.propertyListForType_(NSFilenamesPboardType)
             for path in paths:
-                folder, lastname = os.path.split( path )
                 typ = "file"
                 if os.path.isdir( path ):
                     typ = "folder"
                 prop = getFileProperties( path )
-                currnode = { 
-                    'name': lastname,
-                    'value': {
-                        'path': path,
-                        'type': typ,
-                        'size': str(prop.get("NSFileSize", "")),
-                        'type': num2ostype(int(prop.get("NSFileHFSTypeCode", "0"))),
-                        'creator': num2ostype(int(prop.get("NSFileHFSCreatorCode", "0"))),
-                        'created': str(prop.get("NSFileCreationDate", "")),
-                        'modified': str(prop.get("NSFileModificationDate", "")),
-                        'fileID': str(prop.get("NSFileSystemFileNumber", "-1"))
-                        },
-                    'typ': CactusOutlineTypes.typeOutline,
-                    'children': [] }
-                
+                typ, currnode = makeFilePropertiesNode( path )
                 if typ == "folder":
                     folder2Outline( path, currnode )
+                
                 nodes.append( currnode )
 
         elif t == mystringtype:
@@ -1505,7 +1495,8 @@ class KWOutlineView(NSOutlineView):
                                 elif theType == "scripting2Post":
                                     open_node( url, nodeType="HTML")
                                 else:
-                                    print "Unhandled Node open\ntype: '%s'\nurl: '%s'" %(repr(theType), repr(url))
+                                    #print "Unhandled Node open\ntype: '%s'\nurl: '%s'" % (repr(theType), repr(url))
+                                    open_node( url )
 
                             consumed = True
 
@@ -2561,32 +2552,56 @@ def folder2Outline( folder, node, filter=None):
     
     For folders recursively create children.
     """
-
+    defaults = NSUserDefaults.standardUserDefaults()
+    ignoredot = False
+    try:
+        ignoredot = bool(defaults.objectForKey_( u'optIgnoreDotFiles'))
+    except:
+        pass
     root, directories, files = os.walk( folder ).next()
+    if ignoredot:
+        files[:] = [f for f in files if not f.startswith('.')]
+        directories[:] = [f for f in directories if not f.startswith('.')]
     result = []
     items = files[:]
     items.extend( directories )
     items.sort()
     for item in items:
         path = os.path.join( root, item)
-        prop = getFileProperties( path )
-        typ = "file"
-        if os.path.isdir( path ):
-            typ = "folder"
-        currnode = { 
-                'name': item,
-                'value': {
-                    'path': path,
-                    'type': typ,
-                    'size': str(prop.get("NSFileSize", "")),
-                    'type': num2ostype(int(prop.get("NSFileHFSTypeCode", "0"))),
-                    'creator': num2ostype(int(prop.get("NSFileHFSCreatorCode", "0"))),
-                    'created': str(prop.get("NSFileCreationDate", "")),
-                    'modified': str(prop.get("NSFileModificationDate", "")),
-                    'fileID': str(prop.get("NSFileSystemFileNumber", "-1"))
-                    },
-                'typ': CactusOutlineTypes.typeOutline,
-                'children': [] }
+        typ, currnode = makeFilePropertiesNode( path )
         if typ == "folder":
             folder2Outline( path, currnode )
         node['children'].append( currnode )
+
+def makeFilePropertiesNode( path ):
+    prop = getFileProperties( path )
+    parent, item = os.path.split( path )
+    typ = "file"
+    if os.path.isdir( path ):
+        typ = "folder"
+    url = NSURL2str( NSURL.fileURLWithPath_(path))
+
+    currnode = { 
+        'name': item,
+        'value': {
+            'url': url,
+            'type': typ,
+            'size': str(prop.get("NSFileSize", "")),
+            'created': str(prop.get("NSFileCreationDate", "")),
+            'modified': str(prop.get("NSFileModificationDate", "")),
+            'fileID': str(prop.get("NSFileSystemFileNumber", "-1"))
+            },
+        'typ': CactusOutlineTypes.typeOutline,
+        'children': [] }
+
+    # add type & creator if set
+    hfstype = int(prop.get("NSFileHFSTypeCode", "0"))
+    if hfstype:
+        hfstype = num2ostype( hfstype )
+        currnode['HFSType'] = hfstype
+    hfscreator = int(prop.get("NSFileHFSCreatorCode", "0"))
+    if hfscreator:
+        hfscreator = num2ostype( hfscreator )
+        currnode['HFSCreator'] = hfscreator
+
+    return typ, currnode
