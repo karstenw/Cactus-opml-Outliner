@@ -399,12 +399,12 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
                     None )
         else:
             # preview can't do http so open it in the std browser:
-            if cache:
+            if cache and not supressCache:
                 nsurl = CactusTools.cache_url( nsurl, ext )
             if open_:
                 workspace.openURL_( nsurl )
     else:
-        if cache:
+        if cache and not supressCache:
             nsurl = CactusTools.cache_url( nsurl, ext )
         if open_:
             workspace.openURL_( nsurl )
