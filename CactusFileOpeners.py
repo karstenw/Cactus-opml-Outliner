@@ -15,8 +15,11 @@ import traceback
 import pdb
 import pprint
 pp = pprint.pprint
-kwdbg = False
-kwlog = True
+
+import CactusVersion
+kwdbg = CactusVersion.developmentversion
+kwlog = CactusVersion.developmentversion
+
 
 import time
 
@@ -32,8 +35,6 @@ NSUserDefaults = AppKit.NSUserDefaults
 import CactusTools
 num2ostype = CactusTools.num2ostype
 ostype2num = CactusTools.ostype2num
-
-import CactusVersion
 
 import CactusOutlineTypes
 typeOutline = CactusOutlineTypes.typeOutline

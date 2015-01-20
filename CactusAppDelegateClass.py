@@ -11,10 +11,12 @@ import os
 import pdb
 import pprint
 pp = pprint.pprint
-kwdbg = False
-kwlog = True
 
+import CactusVersion
+kwdbg = CactusVersion.developmentversion
+kwlog = CactusVersion.developmentversion
 
+cachefolder = CactusVersion.cachefolder
 
 import objc
 
@@ -61,9 +63,6 @@ import CactusOutlineNode
 OutlineNode = CactusOutlineNode.OutlineNode
 
 import CactusOPML
-
-import CactusVersion
-cachefolder = CactusVersion.cachefolder
 
 import CactusPreferenceController
 CactusPreferenceController = CactusPreferenceController.CactusPreferenceController
@@ -172,7 +171,6 @@ class CactusAppDelegate(NSObject):
         userdefaults.setObject_forKey_(False,       u'optCommentColumn')
         userdefaults.setObject_forKey_(False,       u'optTypeColumn')
         userdefaults.setObject_forKey_(True,        u'optValueColumn')
-
 
         # opml tab
         userdefaults.setObject_forKey_("",          u'txtUserEmail')

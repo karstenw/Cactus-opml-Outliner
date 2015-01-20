@@ -24,8 +24,6 @@ import math
 import feedparser
 
 import CactusVersion
-
-
 kwdbg = CactusVersion.developmentversion
 kwlog = CactusVersion.developmentversion
 
@@ -2200,8 +2198,10 @@ class OutlineViewDelegateDatasource(NSObject):
 
 
     def outlineView_validateDrop_proposedItem_proposedChildIndex_(self, ov, dragInfo, item, index):
-        if kwdbg:
+        if 0 and kwdbg:
+            # deactivated. very noysy
             print "DELG.outlineView_validateDrop_proposedItem_proposedChildIndex_"
+
         if dragInfo.draggingSource() == self.outlineView:
             # print "drag in outlineView()!"
             # print item

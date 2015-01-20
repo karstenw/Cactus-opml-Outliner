@@ -19,8 +19,10 @@ import mactypes
 import appscript
 asc = appscript
 
-kwdbg = False
-kwlog = True
+import CactusVersion
+kwdbg = CactusVersion.developmentversion
+kwlog = CactusVersion.developmentversion
+
 import pdb
 
 import re
@@ -40,8 +42,6 @@ CactusIMLType = CactusDocumentTypes.CactusIMLType
 CactusDocumentTypesSet = CactusDocumentTypes.CactusDocumentTypesSet
 CactusDocumentXMLBasedTypesSet = CactusDocumentTypes.CactusDocumentXMLBasedTypesSet
 
-
-import CactusVersion
 
 import feedparser
 

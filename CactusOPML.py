@@ -11,12 +11,14 @@ urlopen = urllib2.urlopen
 
 import pprint
 pp = pprint.pprint
+
 import traceback
 
-kwdbg = False
-kwlog = False
-import pdb
+import CactusVersion
+kwdbg = CactusVersion.developmentversion
+kwlog = CactusVersion.developmentversion
 
+import pdb
 
 import lxml
 import lxml.etree
@@ -29,8 +31,6 @@ import lxml.html
 #import lxml.html.builder
 
 import PyRSS2Gen
-
-import CactusVersion
 
 import CactusExceptions
 OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
