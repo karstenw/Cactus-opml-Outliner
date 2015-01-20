@@ -652,8 +652,8 @@
 							<object class="NSTextFieldCell" key="NSCell" id="813358251">
 								<int key="NSCellFlags">69336577</int>
 								<int key="NSCellFlags2">1346371584</int>
-								<string type="base64-UTF8" key="NSContents">Rm9yIGZvcm1hdHRpbmcgb3B0aW9ucyBzZWU6Cmh0dHA6Ly9kb2NzLnB5dGhvbi5vcmcvMi9saWJyYXJ5
-L2RhdGV0aW1lLmh0bWwjc3RyZnRpbWUtYW5kLXN0cnB0aW1lLWJlaGF2aW9yA</string>
+								<string type="base64-UTF8" key="NSContents">Rm9yIGZvcm1hdHRpbmcgb3B0aW9ucyBzZWU6Cmh0dHBzOi8vZG9jcy5weXRob24ub3JnLzIvbGlicmFy
+eS9kYXRldGltZS5odG1sI3N0cmZ0aW1lLWFuZC1zdHJwdGltZS1iZWhhdmlvcg</string>
 								<object class="NSFont" key="NSSupport">
 									<string key="NSName">LucidaGrande</string>
 									<double key="NSSize">12</double>
