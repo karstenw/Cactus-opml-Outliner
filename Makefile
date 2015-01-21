@@ -19,7 +19,9 @@ release:
 	cp -p ./LICENSE ./Cactus_v000/
 	
 	# markdown README.md >README.html
-	markdown_py -o html5 -f ./Cactus_v000/README.html README.md
+	# markdown_py -o html5 -f ./Cactus_v000/README.html README.md
+	mmd -o ./Cactus_v000/README.html README.md
+
 	cp README.md  ./Cactus_v000/
 	
 	rm -Rf ./Cactus_v000/Cactus.app
