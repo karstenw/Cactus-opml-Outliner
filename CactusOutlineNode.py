@@ -15,9 +15,6 @@ import traceback
 import time
 import datetime
 
-import urllib
-import urlparse
-
 import math
 import feedparser
 
