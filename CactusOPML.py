@@ -38,7 +38,6 @@ XMLParseErrorException = CactusExceptions.XMLParseErrorException
 HTMLParseErrorException = CactusExceptions.HTMLParseErrorException
 PLISTParseErrorException = CactusExceptions.PLISTParseErrorException
 
-
 import Foundation
 NSURL = Foundation.NSURL
 NSDictionary = Foundation.NSDictionary
@@ -117,7 +116,6 @@ def getOPML( etRootnode ):
 
     # get body
     body = etRootnode.find("body")
-    
 
     if head:
         for item in list(head):
@@ -155,7 +153,7 @@ def parse_plist( nsurl ):
     except StandardError, v:
         raise PLISTParseErrorException, "The PLIST file could not be parsed.\n\n%s" % v
     return nsdict
-    
+
 
 # UNUSED
 def parse(opml_url):
@@ -454,6 +452,7 @@ def createSubNodesHTML(OPnode, ETnode, level, indent=0):
                 s = createSubNodesHTML( child, ETSub, level+1, indent )
     return ETnode
 
+
 def generateHTML( rootNode, doctype, encoding, indent=0 ):
 
     baseOP = rootNode.children[0]
@@ -507,7 +506,6 @@ def generateHTML( rootNode, doctype, encoding, indent=0 ):
                                include_meta_content_type=True,
                                encoding=encoding,
                                doctype=doctype)
-    # return page
 
 
 def generateXML( rootNode, indent=False ):
@@ -764,7 +762,7 @@ def generatePLISTArray_( rootNode ):
             plist.append( generatePLISTDict_( child ) )
     return plist
 
-    
+
 def generateOPML( rootNode, indent=2, expansion={} ):
     """Generate an OPML/XML tree from OutlineNode rootNode.
     
