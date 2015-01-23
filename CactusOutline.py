@@ -2598,10 +2598,10 @@ def makeFilePropertiesNode( path ):
     hfstype = int(prop.get("NSFileHFSTypeCode", "0"))
     if hfstype:
         hfstype = num2ostype( hfstype )
-        currnode['HFSType'] = hfstype
+        currnode['value']['HFSType'] = hfstype
     hfscreator = int(prop.get("NSFileHFSCreatorCode", "0"))
     if hfscreator:
         hfscreator = num2ostype( hfscreator )
-        currnode['HFSCreator'] = hfscreator
+        currnode['value']['HFSCreator'] = hfscreator
 
     return typ, currnode
