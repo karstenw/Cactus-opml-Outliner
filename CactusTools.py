@@ -87,7 +87,9 @@ def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
     return s
 
 
-def detectFileType( nsfileurl ):
+
+
+def detectFileTypeAtURL( nsfileurl ):
     """Not yet sure how to autodetect without reading some files twice.
 
     So far the parsers used are:
@@ -98,6 +100,13 @@ def detectFileType( nsfileurl ):
         PLIST: NSDictionary.dictionaryWithContentsOfURL_ (opens URL)
     """
     pass
+
+
+def detectFileTypeLocalFile( path ):
+    # this needs to be checked against the binary string
+    xmlre = re.compile( r'''^<?xml\s+version\s*="1.0"\s+encoding\s*=\s*"''' )
+
+
 
 
 def readURL( nsurl, type_="" ):
@@ -204,7 +213,8 @@ def readURL( nsurl, type_="" ):
         if s.startswith("<?xml ") or s.startswith("<opml") or s.startswith("<rss"):
             re_bogusCharacters = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f]')
 
-            # perhaps an effort to preserve the replaced character should be made here
+            # TBD: perhaps an effort to preserve the replaced character should be made here
+            # use urlescape
             t = re.sub( re_bogusCharacters, "???", s)
             if s != t:
                 print "Bogus characters in XML..."
