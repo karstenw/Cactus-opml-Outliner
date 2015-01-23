@@ -1,6 +1,9 @@
 ## This is the Cactus-opml outline editor. ##
 
 
+![Image](+icons/large/CowSkull.png?raw=true)
+
+
 It is an outline editor based on the PythonBrowser example from PyObjC.
 
 Developed on OSX 10.6 with Python 2.7, Xcode 3.2, pyobjc 3.1b1 and py2app 0.8
