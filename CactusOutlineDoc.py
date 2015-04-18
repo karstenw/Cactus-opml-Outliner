@@ -687,6 +687,12 @@ class CactusOutlineDocument(NSDocument):
             # return None
             rootXML = CactusOPML.generateXML( self.rootNode) #, indent=1 )
 
+            # check consistency
+            if self.rootNode.noOfChildren() > 1:
+                firstborn = self.rootNode.childAtIndex_(0)
+                name = firstborn.name
+                errorDialog(u"Warning",
+                    u"XML documents can have only 1 to level node. Every node after '%s' will be ommited on save." % (name,))
             e = etree.ElementTree( rootXML )
 
             fob = cStringIO.StringIO()
