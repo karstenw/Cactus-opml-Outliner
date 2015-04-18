@@ -103,82 +103,76 @@ With the new "Open As..." option in the file dialogs, it is now possible to load
 
 ## Latest changes ##
 
-Drag and drop inside Cactus.
++ Drag and drop inside Cactus.
 
-Cut, copy and paste.
++ Cut, copy and paste of nodes.
 
-Cactus can insert via context menu all the links from the frontmost Safari document
++ Cactus can insert via context menu all the links from the frontmost Safari document
 
-The "Node" menu has been partially wired. Additionally to TAB, SHIFT-TAB, ctrl-up/down nodes can now also be moved with cmd-U/D/L/R and directly from the menu.
++ The "Node" menu has been partially wired. Additionally to TAB, SHIFT-TAB, ctrl-up/down nodes can now also be moved with cmd-U/D/L/R and directly from the menu.
 
-A little bit of MORE sentimentality: Create a Calendar with the "Calendar..." command in the "Outline" menu.
++ A little bit of MORE sentimentality: Create a Calendar with the "Calendar..." command in the "Outline" menu.
 
-Updated development environment to 10.6.
++ Updated development environment to 10.6.
 
-Open iTunes Library.xml file as their own type since .xml is already used.
++ Open iTunes Library.xml file as their own type since .xml is already used.
 
-XML and HTML writing are back.
++ XML and HTML writing are back.
 
-PLIST file type. Read and write apple property lists.
++ PLIST file type. Read and write apple property lists.
 
-Preferences.
++ Preferences.
 
-Cactus now reads and saves the window position of OPML files.
++ Cactus now reads and saves the window position of OPML files.
 
-Cactus now reads and saves the expansion state of OPML files.
++ Cactus now reads and saves the expansion state of OPML files.
 
-A bug in the RSS generation that ommited the channel description has been corrected.
++ A bug in the RSS generation that ommited the channel description has been corrected.
 
-A bug in the previous version which ommitted all OPML head values has been corrected.
++ A bug in the previous version which ommitted all OPML head values has been corrected.
 
-New shortcuts:
-ctrl-left select parents of current selection
-ctrl-alt-left select parents of current selection and collapse children
++ New shortcuts:
+  + ctrl-left select parents of current selection
+  + ctrl-alt-left select parents of current selection and collapse children
 
-ctrl-right select children of current selection
-ctrl-alt-right select children of current selection and expand children
+  + ctrl-right select children of current selection
+  + ctrl-alt-right select children of current selection and expand children
 
-Cactus has now big icons up to 512 pixels.
++ Cactus has now big icons up to 512 pixels.
 
-HTML is now a document type but only for reading.
++ HTML is now a document type but only for reading.
 
-There is now a context menu. The only item is "Include" which will include linked OPML files of the types 'include', 'outline', 'thumbList', 'code', 'thumbListVarCol' and 'thumbList'.
++ There is now a context menu. The only item is "Include" which will include linked OPML files of the types 'include', 'outline', 'thumbList', 'code', 'thumbListVarCol' and 'thumbList'.
 
-The Outline window now shows which file type was loaded. I.e. one of "OPML File", "RSS File" or "XML File".
++ The Outline window now shows which file type was loaded. I.e. one of "OPML File", "RSS File" or "XML File".
 
-The "Expand", "Expand All Subheads", "Collapse", "Collapse Everything", "Collapse To Parent" items of the "Outline" menu have been activated.
++ The "Expand", "Expand All Subheads", "Collapse", "Collapse Everything", "Collapse To Parent" items of the "Outline" menu have been activated.
 
-The Open and OpenURL dialogs now have an extension to force the filetype; i.e. Open As...
++ The Open and OpenURL dialogs now have an extension to force the filetype; i.e. Open As...
 
-XML is now a document type.
++ XML is now a document type.
 
-RSS and OPML are now a document types.
++ RSS and OPML are now a document types.
 
-Document icons for local files.
++ Document icons for local files.
 
-Added a recent URLs menu to the open URL dialog. Holds the last 30 visited URLs.
++ Added a recent URLs menu to the open URL dialog. Holds the last 30 visited URLs.
 
-Cactus now tries to correct some common errors in OPML files.
-
-Corrections applied are:
-+ wrong XML declarations ( "&lt;?xml encoding...?&gt;" instead of "&lt;?xml version...?>"
-+ illegal characters (chrs 0-8,11,12,14-31) are replaced with "???"
-+ some OPML files had a &lt;directiveCache&gt; tag instead of &lt;/outline&gt; at the top level
-
-
-Take a look at the updated shortcuts section. The ctrl-up/down keys were previously undocumented.
++ Cactus now tries to correct some common errors in OPML files.
+  + Corrections applied are:
+    + wrong XML declarations ( "&lt;?xml encoding...?&gt;" instead of "&lt;?xml version...?>"
+    + illegal characters (chrs 0-8,11,12,14-31) are replaced with "???"
+    + some OPML files had a &lt;directiveCache&gt; tag instead of &lt;/outline&gt; at the top level
+  + Take a look at the updated shortcuts section. The ctrl-up/down keys were previously undocumented.
 
 
-Links in outline nodes which end in one of (aac,aifc,aiff,aif,au,ulw,snd,caf,
-gsm,kar,mid,smf,midi,mp3,swa,wav,3gp,3g2,amc,avi,vfw,dif,dv,fli,mp2,m1s,m75,
-m15,m2p,mpg,mpeg,mp4,mpg4,mqv,qtz,mov,qt,qtl,rtsp,sd2,sdp,sml,m1a,mpa,mpm,
-m1v,m2v,m4a,m4p,m4b,m4v,amr,cdda,dvd,atr,sdv,pls,qmed) are now open in Quicktime-Player
++ Links in outline nodes which end in one of (aac,aifc,aiff,aif,au,ulw,snd,caf, gsm,kar,mid,smf,midi,mp3,swa,wav,3gp,3g2,amc,avi,vfw,dif,dv,fli,mp2,m1s,m75, m15,m2p,mpg,mpeg,mp4,mpg4,mqv,qtz,mov,qt,qtl,rtsp,sd2,sdp,sml,m1a,mpa,mpm, m1v,m2v,m4a,m4p,m4b,m4v,amr,cdda,dvd,atr,sdv,pls,qmed) are now open in Quicktime-Player
 
-RSS parser should be more tolerant now.
++ RSS parser should be more tolerant now.
 
-Internal stuff. Preparing for the NSDocument refactoring.
++ Internal stuff. Preparing for the NSDocument refactoring.
 
-Updated feedparser to V5.1.1.
++ Updated feedparser to V5.1.1.
 
 
 ## Build ##
