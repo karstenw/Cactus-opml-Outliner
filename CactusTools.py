@@ -351,7 +351,8 @@ def getFileProperties( theFile ):
     """
     sfm = NSFileManager.defaultManager()
     props = sfm.fileAttributesAtPath_traverseLink_( theFile, True )
-
+    if not props:
+        return {}
     mtprops = props.mutableCopy()
     mtprops.removeObjectsForKeys_( [
         u"NSFileExtensionHidden",
