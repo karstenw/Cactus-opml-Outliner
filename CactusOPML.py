@@ -482,7 +482,6 @@ def generateHTML( rootNode, doctype, encoding, indent=0 ):
     
     # so;
     d = baseOP.getValueDict()
-    # pdb.set_trace()
     for e in d:
         if ':' in e:
             continue

@@ -138,6 +138,5 @@ class OpenURLWindowController(NSWindowController):
 
     @objc.IBAction
     def Cancel_(self, sender):
-        #pdb.set_trace()
         self.close()
 

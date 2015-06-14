@@ -312,12 +312,42 @@ def open_photo( url, open_=True ):
 
 
 # TODO: change parameter to node!
-def open_node( url, nodeType=None, open_=True, supressCache=False ):
+def open_node( url, nodeType=None, open_=0, supressCache=False ):
     if kwdbg:
         print "CactusOutline.open_node()"
         pp( (url,nodeType,open_, supressCache) )
 
-    # pdb.set_trace()
+    if chr(10) in url or chr(13) in url:
+        return
+
+    # manual quoting
+    analyzeEncoding = re.compile(r'[\x00-\x22\x24\x80-\xFF]')
+    while True:
+        m = analyzeEncoding.search( url )
+        if m:
+            c = ord(m.group())
+            h = hex(c)[2:]
+            h = h.rjust(2, '0')
+            url = url.replace(m.group(), '%'+h)
+        else:
+            break
+    url = url.replace(" ", '%20')
+
+    purl = urlparse.urlparse( url )
+    if m:
+        path = purl.path #urllib.quote( purl.path )
+        url = urlparse.ParseResult( scheme = purl.scheme, netloc = purl.netloc,
+                                    path = path, params = purl.params,
+                                    query = purl.query, fragment = purl.fragment)
+        # for c in url
+        print m
+        print repr(url)
+        print
+
+    nsurl = NSURL.URLWithString_( url )
+
+    if nsurl == None:
+        return
 
     defaults = NSUserDefaults.standardUserDefaults()
     cache = False
@@ -338,12 +368,6 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
     if url.startswith('file://localhost/') or url.startswith('file:///'):
         supressCache = True
 
-    if ' ' in url:
-        # url = url.replace(" ", "%20")
-        
-        nsurl = NSURL.URLWithString_( url.replace(" ", "%20" ))
-    else:
-        nsurl = NSURL.URLWithString_( url )
     if nodeType == "OPML" or ext == "opml":
         if cache and not supressCache:
             dummy = CactusTools.cache_url( nsurl, ext )
@@ -418,8 +442,8 @@ class KWOutlineView(NSOutlineView):
 
     def awakeFromNib(self):
         self.editSession = False
+
         # manual en- & disabling menu items
-        #pdb.set_trace()
         self.clipboardRoot = OutlineNode("Clipboard root", "", None, typeOutline, None)
         menu = NSMenu.alloc().initWithTitle_( u"" )
         menu.setDelegate_(self)
@@ -748,7 +772,7 @@ class KWOutlineView(NSOutlineView):
     
     def copyNodesToPasteboard_( self, pb ):
         print "KWOutlineView.copyNodesToPasteboard_"
-        #pdb.set_trace()
+
         pb.declareTypes_owner_( [DragDropCactusPboardType,
                                  NSStringPboardType],
                                  # NSFilenamesPboardType],
@@ -795,7 +819,7 @@ class KWOutlineView(NSOutlineView):
         """
         if 1: #kwlog:
             print "KWOutlineView.readNodesFromPasteboard_parent_index_"
-        # pdb.set_trace()
+
         types = pb.types()
         t = None
         mystringtype = "public.utf8-plain-text"
@@ -815,8 +839,6 @@ class KWOutlineView(NSOutlineView):
         delg = self.delegate()
         typ = delg.typ
         root = delg.root
-
-        # pdb.set_trace()
 
         data = pb.dataForType_(t)
         nodes = []
@@ -1223,7 +1245,6 @@ class KWOutlineView(NSOutlineView):
                 #
                 # Control (Alt) Enter
                 if eventModifiers & NSControlKeyMask:
-                    # pdb.set_trace()
 
                     ###############################################################
                     #
@@ -1244,7 +1265,16 @@ class KWOutlineView(NSOutlineView):
 
                         # get node selection
                         items = self.getSelectionItems()
-
+                        
+                        # get base url
+                        # should be used later on
+                        baseurl = ""
+                        try:
+                            ctrl = self.delegate().controller
+                            doc = ctrl.document()
+                            baseurl = doc.url
+                        except:
+                            pass
                         # do the selection
                         for item in items:
                             name = item.name
@@ -1364,7 +1394,6 @@ class KWOutlineView(NSOutlineView):
                                 if not d:
                                     print name
                                     soup = BeautifulSoup(name)
-                                    # pdb.set_trace()
                                     for link in soup.find_all('img'):
                                         dest = link.get('src')
                                         # print dest
@@ -1383,9 +1412,6 @@ class KWOutlineView(NSOutlineView):
                             # in an outline
                             else:
                                 #
-
-                                # pdb.set_trace()
-
                                 v = item.getValueDict()
                                 theType = v.get("type", "")
                                 url = ""
@@ -1681,7 +1707,7 @@ class KWOutlineView(NSOutlineView):
                         # selfRect = self.bounds()
                         # deltaH = selfRect.size.height / 2
                         # y += deltaH
-                        # pdb.set_trace()
+                        # 
                         # print "ScrollTo_( %s, %s )" % (repr(x), repr(y))
                         # self.superview().scrollToPoint_( NSMakePoint( x, y ) )
                         self.scrollRowToVisible_( first )
@@ -2142,9 +2168,7 @@ class OutlineViewDelegateDatasource(NSObject):
     #
     def outlineView_acceptDrop_item_childIndex_(self, ov, info, targetItem, index):
         print "DELG.outlineView_acceptDrop_item_childIndex_"
-        # pdb.set_trace()
 
-        
         pb = info.draggingPasteboard()
         # pp(info)
 
@@ -2226,7 +2250,7 @@ class OutlineViewDelegateDatasource(NSObject):
     def outlineView_writeItems_toPasteboard_(self, ov, items, pb):
         if kwdbg:
             print "DELG.outlineView_writeItems_toPasteboard_"
-        #pdb.set_trace()
+
         pb.declareTypes_owner_( [DragDropCactusPboardType],
                                 self)
         # items = ov.getSelectionItems()

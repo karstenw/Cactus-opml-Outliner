@@ -469,8 +469,6 @@ def cache_url( nsurl, fileextension ):
     returnURL = nsurl
     url = NSURL2str( nsurl )
 
-    # pdb.set_trace()
-
     try:
         localpath, localname = getDownloadFolder(nsurl)
 
@@ -517,6 +515,7 @@ def cache_url( nsurl, fileextension ):
             print "LOAD: %s..." % url
             fname, info = urllib.urlretrieve(url, localpath)
             print "LOAD: %s...done" % url
+            print "LOCAL:", repr(localpath)
 
             try:
                 finder = asc.app(u'Finder.app')
@@ -546,25 +545,31 @@ def cache_url( nsurl, fileextension ):
 def mergeURLs( base, rel ):
     """create an url with base as the base, updated by existing parts of rel."""
     s = u"CactusTools.mergeURLs(%s, %s) ->  %s"
-    
-    if type(base ) in (NSURL,):
-        base = NSURL2str(base)
-    pbase = urlparse.urlparse( base )
+
     prel = urlparse.urlparse( rel )
+    if prel.scheme and prel.netloc:
+        return prel.geturl()
+
+    if type(base) in (NSURL,):
+        base = NSURL2str(base)
     
-    if not pbase:
-        print
-        print
-        print
-        print "ERROR: CactusTools.mergeURLs: base is nil: %s" % repr(base)
-        print "-" * 80
-        # pdb.set_trace()
-        print
-        print
+    # it's a relative path
+
+    pbase = urlparse.urlparse( base )
+
+    path = pbase.path
+    folder, filename = os.path.split( path )
+    basename, ext = os.path.splitext( filename )
+    if ext != "" and path[-1] != '/':
+        path = os.path.join(folder, rel)
+    else:
+        path = os.path.join(path, rel)
+    
+
     target = urlparse.ParseResult(
         scheme = pbase.scheme,
-        netloc = prel.netloc if (prel.netloc) else pbase.netloc,
-        path = prel.path if (prel.path) else pbase.path,
+        netloc = pbase.netloc,
+        path = path,
         params = prel.params if (prel.params) else pbase.params,
         query = prel.query if (prel.query) else pbase.query,
         fragment = prel.fragment if (prel.fragment) else pbase.fragment)

@@ -70,8 +70,6 @@ def openOPML_withURLTag_(rootOPML, urltag):
     defaults = NSUserDefaults.standardUserDefaults()
     optMergeComment = defaults.objectForKey_( u'optMergeComment')
 
-    # pdb.set_trace()
-
     #
     #  Split this up.
     def getChildrenforNode(node, children, root):
@@ -197,7 +195,6 @@ def openOPML_withURLTag_(rootOPML, urltag):
                     getChildrenforNode( node, children, root )
                 except Exception, err:
                     print err
-                    # pdb.set_trace()
                     pp(children)
                     pp(item)
     #title = os
@@ -254,7 +251,6 @@ def openXML_( rootXML):
                 n = len(childs)
             except Exception, err:
                 print
-                # pdb.set_trace()
                 print err
             if len(childs) > 0:
                 getChildrenforNode(newnode, childs, root)
@@ -293,7 +289,6 @@ def openXML_( rootXML):
         print "CactusFileOpeners.openXML_() ERROR"
         print "childen has no length attribute!"
         print type(children)
-        # pdb.set_trace()
         print err
 
 
@@ -508,7 +503,6 @@ def getPLISTValue(nsvalue):
         valueTypeName = [ ('cactusNodeType', "string") ]
     else:
         print "BOGATIVE VALUE TYPE:", repr(valueType)
-        #pdb.set_trace()
         print
     return value, valueTypeName
 
@@ -539,7 +533,6 @@ def openIML_( nsdict ):
     progressCount = 0
 
     def getTracks( nsdict, parent ):
-        # pdb.set_trace()
         i = 0
         id_trackname = {}
         for trackItem in nsdict:
@@ -618,7 +611,6 @@ def openIML_( nsdict ):
             return node
 
     def getPlaylists( nsdict, parent, id_track_dict ):
-        # pdb.set_trace()
 
         defaults = NSUserDefaults.standardUserDefaults()
         optIMLImportSystemLibraries = defaults.objectForKey_( u'optIMLImportSystemLibraries')
@@ -905,7 +897,6 @@ def openPLIST_( nsdict ):
                 node.setValue_( [ ('cactusNodeType', "string") ] )
             else:
                 print "BOGATIVE VALUE TYPE:", repr(valueType)
-                #pdb.set_trace()
                 print
 
             node.setComment_( value )
