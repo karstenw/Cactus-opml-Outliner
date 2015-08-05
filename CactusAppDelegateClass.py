@@ -19,6 +19,7 @@ kwlog = CactusVersion.developmentversion
 cachefolder = CactusVersion.cachefolder
 
 import objc
+super = objc.super
 
 import Foundation
 NSObject = Foundation.NSObject

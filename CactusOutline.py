@@ -44,6 +44,7 @@ import CactusOutlineTypes
 typeOutline = CactusOutlineTypes.typeOutline
 
 import objc
+super = objc.super
 
 
 import Foundation
@@ -242,9 +243,11 @@ g_opmplnodetypes = {
 g_preview_extensions = ("pdf ai ps epi eps epsf epsi "
                         "tiff tif "
                         "crw cr2 nef raf orf mrw srf dcr arw pef raw mos "
-                        "dng xbm exr bmp gif ico jpg jpeg jpe thm pict pct "
+                        "dng xbm exr bmp gif ico jpg jpeg jpe thm "
                         "png qtif tga targa sgi psd pntg fpx fax jfx jfax icns jp2 "
                         "pic hdr ")
+                        # not anymore
+                        # "pict pct " 
 g_preview_extensions = g_preview_extensions.split()
 
 g_qtplayer_extensions = ("aac aifc aiff aif au ulw snd caf gsm kar mid smf midi "
@@ -312,13 +315,15 @@ def open_photo( url, open_=True ):
 
 
 # TODO: change parameter to node!
-def open_node( url, nodeType=None, open_=0, supressCache=False ):
+def open_node( url, nodeType=None, open_=1, supressCache=False ):
     if kwdbg:
         print "CactusOutline.open_node()"
         pp( (url,nodeType,open_, supressCache) )
 
     if chr(10) in url or chr(13) in url:
         return
+
+    # pdb.set_trace()
 
     # manual quoting
     analyzeEncoding = re.compile(r'[\x00-\x22\x24\x80-\xFF]')
@@ -428,7 +433,7 @@ def open_node( url, nodeType=None, open_=0, supressCache=False ):
     else:
         if cache and not supressCache:
             nsurl = CactusTools.cache_url( nsurl, ext )
-        if open_:
+        if 0: # open_:
             workspace.openURL_( nsurl )
 
 def handleEventReturnKeyOV_Event_( ov, event ):
@@ -1372,12 +1377,18 @@ class KWOutlineView(NSOutlineView):
                                 basename, extension = getURLExtension(url)
                                 if extension:
                                     extension = extension.replace('.', '')
+
+                                # pdb.set_trace()
+
                                 if extension in g_qtplayer_extensions:
                                     open_node(url, 'QTPL')
-                                elif  extension in g_preview_extensions:
+                                elif extension in g_preview_extensions:
                                     open_node(url)
-                                else:
+                                elif extension == '':
                                     open_node(url, 'HTML')
+                                else:
+                                    # here should be automatic content handling
+                                    open_node(url)
                             
                             elif name in ('url', 'htmlUrl', 'xmlUrl', 'xmlurl'):
                                 #

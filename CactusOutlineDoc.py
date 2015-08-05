@@ -45,6 +45,7 @@ HTMLParseErrorException = CactusExceptions.HTMLParseErrorException
 PLISTParseErrorException = CactusExceptions.PLISTParseErrorException
 
 import objc
+super = objc.super
 
 import Foundation
 NSObject = Foundation.NSObject

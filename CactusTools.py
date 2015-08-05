@@ -510,7 +510,7 @@ def cache_url( nsurl, fileextension ):
                     localpath = os.path.join( localpath, localname + "." + fileextension )
 
             if fileextension:
-                if not localpath.endswith( "." + fileextension ):
+                if not localpath.lower().endswith( "." + fileextension.lower() ):
                     localpath = localpath + '.' + fileextension
             print "LOAD: %s..." % url
             fname, info = urllib.urlretrieve(url, localpath)

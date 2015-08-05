@@ -135,7 +135,8 @@ def openOPML_withURLTag_(rootOPML, urltag):
         if urltag:
             if 'cactusUrl' not in headtags:
                 # add this url only once, not for every open
-                head.addChild_(OutlineNode('cactusUrl', unicode(urltag), head, typeOutline, root))
+                head.addChild_(OutlineNode('cactusUrl', unicode(urltag), head,
+                               typeOutline, root))
     # fill in missing opml attributes here
     # created, modified
     #
@@ -335,12 +336,12 @@ def openRSS_(url):
     # microblog_endday, microblog_filename, microblog_startday, microblog_url,
     # published, subtitle, title, updated, cloud
     if d.feed:
-        keys = """author authors category comments cloud description docs enclosure generator
-                  generator_detail guid image language link links microblog_archive
-                  microblog_endday microblog_filename microblog_startday
-                  microblog_url published pubDate source subtitle subtitle_detail
-                  sy_updatefrequency sy_updateperiod title title_detail updated
-                  updated_parsed""".split()
+        keys = """author authors category comments cloud description docs enclosure
+                  generator generator_detail guid image language link links
+                  microblog_archive microblog_endday microblog_filename
+                  microblog_startday microblog_url published pubDate source
+                  subtitle subtitle_detail sy_updatefrequency sy_updateperiod
+                  title title_detail updated updated_parsed""".split()
 
         feedkeys = d.feed.keys()
         feedkeys.sort()

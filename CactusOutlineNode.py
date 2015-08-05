@@ -36,6 +36,7 @@ import CactusOutlineTypes
 typeOutline = CactusOutlineTypes.typeOutline
 
 import objc
+super = objc.super
 
 import CactusTools
 makeunicode = CactusTools.makeunicode
