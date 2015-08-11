@@ -18,6 +18,7 @@ import struct
 import mactypes
 import appscript
 asc = appscript
+import Finder10
 
 import CactusVersion
 kwdbg = CactusVersion.developmentversion
@@ -518,10 +519,10 @@ def cache_url( nsurl, fileextension ):
             print "LOCAL:", repr(localpath)
 
             try:
-                finder = asc.app(u'Finder.app')
+                finder = asc.app(u'Finder.app', terms=Finder10)
                 hfspath = mactypes.File( localpath ).hfspath
                 finder.files[hfspath].comment.set( url )
-            except StadardError, v:
+            except StandardError, v:
                 print "SET COMMENT FAILED ON '%s'" % localpath
             # get file date
             lmodfdate = os.stat( localpath ).st_mtime
