@@ -45,7 +45,6 @@ HTMLParseErrorException = CactusExceptions.HTMLParseErrorException
 PLISTParseErrorException = CactusExceptions.PLISTParseErrorException
 
 import objc
-super = objc.super
 
 import Foundation
 NSObject = Foundation.NSObject
@@ -216,7 +215,7 @@ class CactusOutlineDocument(NSDocument):
     def init(self):
         if kwlog:
             print "CactusOutlineDocument.init()"
-        self = super( CactusOutlineDocument, self).init()
+        self = objc.super( CactusOutlineDocument, self).init()
 
         # outline specific
         # parentNode is used to determine if only an aspect of the outline is edited
@@ -239,7 +238,7 @@ class CactusOutlineDocument(NSDocument):
 
     def dealloc(self):
         print "CactusOutlineDocument.dealloc()"
-        super(CactusOutlineDocument, self).dealloc()
+        objc.super(CactusOutlineDocument, self).dealloc()
 
 
     def autosavingFileType(self):
@@ -487,7 +486,7 @@ class CactusOutlineDocument(NSDocument):
     def displayName(self):
         if kwlog:
             print "CactusOutlineDocument.displayName() ->",
-        title = super( CactusOutlineDocument, self).displayName()
+        title = objc.super( CactusOutlineDocument, self).displayName()
 
         if 0:
             title = self.title
@@ -536,7 +535,7 @@ class CactusOutlineDocument(NSDocument):
         # do nothing the superclass wouldn't do
         if kwlog:
             print "SUPER CactusOutlineDocument.fileURL()"
-        return super( CactusOutlineDocument, self).fileURL()
+        return objc.super( CactusOutlineDocument, self).fileURL()
 
 
     def setFileURL_( self, theURL ):
@@ -546,7 +545,7 @@ class CactusOutlineDocument(NSDocument):
         # do nothing the superclass wouldn't do
         if kwlog:
             print "SUPER CactusOutlineDocument.setFileURL()", repr(NSURL2str(theURL))
-        super( CactusOutlineDocument, self).setFileURL_( theURL )
+        objc.super( CactusOutlineDocument, self).setFileURL_( theURL )
         self.url = theURL
 
 
@@ -556,14 +555,14 @@ class CactusOutlineDocument(NSDocument):
         # do nothing the superclass wouldn't do
         if kwlog:
             print "SUPER CactusOutlineDocument.windowControllerWillLoadNib_( %s )" % repr(aController)
-        super( CactusOutlineDocument, self).windowControllerWillLoadNib_(aController)
+        objc.super( CactusOutlineDocument, self).windowControllerWillLoadNib_(aController)
 
 
     def windowControllerDidLoadNib_( self, aController):
         # do nothing the superclass wouldn't do
         if kwlog:
             print "SUPER CactusOutlineDocument.windowControllerDidLoadNib_( %s )" % repr(aController)
-        super( CactusOutlineDocument, self).windowControllerDidLoadNib_(aController)
+        objc.super( CactusOutlineDocument, self).windowControllerDidLoadNib_(aController)
 
 
     def calculateExpansionState_( self, rootNode ):
@@ -822,7 +821,7 @@ class CactusOutlineDocument(NSDocument):
         if kwlog:
             print "CactusOutlineDocument.showWindows()"
 
-        c = super( CactusOutlineDocument, self).showWindows()
+        c = objc.super( CactusOutlineDocument, self).showWindows()
         #
         # extract data for expansionstate & window size
         #
@@ -930,7 +929,9 @@ class CactusOutlineDocument(NSDocument):
     def windowControllers(self):
         if kwlog:
             print "CactusOutlineDocument.windowControllers()"
-        return super( CactusOutlineDocument, self).windowControllers()
+        #pdb.set_trace()
+        #print
+        return objc.super( CactusOutlineDocument, self).windowControllers()
 
     def printShowingPrintPanel_(self, show):
         printInfo = self.printInfo()
@@ -986,7 +987,7 @@ class CactusOutlineWindowController(NSWindowController):
         #    self.parentNode.release()
         print "DEALLOCDBG model:", self.model, self.model.retainCount()
         self.model.release()
-        super(CactusOutlineWindowController, self).dealloc()
+        objc.super(CactusOutlineWindowController, self).dealloc()
 
     def init(self):
         self = self.initWithWindowNibName_("OutlineEditor")
@@ -1173,7 +1174,7 @@ class CactusOutlineWindowController(NSWindowController):
     def doubleClick_(self, sender):
         if kwlog:
             print "CactusOutlineWindowController.doubleClick_()"
-        #super(CactusOutlineWindowController, self).doubleClick_(sender)
+        #objc.super(CactusOutlineWindowController, self).doubleClick_(sender)
 
     def reloadData(self):
         if kwlog:
