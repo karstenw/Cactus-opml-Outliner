@@ -44,7 +44,6 @@ import CactusOutlineTypes
 typeOutline = CactusOutlineTypes.typeOutline
 
 import objc
-super = objc.super
 
 
 import Foundation
@@ -315,7 +314,7 @@ def open_photo( url, open_=True ):
 
 
 # TODO: change parameter to node!
-def open_node( url, nodeType=None, open_=1, supressCache=False ):
+def open_node( url, nodeType=None, open_=True, supressCache=False ):
     if kwdbg:
         print "CactusOutline.open_node()"
         pp( (url,nodeType,open_, supressCache) )
@@ -490,7 +489,7 @@ class KWOutlineView(NSOutlineView):
             s = NSIndexSet.indexSetWithIndex_( row )
             self.selectRowIndexes_byExtendingSelection_(s, True)
             # self.selectRow_byExtendingSelection_(row, True)
-        return super( KWOutlineView, self).menuForEvent_(theEvent)
+        return objc.super( KWOutlineView, self).menuForEvent_(theEvent)
 
     def validateMenuItem_(self, sender):
         # row = self.selectedRow()
@@ -712,7 +711,7 @@ class KWOutlineView(NSOutlineView):
     @objc.IBAction
     def XdraggingExited_( self, dragInfo ):
         print "draggingExited_"
-        super(KWOutlineView, self).draggingExited_(dragInfo)
+        objc.super(KWOutlineView, self).draggingExited_(dragInfo)
 
     def XprepareForDragOperation_( self, dragInfo ):
         print "KWOutlineView.prepareForDragOperation_"
@@ -952,7 +951,7 @@ class KWOutlineView(NSOutlineView):
         userInfo = aNotification.userInfo()
         if userInfo:
             pp(userInfo)
-        super( KWOutlineView, self).textDidBeginEditing_(aNotification)
+        objc.super( KWOutlineView, self).textDidBeginEditing_(aNotification)
         #self.window().makeFirstResponder_(self)
 
 
@@ -986,7 +985,7 @@ class KWOutlineView(NSOutlineView):
             elif textMovement == NSIllegalTextMovement:
                 print "NSIllegalTextMovement"
 
-        super( KWOutlineView, self).textDidChange_(aNotification)
+        objc.super( KWOutlineView, self).textDidChange_(aNotification)
         #self.window().makeFirstResponder_(self)
 
 
@@ -1057,7 +1056,7 @@ class KWOutlineView(NSOutlineView):
             print "UNHANDLED MOVEMENT"
 
         # finish current cell
-        super( KWOutlineView, self).textDidEndEditing_(aNotification)
+        objc.super( KWOutlineView, self).textDidEndEditing_(aNotification)
 
         if returnContinue:
             self.window().makeFirstResponder_(self)
@@ -1179,7 +1178,7 @@ class KWOutlineView(NSOutlineView):
             print "eventCharNum", eventCharNum
 
         if eventCharNum not in mykeys:
-            super(KWOutlineView, self).keyDown_( theEvent )
+            objc.super(KWOutlineView, self).keyDown_( theEvent )
             return None
 
         delg = self.delegate()
@@ -1726,7 +1725,7 @@ class KWOutlineView(NSOutlineView):
                 self.setNeedsDisplay_( True )
                 consumed = True
         if not consumed:
-            super(KWOutlineView, self).keyDown_( theEvent )
+            objc.super(KWOutlineView, self).keyDown_( theEvent )
 
     #
     # key event handlers
@@ -1995,7 +1994,7 @@ class OutlineViewDelegateDatasource(NSObject):
     #   restricted
 
     def init(self):
-        self = super(OutlineViewDelegateDatasource, self).init()
+        self = objc.super(OutlineViewDelegateDatasource, self).init()
         if not self:
             return None
         self.typ = None
@@ -2026,7 +2025,7 @@ class OutlineViewDelegateDatasource(NSObject):
         if self.document:
             print "TODO OutlineViewDelegateDatasource.document.release()", self.document.retainCount()
         #    self.document.release()
-        super(OutlineViewDelegateDatasource, self).dealloc()
+        objc.super(OutlineViewDelegateDatasource, self).dealloc()
 
     def initWithObject_type_parentNode_(self, obj, typ, parentNode):
         self = self.init()
