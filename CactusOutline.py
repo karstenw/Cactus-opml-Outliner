@@ -1364,8 +1364,6 @@ class KWOutlineView(NSOutlineView):
                                 if extension:
                                     extension = extension.replace('.', '')
 
-                                # pdb.set_trace()
-
                                 if extension in g_qtplayer_extensions:
                                     open_node(url, 'QTPL')
                                 elif extension in g_preview_extensions:
@@ -2623,7 +2621,7 @@ def makeFilePropertiesNode( path ):
         # check for XML illegal characters here
         m = re_bogusCharacters.match( hfstype_s )
         if m:
-            currnode['value']['HFSType'] = hex(hfstype_s)
+            currnode['value']['HFSType'] = hex(hfstype)
         else:
             currnode['value']['HFSType'] = hfstype_s
 
@@ -2634,7 +2632,7 @@ def makeFilePropertiesNode( path ):
         # check for XML illegal characters here
         m = re_bogusCharacters.match( hfscreator_s )
         if m:
-            currnode['value']['HFSCreator'] = hex(hfscreator_s)
+            currnode['value']['HFSCreator'] = hex(hfscreator)
         else:
             currnode['value']['HFSCreator'] = hfscreator_s
 
