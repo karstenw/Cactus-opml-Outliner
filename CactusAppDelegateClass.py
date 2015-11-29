@@ -497,7 +497,6 @@ class CactusAppDelegate(NSObject):
                         getChildrenforNode( node, children )
                     except Exception, err:
                         print err
-                        # pdb.set_trace()
                         pp(children)
                         pp(item)
         return root

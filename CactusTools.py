@@ -466,8 +466,6 @@ def cache_url( nsurl, fileextension ):
     if 1:
         print "CactusTools.cache_url( %s, %s )" % (nsurl, fileextension)
 
-    # pdb.set_trace()
-    
     if not nsurl:
         return False
 
