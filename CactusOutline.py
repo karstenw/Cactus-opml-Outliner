@@ -80,26 +80,10 @@ NSData = AppKit.NSData
 NSMenu = AppKit.NSMenu
 
 NSPasteboard = AppKit.NSPasteboard
-#NSAlert = AppKit.NSAlert
-#NSPopUpButtonWillPopUpNotification = AppKit.NSPopUpButtonWillPopUpNotification
-
 NSWorkspace = AppKit.NSWorkspace
-
-#NSWorkspaceDidMountNotification = AppKit.NSWorkspaceDidMountNotification
-#NSWorkspaceDidUnmountNotification = AppKit.NSWorkspaceDidUnmountNotification
-#NSWorkspaceWillUnmountNotification = AppKit.NSWorkspaceWillUnmountNotification
-#NSImage = AppKit.NSImage
-#NSFont = AppKit.NSFont
-#NSFontAttributeName = AppKit.NSFontAttributeName
-#NSForegroundColorAttributeName = AppKit.NSForegroundColorAttributeName
-#NSColor = AppKit.NSColor
 
 NSString = AppKit.NSString
 NSMutableString = AppKit.NSMutableString
-
-#NSBitmapImageRep = AppKit.NSBitmapImageRep
-#NSPICTFileType = AppKit.NSPICTFileType
-#NSTIFFFileType = AppKit.NSTIFFFileType
 
 NSTableView = AppKit.NSTableView
 NSText = AppKit.NSText
@@ -209,6 +193,9 @@ CactusDocumentXMLBasedTypesSet = CactusDocumentTypes.CactusDocumentXMLBasedTypes
 
 import CactusExceptions
 OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
+
+import CactusXMLProperties
+re_bogusCharacters = CactusXMLProperties.re_bogusCharacters
 
 
 import CactusFileOpeners
@@ -432,7 +419,7 @@ def open_node( url, nodeType=None, open_=True, supressCache=False ):
     else:
         if cache and not supressCache:
             nsurl = CactusTools.cache_url( nsurl, ext )
-        if 0: # open_:
+        if open_:
             workspace.openURL_( nsurl )
 
 def handleEventReturnKeyOV_Event_( ov, event ):
@@ -2631,11 +2618,24 @@ def makeFilePropertiesNode( path ):
     # add type & creator if set
     hfstype = int(prop.get("NSFileHFSTypeCode", "0"))
     if hfstype:
-        hfstype = num2ostype( hfstype )
-        currnode['value']['HFSType'] = hfstype
+        hfstype_s = num2ostype( hfstype )
+
+        # check for XML illegal characters here
+        m = re_bogusCharacters.match( hfstype_s )
+        if m:
+            currnode['value']['HFSType'] = hex(hfstype_s)
+        else:
+            currnode['value']['HFSType'] = hfstype_s
+
     hfscreator = int(prop.get("NSFileHFSCreatorCode", "0"))
     if hfscreator:
-        hfscreator = num2ostype( hfscreator )
-        currnode['value']['HFSCreator'] = hfscreator
+        hfscreator_s = num2ostype( hfscreator )
+
+        # check for XML illegal characters here
+        m = re_bogusCharacters.match( hfscreator_s )
+        if m:
+            currnode['value']['HFSCreator'] = hex(hfscreator_s)
+        else:
+            currnode['value']['HFSCreator'] = hfscreator_s
 
     return typ, currnode
