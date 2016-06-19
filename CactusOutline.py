@@ -1430,7 +1430,7 @@ class KWOutlineView(NSOutlineView):
 
                                 elif theType in ( 'howto', 'html', 'include', 'outline',
                                                   'redirect', 'thumbList', 'import',
-                                                  'thumbListVarCol', 'code'):
+                                                  'thumbListVarCol', 'code', 'audio'):
                                     open_node( url )
 
                                 elif theType in ('link', ):
