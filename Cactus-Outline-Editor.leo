@@ -357,7 +357,7 @@
 <v t="karstenw.20160619131622.5"><vh>ascachepath</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131616.1"><vh>@clean CactusVersion.py</vh>
+<v t="karstenw.20160619131616.1" a="E"><vh>@clean CactusVersion.py</vh>
 <v t="karstenw.20160619131625.1"><vh>CactusVersion declarations</vh></v>
 </v>
 <v t="karstenw.20160619131631.1"><vh>@clean CactusXMLProperties.py</vh>
@@ -492,13 +492,15 @@
 <v t="karstenw.20160619132031.1"><vh>@clean setup.py</vh>
 <v t="karstenw.20160619132037.1"><vh>setup declarations</vh></v>
 </v>
-<v t="karstenw.20160619132048.1"><vh>@clean edit_all.sh</vh></v>
-<v t="karstenw.20160619132221.1"><vh>@clean release.sh</vh></v>
+<v t="karstenw.20160619200133.1"><vh>LICENSES</vh>
 <v t="karstenw.20160619132244.1"><vh>@clean licence_feedreader.txt</vh></v>
 <v t="karstenw.20160619132253.1"><vh>@clean license_PyRSS2Gen.txt</vh></v>
 <v t="karstenw.20160619132304.1"><vh>@clean licenses_lxml.txt</vh></v>
-<v t="karstenw.20160619132317.1"><vh>@clean CHANGES</vh></v>
 <v t="karstenw.20160619132327.1"><vh>@clean LICENSE</vh></v>
+</v>
+<v t="karstenw.20160619132221.1"><vh>@clean release.sh</vh></v>
+<v t="karstenw.20160619132048.1"><vh>@clean edit_all.sh</vh></v>
+<v t="karstenw.20160619132317.1"><vh>@clean CHANGES</vh></v>
 <v t="karstenw.20160619132335.1"><vh>@clean Makefile</vh></v>
 </v>
 </vnodes>
@@ -9923,9 +9925,9 @@ import os
 appname ="Cactus Outline-Editor"
 appnameshort = "Cactus"
 
-copyright = 'Copyright 2011-2015 Karsten Wolf'
+copyright = 'Copyright 2011-2016 Karsten Wolf'
 
-version = "0.7.4"
+version = "0.7.5"
 
 # 
 user_agent = "%s/%s +https://github.com/karstenw/Cactus-opml-Outliner" % (appname, version)
@@ -11103,7 +11105,7 @@ The isoschematron implementation uses several XSL and RelaxNG resources:
 </t>
 <t tx="karstenw.20160619132317.1">@language unknown_language
 CHANGES</t>
-<t tx="karstenw.20160619132327.1">@language unknown_language
+<t tx="karstenw.20160619132327.1">@nocolor
 Cactus is released under the following license:
 
 
@@ -11131,7 +11133,7 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 </t>
-<t tx="karstenw.20160619132335.1">@language unknown_language
+<t tx="karstenw.20160619132335.1">@nocolor
 
 
 
@@ -11179,5 +11181,6 @@ edit:
 <t tx="karstenw.20160619192840.1"></t>
 <t tx="karstenw.20160619192849.1"></t>
 <t tx="karstenw.20160619193218.1"></t>
+<t tx="karstenw.20160619200133.1"></t>
 </tnodes>
 </leo_file>
