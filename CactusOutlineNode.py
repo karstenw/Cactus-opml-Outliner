@@ -225,8 +225,8 @@ class OutlineNode(NSObject):
     def setMaxLineHeight(self):
         items = [
             self.calcAttributesHeight(),
-            self.lineHeight( self.name ),
-            self.lineHeight( self.comment )]
+            self.lineHeight_( self.name ),
+            self.lineHeight_( self.comment )]
         self.maxHeight = max(items)
 
     def setAttributes_(self, attrs):
@@ -255,13 +255,13 @@ class OutlineNode(NSObject):
         self.setMaxLineHeight()
 
 
-    def lineHeight(self, val):
+    def lineHeight_(self, val):
         lines = 0
         try:
             lines += val.count( u"\r" )
             lines += val.count( u"\n" )
         except Exception, err:
-            print "\n\nERROR in lineHeight()"
+            print "\n\nERROR in lineHeight_()"
             tb = unicode(traceback.format_exc())
             print err
             print
@@ -276,7 +276,7 @@ class OutlineNode(NSObject):
     def calcAttributesHeight(self):
         lineheight = 0
         for key in self.attributes:
-            lineheight += self.lineHeight( self.attributes[ key ] )
+            lineheight += self.lineHeight_( self.attributes[ key ] )
         return lineheight
 
 
