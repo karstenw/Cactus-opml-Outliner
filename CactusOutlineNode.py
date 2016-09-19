@@ -69,9 +69,9 @@ class NodeValue(object):
         if type(value) != list:
             if type(value) in (str, unicode, NSString, bool, int,
                                NSMutableString, objc.pyobjc_unicode):
-                value = self.listFromDisplayValue( value )
+                value = self.listFromDisplayValue_( value )
             elif isinstance(value, dict):
-                value = self.listFromDictionary( value )
+                value = self.listFromDictionary_( value )
             else:
                 print "BOGATIVE VALUETYPE:", type(value)
 
@@ -95,7 +95,7 @@ class NodeValue(object):
                 l.append(u"%s" % (v,))
         return '\n'. join(l)
 
-    def listFromDisplayValue(self, displayValue):
+    def listFromDisplayValue_(self, displayValue):
         try:
             lines = displayValue.split('\n')
         except AttributeError,err:
@@ -120,7 +120,7 @@ class NodeValue(object):
             l = d.items()
         return l
 
-    def listFromDictionary(self, value):
+    def listFromDictionary_(self, value):
         l = []
         for k, v in value.items():
             l.append( (k,v) )
