@@ -357,7 +357,7 @@
 <v t="karstenw.20160619131622.5"><vh>ascachepath</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131616.1"><vh>@clean CactusVersion.py</vh>
+<v t="karstenw.20160619131616.1" a="E"><vh>@clean CactusVersion.py</vh>
 <v t="karstenw.20160619131625.1"><vh>CactusVersion declarations</vh></v>
 </v>
 <v t="karstenw.20160619131631.1"><vh>@clean CactusXMLProperties.py</vh>
@@ -9927,9 +9927,9 @@ import os
 appname ="Cactus Outline-Editor"
 appnameshort = "Cactus"
 
-copyright = 'Copyright 2011-2016 Karsten Wolf'
+copyright = 'Copyright 2011-2017 Karsten Wolf'
 
-version = "0.7.5"
+version = "0.7.6"
 
 # 
 user_agent = "%s/%s +https://github.com/karstenw/Cactus-opml-Outliner" % (appname, version)
