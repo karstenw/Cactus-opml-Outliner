@@ -10,14 +10,39 @@
 <find_panel_settings/>
 <vnodes>
 <v t="karstenw.20160619130609.2" a="E"><vh>Code</vh>
-<v t="karstenw.20160619192706.1"><vh>Tools</vh>
+<v t="karstenw.20160619192706.1" a="E"><vh>Tools</vh>
 <v t="karstenw.20160619130856.1"><vh>@clean CactusAccessoryController.py</vh>
 <v t="karstenw.20160619130933.1"><vh>CactusAccessoryController declarations</vh></v>
-<v t="karstenw.20160619130933.2" a="E"><vh>class CactusOpenAsAccessoryController</vh>
+<v t="karstenw.20160619130933.2"><vh>class CactusOpenAsAccessoryController</vh>
 <v t="karstenw.20160619130933.3"><vh>__new__</vh></v>
 <v t="karstenw.20160619130933.4"><vh>init</vh></v>
 <v t="karstenw.20160619130933.5"><vh>menuOpenAsType_</vh></v>
 </v>
+</v>
+<v t="karstenw.20160619131542.1"><vh>@clean CactusTools.py</vh>
+<v t="karstenw.20160619131552.1"><vh>CactusTools declarations</vh></v>
+<v t="karstenw.20160619131552.2"><vh>num2ostype</vh></v>
+<v t="karstenw.20160619131552.3"><vh>ostype2num</vh></v>
+<v t="karstenw.20160619131552.4"><vh>makeunicode</vh></v>
+<v t="karstenw.20160619131552.5"><vh>detectFileTypeAtURL</vh></v>
+<v t="karstenw.20160619131552.6"><vh>detectFileTypeLocalFile</vh></v>
+<v t="karstenw.20160619131552.7"><vh>readURL</vh></v>
+<v t="karstenw.20160619131552.8"><vh>classifyAndReadUrl</vh></v>
+<v t="karstenw.20160619131552.9"><vh>cancelContinueAlert</vh></v>
+<v t="karstenw.20160619131552.10"><vh>errorDialog</vh></v>
+<v t="karstenw.20160619131552.11"><vh>getFileDialog</vh></v>
+<v t="karstenw.20160619131552.12"><vh>getFolderDialog</vh></v>
+<v t="karstenw.20160619131552.13"><vh>NSURL2str</vh></v>
+<v t="karstenw.20160619131552.14"><vh>saveAsDialog</vh></v>
+<v t="karstenw.20160619131552.15"><vh>getFileProperties</vh></v>
+<v t="karstenw.20160619131552.16"><vh>setFileProperties</vh></v>
+<v t="karstenw.20160619131552.17"><vh>datestring_nsdate</vh></v>
+<v t="karstenw.20160619131552.18"><vh>getDownloadFolder</vh></v>
+<v t="karstenw.20160619131552.19"><vh>getRemotefilemodificationDate</vh></v>
+<v t="karstenw.20160619131552.20"><vh>setFileModificationDate</vh></v>
+<v t="karstenw.20160619131552.21"><vh>cache_url</vh></v>
+<v t="karstenw.20160619131552.22"><vh>mergeURLs</vh></v>
+<v t="karstenw.20160619131552.23"><vh>getURLExtension</vh></v>
 </v>
 </v>
 <v t="karstenw.20160619193218.1" a="E"><vh>Controllers</vh>
@@ -46,8 +71,16 @@
 <v t="karstenw.20160619131155.9"><vh>Cancel_</vh></v>
 </v>
 </v>
+<v t="karstenw.20160619131507.1"><vh>@clean CactusPreferenceController.py</vh>
+<v t="karstenw.20160619131527.1"><vh>CactusPreferenceController declarations</vh></v>
+<v t="karstenw.20160619131527.2"><vh>class CactusPreferenceController</vh>
+<v t="karstenw.20160619131527.3"><vh>init</vh></v>
+<v t="karstenw.20160619131527.4"><vh>windowWillClose_</vh></v>
+<v t="karstenw.20160619131527.5"><vh>chooseFolder_</vh></v>
 </v>
-<v t="karstenw.20160619131033.1" a="E"><vh>@clean CactusDocumentTypes.py</vh>
+</v>
+</v>
+<v t="karstenw.20160619131033.1"><vh>@clean CactusDocumentTypes.py</vh>
 <v t="karstenw.20160619131040.1"><vh>CactusDocumentTypes declarations</vh></v>
 </v>
 <v t="karstenw.20160619131050.1"><vh>@clean CactusExceptions.py</vh>
@@ -55,14 +88,14 @@
 <v t="karstenw.20160619131056.2"><vh>class CactusBaseException</vh>
 <v t="karstenw.20160619131056.3"><vh>__init__</vh></v>
 </v>
-<v t="karstenw.20160619192840.1"><vh>Errors</vh>
+<v t="karstenw.20160619192840.1" a="E"><vh>Errors</vh>
 <v t="karstenw.20160619131056.4"><vh>class OPMLParseErrorException</vh></v>
 <v t="karstenw.20160619131056.5"><vh>class RSSParseErrorException</vh></v>
 <v t="karstenw.20160619131056.6"><vh>class XMLParseErrorException</vh></v>
 <v t="karstenw.20160619131056.7"><vh>class HTMLParseErrorException</vh></v>
 <v t="karstenw.20160619131056.8"><vh>class PLISTParseErrorException</vh></v>
 </v>
-<v t="karstenw.20160619192849.1"><vh>Messages</vh>
+<v t="karstenw.20160619192849.1" a="E"><vh>Messages</vh>
 <v t="karstenw.20160619131056.9"><vh>class CancelledException</vh></v>
 <v t="karstenw.20160619131056.10"><vh>class DoneException</vh></v>
 <v t="karstenw.20160619131056.11"><vh>class DoneMessageException</vh></v>
@@ -78,7 +111,7 @@
 <v t="karstenw.20160619131110.7"><vh>openIML_</vh></v>
 <v t="karstenw.20160619131110.8"><vh>openPLIST_</vh></v>
 </v>
-<v t="karstenw.20160619131220.1" a="E"><vh>@clean CactusOPML.py</vh>
+<v t="karstenw.20160619131220.1"><vh>@clean CactusOPML.py</vh>
 <v t="karstenw.20160619131225.1"><vh>CactusOPML declarations</vh></v>
 <v t="karstenw.20160619131225.2"><vh>getOutlineNodes</vh></v>
 <v t="karstenw.20160619131225.3"><vh>getOPML</vh></v>
@@ -105,12 +138,12 @@
 <v t="karstenw.20160619131225.24"><vh>photo_from_string</vh></v>
 <v t="karstenw.20160619131225.25"><vh>getPhotoXML</vh></v>
 </v>
-<v t="karstenw.20160619131230.1" a="E"><vh>@clean CactusOutline.py</vh>
+<v t="karstenw.20160619131230.1"><vh>@clean CactusOutline.py</vh>
 <v t="karstenw.20160619131238.1"><vh>CactusOutline declarations</vh></v>
 <v t="karstenw.20160619131238.2"><vh>open_photo</vh></v>
 <v t="karstenw.20160619131238.3"><vh>open_node</vh></v>
 <v t="karstenw.20160619131238.4"><vh>handleEventReturnKeyOV_Event_</vh></v>
-<v t="karstenw.20160619131238.5" a="E"><vh>class KWOutlineView</vh>
+<v t="karstenw.20160619131238.5"><vh>class KWOutlineView</vh>
 <v t="karstenw.20160619131238.6"><vh>awakeFromNib</vh></v>
 <v t="karstenw.20160619131238.7"><vh>menuForEvent_</vh></v>
 <v t="karstenw.20160619131238.8"><vh>validateMenuItem_</vh></v>
@@ -306,14 +339,6 @@
 <v t="karstenw.20160619131524.3"><vh>awakeFromNib</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131507.1"><vh>@clean CactusPreferenceController.py</vh>
-<v t="karstenw.20160619131527.1"><vh>CactusPreferenceController declarations</vh></v>
-<v t="karstenw.20160619131527.2"><vh>class CactusPreferenceController</vh>
-<v t="karstenw.20160619131527.3"><vh>init</vh></v>
-<v t="karstenw.20160619131527.4"><vh>windowWillClose_</vh></v>
-<v t="karstenw.20160619131527.5"><vh>chooseFolder_</vh></v>
-</v>
-</v>
 <v t="karstenw.20160619131515.1"><vh>@clean CactusTableDocument.py</vh>
 <v t="karstenw.20160619131529.1"><vh>CactusTableDocument declarations</vh></v>
 </v>
@@ -324,31 +349,6 @@
 <v t="karstenw.20160619131549.4"><vh>__init__</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131542.1"><vh>@clean CactusTools.py</vh>
-<v t="karstenw.20160619131552.1"><vh>CactusTools declarations</vh></v>
-<v t="karstenw.20160619131552.2"><vh>num2ostype</vh></v>
-<v t="karstenw.20160619131552.3"><vh>ostype2num</vh></v>
-<v t="karstenw.20160619131552.4"><vh>makeunicode</vh></v>
-<v t="karstenw.20160619131552.5"><vh>detectFileTypeAtURL</vh></v>
-<v t="karstenw.20160619131552.6"><vh>detectFileTypeLocalFile</vh></v>
-<v t="karstenw.20160619131552.7"><vh>readURL</vh></v>
-<v t="karstenw.20160619131552.8"><vh>classifyAndReadUrl</vh></v>
-<v t="karstenw.20160619131552.9"><vh>cancelContinueAlert</vh></v>
-<v t="karstenw.20160619131552.10"><vh>errorDialog</vh></v>
-<v t="karstenw.20160619131552.11"><vh>getFileDialog</vh></v>
-<v t="karstenw.20160619131552.12"><vh>getFolderDialog</vh></v>
-<v t="karstenw.20160619131552.13"><vh>NSURL2str</vh></v>
-<v t="karstenw.20160619131552.14"><vh>saveAsDialog</vh></v>
-<v t="karstenw.20160619131552.15"><vh>getFileProperties</vh></v>
-<v t="karstenw.20160619131552.16"><vh>setFileProperties</vh></v>
-<v t="karstenw.20160619131552.17"><vh>datestring_nsdate</vh></v>
-<v t="karstenw.20160619131552.18"><vh>getDownloadFolder</vh></v>
-<v t="karstenw.20160619131552.19"><vh>getRemotefilemodificationDate</vh></v>
-<v t="karstenw.20160619131552.20"><vh>setFileModificationDate</vh></v>
-<v t="karstenw.20160619131552.21"><vh>cache_url</vh></v>
-<v t="karstenw.20160619131552.22"><vh>mergeURLs</vh></v>
-<v t="karstenw.20160619131552.23"><vh>getURLExtension</vh></v>
-</v>
 <v t="karstenw.20160619131607.1"><vh>@clean CactusURL.py</vh>
 <v t="karstenw.20160619131622.1"><vh>CactusURL declarations</vh></v>
 <v t="karstenw.20160619131622.2"><vh>NSURL2str</vh></v>
@@ -357,7 +357,7 @@
 <v t="karstenw.20160619131622.5"><vh>ascachepath</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131616.1" a="E"><vh>@clean CactusVersion.py</vh>
+<v t="karstenw.20160619131616.1"><vh>@clean CactusVersion.py</vh>
 <v t="karstenw.20160619131625.1"><vh>CactusVersion declarations</vh></v>
 </v>
 <v t="karstenw.20160619131631.1"><vh>@clean CactusXMLProperties.py</vh>
@@ -486,7 +486,7 @@
 <v t="karstenw.20160619130959.50"><vh>applySettings_</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131126.1"><vh>@clean CactusMain.py</vh>
+<v t="karstenw.20160619131126.1" a="E"><vh>@clean CactusMain.py</vh>
 <v t="karstenw.20160619131153.1"><vh>CactusMain declarations</vh></v>
 </v>
 <v t="karstenw.20160619132031.1"><vh>@clean setup.py</vh>
@@ -2648,6 +2648,8 @@ AppHelper = PyObjCTools.AppHelper
 
 
 import CactusVersion
+devVersion = CactusVersion.developmentversion
+
 import CactusOutline
 import CactusAppDelegateClass
 
@@ -2656,14 +2658,14 @@ import CactusOutlineWindow
 import CactusOutlineDoc
 import CactusTableDocument
 
-
-
 if CactusVersion.developmentversion:
     import PyObjCTools.Debugging
     PyObjCTools.Debugging.installVerboseExceptionHandler()
 
 if __name__ == "__main__":
-    AppHelper.runEventLoop()
+    AppHelper.runEventLoop(pdb=devVersion)
+
+
 </t>
 <t tx="karstenw.20160619131155.1"># -*- coding: utf-8 -*-
 
@@ -4764,8 +4766,8 @@ def paste_(self, sender):
 <t tx="karstenw.20160619131238.3"># TODO: change parameter to node!
 def open_node( url, nodeType=None, open_=True, supressCache=False ):
     if kwdbg:
-        print "CactusOutline.open_node()"
-        pp( (url,nodeType,open_, supressCache) )
+        print "CactusOutline.open_node()", repr(url)
+        # pp( (url,nodeType,open_, supressCache) )
 
     if chr(10) in url or chr(13) in url:
         return
@@ -6598,7 +6600,7 @@ def deleteNodes(ov, nodes=(), selection=False):
             post = urllib.quote( post, "/:?" )
             url = "%s%%23%s" % (pre, post)
     if kwdbg:
-        print "CactusOutline.unmangleFSSpecURL(%s) -&gt; %s" % (orgurl, url)
+        print "CactusOutline.unmangleFSSpecURL(%s) -&gt; %s" % (repr(orgurl), repr(url) )
     return url
 
 
@@ -8195,8 +8197,8 @@ def __new__(cls, *args, **kwargs):
 <t tx="karstenw.20160619131304.14">def setMaxLineHeight(self):
     items = [
         self.calcAttributesHeight(),
-        self.lineHeight( self.name ),
-        self.lineHeight( self.comment )]
+        self.lineHeight_( self.name ),
+        self.lineHeight_( self.comment )]
     self.maxHeight = max(items)
 
 </t>
@@ -8227,13 +8229,13 @@ def __new__(cls, *args, **kwargs):
 
 
 </t>
-<t tx="karstenw.20160619131304.16">def lineHeight(self, val):
+<t tx="karstenw.20160619131304.16">def lineHeight_(self, val):
     lines = 0
     try:
         lines += val.count( u"\r" )
         lines += val.count( u"\n" )
     except Exception, err:
-        print "\n\nERROR in lineHeight()"
+        print "\n\nERROR in lineHeight_()"
         tb = unicode(traceback.format_exc())
         print err
         print
@@ -8249,7 +8251,7 @@ def __new__(cls, *args, **kwargs):
 <t tx="karstenw.20160619131304.17">def calcAttributesHeight(self):
     lineheight = 0
     for key in self.attributes:
-        lineheight += self.lineHeight( self.attributes[ key ] )
+        lineheight += self.lineHeight_( self.attributes[ key ] )
     return lineheight
 
 
@@ -8415,9 +8417,9 @@ def __init__(self, value):
     if type(value) != list:
         if type(value) in (str, unicode, NSString, bool, int,
                            NSMutableString, objc.pyobjc_unicode):
-            value = self.listFromDisplayValue( value )
+            value = self.listFromDisplayValue_( value )
         elif isinstance(value, dict):
-            value = self.listFromDictionary( value )
+            value = self.listFromDictionary_( value )
         else:
             print "BOGATIVE VALUETYPE:", type(value)
 
@@ -8657,7 +8659,7 @@ def makeChildOf_(self, other):
     return node
 
 </t>
-<t tx="karstenw.20160619131304.5">def listFromDisplayValue(self, displayValue):
+<t tx="karstenw.20160619131304.5">def listFromDisplayValue_(self, displayValue):
     try:
         lines = displayValue.split('\n')
     except AttributeError,err:
@@ -8683,7 +8685,7 @@ def makeChildOf_(self, other):
     return l
 
 </t>
-<t tx="karstenw.20160619131304.6">def listFromDictionary(self, value):
+<t tx="karstenw.20160619131304.6">def listFromDictionary_(self, value):
     l = []
     for k, v in value.items():
         l.append( (k,v) )
@@ -9422,7 +9424,7 @@ def saveAsDialog(path):
     if not os.path.exists(cacheFolder):
         os.makedirs( cacheFolder )
     #
-    localpath = str( nsurl.relativePath() )
+    localpath = makeunicode( nsurl.relativePath() )
     s = nsurl.absoluteString()
     if '#' in s:
         n = s.count( '/' )
@@ -9434,15 +9436,15 @@ def saveAsDialog(path):
 
             localpath = os.path.join( base, filename )
 
-    if localpath.startswith('/'):
+    if localpath.startswith( u'/' ):
         localpath = localpath[1:]
-    localpath = os.path.join( str(nsurl.host()), localpath)
+    localpath = os.path.join( makeunicode(nsurl.host()), localpath)
 
     if localpath:
         localrelfolder, localname = os.path.split( localpath )
         localpath = os.path.join( cacheFolder, localpath )
         if kwdbg:
-            print "CactusTools.getDownloadFolder(%s) -&gt; %s" % (NSURL2str(nsurl), localpath)
+            print "CactusTools.getDownloadFolder(%s) -&gt; %s" % (NSURL2str(nsurl), repr(localpath) )
         return localpath, localname
     return False, False
 
@@ -9936,7 +9938,7 @@ document_creator = "Created by %s %s" % (appname, version)
 
 cachefolder = os.path.expanduser("~/Library/Application Support/%s" % appname )
 
-developmentversion = True
+developmentversion = False
 </t>
 <t tx="karstenw.20160619131631.1">@language python
 @tabwidth -4

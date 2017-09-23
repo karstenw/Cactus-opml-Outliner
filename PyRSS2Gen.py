@@ -387,8 +387,8 @@ class RSS2(WriteXmlMixin):
         # output after the three required fields.
         pass
 
-    
-    
+
+
 class RSSItem(WriteXmlMixin):
     """Publish an RSS Item"""
     element_attrs = {}

@@ -406,7 +406,7 @@ def getDownloadFolder( nsurl ):
     if not os.path.exists(cacheFolder):
         os.makedirs( cacheFolder )
     #
-    localpath = str( nsurl.relativePath() )
+    localpath = makeunicode( nsurl.relativePath() )
     s = nsurl.absoluteString()
     if '#' in s:
         n = s.count( '/' )
@@ -418,15 +418,15 @@ def getDownloadFolder( nsurl ):
 
             localpath = os.path.join( base, filename )
 
-    if localpath.startswith('/'):
+    if localpath.startswith( u'/' ):
         localpath = localpath[1:]
-    localpath = os.path.join( str(nsurl.host()), localpath)
+    localpath = os.path.join( makeunicode(nsurl.host()), localpath)
 
     if localpath:
         localrelfolder, localname = os.path.split( localpath )
         localpath = os.path.join( cacheFolder, localpath )
         if kwdbg:
-            print "CactusTools.getDownloadFolder(%s) -> %s" % (NSURL2str(nsurl), localpath)
+            print "CactusTools.getDownloadFolder(%s) -> %s" % (NSURL2str(nsurl), repr(localpath) )
         return localpath, localname
     return False, False
 

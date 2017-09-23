@@ -303,8 +303,8 @@ def open_photo( url, open_=True ):
 # TODO: change parameter to node!
 def open_node( url, nodeType=None, open_=True, supressCache=False ):
     if kwdbg:
-        print "CactusOutline.open_node()"
-        pp( (url,nodeType,open_, supressCache) )
+        print "CactusOutline.open_node()", repr(url)
+        # pp( (url,nodeType,open_, supressCache) )
 
     if chr(10) in url or chr(13) in url:
         return
@@ -466,7 +466,7 @@ class KWOutlineView(NSOutlineView):
     #
     # The initial and currently static context menu is defined in awakeFromNib
     #
-    
+
     def menuForEvent_(self, theEvent):
         """This makes the selection include the right-click row"""
         row = self.rowAtPoint_( self.convertPoint_fromView_(
@@ -652,7 +652,7 @@ class KWOutlineView(NSOutlineView):
 
         self.reloadData()
         self.setNeedsDisplay_( True )
-    
+
     #
     # drag and drop
     #
@@ -685,7 +685,7 @@ class KWOutlineView(NSOutlineView):
         self.setNeedsDisplay_(True)
         return NSDragOperationNone
 
-    
+
     def XdraggingUpdated_( self, dragInfo ):
         #print "draggingUpdated_",
         if dragInfo.draggingSource():
@@ -694,7 +694,7 @@ class KWOutlineView(NSOutlineView):
         else:
             print "external"
             return NSDragOperationCopy
-    
+
     @objc.IBAction
     def XdraggingExited_( self, dragInfo ):
         print "draggingExited_"
@@ -706,7 +706,7 @@ class KWOutlineView(NSOutlineView):
         pp( self.currentDragItems )
         # self.setNeedsDisplay_(True)
         return 1
-    
+
     def XperformDragOperation_( self, dragInfo ):
         print "KWOutlineView.performDragOperation_"
         pboard = dragInfo.draggingPasteboard()
@@ -728,26 +728,26 @@ class KWOutlineView(NSOutlineView):
         
         
 
-    
+
     #def wantsPeriodicDraggingUpdates(self):
     #    # if present crashes at startup
     #    # perhaps try it when methods are fleshed out
     #    return False
-    
+
     #
     # drag source
     #
-    
+
     def XmouseDragged_(self, event):
         # from hillegass book
         pass
-    
+
     @objc.IBAction
     def cut_(self, sender):
         self.copy_(sender)
         deleteNodes(self, selection=True)
         self.deselectAll_( None )
-    
+
     @objc.IBAction
     def copy_(self, sender):
         pb = NSPasteboard.generalPasteboard()
@@ -760,7 +760,7 @@ class KWOutlineView(NSOutlineView):
         if pastedItems:
             self.reloadData()
             self.selectItems_(pastedItems)
-    
+
     def copyNodesToPasteboard_( self, pb ):
         print "KWOutlineView.copyNodesToPasteboard_"
 
@@ -2512,7 +2512,7 @@ def unmangleFSSPecURL( url ):
             post = urllib.quote( post, "/:?" )
             url = "%s%%23%s" % (pre, post)
     if kwdbg:
-        print "CactusOutline.unmangleFSSpecURL(%s) -> %s" % (orgurl, url)
+        print "CactusOutline.unmangleFSSpecURL(%s) -> %s" % (repr(orgurl), repr(url) )
     return url
 
 
