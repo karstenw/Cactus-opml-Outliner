@@ -6,7 +6,7 @@
 
 It is an outline editor based on the PythonBrowser example from PyObjC.
 
-Developed on OSX 10.6 with Python 2.7, Xcode 3.2, pyobjc 3.1b1 and py2app 0.8
+Developed on OSX 10.6 with Python 2.7, pyobjc 3.3a0 and py2app 0.15
 
 It's still in development but it gets better.
 
@@ -16,10 +16,11 @@ Use it to explore OPML, RSS, XML, PLIST, HTML and iTunes XMLfiles. Nodes can be 
 
 <http://groups.google.com/group/cactus-outliner-dev>
 
-## Downloads ##
+## Download compiled app from my dropbox ##
 
-<http://goo.gl/EALQi>
+The old dropbox (http://goo.gl/EALQi) link stopped working. So here is the new one.
 
+[https://goo.gl/yAL1Rm](https://goo.gl/yAL1Rm)
 
 
 
@@ -74,7 +75,7 @@ Currently Cactus can open "iTunes Music Library.xml" files. This is incomplete (
 ## Quickstart ##
 
 Download the latest binary from
-http://goo.gl/EALQi
+https://goo.gl/yAL1Rm
 unzip and launch.
 
 Do a google search for "filetype:opml"
@@ -184,7 +185,7 @@ Will build the app in the dist folder.
 
 
 #### A compiled binary can be downloaded from my dropbox. Versions >= 0.5.0 need Intel Macs and 10.6.####
-http://goo.gl/EALQi
+https://goo.gl/yAL1Rm
 
 
 #### Prerequisites for compiling: ####
@@ -200,6 +201,8 @@ http://goo.gl/EALQi
 ## Recent versions ##
 
 For more details see the announcements on the dev-list <http://groups.google.com/group/cactus-outliner-dev>
+
+v0.7.5 - no functional changes. Python 2.7.14 and PyObjc 3.3a0
 
 v0.7.2 - file drag and drop more refined. Added preference to ignore files/folders starting with a '.'
 
