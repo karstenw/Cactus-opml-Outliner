@@ -454,7 +454,9 @@ class KWOutlineView(NSOutlineView):
                                                       "insertSafariLinks:", u"")
         # copySelectionPython_
         menu.setAutoenablesItems_(False)
-        self.registerForDraggedTypes_([DragDropCactusPboardType,NSFilenamesPboardType,NSStringPboardType])
+        self.registerForDraggedTypes_( [DragDropCactusPboardType,
+                                        NSFilenamesPboardType,
+                                        NSStringPboardType] )
         self.setVerticalMotionCanBeginDrag_( False )
         #self.setDraggingSourceOperationMask_forLocal_( NSDragOperationEvery, True )
         #self.setDraggingSourceOperationMask_forLocal_( NSDragOperationAll_Obsolete, False )
