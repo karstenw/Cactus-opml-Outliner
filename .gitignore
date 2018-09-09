@@ -12,4 +12,10 @@ rsstest
 +class_diagrams
 bugbench
 +icon/banner/*
-
++latex
+English.lproj/Cactus-Dumm*
+English.lproj/*.py
+++CURRENT_ERROR.tab
++Cocoa Browser Air.app
+oppack.tab
+release.sh
