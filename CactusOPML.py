@@ -257,7 +257,7 @@ def getXMLNodes( node ):
                     print "TAIL:", repr(tail)
                 
         comment = False
-        if name == u"<built-in function Comment>":
+        if name == u"<built-in function Comment>" or name.startswith(u"<cyfunction Comment "):
             name = u"COMMENT"
             comment = True
             # dont strip comments
@@ -334,7 +334,7 @@ def getHTML_( etRootnode ):
     name = unicode(name)
 
     comment = False
-    if name == u"<built-in function Comment>":
+    if name == u"<built-in function Comment>" or name.startswith(u"<cyfunction Comment "):
         name = u"COMMENT"
         comment = True
 
@@ -444,6 +444,7 @@ def createSubNodesHTML(OPnode, ETnode, level, indent=0):
         # do children
         for child in OPnode.children:
             attrib = child.getValueDict()
+            pp(attrib)
             if 'cactustype' in attrib and attrib["cactustype"] == u"comment":
                 ETSub = lxmletree.Comment( child.comment )
                 ETnode.append( ETSub )
@@ -495,7 +496,12 @@ def generateHTML( rootNode, doctype, encoding, indent=0 ):
     if comment:
         rootElement.text = comment
 
-    nodes = createSubNodesHTML(baseOP, rootElement, 1, indent)
+    try:
+        nodes = createSubNodesHTML(baseOP, rootElement, 1, indent)
+    except Exception, err:
+        print 
+        print err
+        print
 
     if indent:
         indentXML(rootElement, level=0, width=indent)
