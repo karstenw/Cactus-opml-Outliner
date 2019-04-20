@@ -29,6 +29,8 @@ etree = xml.etree.cElementTree
 
 import lxml.html
 #import lxml.html.builder
+CommentNode = lxml.etree.Comment
+
 
 import PyRSS2Gen
 
@@ -257,7 +259,7 @@ def getXMLNodes( node ):
                     print "TAIL:", repr(tail)
                 
         comment = False
-        if name == u"<built-in function Comment>" or name.startswith(u"<cyfunction Comment "):
+        if n.tag in (CommentNode,):
             name = u"COMMENT"
             comment = True
             # dont strip comments
@@ -334,7 +336,7 @@ def getHTML_( etRootnode ):
     name = unicode(name)
 
     comment = False
-    if name == u"<built-in function Comment>" or name.startswith(u"<cyfunction Comment "):
+    if rootnode.tag in (CommentNode,):
         name = u"COMMENT"
         comment = True
 
