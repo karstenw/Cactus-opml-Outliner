@@ -4,9 +4,9 @@ import os
 appname ="Cactus Outline-Editor"
 appnameshort = "Cactus"
 
-copyright = 'Copyright 2011-2017 Karsten Wolf'
+copyright = 'Copyright 2011-2019 Karsten Wolf'
 
-version = "0.7.5"
+version = "0.7.6"
 
 # 
 user_agent = "%s/%s +https://github.com/karstenw/Cactus-opml-Outliner" % (appname, version)
