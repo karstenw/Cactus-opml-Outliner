@@ -19,7 +19,7 @@
 <v t="karstenw.20160619130933.5"><vh>menuOpenAsType_</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131542.1"><vh>@clean CactusTools.py</vh>
+<v t="karstenw.20160619131542.1" a="E"><vh>@clean CactusTools.py</vh>
 <v t="karstenw.20160619131552.1"><vh>CactusTools declarations</vh></v>
 <v t="karstenw.20160619131552.2"><vh>num2ostype</vh></v>
 <v t="karstenw.20160619131552.3"><vh>ostype2num</vh></v>
@@ -101,7 +101,7 @@
 <v t="karstenw.20160619131056.11"><vh>class DoneMessageException</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131102.1"><vh>@clean CactusFileOpeners.py</vh>
+<v t="karstenw.20160619131102.1" a="E"><vh>@clean CactusFileOpeners.py</vh>
 <v t="karstenw.20160619131110.1"><vh>Imports and Globals</vh></v>
 <v t="karstenw.20160619131110.2"><vh>openOPML_</vh></v>
 <v t="karstenw.20160619131110.3"><vh>openOPML_withURLTag_</vh></v>
@@ -1567,7 +1567,7 @@ CactusXMLOSTypes = [ '****' ]
 
 # an outliner as a html editor
 CactusHTMLType = u'HTML File'
-CactusHTMLFileExtensions = [ 'html', 'htm' ]
+CactusHTMLFileExtensions = [ 'html', 'htm', 'tpl' ]
 CactusHTMLOSTypes = [ '****' ]
 
 # an outliner as a property list editor
@@ -3076,6 +3076,8 @@ etree = xml.etree.cElementTree
 
 import lxml.html
 #import lxml.html.builder
+CommentNode = lxml.etree.Comment
+
 
 import PyRSS2Gen
 
@@ -3152,7 +3154,7 @@ urls = {}
     name = unicode(name)
 
     comment = False
-    if name == u"&lt;built-in function Comment&gt;":
+    if rootnode.tag in (CommentNode,):
         name = u"COMMENT"
         comment = True
 
@@ -3267,6 +3269,7 @@ def xml_from_string(xml_text):
         # do children
         for child in OPnode.children:
             attrib = child.getValueDict()
+            pp(attrib)
             if 'cactustype' in attrib and attrib["cactustype"] == u"comment":
                 ETSub = lxmletree.Comment( child.comment )
                 ETnode.append( ETSub )
@@ -3319,7 +3322,12 @@ def xml_from_string(xml_text):
     if comment:
         rootElement.text = comment
 
-    nodes = createSubNodesHTML(baseOP, rootElement, 1, indent)
+    try:
+        nodes = createSubNodesHTML(baseOP, rootElement, 1, indent)
+    except Exception, err:
+        print 
+        print err
+        print
 
     if indent:
         indentXML(rootElement, level=0, width=indent)
@@ -3964,7 +3972,7 @@ def getXMLNodes( node ):
                     print "TAIL:", repr(tail)
                 
         comment = False
-        if name == u"&lt;built-in function Comment&gt;":
+        if n.tag in (CommentNode,):
             name = u"COMMENT"
             comment = True
             # dont strip comments
@@ -4296,6 +4304,60 @@ g_qtplayer_extensions = g_qtplayer_extensions.split()
         listroot.addChild_( node )
     self.reloadData()
     self.setNeedsDisplay_( True )
+
+
+def insertSafarimages_(self, sender):
+    if kwlog:
+        print "KWOutlineView.insertSafariLinks_()"
+    row = self.clickedRow()
+    selection = self.getSelectionItems()
+    if not selection:
+        return
+    result = []
+
+    item = selection[0]
+    idx = item.siblingIndex()
+
+    parent = item.parent
+
+    safari = appscript.app("Safari.app")
+    if not safari.isrunning():
+        return
+
+    src = ""
+    try:
+        src = safari.windows[1].current_tab.source()
+        url = safari.windows[1].current_tab.URL()
+    except Exception, err:
+        print err
+    if not src:
+        return
+    soup = BeautifulSoup( src )
+    links = soup.find_all( 'img' )
+
+    purl = urlparse.urlparse( url )
+
+    listroot = OutlineNode(url, "", parent, typeOutline, item.rootNode)
+    parent.addChild_atIndex_( listroot, idx+1 )
+
+    pdb.set_trace()
+
+    for link in links:
+        d = { 'type': 'link' }
+        dest = link.get('src', False)
+        if not dest:
+            continue
+        name = link.text
+        d['name'] = name
+        pdest = urlparse.urlparse( dest )
+        target = mergeURLs( url, dest )
+        d['url'] = target
+
+        node = OutlineNode(name, d, listroot, typeOutline, item.rootNode)
+        listroot.addChild_( node )
+    self.reloadData()
+    self.setNeedsDisplay_( True )
+
 
 
 </t>
@@ -4764,7 +4826,7 @@ def paste_(self, sender):
 
 </t>
 <t tx="karstenw.20160619131238.3"># TODO: change parameter to node!
-def open_node( url, nodeType=None, open_=True, supressCache=False ):
+def open_node( url, nodeType=None, open_=False, supressCache=False ):
     if kwdbg:
         print "CactusOutline.open_node()", repr(url)
         # pp( (url,nodeType,open_, supressCache) )
@@ -6075,9 +6137,13 @@ def init(self):
 
     menu.addItemWithTitle_action_keyEquivalent_( u"Insert Safari links",
                                                   "insertSafariLinks:", u"")
+    menu.addItemWithTitle_action_keyEquivalent_( u"Insert Safari images",
+                                                  "insertSafarimages:", u"")
     # copySelectionPython_
     menu.setAutoenablesItems_(False)
-    self.registerForDraggedTypes_([DragDropCactusPboardType,NSFilenamesPboardType,NSStringPboardType])
+    self.registerForDraggedTypes_( [DragDropCactusPboardType,
+                                    NSFilenamesPboardType,
+                                    NSStringPboardType] )
     self.setVerticalMotionCanBeginDrag_( False )
     #self.setDraggingSourceOperationMask_forLocal_( NSDragOperationEvery, True )
     #self.setDraggingSourceOperationMask_forLocal_( NSDragOperationAll_Obsolete, False )
@@ -9253,10 +9319,10 @@ kwlog = CactusVersion.developmentversion
 import pdb
 
 import re
-
 import urllib
-
 import urlparse
+import StringIO
+import gzip
 
 import CactusDocumentTypes
 CactusOPMLType = CactusDocumentTypes.CactusOPMLType
@@ -9712,6 +9778,17 @@ def num2ostype( num ):
     s = fob.read()
     fob.close()
 
+    # check for gzip compressed opml file
+    # pdb.set_trace()
+    try:
+        if len(s) &gt; 2:
+            if ord(s[0]) == 0x1f:
+                if ord(s[1]) == 0x8b:
+                    unzipped = gzip.GzipFile( fileobj=StringIO.StringIO(s) ).read()
+                    s = unzipped
+    except Exception:
+        pass
+
     if type_ == CactusOPMLType:
         # this is a quick &amp; dirty approach and should be applied much more carefully
         # than it is now... perhaps those errors get corrected and &lt;directivecache&gt;
@@ -9927,9 +10004,9 @@ import os
 appname ="Cactus Outline-Editor"
 appnameshort = "Cactus"
 
-copyright = 'Copyright 2011-2017 Karsten Wolf'
+copyright = 'Copyright 2011-2019 Karsten Wolf'
 
-version = "0.7.5"
+version = "0.7.6"
 
 # 
 user_agent = "%s/%s +https://github.com/karstenw/Cactus-opml-Outliner" % (appname, version)
@@ -10990,7 +11067,7 @@ open /Users/karstenwo/python/pyobjc/+ideen/outliner_kw/Cactus-git/English.lproj/
 rm -Rf ./build/*
 rm -Rf ./dist/*
 
-/usr/bin/env python setup.py py2app
+/usr/bin/env python setup.py py2app -O2 -g -x
 
 mkdir -p ../Cactus-opml-Outliner-binaries/Cactus_v000
 
@@ -11007,7 +11084,8 @@ cp README.md  ../Cactus-opml-Outliner-binaries/Cactus_v000/
 
 rm -Rf ../Cactus-opml-Outliner-binaries/Cactus_v000/Cactus.app
 
-mv ./dist/Cactus.app ../Cactus-opml-Outliner-binaries/Cactus_v000/</t>
+mv ./dist/Cactus.app ../Cactus-opml-Outliner-binaries/Cactus_v000/
+</t>
 <t tx="karstenw.20160619132244.1">@nocolor
 Copyright (c) 2010-2012 Kurt McKee &lt;contactme@kurtmckee.org&gt;
 Copyright (c) 2002-2008 Mark Pilgrim
