@@ -452,6 +452,8 @@ class KWOutlineView(NSOutlineView):
 
         menu.addItemWithTitle_action_keyEquivalent_( u"Insert Safari links",
                                                       "insertSafariLinks:", u"")
+        menu.addItemWithTitle_action_keyEquivalent_( u"Insert Safari images",
+                                                      "insertSafarimages:", u"")
         # copySelectionPython_
         menu.setAutoenablesItems_(False)
         self.registerForDraggedTypes_( [DragDropCactusPboardType,
@@ -539,6 +541,60 @@ class KWOutlineView(NSOutlineView):
             listroot.addChild_( node )
         self.reloadData()
         self.setNeedsDisplay_( True )
+
+
+    def insertSafarimages_(self, sender):
+        if kwlog:
+            print "KWOutlineView.insertSafariLinks_()"
+        row = self.clickedRow()
+        selection = self.getSelectionItems()
+        if not selection:
+            return
+        result = []
+
+        item = selection[0]
+        idx = item.siblingIndex()
+
+        parent = item.parent
+
+        safari = appscript.app("Safari.app")
+        if not safari.isrunning():
+            return
+
+        src = ""
+        try:
+            src = safari.windows[1].current_tab.source()
+            url = safari.windows[1].current_tab.URL()
+        except Exception, err:
+            print err
+        if not src:
+            return
+        soup = BeautifulSoup( src )
+        links = soup.find_all( 'img' )
+
+        purl = urlparse.urlparse( url )
+
+        listroot = OutlineNode(url, "", parent, typeOutline, item.rootNode)
+        parent.addChild_atIndex_( listroot, idx+1 )
+
+        pdb.set_trace()
+
+        for link in links:
+            d = { 'type': 'link' }
+            dest = link.get('src', False)
+            if not dest:
+                continue
+            name = link.text
+            d['name'] = name
+            pdest = urlparse.urlparse( dest )
+            target = mergeURLs( url, dest )
+            d['url'] = target
+
+            node = OutlineNode(name, d, listroot, typeOutline, item.rootNode)
+            listroot.addChild_( node )
+        self.reloadData()
+        self.setNeedsDisplay_( True )
+
 
 
     def copySelectionPython_(self, sender):
