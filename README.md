@@ -6,7 +6,9 @@
 
 It is an outline editor based on the PythonBrowser example from PyObjC.
 
-Developed on OSX 10.6 with Python 2.7, pyobjc 3.3a0 and py2app 0.15
+Developed on OSX with Python2, pyobjc and py2app.
+
+It runs on 10.9 to 10.12. 10.13 and up not tested.
 
 It's still in development but it gets better.
 
