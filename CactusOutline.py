@@ -577,7 +577,7 @@ class KWOutlineView(NSOutlineView):
         listroot = OutlineNode(url, "", parent, typeOutline, item.rootNode)
         parent.addChild_atIndex_( listroot, idx+1 )
 
-        pdb.set_trace()
+        # pdb.set_trace()
 
         for link in links:
             d = { 'type': 'link' }

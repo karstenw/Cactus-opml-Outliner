@@ -19,7 +19,7 @@
 <v t="karstenw.20160619130933.5"><vh>menuOpenAsType_</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131542.1" a="E"><vh>@clean CactusTools.py</vh>
+<v t="karstenw.20160619131542.1"><vh>@clean CactusTools.py</vh>
 <v t="karstenw.20160619131552.1"><vh>CactusTools declarations</vh></v>
 <v t="karstenw.20160619131552.2"><vh>num2ostype</vh></v>
 <v t="karstenw.20160619131552.3"><vh>ostype2num</vh></v>
@@ -101,7 +101,7 @@
 <v t="karstenw.20160619131056.11"><vh>class DoneMessageException</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131102.1" a="E"><vh>@clean CactusFileOpeners.py</vh>
+<v t="karstenw.20160619131102.1"><vh>@clean CactusFileOpeners.py</vh>
 <v t="karstenw.20160619131110.1"><vh>Imports and Globals</vh></v>
 <v t="karstenw.20160619131110.2"><vh>openOPML_</vh></v>
 <v t="karstenw.20160619131110.3"><vh>openOPML_withURLTag_</vh></v>
@@ -138,12 +138,12 @@
 <v t="karstenw.20160619131225.24"><vh>photo_from_string</vh></v>
 <v t="karstenw.20160619131225.25"><vh>getPhotoXML</vh></v>
 </v>
-<v t="karstenw.20160619131230.1"><vh>@clean CactusOutline.py</vh>
+<v t="karstenw.20160619131230.1" a="E"><vh>@clean CactusOutline.py</vh>
 <v t="karstenw.20160619131238.1"><vh>CactusOutline declarations</vh></v>
 <v t="karstenw.20160619131238.2"><vh>open_photo</vh></v>
 <v t="karstenw.20160619131238.3"><vh>open_node</vh></v>
 <v t="karstenw.20160619131238.4"><vh>handleEventReturnKeyOV_Event_</vh></v>
-<v t="karstenw.20160619131238.5"><vh>class KWOutlineView</vh>
+<v t="karstenw.20160619131238.5" a="E"><vh>class KWOutlineView</vh>
 <v t="karstenw.20160619131238.6"><vh>awakeFromNib</vh></v>
 <v t="karstenw.20160619131238.7"><vh>menuForEvent_</vh></v>
 <v t="karstenw.20160619131238.8"><vh>validateMenuItem_</vh></v>
@@ -4340,7 +4340,7 @@ def insertSafarimages_(self, sender):
     listroot = OutlineNode(url, "", parent, typeOutline, item.rootNode)
     parent.addChild_atIndex_( listroot, idx+1 )
 
-    pdb.set_trace()
+    # pdb.set_trace()
 
     for link in links:
         d = { 'type': 'link' }
@@ -4826,7 +4826,7 @@ def paste_(self, sender):
 
 </t>
 <t tx="karstenw.20160619131238.3"># TODO: change parameter to node!
-def open_node( url, nodeType=None, open_=False, supressCache=False ):
+def open_node( url, nodeType=None, open_=True, supressCache=False ):
     if kwdbg:
         print "CactusOutline.open_node()", repr(url)
         # pp( (url,nodeType,open_, supressCache) )
@@ -10004,9 +10004,9 @@ import os
 appname ="Cactus Outline-Editor"
 appnameshort = "Cactus"
 
-copyright = 'Copyright 2011-2019 Karsten Wolf'
+copyright = 'Copyright 2011-2020 Karsten Wolf'
 
-version = "0.7.6"
+version = "0.7.7"
 
 # 
 user_agent = "%s/%s +https://github.com/karstenw/Cactus-opml-Outliner" % (appname, version)
