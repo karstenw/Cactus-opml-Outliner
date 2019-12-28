@@ -27,10 +27,10 @@ kwlog = CactusVersion.developmentversion
 import pdb
 
 import re
-
 import urllib
-
 import urlparse
+import StringIO
+import gzip
 
 import CactusDocumentTypes
 CactusOPMLType = CactusDocumentTypes.CactusOPMLType
@@ -146,6 +146,17 @@ def readURL( nsurl, type_="" ):
     fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
     s = fob.read()
     fob.close()
+
+    # check for gzip compressed opml file
+    # pdb.set_trace()
+    try:
+        if len(s) > 2:
+            if ord(s[0]) == 0x1f:
+                if ord(s[1]) == 0x8b:
+                    unzipped = gzip.GzipFile( fileobj=StringIO.StringIO(s) ).read()
+                    s = unzipped
+    except Exception:
+        pass
 
     if type_ == CactusOPMLType:
         # this is a quick & dirty approach and should be applied much more carefully
