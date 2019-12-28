@@ -27,7 +27,7 @@ CactusXMLOSTypes = [ '****' ]
 
 # an outliner as a html editor
 CactusHTMLType = u'HTML File'
-CactusHTMLFileExtensions = [ 'html', 'htm' ]
+CactusHTMLFileExtensions = [ 'html', 'htm', 'tpl' ]
 CactusHTMLOSTypes = [ '****' ]
 
 # an outliner as a property list editor
