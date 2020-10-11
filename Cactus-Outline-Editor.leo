@@ -10,7 +10,7 @@
 <find_panel_settings/>
 <vnodes>
 <v t="karstenw.20160619130609.2" a="E"><vh>Code</vh>
-<v t="karstenw.20160619192706.1" a="E"><vh>Tools</vh>
+<v t="karstenw.20160619192706.1"><vh>Tools</vh>
 <v t="karstenw.20160619130856.1"><vh>@clean CactusAccessoryController.py</vh>
 <v t="karstenw.20160619130933.1"><vh>CactusAccessoryController declarations</vh></v>
 <v t="karstenw.20160619130933.2"><vh>class CactusOpenAsAccessoryController</vh>
@@ -45,7 +45,7 @@
 <v t="karstenw.20160619131552.23"><vh>getURLExtension</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619193218.1" a="E"><vh>Controllers</vh>
+<v t="karstenw.20160619193218.1"><vh>Controllers</vh>
 <v t="karstenw.20160619131140.1"><vh>@clean CactusOpenURLController.py</vh>
 <v t="karstenw.20160619131158.1"><vh>CactusOpenURLController declarations</vh></v>
 <v t="karstenw.20160619131158.2"><vh>class OpenURLWindowController</vh>
@@ -138,12 +138,12 @@
 <v t="karstenw.20160619131225.24"><vh>photo_from_string</vh></v>
 <v t="karstenw.20160619131225.25"><vh>getPhotoXML</vh></v>
 </v>
-<v t="karstenw.20160619131230.1" a="E"><vh>@clean CactusOutline.py</vh>
+<v t="karstenw.20160619131230.1"><vh>@clean CactusOutline.py</vh>
 <v t="karstenw.20160619131238.1"><vh>CactusOutline declarations</vh></v>
 <v t="karstenw.20160619131238.2"><vh>open_photo</vh></v>
 <v t="karstenw.20160619131238.3"><vh>open_node</vh></v>
 <v t="karstenw.20160619131238.4"><vh>handleEventReturnKeyOV_Event_</vh></v>
-<v t="karstenw.20160619131238.5" a="E"><vh>class KWOutlineView</vh>
+<v t="karstenw.20160619131238.5"><vh>class KWOutlineView</vh>
 <v t="karstenw.20160619131238.6"><vh>awakeFromNib</vh></v>
 <v t="karstenw.20160619131238.7"><vh>menuForEvent_</vh></v>
 <v t="karstenw.20160619131238.8"><vh>validateMenuItem_</vh></v>
@@ -4826,7 +4826,7 @@ def paste_(self, sender):
 
 </t>
 <t tx="karstenw.20160619131238.3"># TODO: change parameter to node!
-def open_node( url, nodeType=None, open_=True, supressCache=False ):
+def open_node( url, nodeType=None, open_=False, supressCache=False ):
     if kwdbg:
         print "CactusOutline.open_node()", repr(url)
         # pp( (url,nodeType,open_, supressCache) )

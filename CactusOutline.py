@@ -301,7 +301,7 @@ def open_photo( url, open_=True ):
 
 
 # TODO: change parameter to node!
-def open_node( url, nodeType=None, open_=True, supressCache=False ):
+def open_node( url, nodeType=None, open_=False, supressCache=False ):
     if kwdbg:
         print "CactusOutline.open_node()", repr(url)
         # pp( (url,nodeType,open_, supressCache) )
