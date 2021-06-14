@@ -18,12 +18,11 @@ Use it to explore OPML, RSS, XML, PLIST, HTML and iTunes XMLfiles. Nodes can be 
 
 <http://groups.google.com/group/cactus-outliner-dev>
 
-## Download compiled app from my dropbox ##
+## Download compiled app from the [github releases](./releases) ##
 
-The old dropbox (http://goo.gl/EALQi) link stopped working. So here is the new one.
+Starting with v0,7.7 in 2021-06 the binaries will reside in the github releases.
 
-[https://goo.gl/yAL1Rm](https://goo.gl/yAL1Rm)
-
+The old dropbox archives will be deleted. If you need an older version, contact me.
 
 
 ## A Warning ##
