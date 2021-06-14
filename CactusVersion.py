@@ -4,7 +4,7 @@ import os
 appname ="Cactus Outline-Editor"
 appnameshort = "Cactus"
 
-copyright = 'Copyright 2011-2020 Karsten Wolf'
+copyright = 'Copyright 2011-2021 Karsten Wolf'
 
 version = "0.7.7"
 
