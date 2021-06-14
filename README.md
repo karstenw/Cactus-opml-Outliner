@@ -8,7 +8,7 @@ It is an outline editor based on the PythonBrowser example from PyObjC.
 
 Developed on OSX with Python2, pyobjc and py2app.
 
-It runs on 10.9 to 10.12. 10.13 and up not tested.
+It runs on 10.9 to 10.13. 10.14 and up not tested.
 
 It's still in development but it gets better.
 
