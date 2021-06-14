@@ -18,7 +18,7 @@ Use it to explore OPML, RSS, XML, PLIST, HTML and iTunes XMLfiles. Nodes can be 
 
 <http://groups.google.com/group/cactus-outliner-dev>
 
-## Download compiled app from the [github releases](./releases) ##
+## Download compiled app from the [github releases](../../releases) ##
 
 Starting with v0,7.7 in 2021-06 the binaries will reside in the github releases.
 
