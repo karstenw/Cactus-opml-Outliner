@@ -19,7 +19,7 @@
 <v t="karstenw.20160619130933.5"><vh>menuOpenAsType_</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131542.1"><vh>@clean CactusTools.py</vh>
+<v t="karstenw.20160619131542.1" a="E"><vh>@clean CactusTools.py</vh>
 <v t="karstenw.20160619131552.1"><vh>CactusTools declarations</vh></v>
 <v t="karstenw.20160619131552.2"><vh>num2ostype</vh></v>
 <v t="karstenw.20160619131552.3"><vh>ostype2num</vh></v>
@@ -80,7 +80,7 @@
 </v>
 </v>
 </v>
-<v t="karstenw.20160619131033.1"><vh>@clean CactusDocumentTypes.py</vh>
+<v t="karstenw.20160619131033.1" a="E"><vh>@clean CactusDocumentTypes.py</vh>
 <v t="karstenw.20160619131040.1"><vh>CactusDocumentTypes declarations</vh></v>
 </v>
 <v t="karstenw.20160619131050.1"><vh>@clean CactusExceptions.py</vh>
@@ -9302,6 +9302,7 @@ import os
 
 import traceback
 
+import time
 import datetime
 import unicodedata
 
@@ -9319,7 +9320,9 @@ kwlog = CactusVersion.developmentversion
 import pdb
 
 import re
+import requests
 import urllib
+import urllib2
 import urlparse
 import StringIO
 import gzip
@@ -9614,10 +9617,19 @@ def num2ostype( num ):
             if fileextension:
                 if not localpath.lower().endswith( "." + fileextension.lower() ):
                     localpath = localpath + '.' + fileextension
+
             print "LOAD: %s..." % url
-            fname, info = urllib.urlretrieve(url, localpath)
-            print "LOAD: %s...done" % url
-            print "LOCAL:", repr(localpath)
+            headers = {}
+            r = requests.get( url )
+            s = r.content
+            headers = r.headers
+            r.close()
+            fob = open(localpath, 'w')
+            fob.write( s )
+            fob.close()
+            
+            dts = feedparser._parse_date( headers.get( 'last-modified', '' ) )
+            dt = datetime.datetime.fromtimestamp(time.mktime( dts ))
 
             try:
                 finder = asc.app(u'Finder.app', terms=Finder10)
@@ -9629,11 +9641,15 @@ def num2ostype( num ):
             lmodfdate = os.stat( localpath ).st_mtime
             lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
             try:
-                rmodfdate = datetime.datetime( *info.getdate('last-modified')[:6] )
-                setFileModificationDate( localpath, rmodfdate )
-            except TypeError, err:
+                # rmodfdate = datetime.datetime( *headers.getdate('last-modified')[:6] )
+                # setFileModificationDate( localpath, rmodfdate )
+                setFileModificationDate( localpath, dt )
+            except TypeError as err:
                 # do not cache if modification date cannot be determined
                 print "NOCACHE: Could not get remote file(%s) modification date." % url
+                print( err )
+            print "LOAD: %s...done" % url
+            print "LOCAL:", repr(localpath)
 
         returnURL = NSURL.fileURLWithPath_( unicode(localpath) )
 
@@ -9759,7 +9775,7 @@ def num2ostype( num ):
         CactusIMLType: "xml"
     }
 
-    fileext = translateType.get( type_, "")
+    fileext = translateType.get( type_, ".bin")
 
     defaults = NSUserDefaults.standardUserDefaults()
     cache = False
@@ -9774,9 +9790,10 @@ def num2ostype( num ):
 
     url = NSURL2str(nsurl)
 
-    fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
-    s = fob.read()
-    fob.close()
+    r = requests.get( url )
+    s = r.content
+    headers = r.headers
+    r.close()
 
     # check for gzip compressed opml file
     # pdb.set_trace()
@@ -10004,9 +10021,9 @@ import os
 appname ="Cactus Outline-Editor"
 appnameshort = "Cactus"
 
-copyright = 'Copyright 2011-2020 Karsten Wolf'
+copyright = 'Copyright 2011-2021 Karsten Wolf'
 
-version = "0.7.7"
+version = "0.7.8"
 
 # 
 user_agent = "%s/%s +https://github.com/karstenw/Cactus-opml-Outliner" % (appname, version)
