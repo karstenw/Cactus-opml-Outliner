@@ -203,6 +203,8 @@ https://goo.gl/yAL1Rm
 
 For more details see the announcements on the dev-list <http://groups.google.com/group/cactus-outliner-dev>
 
+v0.7.8 - no functional changes. Switched to requests for URL loading.
+
 v0.7.5 - no functional changes. Python 2.7.14 and PyObjc 3.3a0
 
 v0.7.2 - file drag and drop more refined. Added preference to ignore files/folders starting with a '.'
