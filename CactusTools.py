@@ -10,6 +10,7 @@ import os
 
 import traceback
 
+import time
 import datetime
 import unicodedata
 
@@ -27,7 +28,9 @@ kwlog = CactusVersion.developmentversion
 import pdb
 
 import re
+import requests
 import urllib
+import urllib2
 import urlparse
 import StringIO
 import gzip
@@ -128,7 +131,7 @@ def readURL( nsurl, type_="" ):
         CactusIMLType: "xml"
     }
 
-    fileext = translateType.get( type_, "")
+    fileext = translateType.get( type_, ".bin")
 
     defaults = NSUserDefaults.standardUserDefaults()
     cache = False
@@ -137,15 +140,25 @@ def readURL( nsurl, type_="" ):
     except StandardError, err:
         print "ERROR reading defaults.", repr(err)
     
+    # pdb.set_trace()
+    
     if cache:
         if not nsurl.isFileURL():
             nsurl = cache_url(nsurl, fileext)
 
     url = NSURL2str(nsurl)
 
-    fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
-    s = fob.read()
-    fob.close()
+    if 0:
+        # does not work with file urls
+        r = requests.get( url )
+        s = r.content
+        headers = r.headers
+        r.close()
+    else:
+        # fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
+        fob = feedparser._open_resource(url, None, None, None, None, [], {})
+        s = fob.read()
+        fob.close()
 
     # check for gzip compressed opml file
     # pdb.set_trace()
@@ -483,6 +496,8 @@ def cache_url( nsurl, fileextension ):
     returnURL = nsurl
     url = NSURL2str( nsurl )
 
+    # pdb.set_trace()
+
     try:
         localpath, localname = getDownloadFolder(nsurl)
 
@@ -526,10 +541,19 @@ def cache_url( nsurl, fileextension ):
             if fileextension:
                 if not localpath.lower().endswith( "." + fileextension.lower() ):
                     localpath = localpath + '.' + fileextension
+
             print "LOAD: %s..." % url
-            fname, info = urllib.urlretrieve(url, localpath)
-            print "LOAD: %s...done" % url
-            print "LOCAL:", repr(localpath)
+            headers = {}
+            r = requests.get( url )
+            s = r.content
+            headers = r.headers
+            r.close()
+            fob = open(localpath, 'w')
+            fob.write( s )
+            fob.close()
+            
+            dts = feedparser._parse_date( headers.get( 'last-modified', '' ) )
+            dt = datetime.datetime.fromtimestamp(time.mktime( dts ))
 
             try:
                 finder = asc.app(u'Finder.app', terms=Finder10)
@@ -541,11 +565,15 @@ def cache_url( nsurl, fileextension ):
             lmodfdate = os.stat( localpath ).st_mtime
             lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
             try:
-                rmodfdate = datetime.datetime( *info.getdate('last-modified')[:6] )
-                setFileModificationDate( localpath, rmodfdate )
-            except TypeError, err:
+                # rmodfdate = datetime.datetime( *headers.getdate('last-modified')[:6] )
+                # setFileModificationDate( localpath, rmodfdate )
+                setFileModificationDate( localpath, dt )
+            except TypeError as err:
                 # do not cache if modification date cannot be determined
                 print "NOCACHE: Could not get remote file(%s) modification date." % url
+                print( err )
+            print "LOAD: %s...done" % url
+            print "LOCAL:", repr(localpath)
 
         returnURL = NSURL.fileURLWithPath_( unicode(localpath) )
 
