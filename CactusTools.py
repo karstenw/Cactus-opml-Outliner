@@ -552,8 +552,11 @@ def cache_url( nsurl, fileextension ):
             fob.write( s )
             fob.close()
             
+            dt = datetime.datetime.now()
             dts = feedparser._parse_date( headers.get( 'last-modified', '' ) )
-            dt = datetime.datetime.fromtimestamp(time.mktime( dts ))
+            dts = time.mktime( dts )
+            if dts:
+                dt = datetime.datetime.fromtimestamp( dts )
 
             try:
                 finder = asc.app(u'Finder.app', terms=Finder10)
