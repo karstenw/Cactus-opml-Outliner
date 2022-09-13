@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
+
 """
 """
 
@@ -59,7 +62,7 @@ def timerange( starttime, stoptime, increment):
         yield current
         while current < stoptime:
             current += delta
-            # print "CURRENT:", current
+            # print( "CURRENT:", current )
             yield current
 
 #

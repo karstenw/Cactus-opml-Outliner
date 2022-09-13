@@ -1,6 +1,8 @@
 
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 
 """Some tools which are needed by most files.
 """
@@ -71,6 +73,33 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 # tools
 #
 
+# py3 stuff
+py3 = False
+try:
+    unicode('')
+    punicode = unicode
+    pstr = str
+    punichr = unichr
+except NameError:
+    punicode = str
+    pstr = bytes
+    py3 = True
+    punichr = chr
+    long = int
+
+def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
+    try:
+        if type(s) not in (unicode, objc.pyobjc_unicode):
+            s = unicode(s, srcencoding)
+    except TypeError:
+        print( "makeunicode type conversion error" )
+        print( "FAILED converting", type(s), "to unicode" )
+    s = unicodedata.normalize(normalizer, s)
+    return s
+
+
+
+
 def num2ostype( num ):
     if num == 0:
         return '????'
@@ -80,19 +109,6 @@ def num2ostype( num ):
 
 def ostype2num( ostype ):
     return struct.pack('BBBB', list(ostype))
-
-
-def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
-    try:
-        if type(s) not in (unicode, objc.pyobjc_unicode):
-            s = unicode(s, srcencoding)
-    except TypeError:
-        print "makeunicode type conversion error"
-        print "FAILED converting", type(s), "to unicode"
-    s = unicodedata.normalize(normalizer, s)
-    return s
-
-
 
 
 def detectFileTypeAtURL( nsfileurl ):
@@ -119,7 +135,7 @@ def readURL( nsurl, type_="" ):
     """Read a file. May be local, may be http"""
     url = NSURL2str(nsurl)
     if kwlog:
-        print "CactusTools.readURL( '%s', '%s' )" % (url, type_)
+        print( "CactusTools.readURL( '%s', '%s' )" % (url, type_) )
 
 
     translateType = {
@@ -138,7 +154,7 @@ def readURL( nsurl, type_="" ):
     try:
         cache = bool(defaults.objectForKey_( u'optCache'))
     except StandardError, err:
-        print "ERROR reading defaults.", repr(err)
+        print( "ERROR reading defaults.", repr(err) )
     
     # pdb.set_trace()
     
@@ -182,13 +198,13 @@ def readURL( nsurl, type_="" ):
                           """<?xml version="1.0" encoding="ISO-8859-1"?>""")
 
             if kwlog:
-                print "\nBOGUS XML DELARATION REPLACED\n"
+                print( "\nBOGUS XML DELARATION REPLACED\n" )
 
         # this error occurs up until now only combined with the previous one
         if "<directiveCache>" in s:
             s = s.replace( "<directiveCache>", "</outline>")
             if kwlog:
-                print "\nBOGUS <directiveCache> XML TAG REPLACED\n"
+                print( "\nBOGUS <directiveCache> XML TAG REPLACED\n" )
 
         #
         # opmleditor rules error
@@ -199,7 +215,7 @@ def readURL( nsurl, type_="" ):
         if startrule in s:
             n = s.count(startrule)
             if kwlog:
-                print "BOGUS OPML RULE SECTION: %i SUBSTITUTIONS" % n
+                print( "BOGUS OPML RULE SECTION: %i SUBSTITUTIONS" % n )
             idx = s1 = s2 = 0
             for i in range(1, n+1):
                 # get location o next start- ans endrule
@@ -213,7 +229,7 @@ def readURL( nsurl, type_="" ):
                 post = s[s2:]
 
                 if kwlog:
-                    print "\nOLD", repr(defectiveSnippet)
+                    print( "\nOLD", repr(defectiveSnippet) )
 
                 # clear out false markers
                 defectiveSnippet = defectiveSnippet.replace( startrule, "<")
@@ -233,7 +249,7 @@ def readURL( nsurl, type_="" ):
                 s = pre + defectiveSnippet + post
 
                 if kwlog:
-                    print "\nNEW", repr(defectiveSnippet)
+                    print( "\nNEW", repr(defectiveSnippet) )
 
     if type_ in CactusDocumentXMLBasedTypesSet:
         # this apllies to all since cactus currently only reads xml files
@@ -244,7 +260,7 @@ def readURL( nsurl, type_="" ):
             # use urlescape
             t = re.sub( re_bogusCharacters, "???", s)
             if s != t:
-                print "Bogus characters in XML..."
+                print( "Bogus characters in XML..." )
             s = t
     return s
 
@@ -416,15 +432,15 @@ def getDownloadFolder( nsurl ):
     try:
         cacheFolder = unicode(defaults.objectForKey_( u'txtCacheFolder'))
     except StandardError, err:
-        print "CactusTools.getDownloadFolder(%s) -> False" % NSURL2str(nsurl)
-        print "ERROR reading defaults.", repr(err)
+        print( "CactusTools.getDownloadFolder(%s) -> False" % NSURL2str(nsurl) )
+        print( "ERROR reading defaults.", repr(err) )
 
     cacheFolder = os.path.expanduser( cacheFolder )
 
     # parent folder must exists; minimal plausibility
     parent, foldername = os.path.split( cacheFolder )
     if not os.path.exists( parent ):
-        print "CactusTools.getDownloadFolder(%s) -> False" % NSURL2str(nsurl)
+        print( "CactusTools.getDownloadFolder(%s) -> False" % NSURL2str(nsurl) )
         return False, False
 
     if not os.path.exists(cacheFolder):
@@ -450,7 +466,7 @@ def getDownloadFolder( nsurl ):
         localrelfolder, localname = os.path.split( localpath )
         localpath = os.path.join( cacheFolder, localpath )
         if kwdbg:
-            print "CactusTools.getDownloadFolder(%s) -> %s" % (NSURL2str(nsurl), repr(localpath) )
+            print( "CactusTools.getDownloadFolder(%s) -> %s" % (NSURL2str(nsurl), repr(localpath) ) )
         return localpath, localname
     return False, False
 
@@ -460,7 +476,7 @@ def getRemotefilemodificationDate( url ):
     try:
         f = urllib.urlopen( url )
     except IOError, err:
-        print "ERROR: Could not open url (%s) for date reading." % url
+        print( "ERROR: Could not open url (%s) for date reading." % url )
         return False
 
     rinfo = f.info()
@@ -472,7 +488,7 @@ def getRemotefilemodificationDate( url ):
             rmodfdate = datetime.datetime( *remotemodfdate[:6] )
             #rmodfdate = datetime.datetime( *rinfo.getdate('last-modified')[:6] )
         except TypeError, err:
-            print "Could not get remote file(%s) modification date." % url
+            print( "Could not get remote file(%s) modification date." % url )
             return False
         return rmodfdate
     return False
@@ -483,12 +499,12 @@ def setFileModificationDate( filepath, modfdt ):
     l['NSFileModificationDate'] = date
     setFileProperties( filepath, l)
     folder, filename = os.path.split( filepath )
-    print "Setting file(%s) modification date to %s" % (filename, repr(modfdt))
+    print( "Setting file(%s) modification date to %s" % (filename, repr(modfdt)) )
 
 
 def cache_url( nsurl, fileextension ):
     if 1:
-        print "CactusTools.cache_url( %s, %s )" % (nsurl, fileextension)
+        print( "CactusTools.cache_url( %s, %s )" % (nsurl, fileextension) )
 
     if not nsurl:
         return False
@@ -542,7 +558,7 @@ def cache_url( nsurl, fileextension ):
                 if not localpath.lower().endswith( "." + fileextension.lower() ):
                     localpath = localpath + '.' + fileextension
 
-            print "LOAD: %s..." % url
+            print( "LOAD: %s..." % url )
             headers = {}
             r = requests.get( url )
             s = r.content
@@ -563,7 +579,7 @@ def cache_url( nsurl, fileextension ):
                 hfspath = mactypes.File( localpath ).hfspath
                 finder.files[hfspath].comment.set( url )
             except StandardError, v:
-                print "SET COMMENT FAILED ON '%s'" % localpath
+                print( "SET COMMENT FAILED ON '%s'" % localpath )
             # get file date
             lmodfdate = os.stat( localpath ).st_mtime
             lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
@@ -573,17 +589,17 @@ def cache_url( nsurl, fileextension ):
                 setFileModificationDate( localpath, dt )
             except TypeError as err:
                 # do not cache if modification date cannot be determined
-                print "NOCACHE: Could not get remote file(%s) modification date." % url
+                print( "NOCACHE: Could not get remote file(%s) modification date." % url )
                 print( err )
-            print "LOAD: %s...done" % url
-            print "LOCAL:", repr(localpath)
+            print( "LOAD: %s...done" % url )
+            print( "LOCAL:", repr(localpath) )
 
         returnURL = NSURL.fileURLWithPath_( unicode(localpath) )
 
     except Exception, err:
         tb = unicode(traceback.format_exc())
-        print tb
-        print
+        print( tb )
+        print(  )
 
     return returnURL
 
@@ -622,15 +638,15 @@ def mergeURLs( base, rel ):
     target = urlparse.urlunparse( target )
     try:
         s = s % ( base, rel, target)
-        print s.encode("utf-8")
+        print( s ) #.encode("utf-8")
     except Exception, err:
-        print
-        print "ERROR in mergeURL"
-        print err
-        print "base:", repr(base)
-        print "rel:", repr(rel)
-        print "target:", repr(target)
-        print
+        print(  )
+        print( "ERROR in mergeURL" )
+        print( err )
+        print( "base:", repr(base) )
+        print( "rel:", repr(rel) )
+        print( "target:", repr(target) )
+        print(  )
     return target
 
 
@@ -640,5 +656,5 @@ def getURLExtension( url ):
     folder, filename = os.path.split( path )
     basename, ext = os.path.splitext( filename )
     if kwdbg:
-        print "CactusTools.getURLExtension(%s) -> '%s' . '%s'" % ( url, basename, ext )
+        print( "CactusTools.getURLExtension(%s) -> '%s' . '%s'" % ( url, basename, ext ) )
     return (basename, ext)

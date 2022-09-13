@@ -10,7 +10,7 @@
 <find_panel_settings/>
 <vnodes>
 <v t="karstenw.20160619130609.2" a="E"><vh>Code</vh>
-<v t="karstenw.20160619192706.1"><vh>Tools</vh>
+<v t="karstenw.20160619192706.1" a="E"><vh>Tools</vh>
 <v t="karstenw.20160619130856.1"><vh>@clean CactusAccessoryController.py</vh>
 <v t="karstenw.20160619130933.1"><vh>CactusAccessoryController declarations</vh></v>
 <v t="karstenw.20160619130933.2"><vh>class CactusOpenAsAccessoryController</vh>
@@ -18,31 +18,6 @@
 <v t="karstenw.20160619130933.4"><vh>init</vh></v>
 <v t="karstenw.20160619130933.5"><vh>menuOpenAsType_</vh></v>
 </v>
-</v>
-<v t="karstenw.20160619131542.1" a="E"><vh>@clean CactusTools.py</vh>
-<v t="karstenw.20160619131552.1"><vh>CactusTools declarations</vh></v>
-<v t="karstenw.20160619131552.2"><vh>num2ostype</vh></v>
-<v t="karstenw.20160619131552.3"><vh>ostype2num</vh></v>
-<v t="karstenw.20160619131552.4"><vh>makeunicode</vh></v>
-<v t="karstenw.20160619131552.5"><vh>detectFileTypeAtURL</vh></v>
-<v t="karstenw.20160619131552.6"><vh>detectFileTypeLocalFile</vh></v>
-<v t="karstenw.20160619131552.7"><vh>readURL</vh></v>
-<v t="karstenw.20160619131552.8"><vh>classifyAndReadUrl</vh></v>
-<v t="karstenw.20160619131552.9"><vh>cancelContinueAlert</vh></v>
-<v t="karstenw.20160619131552.10"><vh>errorDialog</vh></v>
-<v t="karstenw.20160619131552.11"><vh>getFileDialog</vh></v>
-<v t="karstenw.20160619131552.12"><vh>getFolderDialog</vh></v>
-<v t="karstenw.20160619131552.13"><vh>NSURL2str</vh></v>
-<v t="karstenw.20160619131552.14"><vh>saveAsDialog</vh></v>
-<v t="karstenw.20160619131552.15"><vh>getFileProperties</vh></v>
-<v t="karstenw.20160619131552.16"><vh>setFileProperties</vh></v>
-<v t="karstenw.20160619131552.17"><vh>datestring_nsdate</vh></v>
-<v t="karstenw.20160619131552.18"><vh>getDownloadFolder</vh></v>
-<v t="karstenw.20160619131552.19"><vh>getRemotefilemodificationDate</vh></v>
-<v t="karstenw.20160619131552.20"><vh>setFileModificationDate</vh></v>
-<v t="karstenw.20160619131552.21"><vh>cache_url</vh></v>
-<v t="karstenw.20160619131552.22"><vh>mergeURLs</vh></v>
-<v t="karstenw.20160619131552.23"><vh>getURLExtension</vh></v>
 </v>
 </v>
 <v t="karstenw.20160619193218.1"><vh>Controllers</vh>
@@ -80,7 +55,7 @@
 </v>
 </v>
 </v>
-<v t="karstenw.20160619131033.1" a="E"><vh>@clean CactusDocumentTypes.py</vh>
+<v t="karstenw.20160619131033.1"><vh>@clean CactusDocumentTypes.py</vh>
 <v t="karstenw.20160619131040.1"><vh>CactusDocumentTypes declarations</vh></v>
 </v>
 <v t="karstenw.20160619131050.1"><vh>@clean CactusExceptions.py</vh>
@@ -349,6 +324,33 @@
 <v t="karstenw.20160619131549.4"><vh>__init__</vh></v>
 </v>
 </v>
+<v t="karstenw.20220912113705.1" a="E"><vh>@clean CactusTools.py</vh>
+<v t="karstenw.20220912113721.1"><vh>Declarations</vh></v>
+<v t="karstenw.20220912114003.1"><vh>python3 stuff</vh></v>
+<v t="karstenw.20220912113812.1"><vh>+ TOOLS</vh></v>
+<v t="karstenw.20220912113721.4"><vh>makeunicode</vh></v>
+<v t="karstenw.20220912113721.2"><vh>num2ostype</vh></v>
+<v t="karstenw.20220912113721.3"><vh>ostype2num</vh></v>
+<v t="karstenw.20220912113721.5"><vh>detectFileTypeAtURL</vh></v>
+<v t="karstenw.20220912113721.6"><vh>detectFileTypeLocalFile</vh></v>
+<v t="karstenw.20220912113721.7"><vh>readURL</vh></v>
+<v t="karstenw.20220912113721.8"><vh>classifyAndReadUrl</vh></v>
+<v t="karstenw.20220912113721.9"><vh>cancelContinueAlert</vh></v>
+<v t="karstenw.20220912113721.10"><vh>errorDialog</vh></v>
+<v t="karstenw.20220912113721.11"><vh>getFileDialog</vh></v>
+<v t="karstenw.20220912113721.12"><vh>getFolderDialog</vh></v>
+<v t="karstenw.20220912113721.13"><vh>NSURL2str</vh></v>
+<v t="karstenw.20220912113721.14"><vh>saveAsDialog</vh></v>
+<v t="karstenw.20220912113721.15"><vh>getFileProperties</vh></v>
+<v t="karstenw.20220912113721.16"><vh>setFileProperties</vh></v>
+<v t="karstenw.20220912113721.17"><vh>datestring_nsdate</vh></v>
+<v t="karstenw.20220912113721.18"><vh>getDownloadFolder</vh></v>
+<v t="karstenw.20220912113721.19"><vh>getRemotefilemodificationDate</vh></v>
+<v t="karstenw.20220912113721.20"><vh>setFileModificationDate</vh></v>
+<v t="karstenw.20220912113721.21"><vh>cache_url</vh></v>
+<v t="karstenw.20220912113721.22"><vh>mergeURLs</vh></v>
+<v t="karstenw.20220912113721.23"><vh>getURLExtension</vh></v>
+</v>
 <v t="karstenw.20160619131607.1"><vh>@clean CactusURL.py</vh>
 <v t="karstenw.20160619131622.1"><vh>CactusURL declarations</vh></v>
 <v t="karstenw.20160619131622.2"><vh>NSURL2str</vh></v>
@@ -357,7 +359,7 @@
 <v t="karstenw.20160619131622.5"><vh>ascachepath</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131616.1" a="E"><vh>@clean CactusVersion.py</vh>
+<v t="karstenw.20160619131616.1"><vh>@clean CactusVersion.py</vh>
 <v t="karstenw.20160619131625.1"><vh>CactusVersion declarations</vh></v>
 </v>
 <v t="karstenw.20160619131631.1"><vh>@clean CactusXMLProperties.py</vh>
@@ -486,7 +488,7 @@
 <v t="karstenw.20160619130959.50"><vh>applySettings_</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131126.1" a="E"><vh>@clean CactusMain.py</vh>
+<v t="karstenw.20160619131126.1"><vh>@clean CactusMain.py</vh>
 <v t="karstenw.20160619131153.1"><vh>CactusMain declarations</vh></v>
 </v>
 <v t="karstenw.20160619132031.1"><vh>@clean setup.py</vh>
@@ -553,6 +555,8 @@ def menuOpenAsType_( self, sender ):
 </t>
 <t tx="karstenw.20160619130959.1">
 # -*- coding: utf-8 -*-
+
+from __future__ import print_function
 
 """
 """
@@ -645,7 +649,7 @@ MakeCalendarController = CactusMakeCalendarController.MakeCalendarController
 
 def initialize(self):
     if kwlog:
-        print "CactusAppDelegate.initialize()"
+        print( "CactusAppDelegate.initialize()" )
     self.visitedURLs = []
     self.documentcontroller = None
     # default settings for preferences
@@ -705,7 +709,7 @@ def initialize(self):
 </t>
 <t tx="karstenw.20160619130959.12">def applicationDidFinishLaunching_(self, notification):
     if kwlog:
-        print "CactusAppDelegate.applicationDidFinishLaunching_()"
+        print( "CactusAppDelegate.applicationDidFinishLaunching_()" )
     self.documentcontroller = CactusDocumentController.alloc().init()
     app = NSApplication.sharedApplication()
     app.activateIgnoringOtherApps_(True)
@@ -714,14 +718,14 @@ def initialize(self):
 <t tx="karstenw.20160619130959.13">@objc.IBAction
 def applicationShouldOpenUntitledFile_( self, sender ):
     if kwlog:
-        print "CactusAppDelegate.applicationShouldOpenUntitledFile_()"
+        print( "CactusAppDelegate.applicationShouldOpenUntitledFile_()" )
     defaults = NSUserDefaults.standardUserDefaults()
     return defaults.objectForKey_( u"optNewDocumentOnStart" )
 
 </t>
 <t tx="karstenw.20160619130959.14">def applicationShouldHandleReopen_hasVisibleWindows_( self, theApplication, flag ):
     if kwlog:
-        print "CactusAppDelegate.applicationShouldHandleReopen_hasVisibleWindows_()"
+        print( "CactusAppDelegate.applicationShouldHandleReopen_hasVisibleWindows_()" )
     # this is needed to prevent creating an untitled document when clicking the dock
     #
     # should really be in the (not yet existent) preferences
@@ -752,13 +756,13 @@ def showPreferencePanel_(self, sender):
 """ """
 def newTableWithRoot_(self, root):
     if kwlog:
-        print "CactusAppDelegate.newTableWithRoot_()"
+        print( "CactusAppDelegate.newTableWithRoot_()" )
     self.newTableWithRoot_title_(root, None)
 
 </t>
 <t tx="karstenw.20160619130959.18">def newTableWithRoot_title_(self, root, title):
     if kwlog:
-        print "DEPRECATED CactusAppDelegate.newTableWithRoot_title_()"
+        print( "DEPRECATED CactusAppDelegate.newTableWithRoot_title_()" )
     # find owning controller here and pass on
     if not title:
         title = u"Table Editor"
@@ -768,7 +772,7 @@ def newTableWithRoot_(self, root):
 </t>
 <t tx="karstenw.20160619130959.19">def newTableWithRoot_fromNode_(self, root, parentNode):
     if kwlog:
-        print "DEPRECATED CactusAppDelegate.newTableWithRoot_fromNode_()"
+        print( "DEPRECATED CactusAppDelegate.newTableWithRoot_fromNode_()" )
     title = "Unnamed"
     if parentNode:
         title = parentNode.name
@@ -785,7 +789,7 @@ def newTableWithRoot_(self, root):
 @objc.IBAction
 def newTable_(self, sender):
     if kwlog:
-        print "DEPRECATED CactusAppDelegate.newTable_()"
+        print( "DEPRECATED CactusAppDelegate.newTable_()" )
     doc = Document("Untitled Table", None)
     CactusWindowController_OLD.alloc().initWithObject_type_(doc, typeTable)
 
@@ -796,7 +800,7 @@ def newTable_(self, sender):
 @objc.IBAction
 def newOutline_(self, sender):
     if kwlog:
-        print "DEPRECATED CactusAppDelegate.newOutline_()"
+        print( "DEPRECATED CactusAppDelegate.newOutline_()" )
 
 </t>
 <t tx="karstenw.20160619130959.22"># UNUSED
@@ -818,16 +822,16 @@ def openURL_(self, sender):
 @objc.IBAction
 def handleNodeMenu_(self, sender):
     if kwlog:
-        print "CactusAppDelegate.handleNodeMenu_(%s)" % repr(sender)
+        print( "CactusAppDelegate.handleNodeMenu_(%s)" % repr(sender) )
     app = NSApplication.sharedApplication()
     win = app.keyWindow()
     if win:
-        print "Save As...", win.title()
+        print( "Save As...", win.title() )
         windelg = win.delegate()
         if windelg:
             ov = windelg.outlineView
             name = sender.title()
-            print name
+            print( name )
             if name == u"Move up":
                 ov.moveSelectionUp()
             elif name == u"Move down":
@@ -874,8 +878,8 @@ def openDownloadsPage_(self, sender):
 
 def newOutlineFromURL_Type_(self, url, type_):
     if kwlog:
-        print "CactusAppDelegate.newOutlineFromURL_Type_(\n\t%s\m\t%s )" % (
-            repr(url), repr(type_))
+        print( "CactusAppDelegate.newOutlineFromURL_Type_(\n\t%s\m\t%s )" %
+                                                repr(url), repr(type_))
 
     if not isinstance(url, NSURL):
         url = NSURL.URLWithString_( url )
@@ -895,7 +899,7 @@ def newOutlineFromURL_Type_(self, url, type_):
 @objc.IBAction
 def newBrowser_(self, sender):
     if kwlog:
-        print "CactusAppDelegate.newBrowser_()"
+        print( "CactusAppDelegate.newBrowser_()" )
     # The CactusWindowController_OLD instance will retain itself,
     # so we don't (have to) keep track of all instances here.
     doc = Document("Untitled Outline", None)
@@ -917,7 +921,7 @@ def __init__(self, fileorurl, rootNode, parentNode=None):
 <t tx="karstenw.20160619130959.30">@objc.IBAction
 def openOutlineDocument_(self, sender):
     if kwlog:
-        print "CactusAppDelegate.openOutlineDocument_()"
+        print( "CactusAppDelegate.openOutlineDocument_()" )
     docctrl = NSDocumentController.sharedDocumentController()
     docctrl.openDocument_(sender)
 
@@ -925,12 +929,12 @@ def openOutlineDocument_(self, sender):
 <t tx="karstenw.20160619130959.31">@objc.IBAction
 def openFile_(self, sender):
     if kwlog:
-        print "DEPRECATED CactusAppDelegate.openFile_()"
+        print( "DEPRECATED CactusAppDelegate.openFile_()" )
     # this is ugly
     f = getFileDialog(multiple=True)
     if f:
         for opmlFile in f:
-            print "Reading OPML '%s'" % (opmlFile.encode("utf-8"),)
+            print( "Reading OPML '%s'" % (opmlFile.encode("utf-8"),) )
             fob = open(opmlFile, 'r')
             folder, filename = os.path.split(opmlFile)
             s = fob.read()
@@ -941,14 +945,14 @@ def openFile_(self, sender):
                 doc = Document(opmlFile, root)
                 CactusWindowController_OLD.alloc().initWithObject_type_(doc, typeOutline)
 
-                print "Reading OPML '%s' Done." % (opmlFile.encode("utf-8"),)
+                print( "Reading OPML '%s' Done." % (opmlFile.encode("utf-8"),) )
             else:
-                print "Reading OPML '%s' FAILED." % (opmlFile.encode("utf-8"),)
+                print( "Reading OPML '%s' FAILED." % (opmlFile.encode("utf-8"),) )
 
 </t>
 <t tx="karstenw.20160619130959.32">def openOPML_(self, rootOPML):
     if kwlog:
-        print "CactusAppDelegate.openOPML_()"
+        print( "CactusAppDelegate.openOPML_()" )
     """This builds the node tree and opens a window."""
     #
     #  Split this up.
@@ -991,7 +995,7 @@ def openFile_(self, sender):
             #v = {'value': v}
 
             node = OutlineNode(k, v, head, typeOutline)
-            #print "HEAD:", node.name
+            #print( "HEAD:", node.name )
             head.addChild_( node )
 
     # fill in missing opml attributes here
@@ -1027,8 +1031,8 @@ def openFile_(self, sender):
             if len(children) &gt; 0:
                 try:
                     getChildrenforNode( node, children )
-                except Exception, err:
-                    print err
+                except Exception as err:
+                    print( err )
                     pp(children)
                     pp(item)
     return root
@@ -1037,12 +1041,12 @@ def openFile_(self, sender):
 <t tx="karstenw.20160619130959.33">@objc.IBAction
 def saveAs_(self, sender):
     if kwlog:
-        print "DEPRECATED CactusAppDelegate.saveAs_()"
-    print "Save As..."
+        print( "DEPRECATED CactusAppDelegate.saveAs_()" )
+    print( "Save As..." )
     app = NSApplication.sharedApplication()
     win = app.keyWindow()
     if win:
-        print "Save As...", win.title()
+        print( "Save As...", win.title() )
         windelg = win.delegate()
         if windelg:
             path = windelg.path
@@ -1060,19 +1064,19 @@ def saveAs_(self, sender):
 </t>
 <t tx="karstenw.20160619130959.34">def getCurrentAppWindow(self):
     if kwlog:
-        print "CactusAppDelegate.getCurrentAppWindow()"
+        print( "CactusAppDelegate.getCurrentAppWindow()" )
     return NSApplication.sharedApplication().keyWindow()
 
 </t>
 <t tx="karstenw.20160619130959.35">def getCurrentDocument(self):
     if kwlog:
-        print "CactusAppDelegate.getCurrentDocument()"
+        print( "CactusAppDelegate.getCurrentDocument()" )
     return NSDocumentController.sharedDocumentController().currentDocument()
 
 </t>
 <t tx="karstenw.20160619130959.36">def getCurrentOutlineView(self):
     if kwlog:
-        print "CactusAppDelegate.getCurrentOutlineView()"
+        print( "CactusAppDelegate.getCurrentOutlineView()" )
     doc = self.getCurrentDocument()
     if isinstance(doc, CactusOutlineDocument):
         win = self.getCurrentAppWindow()
@@ -1084,7 +1088,7 @@ def saveAs_(self, sender):
 <t tx="karstenw.20160619130959.37">@objc.IBAction
 def outlineMenuExpand_(self, sender):
     if kwlog:
-        print "CactusAppDelegate.outlineMenuExpand_()"
+        print( "CactusAppDelegate.outlineMenuExpand_()" )
     ov = self.getCurrentOutlineView()
     if ov:
         ov.expandSelection_(sender)
@@ -1093,7 +1097,7 @@ def outlineMenuExpand_(self, sender):
 <t tx="karstenw.20160619130959.38">@objc.IBAction
 def outlineMenuExpandAll_(self, sender):
     if kwlog:
-        print "CactusAppDelegate.outlineMenuExpandAll_()"
+        print( "CactusAppDelegate.outlineMenuExpandAll_()" )
     ov = self.getCurrentOutlineView()
     if ov:
         ov.expandAllSelection_(sender)
@@ -1102,7 +1106,7 @@ def outlineMenuExpandAll_(self, sender):
 <t tx="karstenw.20160619130959.39">@objc.IBAction
 def outlineMenuCollapse_(self, sender):
     if kwlog:
-        print "CactusAppDelegate.outlineMenuCollapse_()"
+        print( "CactusAppDelegate.outlineMenuCollapse_()" )
     ov = self.getCurrentOutlineView()
     if ov:
         ov.collapseSelection_(sender)
@@ -1115,7 +1119,7 @@ class CactusDocumentController(NSDocumentController):
 <t tx="karstenw.20160619130959.40">@objc.IBAction
 def outlineMenuCollapseAll_(self, sender):
     if kwlog:
-        print "CactusAppDelegate.outlineMenuCollapseAll_()"
+        print( "CactusAppDelegate.outlineMenuCollapseAll_()" )
     ov = self.getCurrentOutlineView()
     if ov:
         ov.collapseAllSelection_(sender)
@@ -1124,7 +1128,7 @@ def outlineMenuCollapseAll_(self, sender):
 <t tx="karstenw.20160619130959.41">@objc.IBAction
 def outlineMenuCollapseToParent_(self, sender):
     if kwlog:
-        print "CactusAppDelegate.outlineMenuCollapseToParent_()"
+        print( "CactusAppDelegate.outlineMenuCollapseToParent_()" )
     ov = self.getCurrentOutlineView()
     if ov:
         ov.collapseToParent_(sender)
@@ -1133,7 +1137,7 @@ def outlineMenuCollapseToParent_(self, sender):
 <t tx="karstenw.20160619130959.42">@objc.IBAction
 def makeCalendar_(self, sender):
     if kwlog:
-        print "CactusAppDelegate.makeCalendar_()"
+        print( "CactusAppDelegate.makeCalendar_()" )
     MakeCalendarController().init()
 
 </t>
@@ -1143,7 +1147,7 @@ def makeCalendar_(self, sender):
 </t>
 <t tx="karstenw.20160619130959.44">def makeCalendarCurrentOrNewDoc_(self, params):
     if kwlog:
-        print "CactusAppDelegate.makeCalendarCurrentOrNewDoc_()"
+        print( "CactusAppDelegate.makeCalendarCurrentOrNewDoc_()" )
     doc = self.getCurrentDocument()
 
     if not doc:
@@ -1202,10 +1206,12 @@ def makeCalendar_(self, sender):
     
     rootNode.addChild_( calRoot )
     
-    years = cal.keys()
+    years = list( cal.keys() )
     
-    try:    years.remove('year')
-    except  Exception:  pass
+    try:
+        years.remove('year')
+    except  Exception:
+         pass
     
     years.sort()
     
@@ -1217,7 +1223,7 @@ def makeCalendar_(self, sender):
         yearNode = OutlineNode(yearString, "", calRoot, typeOutline, theRoot)
         calRoot.addChild_( yearNode )
 
-        months = monthd.keys()
+        months = list( monthd.keys() )
         months.sort()
 
         for monthNumber in months:
@@ -1228,7 +1234,7 @@ def makeCalendar_(self, sender):
             monthNode = OutlineNode(monthString, "", yearNode, typeOutline, theRoot)
             yearNode.addChild_( monthNode )
 
-            days = daysd.keys()
+            days = list( daysd.keys() )
             days.sort()
             
             currWeeks = set()
@@ -1308,7 +1314,7 @@ def init(self):
     # outline or table here
     # tables are outlines with no children
     if kwlog:
-        print "DEPRECATED CactusWindowController_OLD.init()"
+        print( "DEPRECATED CactusWindowController_OLD.init()" )
     doc = Document("Untitled", None)
     return self.initWithObject_type_(doc, typeOutline)
 
@@ -1317,7 +1323,7 @@ def init(self):
     """This controller is used for outline and table windows."""
 
     if kwlog:
-        print "DEPRECATED CactusWindowController_OLD.initWithObject_type_()"
+        print( "DEPRECATED CactusWindowController_OLD.initWithObject_type_()" )
 
     if theType == typeOutline:
         self = self.initWithWindowNibName_("OutlineEditor")
@@ -1401,7 +1407,7 @@ def init(self):
 </t>
 <t tx="karstenw.20160619130959.48">def windowWillClose_(self, notification):
     if kwlog:
-        print "DEPRECATED CactusWindowController_OLD.windowWillClose_()"
+        print( "DEPRECATED CactusWindowController_OLD.windowWillClose_()" )
     # see comment in self.initWithObject_type_()
     #
     # check model.dirty
@@ -1411,12 +1417,12 @@ def init(self):
 </t>
 <t tx="karstenw.20160619130959.49">def doubleClick_(self, sender):
     # Open a new browser window for each selected expandable item
-    print "DEPRECATED doubleClick_()"
+    print( "DEPRECATED doubleClick_()" )
 
 </t>
 <t tx="karstenw.20160619130959.5">def init(self):
     if kwlog:
-        print "CactusDocumentController.init()"
+        print( "CactusDocumentController.init()" )
     self = super( CactusDocumentController, self).init()
     self.selectedType = u"automatic"
     self.urllist = []
@@ -1474,8 +1480,8 @@ def applySettings_(self, sender):
         l = self.menRowLines.title()
         l = int(l)
         self.rowLines = l
-    except StandardError, err:
-        print "\nERROR  ---  Menu Row lines '%'" % repr(l)
+    except StandardError as err:
+        print( "\nERROR  ---  Menu Row lines '%'" % repr(l) )
         self.rowLines = 4
         self.menRowLines.setTitle_( u"4" )
 
@@ -1498,8 +1504,8 @@ def applySettings_(self, sender):
 </t>
 <t tx="karstenw.20160619130959.7">def runModalOpenPanel_forTypes_( self, panel, types ):
     if kwlog:
-        print
-        print "CactusDocumentController.runModalOpenPanel_forTypes_()",
+        print()
+        print( "CactusDocumentController.runModalOpenPanel_forTypes_()", )
     self.selectedType = "automatic"
     extensionCtrl = CactusOpenAsAccessoryController.alloc().init()
 
@@ -1512,13 +1518,13 @@ def applySettings_(self, sender):
         self.urllist = set([NSURL2str(t) for t in panel.URLs()])
     if kwlog:
         pp(result) 
-        print
+        print()
     return result
 
 </t>
 <t tx="karstenw.20160619130959.8">def makeDocumentWithContentsOfURL_ofType_error_(self, url, theType, err):
     if kwlog:
-        print "CactusDocumentController.makeDocumentWithContentsOfURL_ofType_error_()"
+        print( "CactusDocumentController.makeDocumentWithContentsOfURL_ofType_error_()" )
 
     if self.selectedType != "automatic" and len(self.urllist) &gt; 0:
         u = NSURL2str( url )
@@ -1706,6 +1712,8 @@ class CancelledException(CactusBaseException):
 <t tx="karstenw.20160619131110.1">
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 
 """
 """
@@ -1765,13 +1773,13 @@ OutlineNode = CactusOutlineNode.OutlineNode
 </t>
 <t tx="karstenw.20160619131110.2">def openOPML_(rootOPML):
     if kwlog:
-        print "openOPML_()"
+        print( "openOPML_()" )
     return openOPML_withURLTag_(rootOPML, False)
 
 </t>
 <t tx="karstenw.20160619131110.3">def openOPML_withURLTag_(rootOPML, urltag):
     if kwlog:
-        print "CactusFileOpeners.openOPML_withURLTag_()"
+        print( "CactusFileOpeners.openOPML_withURLTag_()" )
     """This builds the node tree and returns the root node."""
 
     defaults = NSUserDefaults.standardUserDefaults()
@@ -1901,8 +1909,8 @@ OutlineNode = CactusOutlineNode.OutlineNode
             if len(children) &gt; 0:
                 try:
                     getChildrenforNode( node, children, root )
-                except Exception, err:
-                    print err
+                except Exception as err:
+                    print( err )
                     pp(children)
                     pp(item)
     #title = os
@@ -1915,7 +1923,7 @@ OutlineNode = CactusOutlineNode.OutlineNode
         s = repr(rootXML)
         if len(s) &gt; 90:
             s = s[:91]
-        print "openXML_( %s )" % s
+        print( "openXML_( %s )" % s )
 
     """This builds the node tree and returns the root node."""
 
@@ -1944,13 +1952,13 @@ OutlineNode = CactusOutlineNode.OutlineNode
 
             try:
                 newnode = OutlineNode(name, content, node, typeOutline, root)
-            except Exception, err:
-                print "\n\nERROR in openXML_()"
+            except Exception as err:
+                print( "\n\nERROR in openXML_()" )
                 tb = unicode(traceback.format_exc())
-                print err
-                print
-                print tb
-                print
+                print( err )
+                print()
+                print( tb )
+                print()
 
             if txt != "":
                 newnode.setComment_( txt )
@@ -1958,9 +1966,9 @@ OutlineNode = CactusOutlineNode.OutlineNode
             node.addChild_( newnode )
             try:
                 n = len(childs)
-            except Exception, err:
-                print
-                print err
+            except Exception as err:
+                print()
+                print( err )
             if len(childs) &gt; 0:
                 getChildrenforNode(newnode, childs, root)
             newnode.release()
@@ -1994,23 +2002,23 @@ OutlineNode = CactusOutlineNode.OutlineNode
 
     try:
         n = len(children)
-    except Exception, err:
-        print "CactusFileOpeners.openXML_() ERROR"
-        print "childen has no length attribute!"
-        print type(children)
-        print err
+    except Exception as err:
+        print( "CactusFileOpeners.openXML_() ERROR" )
+        print( "childen has no length attribute!" )
+        print( type(children) )
+        print( err )
 
 
     if n &gt; 0:
         try:
             getChildrenforNode( node, children, root )
-        except Exception, err:
-            print "\n\nERROR in openXML_()"
+        except Exception as err:
+            print( "\n\nERROR in openXML_()" )
             tb = unicode(traceback.format_exc())
-            print err
-            print
-            print tb
-            print
+            print( err )
+            print()
+            print( tb )
+            print()
             # pp(children)
     #title = os
     return root, CactusXMLType
@@ -2025,7 +2033,7 @@ OutlineNode = CactusOutlineNode.OutlineNode
         s = repr(url)
         if len(s) &gt; 90:
             s = s[:91]
-        print "openRSS_( %s )" % repr(s)
+        print( "openRSS_( %s )" % repr(s) )
     d = feedparser.parse( url, agent=CactusVersion.user_agent )
 
     # make basic nodes
@@ -2063,9 +2071,9 @@ OutlineNode = CactusOutlineNode.OutlineNode
             v = d.feed[k]
             if type(v) in (list,):
                 if len(v) &gt; 1:
-                    print "Large header list"
-                    print k
-                    print repr(v)
+                    print( "Large header list" )
+                    print( k )
+                    print( repr(v) )
                 elif len(v) == 1:
                     v = v[0]
 
@@ -2081,11 +2089,11 @@ OutlineNode = CactusOutlineNode.OutlineNode
                 else:
                     # if k in ('',)
                     if 1:
-                        print "ATTENTION RSS Head values"
-                        print "KEY:", k
-                        print "TYPE:", type(v)
-                        print "REPR:", repr(v)
-                        print
+                        print( "ATTENTION RSS Head values" )
+                        print( "KEY:", k )
+                        print( "TYPE:", type(v) )
+                        print( "REPR:", repr(v) )
+                        print()
                     v = repr(v)
             node = OutlineNode(k, v, head, typeOutline, root)
             head.addChild_( node )
@@ -2194,7 +2202,7 @@ OutlineNode = CactusOutlineNode.OutlineNode
     value = ""
     valueTypeName = ""
     if valueType == bool:
-        # print "BOOLVALUE: '%s' --&gt; '%s'" % (repr(nsvalue), repr(bool(nsvalue)) )
+        # print( "BOOLVALUE: '%s' --&gt; '%s'" % (repr(nsvalue), repr(bool(nsvalue)) ) )
         value = repr(bool(nsvalue))
         valueTypeName = [ ('cactusNodeType', "bool") ]
 
@@ -2213,8 +2221,8 @@ OutlineNode = CactusOutlineNode.OutlineNode
         value = unicode(nsvalue.description())
         valueTypeName = [ ('cactusNodeType', "string") ]
     else:
-        print "BOGATIVE VALUE TYPE:", repr(valueType)
-        print
+        print( "BOGATIVE VALUE TYPE:", repr(valueType) )
+        print()
     return value, valueTypeName
 
 
@@ -2232,7 +2240,7 @@ def openIML_( nsdict ):
         s = repr(nsdict)
         if len(s) &gt; 90:
             s = s[:91]
-        print "openPLIST_( %s )" % s
+        print( "openPLIST_( %s )" % s )
 
     """This builds the node tree and returns the root node."""
 
@@ -2285,7 +2293,7 @@ def openIML_( nsdict ):
             # itemName = u"%s - %s" % (trackAlbum, trackName)
             itemName = trackName
 
-            # print repr(itemName)
+            # print( repr(itemName) )
             trackNode.setName_( itemName )
             trackNode.setValue_( trackAttributes )
             trackNode.setMaxLineHeight()
@@ -2297,8 +2305,8 @@ def openIML_( nsdict ):
                 if i % 100000 == 0:
                     sys.stdout.write('\n')
                     sys.stdout.flush()
-        print
-        print "%i Tracks." % i
+        print()
+        print( "%i Tracks." % i )
         return id_trackname
 
     def makePlaylistNode( name, curPlaylist, value, parent, root, type_):
@@ -2442,10 +2450,10 @@ def openIML_( nsdict ):
                     if i % 100000 == 0:
                         sys.stdout.write('\n')
                         sys.stdout.flush()
-            print
-            print "%s has %i Playlist Items." % (repr(playlistName), j)
-        print
-        print "A total of %i Playlist Items." % i
+            print()
+            print( "%s has %i Playlist Items." % (repr(playlistName), j) )
+        print()
+        print( "A total of %i Playlist Items." % i )
 
 
     def dispatchLevel( nsdict, parent, root, progressCount ):
@@ -2523,7 +2531,7 @@ def openPLIST_( nsdict ):
         s = repr(nsdict)
         if len(s) &gt; 90:
             s = s[:91]
-        print "openPLIST_( %s )" % s
+        print( "openPLIST_( %s )" % s )
 
     """This builds the node tree and returns the root node."""
 
@@ -2582,7 +2590,7 @@ def openPLIST_( nsdict ):
             node = OutlineNode(itemName, "", parent, typeOutline, root)
 
             if valueType == bool:
-                # print "BOOLVALUE: '%s' --&gt; '%s'" % (repr(nsvalue), repr(bool(nsvalue)) )
+                # print( "BOOLVALUE: '%s' --&gt; '%s'" % (repr(nsvalue), repr(bool(nsvalue)) ) )
                 value = repr(bool(nsvalue))
                 node.setValue_( [ ('cactusNodeType', "bool") ] )
 
@@ -2609,8 +2617,8 @@ def openPLIST_( nsdict ):
                 value = unicode(nsvalue.description())
                 node.setValue_( [ ('cactusNodeType', "string") ] )
             else:
-                print "BOGATIVE VALUE TYPE:", repr(valueType)
-                print
+                print( "BOGATIVE VALUE TYPE:", repr(valueType) )
+                print()
 
             node.setComment_( value )
             parent.addChild_(node)
@@ -2668,6 +2676,9 @@ if __name__ == "__main__":
 
 </t>
 <t tx="karstenw.20160619131155.1"># -*- coding: utf-8 -*-
+
+from __future__ import print_function
+
 
 """
 """
@@ -2730,7 +2741,7 @@ import CactusOutlineDoc
         yield current
         while current &lt; stoptime:
             current += delta
-            # print "CURRENT:", current
+            # print( "CURRENT:", current )
             yield current
 
 </t>
@@ -2890,6 +2901,9 @@ def Cancel_(self, sender):
 </t>
 <t tx="karstenw.20160619131158.1"># -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
+
 """
 """
 
@@ -2974,8 +2988,8 @@ def __new__(cls):
     self.noOfRecentURLs = 40
     try:
         self.noOfRecentURLs = int(defaults.objectForKey_( u'txtNoOfRecentURLs'))
-    except StandardError, err:
-        print "ERROR reading defaults.", repr(err)
+    except StandardError as err:
+        print( "ERROR reading defaults.", repr(err) )
 
     # cap recentURLs to max size
     if len(self.visitedURLs) &gt; self.noOfRecentURLs:
@@ -9250,10 +9264,6 @@ class TableWindowController(AutoBaseClass):
 @tabwidth -4
 @others
 </t>
-<t tx="karstenw.20160619131542.1">@language python
-@tabwidth -4
-@others
-</t>
 <t tx="karstenw.20160619131549.1"># UNUSED
 class CactusTableNode(NSObject):
     @others
@@ -9290,659 +9300,6 @@ class CactusTableNode(NSObject):
     self.setMaxLineHeight()
 
     self.retain</t>
-<t tx="karstenw.20160619131552.1">
-# -*- coding: utf-8 -*-
-
-
-"""Some tools which are needed by most files.
-"""
-
-import sys
-import os
-
-import traceback
-
-import time
-import datetime
-import unicodedata
-
-import struct
-
-import mactypes
-import appscript
-asc = appscript
-import Finder10
-
-import CactusVersion
-kwdbg = CactusVersion.developmentversion
-kwlog = CactusVersion.developmentversion
-
-import pdb
-
-import re
-import requests
-import urllib
-import urllib2
-import urlparse
-import StringIO
-import gzip
-
-import CactusDocumentTypes
-CactusOPMLType = CactusDocumentTypes.CactusOPMLType
-CactusRSSType = CactusDocumentTypes.CactusRSSType
-CactusXMLType = CactusDocumentTypes.CactusXMLType
-CactusHTMLType = CactusDocumentTypes.CactusHTMLType
-CactusPLISTType = CactusDocumentTypes.CactusPLISTType
-CactusIMLType = CactusDocumentTypes.CactusIMLType
-
-CactusDocumentTypesSet = CactusDocumentTypes.CactusDocumentTypesSet
-CactusDocumentXMLBasedTypesSet = CactusDocumentTypes.CactusDocumentXMLBasedTypesSet
-
-import CactusXMLProperties
-re_bogusCharacters = CactusXMLProperties.re_bogusCharacters
-
-import feedparser
-
-import objc
-
-import Foundation
-NSURL = Foundation.NSURL
-NSFileManager = Foundation.NSFileManager
-NSUserDefaults = Foundation.NSUserDefaults
-NSString = Foundation.NSString
-
-import AppKit
-NSOpenPanel = AppKit.NSOpenPanel
-NSAlert = AppKit.NSAlert
-NSSavePanel = AppKit.NSSavePanel
-NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
-
-
-
-</t>
-<t tx="karstenw.20160619131552.10">def errorDialog( message="Error", title="Some error occured..."):
-    return cancelContinueAlert(title, message)
-
-
-
-</t>
-<t tx="karstenw.20160619131552.11">#
-# should be obsolete
-#
-
-#
-# Open File
-#
-def getFileDialog(multiple=False):
-    panel = NSOpenPanel.openPanel()
-    panel.setCanChooseFiles_(True)
-    panel.setCanChooseDirectories_(False)
-    panel.setAllowsMultipleSelection_(multiple)
-    rval = panel.runModalForTypes_( None )
-    if rval:
-        return [t for t in panel.filenames()]
-    return []
-
-
-</t>
-<t tx="karstenw.20160619131552.12">def getFolderDialog(multiple=False):
-    panel = NSOpenPanel.openPanel()
-    panel.setCanChooseFiles_(False)
-    panel.setCanChooseDirectories_(True)
-    panel.setAllowsMultipleSelection_(multiple)
-    rval = panel.runModalForTypes_([])
-    if rval:
-        return [t for t in panel.filenames()]
-    return []
-
-
-</t>
-<t tx="karstenw.20160619131552.13">def NSURL2str( nsurl ):
-    if isinstance(nsurl, NSURL):
-        return str(nsurl.absoluteString())
-    return nsurl
-
-</t>
-<t tx="karstenw.20160619131552.14">#
-# File save dialog
-#
-# SHOULD NOT BE USED ANYMORE (NSDocument handling)
-def saveAsDialog(path):
-    panel = NSSavePanel.savePanel()
-
-    if path:
-        panel.setDirectory_( path )
-
-    panel.setMessage_( u"Save as OPML" )
-    panel.setExtensionHidden_( False )
-    panel.setCanSelectHiddenExtension_(True)
-    panel.setRequiredFileType_( u"opml" )
-    if path:
-        if not os.path.isdir( path ):
-            folder, fle = os.path.split(path)
-        else:
-            folder = path
-            fle = "Untitled.opml"
-        rval = panel.runModalForDirectory_file_(folder, fle)
-    else:
-        rval = panel.runModal()
-
-    if rval == NSFileHandlingPanelOKButton:
-        return panel.filename()
-    return False
-
-
-</t>
-<t tx="karstenw.20160619131552.15">def getFileProperties( theFile ):
-    """
-    """
-    sfm = NSFileManager.defaultManager()
-    props = sfm.fileAttributesAtPath_traverseLink_( theFile, True )
-    if not props:
-        return {}
-    mtprops = props.mutableCopy()
-    mtprops.removeObjectsForKeys_( [
-        u"NSFileExtensionHidden",
-        u"NSFileGroupOwnerAccountID",
-        u"NSFileGroupOwnerAccountName",
-        u"NSFileOwnerAccountID",
-        u"NSFileOwnerAccountName",
-        #u"NSFilePosixPermissions",
-        #u"NSFileReferenceCount",
-        # u"NSFileSize",
-        #u"NSFileSystemFileNumber",
-        u"NSFileSystemNumber",
-        u"NSFileType",
-        # u"NSFileHFSCreatorCode",
-        # u"NSFileHFSTypeCode",
-        #u"NSFileCreationDate"
-        ] )
-    return mtprops
-
-</t>
-<t tx="karstenw.20160619131552.16">def setFileProperties( theFile, props ):
-    sfm = NSFileManager.defaultManager()
-    return sfm.changeFileAttributes_atPath_( props, theFile )
-
-</t>
-<t tx="karstenw.20160619131552.17">def datestring_nsdate( dt=datetime.datetime.now() ):
-    now = str(dt)
-    now = now[:19]
-    now = now + " +0000"
-    return now
-
-
-</t>
-<t tx="karstenw.20160619131552.18">def getDownloadFolder( nsurl ):
-    defaults = NSUserDefaults.standardUserDefaults()
-    cacheFolder = CactusVersion.cachefolder
-    try:
-        cacheFolder = unicode(defaults.objectForKey_( u'txtCacheFolder'))
-    except StandardError, err:
-        print "CactusTools.getDownloadFolder(%s) -&gt; False" % NSURL2str(nsurl)
-        print "ERROR reading defaults.", repr(err)
-
-    cacheFolder = os.path.expanduser( cacheFolder )
-
-    # parent folder must exists; minimal plausibility
-    parent, foldername = os.path.split( cacheFolder )
-    if not os.path.exists( parent ):
-        print "CactusTools.getDownloadFolder(%s) -&gt; False" % NSURL2str(nsurl)
-        return False, False
-
-    if not os.path.exists(cacheFolder):
-        os.makedirs( cacheFolder )
-    #
-    localpath = makeunicode( nsurl.relativePath() )
-    s = nsurl.absoluteString()
-    if '#' in s:
-        n = s.count( '/' )
-        if n &gt;= 3:
-            l = s.split( '/' )
-            filename = l[-1]
-            filename = urllib.unquote( filename )
-            base , fname = os.path.split( localpath )
-
-            localpath = os.path.join( base, filename )
-
-    if localpath.startswith( u'/' ):
-        localpath = localpath[1:]
-    localpath = os.path.join( makeunicode(nsurl.host()), localpath)
-
-    if localpath:
-        localrelfolder, localname = os.path.split( localpath )
-        localpath = os.path.join( cacheFolder, localpath )
-        if kwdbg:
-            print "CactusTools.getDownloadFolder(%s) -&gt; %s" % (NSURL2str(nsurl), repr(localpath) )
-        return localpath, localname
-    return False, False
-
-
-</t>
-<t tx="karstenw.20160619131552.19">def getRemotefilemodificationDate( url ):
-
-    try:
-        f = urllib.urlopen( url )
-    except IOError, err:
-        print "ERROR: Could not open url (%s) for date reading." % url
-        return False
-
-    rinfo = f.info()
-    f.close()
-
-    remotemodfdate = rinfo.getdate('last-modified')
-    if remotemodfdate:
-        try:
-            rmodfdate = datetime.datetime( *remotemodfdate[:6] )
-            #rmodfdate = datetime.datetime( *rinfo.getdate('last-modified')[:6] )
-        except TypeError, err:
-            print "Could not get remote file(%s) modification date." % url
-            return False
-        return rmodfdate
-    return False
-
-</t>
-<t tx="karstenw.20160619131552.2">#
-# tools
-#
-
-def num2ostype( num ):
-    if num == 0:
-        return '????'
-    s = struct.pack("&gt;I", num)
-    return makeunicode(s, "macroman")
-
-
-</t>
-<t tx="karstenw.20160619131552.20">def setFileModificationDate( filepath, modfdt ):
-    l = getFileProperties( filepath )
-    date = Foundation.NSDate.dateWithString_( datestring_nsdate( modfdt ) )
-    l['NSFileModificationDate'] = date
-    setFileProperties( filepath, l)
-    folder, filename = os.path.split( filepath )
-    print "Setting file(%s) modification date to %s" % (filename, repr(modfdt))
-
-
-</t>
-<t tx="karstenw.20160619131552.21">def cache_url( nsurl, fileextension ):
-    if 1:
-        print "CactusTools.cache_url( %s, %s )" % (nsurl, fileextension)
-
-    if not nsurl:
-        return False
-
-    returnURL = nsurl
-    url = NSURL2str( nsurl )
-
-    try:
-        localpath, localname = getDownloadFolder(nsurl)
-
-        # perhaps we are not caching
-        if not localpath:
-            return nsurl
-
-        if not localpath.endswith(localname):
-            localfullpath = os.path.join(localpath, localname)
-
-        folder, filename = os.path.split( localpath )
-        if not os.path.exists(folder):
-            os.makedirs( folder )
-
-        dodownload = False
-        if os.path.exists( localpath ):
-            # file already downloaded; perhaps set file modification date
-            lmodfdate = os.stat( localpath ).st_mtime
-            lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
-            rmodfdate = getRemotefilemodificationDate( url )
-
-            if not rmodfdate:
-                # remote modification date could not be determined
-                pass
-            elif rmodfdate and rmodfdate &lt; lmodfdate:
-                setFileModificationDate( localpath, rmodfdate )
-            elif rmodfdate and rmodfdate == lmodfdate:
-                pass
-            else:
-                dodownload = True
-        else:
-            dodownload = True
-
-        if dodownload:
-            #
-            if os.path.isdir( localpath ):
-                if not localname:
-                    localname = "file"
-                    localpath = os.path.join( localpath, localname + "." + fileextension )
-
-            if fileextension:
-                if not localpath.lower().endswith( "." + fileextension.lower() ):
-                    localpath = localpath + '.' + fileextension
-
-            print "LOAD: %s..." % url
-            headers = {}
-            r = requests.get( url )
-            s = r.content
-            headers = r.headers
-            r.close()
-            fob = open(localpath, 'w')
-            fob.write( s )
-            fob.close()
-            
-            dts = feedparser._parse_date( headers.get( 'last-modified', '' ) )
-            dt = datetime.datetime.fromtimestamp(time.mktime( dts ))
-
-            try:
-                finder = asc.app(u'Finder.app', terms=Finder10)
-                hfspath = mactypes.File( localpath ).hfspath
-                finder.files[hfspath].comment.set( url )
-            except StandardError, v:
-                print "SET COMMENT FAILED ON '%s'" % localpath
-            # get file date
-            lmodfdate = os.stat( localpath ).st_mtime
-            lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
-            try:
-                # rmodfdate = datetime.datetime( *headers.getdate('last-modified')[:6] )
-                # setFileModificationDate( localpath, rmodfdate )
-                setFileModificationDate( localpath, dt )
-            except TypeError as err:
-                # do not cache if modification date cannot be determined
-                print "NOCACHE: Could not get remote file(%s) modification date." % url
-                print( err )
-            print "LOAD: %s...done" % url
-            print "LOCAL:", repr(localpath)
-
-        returnURL = NSURL.fileURLWithPath_( unicode(localpath) )
-
-    except Exception, err:
-        tb = unicode(traceback.format_exc())
-        print tb
-        print
-
-    return returnURL
-
-</t>
-<t tx="karstenw.20160619131552.22">def mergeURLs( base, rel ):
-    """create an url with base as the base, updated by existing parts of rel."""
-    s = u"CactusTools.mergeURLs(%s, %s) -&gt;  %s"
-
-    prel = urlparse.urlparse( rel )
-    if prel.scheme and prel.netloc:
-        return prel.geturl()
-
-    if type(base) in (NSURL,):
-        base = NSURL2str(base)
-    
-    # it's a relative path
-
-    pbase = urlparse.urlparse( base )
-
-    path = pbase.path
-    folder, filename = os.path.split( path )
-    basename, ext = os.path.splitext( filename )
-    if ext != "" and path[-1] != '/':
-        path = os.path.join(folder, rel)
-    else:
-        path = os.path.join(path, rel)
-    
-
-    target = urlparse.ParseResult(
-        scheme = pbase.scheme,
-        netloc = pbase.netloc,
-        path = path,
-        params = prel.params if (prel.params) else pbase.params,
-        query = prel.query if (prel.query) else pbase.query,
-        fragment = prel.fragment if (prel.fragment) else pbase.fragment)
-
-    target = urlparse.urlunparse( target )
-    try:
-        s = s % ( base, rel, target)
-        print s.encode("utf-8")
-    except Exception, err:
-        print
-        print "ERROR in mergeURL"
-        print err
-        print "base:", repr(base)
-        print "rel:", repr(rel)
-        print "target:", repr(target)
-        print
-    return target
-
-
-</t>
-<t tx="karstenw.20160619131552.23">def getURLExtension( url ):
-    purl = urlparse.urlparse( url )
-    path = purl.path
-    folder, filename = os.path.split( path )
-    basename, ext = os.path.splitext( filename )
-    if kwdbg:
-        print "CactusTools.getURLExtension(%s) -&gt; '%s' . '%s'" % ( url, basename, ext )
-    return (basename, ext)
-</t>
-<t tx="karstenw.20160619131552.3">def ostype2num( ostype ):
-    return struct.pack('BBBB', list(ostype))
-
-
-</t>
-<t tx="karstenw.20160619131552.4">def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
-    try:
-        if type(s) not in (unicode, objc.pyobjc_unicode):
-            s = unicode(s, srcencoding)
-    except TypeError:
-        print "makeunicode type conversion error"
-        print "FAILED converting", type(s), "to unicode"
-    s = unicodedata.normalize(normalizer, s)
-    return s
-
-
-
-
-</t>
-<t tx="karstenw.20160619131552.5">def detectFileTypeAtURL( nsfileurl ):
-    """Not yet sure how to autodetect without reading some files twice.
-
-    So far the parsers used are:
-        OPML: cElementTree (opens string)
-        RSS: feedparser (opens string)
-        XML: cElementTree (opens string)
-        HTML: lxml (opens URL)
-        PLIST: NSDictionary.dictionaryWithContentsOfURL_ (opens URL)
-    """
-    pass
-
-
-</t>
-<t tx="karstenw.20160619131552.6">def detectFileTypeLocalFile( path ):
-    # this needs to be checked against the binary string
-    xmlre = re.compile( r'''^&lt;?xml\s+version\s*="1.0"\s+encoding\s*=\s*"''' )
-
-
-
-
-</t>
-<t tx="karstenw.20160619131552.7">def readURL( nsurl, type_="" ):
-    """Read a file. May be local, may be http"""
-    url = NSURL2str(nsurl)
-    if kwlog:
-        print "CactusTools.readURL( '%s', '%s' )" % (url, type_)
-
-
-    translateType = {
-        CactusOPMLType: "opml",
-        CactusHTMLType: "html",
-        CactusXMLType: "xml",
-        CactusRSSType: "rss",
-        CactusPLISTType: "plist",
-        CactusIMLType: "xml"
-    }
-
-    fileext = translateType.get( type_, ".bin")
-
-    defaults = NSUserDefaults.standardUserDefaults()
-    cache = False
-    try:
-        cache = bool(defaults.objectForKey_( u'optCache'))
-    except StandardError, err:
-        print "ERROR reading defaults.", repr(err)
-    
-    if cache:
-        if not nsurl.isFileURL():
-            nsurl = cache_url(nsurl, fileext)
-
-    url = NSURL2str(nsurl)
-
-    r = requests.get( url )
-    s = r.content
-    headers = r.headers
-    r.close()
-
-    # check for gzip compressed opml file
-    # pdb.set_trace()
-    try:
-        if len(s) &gt; 2:
-            if ord(s[0]) == 0x1f:
-                if ord(s[1]) == 0x8b:
-                    unzipped = gzip.GzipFile( fileobj=StringIO.StringIO(s) ).read()
-                    s = unzipped
-    except Exception:
-        pass
-
-    if type_ == CactusOPMLType:
-        # this is a quick &amp; dirty approach and should be applied much more carefully
-        # than it is now... perhaps those errors get corrected and &lt;directivecache&gt;
-        # will be a propper node.
-
-        # clean up bogative xml declaration. OPML-Editor, I'm looking at you...
-        if s.startswith("""&lt;?xml encoding="ISO-8859-1" version="1.0"?&gt;"""):
-            s = s.replace("""&lt;?xml encoding="ISO-8859-1" version="1.0"?&gt;""",
-                          """&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;""")
-
-            if kwlog:
-                print "\nBOGUS XML DELARATION REPLACED\n"
-
-        # this error occurs up until now only combined with the previous one
-        if "&lt;directiveCache&gt;" in s:
-            s = s.replace( "&lt;directiveCache&gt;", "&lt;/outline&gt;")
-            if kwlog:
-                print "\nBOGUS &lt;directiveCache&gt; XML TAG REPLACED\n"
-
-        #
-        # opmleditor rules error
-        #
-        startrule = """text="&amp;lt;rules &lt;"""
-        endrule = """&amp;gt;"&gt;"""
-
-        if startrule in s:
-            n = s.count(startrule)
-            if kwlog:
-                print "BOGUS OPML RULE SECTION: %i SUBSTITUTIONS" % n
-            idx = s1 = s2 = 0
-            for i in range(1, n+1):
-                # get location o next start- ans endrule
-                s1 = s.find( startrule,s2 )
-                s2 = s.find( endrule, s1 )
-                s2 = s2 + len(endrule)
-
-                # save stuff before, location and after bogative rule
-                pre = s[:s1]
-                defectiveSnippet = s[s1:s2]
-                post = s[s2:]
-
-                if kwlog:
-                    print "\nOLD", repr(defectiveSnippet)
-
-                # clear out false markers
-                defectiveSnippet = defectiveSnippet.replace( startrule, "&lt;")
-                defectiveSnippet = defectiveSnippet.replace( endrule, "")
-
-                defectiveSnippet = defectiveSnippet.replace( '&lt;', "&amp;lt;")
-                defectiveSnippet = defectiveSnippet.replace( '&gt;', "&amp;gt;")
-                defectiveSnippet = defectiveSnippet.replace( '"', "&amp;quot;")
-
-                # restore start and end
-                defectiveSnippet = 'text="' + defectiveSnippet + '"&gt;'
-
-                # advance pointer
-                s2 = len(pre) + len(defectiveSnippet)
-
-                # restore s
-                s = pre + defectiveSnippet + post
-
-                if kwlog:
-                    print "\nNEW", repr(defectiveSnippet)
-
-    if type_ in CactusDocumentXMLBasedTypesSet:
-        # this apllies to all since cactus currently only reads xml files
-        if s.startswith("&lt;?xml ") or s.startswith("&lt;opml") or s.startswith("&lt;rss"):
-            re_bogusCharacters = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f]')
-
-            # TBD: perhaps an effort to preserve the replaced character should be made here
-            # use urlescape
-            t = re.sub( re_bogusCharacters, "???", s)
-            if s != t:
-                print "Bogus characters in XML..."
-            s = t
-    return s
-
-
-</t>
-<t tx="karstenw.20160619131552.8"># UNUSED
-def classifyAndReadUrl( url ):
-    """TBD
-
-    Read in an URL and try to classify it as opml, bogative opml, rss, xml.
-    """
-
-    s = readURL( url )
-
-    # check for bogative OPML editor xml declaration
-    bogus = re.compile( """&lt;?xml encoding=["']ISO-8859-1["'] version=["']1.0["']?&gt;""" )
-    if s.startswith("""&lt;?xml encoding="ISO-8859-1" version="1.0"?&gt;"""):
-        pass
-
-
-    # the type should be determinable within the first 250 bytes
-    checkpart = s[:250]
-
-    xmlre = re.compile( "^&lt;?xml\W+version" )
-    rspre = re.compile( "&lt;reallySimplePhoto" )
-    opmlre = re.compile( "&lt;opml version" )
-
-    if checkpart.startswith( "&lt;?xml version" ):
-        pass
-        # we have a xml based document
-
-    if checkpart.startswith( "&lt;?xml version" ):
-        pass
-        # check for opml
-        # check for rss
-
-
-</t>
-<t tx="karstenw.20160619131552.9">#
-# dialogs
-#
-def cancelContinueAlert(title, message, butt1="OK", butt2=False):
-    """Run a generic Alert with buttons "Weiter" &amp; "Abbrechen".
-
-       Returns True if "Weiter"; False otherwise
-    """
-    alert = NSAlert.alloc().init()
-    alert.setAlertStyle_( 0 )
-    alert.setInformativeText_( title )
-    alert.setMessageText_( message )
-    alert.setShowsHelp_( False )
-    alert.addButtonWithTitle_( butt1 )
-
-    if butt2:
-        # button 2 has keyboard equivalent "Escape"
-        button2 = alert.addButtonWithTitle_( butt2 )
-        button2.setKeyEquivalent_( unichr(27) )
-
-    f = alert.runModal()
-    return f == AppKit.NSAlertFirstButtonReturn
-
-
-</t>
 <t tx="karstenw.20160619131607.1">@language python
 @tabwidth -4
 @others
@@ -11279,5 +10636,694 @@ edit:
 <t tx="karstenw.20160619192849.1"></t>
 <t tx="karstenw.20160619193218.1"></t>
 <t tx="karstenw.20160619200133.1"></t>
+<t tx="karstenw.20220912113705.1">@language python
+@tabwidth -4
+@others
+</t>
+<t tx="karstenw.20220912113721.1">
+# -*- coding: utf-8 -*-
+
+from __future__ import print_function
+
+
+"""Some tools which are needed by most files.
+"""
+
+import sys
+import os
+
+import traceback
+
+import time
+import datetime
+import unicodedata
+
+import struct
+
+import mactypes
+import appscript
+asc = appscript
+import Finder10
+
+import CactusVersion
+kwdbg = CactusVersion.developmentversion
+kwlog = CactusVersion.developmentversion
+
+import pdb
+
+import re
+import requests
+import urllib
+import urllib2
+import urlparse
+import StringIO
+import gzip
+
+import CactusDocumentTypes
+CactusOPMLType = CactusDocumentTypes.CactusOPMLType
+CactusRSSType = CactusDocumentTypes.CactusRSSType
+CactusXMLType = CactusDocumentTypes.CactusXMLType
+CactusHTMLType = CactusDocumentTypes.CactusHTMLType
+CactusPLISTType = CactusDocumentTypes.CactusPLISTType
+CactusIMLType = CactusDocumentTypes.CactusIMLType
+
+CactusDocumentTypesSet = CactusDocumentTypes.CactusDocumentTypesSet
+CactusDocumentXMLBasedTypesSet = CactusDocumentTypes.CactusDocumentXMLBasedTypesSet
+
+import CactusXMLProperties
+re_bogusCharacters = CactusXMLProperties.re_bogusCharacters
+
+import feedparser
+
+import objc
+
+import Foundation
+NSURL = Foundation.NSURL
+NSFileManager = Foundation.NSFileManager
+NSUserDefaults = Foundation.NSUserDefaults
+NSString = Foundation.NSString
+
+import AppKit
+NSOpenPanel = AppKit.NSOpenPanel
+NSAlert = AppKit.NSAlert
+NSSavePanel = AppKit.NSSavePanel
+NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
+
+
+
+#
+# tools
+#
+
+</t>
+<t tx="karstenw.20220912113721.10">def errorDialog( message="Error", title="Some error occured..."):
+    return cancelContinueAlert(title, message)
+
+
+
+#
+# should be obsolete
+#
+
+#
+# Open File
+#
+</t>
+<t tx="karstenw.20220912113721.11">def getFileDialog(multiple=False):
+    panel = NSOpenPanel.openPanel()
+    panel.setCanChooseFiles_(True)
+    panel.setCanChooseDirectories_(False)
+    panel.setAllowsMultipleSelection_(multiple)
+    rval = panel.runModalForTypes_( None )
+    if rval:
+        return [t for t in panel.filenames()]
+    return []
+
+
+</t>
+<t tx="karstenw.20220912113721.12">def getFolderDialog(multiple=False):
+    panel = NSOpenPanel.openPanel()
+    panel.setCanChooseFiles_(False)
+    panel.setCanChooseDirectories_(True)
+    panel.setAllowsMultipleSelection_(multiple)
+    rval = panel.runModalForTypes_([])
+    if rval:
+        return [t for t in panel.filenames()]
+    return []
+
+
+</t>
+<t tx="karstenw.20220912113721.13">def NSURL2str( nsurl ):
+    if isinstance(nsurl, NSURL):
+        return str(nsurl.absoluteString())
+    return nsurl
+
+#
+# File save dialog
+#
+# SHOULD NOT BE USED ANYMORE (NSDocument handling)
+</t>
+<t tx="karstenw.20220912113721.14">def saveAsDialog(path):
+    panel = NSSavePanel.savePanel()
+
+    if path:
+        panel.setDirectory_( path )
+
+    panel.setMessage_( u"Save as OPML" )
+    panel.setExtensionHidden_( False )
+    panel.setCanSelectHiddenExtension_(True)
+    panel.setRequiredFileType_( u"opml" )
+    if path:
+        if not os.path.isdir( path ):
+            folder, fle = os.path.split(path)
+        else:
+            folder = path
+            fle = "Untitled.opml"
+        rval = panel.runModalForDirectory_file_(folder, fle)
+    else:
+        rval = panel.runModal()
+
+    if rval == NSFileHandlingPanelOKButton:
+        return panel.filename()
+    return False
+
+
+</t>
+<t tx="karstenw.20220912113721.15">def getFileProperties( theFile ):
+    """
+    """
+    sfm = NSFileManager.defaultManager()
+    props = sfm.fileAttributesAtPath_traverseLink_( theFile, True )
+    if not props:
+        return {}
+    mtprops = props.mutableCopy()
+    mtprops.removeObjectsForKeys_( [
+        u"NSFileExtensionHidden",
+        u"NSFileGroupOwnerAccountID",
+        u"NSFileGroupOwnerAccountName",
+        u"NSFileOwnerAccountID",
+        u"NSFileOwnerAccountName",
+        #u"NSFilePosixPermissions",
+        #u"NSFileReferenceCount",
+        # u"NSFileSize",
+        #u"NSFileSystemFileNumber",
+        u"NSFileSystemNumber",
+        u"NSFileType",
+        # u"NSFileHFSCreatorCode",
+        # u"NSFileHFSTypeCode",
+        #u"NSFileCreationDate"
+        ] )
+    return mtprops
+
+</t>
+<t tx="karstenw.20220912113721.16">def setFileProperties( theFile, props ):
+    sfm = NSFileManager.defaultManager()
+    return sfm.changeFileAttributes_atPath_( props, theFile )
+
+</t>
+<t tx="karstenw.20220912113721.17">def datestring_nsdate( dt=datetime.datetime.now() ):
+    now = str(dt)
+    now = now[:19]
+    now = now + " +0000"
+    return now
+
+
+</t>
+<t tx="karstenw.20220912113721.18">def getDownloadFolder( nsurl ):
+    defaults = NSUserDefaults.standardUserDefaults()
+    cacheFolder = CactusVersion.cachefolder
+    try:
+        cacheFolder = unicode(defaults.objectForKey_( u'txtCacheFolder'))
+    except StandardError, err:
+        print( "CactusTools.getDownloadFolder(%s) -&gt; False" % NSURL2str(nsurl) )
+        print( "ERROR reading defaults.", repr(err) )
+
+    cacheFolder = os.path.expanduser( cacheFolder )
+
+    # parent folder must exists; minimal plausibility
+    parent, foldername = os.path.split( cacheFolder )
+    if not os.path.exists( parent ):
+        print( "CactusTools.getDownloadFolder(%s) -&gt; False" % NSURL2str(nsurl) )
+        return False, False
+
+    if not os.path.exists(cacheFolder):
+        os.makedirs( cacheFolder )
+    #
+    localpath = makeunicode( nsurl.relativePath() )
+    s = nsurl.absoluteString()
+    if '#' in s:
+        n = s.count( '/' )
+        if n &gt;= 3:
+            l = s.split( '/' )
+            filename = l[-1]
+            filename = urllib.unquote( filename )
+            base , fname = os.path.split( localpath )
+
+            localpath = os.path.join( base, filename )
+
+    if localpath.startswith( u'/' ):
+        localpath = localpath[1:]
+    localpath = os.path.join( makeunicode(nsurl.host()), localpath)
+
+    if localpath:
+        localrelfolder, localname = os.path.split( localpath )
+        localpath = os.path.join( cacheFolder, localpath )
+        if kwdbg:
+            print( "CactusTools.getDownloadFolder(%s) -&gt; %s" % (NSURL2str(nsurl), repr(localpath) ) )
+        return localpath, localname
+    return False, False
+
+
+</t>
+<t tx="karstenw.20220912113721.19">def getRemotefilemodificationDate( url ):
+
+    try:
+        f = urllib.urlopen( url )
+    except IOError, err:
+        print( "ERROR: Could not open url (%s) for date reading." % url )
+        return False
+
+    rinfo = f.info()
+    f.close()
+
+    remotemodfdate = rinfo.getdate('last-modified')
+    if remotemodfdate:
+        try:
+            rmodfdate = datetime.datetime( *remotemodfdate[:6] )
+            #rmodfdate = datetime.datetime( *rinfo.getdate('last-modified')[:6] )
+        except TypeError, err:
+            print( "Could not get remote file(%s) modification date." % url )
+            return False
+        return rmodfdate
+    return False
+
+</t>
+<t tx="karstenw.20220912113721.2">def num2ostype( num ):
+    if num == 0:
+        return '????'
+    s = struct.pack("&gt;I", num)
+    return makeunicode(s, "macroman")
+
+
+</t>
+<t tx="karstenw.20220912113721.20">def setFileModificationDate( filepath, modfdt ):
+    l = getFileProperties( filepath )
+    date = Foundation.NSDate.dateWithString_( datestring_nsdate( modfdt ) )
+    l['NSFileModificationDate'] = date
+    setFileProperties( filepath, l)
+    folder, filename = os.path.split( filepath )
+    print( "Setting file(%s) modification date to %s" % (filename, repr(modfdt)) )
+
+
+</t>
+<t tx="karstenw.20220912113721.21">def cache_url( nsurl, fileextension ):
+    if 1:
+        print( "CactusTools.cache_url( %s, %s )" % (nsurl, fileextension) )
+
+    if not nsurl:
+        return False
+
+    returnURL = nsurl
+    url = NSURL2str( nsurl )
+
+    # pdb.set_trace()
+
+    try:
+        localpath, localname = getDownloadFolder(nsurl)
+
+        # perhaps we are not caching
+        if not localpath:
+            return nsurl
+
+        if not localpath.endswith(localname):
+            localfullpath = os.path.join(localpath, localname)
+
+        folder, filename = os.path.split( localpath )
+        if not os.path.exists(folder):
+            os.makedirs( folder )
+
+        dodownload = False
+        if os.path.exists( localpath ):
+            # file already downloaded; perhaps set file modification date
+            lmodfdate = os.stat( localpath ).st_mtime
+            lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
+            rmodfdate = getRemotefilemodificationDate( url )
+
+            if not rmodfdate:
+                # remote modification date could not be determined
+                pass
+            elif rmodfdate and rmodfdate &lt; lmodfdate:
+                setFileModificationDate( localpath, rmodfdate )
+            elif rmodfdate and rmodfdate == lmodfdate:
+                pass
+            else:
+                dodownload = True
+        else:
+            dodownload = True
+
+        if dodownload:
+            #
+            if os.path.isdir( localpath ):
+                if not localname:
+                    localname = "file"
+                    localpath = os.path.join( localpath, localname + "." + fileextension )
+
+            if fileextension:
+                if not localpath.lower().endswith( "." + fileextension.lower() ):
+                    localpath = localpath + '.' + fileextension
+
+            print( "LOAD: %s..." % url )
+            headers = {}
+            r = requests.get( url )
+            s = r.content
+            headers = r.headers
+            r.close()
+            fob = open(localpath, 'w')
+            fob.write( s )
+            fob.close()
+            
+            dt = datetime.datetime.now()
+            dts = feedparser._parse_date( headers.get( 'last-modified', '' ) )
+            dts = time.mktime( dts )
+            if dts:
+                dt = datetime.datetime.fromtimestamp( dts )
+
+            try:
+                finder = asc.app(u'Finder.app', terms=Finder10)
+                hfspath = mactypes.File( localpath ).hfspath
+                finder.files[hfspath].comment.set( url )
+            except StandardError, v:
+                print( "SET COMMENT FAILED ON '%s'" % localpath )
+            # get file date
+            lmodfdate = os.stat( localpath ).st_mtime
+            lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
+            try:
+                # rmodfdate = datetime.datetime( *headers.getdate('last-modified')[:6] )
+                # setFileModificationDate( localpath, rmodfdate )
+                setFileModificationDate( localpath, dt )
+            except TypeError as err:
+                # do not cache if modification date cannot be determined
+                print( "NOCACHE: Could not get remote file(%s) modification date." % url )
+                print( err )
+            print( "LOAD: %s...done" % url )
+            print( "LOCAL:", repr(localpath) )
+
+        returnURL = NSURL.fileURLWithPath_( unicode(localpath) )
+
+    except Exception, err:
+        tb = unicode(traceback.format_exc())
+        print( tb )
+        print(  )
+
+    return returnURL
+
+</t>
+<t tx="karstenw.20220912113721.22">def mergeURLs( base, rel ):
+    """create an url with base as the base, updated by existing parts of rel."""
+    s = u"CactusTools.mergeURLs(%s, %s) -&gt;  %s"
+
+    prel = urlparse.urlparse( rel )
+    if prel.scheme and prel.netloc:
+        return prel.geturl()
+
+    if type(base) in (NSURL,):
+        base = NSURL2str(base)
+    
+    # it's a relative path
+
+    pbase = urlparse.urlparse( base )
+
+    path = pbase.path
+    folder, filename = os.path.split( path )
+    basename, ext = os.path.splitext( filename )
+    if ext != "" and path[-1] != '/':
+        path = os.path.join(folder, rel)
+    else:
+        path = os.path.join(path, rel)
+    
+
+    target = urlparse.ParseResult(
+        scheme = pbase.scheme,
+        netloc = pbase.netloc,
+        path = path,
+        params = prel.params if (prel.params) else pbase.params,
+        query = prel.query if (prel.query) else pbase.query,
+        fragment = prel.fragment if (prel.fragment) else pbase.fragment)
+
+    target = urlparse.urlunparse( target )
+    try:
+        s = s % ( base, rel, target)
+        print( s ) #.encode("utf-8")
+    except Exception, err:
+        print(  )
+        print( "ERROR in mergeURL" )
+        print( err )
+        print( "base:", repr(base) )
+        print( "rel:", repr(rel) )
+        print( "target:", repr(target) )
+        print(  )
+    return target
+
+
+</t>
+<t tx="karstenw.20220912113721.23">def getURLExtension( url ):
+    purl = urlparse.urlparse( url )
+    path = purl.path
+    folder, filename = os.path.split( path )
+    basename, ext = os.path.splitext( filename )
+    if kwdbg:
+        print( "CactusTools.getURLExtension(%s) -&gt; '%s' . '%s'" % ( url, basename, ext ) )
+    return (basename, ext)
+</t>
+<t tx="karstenw.20220912113721.3">def ostype2num( ostype ):
+    return struct.pack('BBBB', list(ostype))
+
+
+</t>
+<t tx="karstenw.20220912113721.4">def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
+    try:
+        if type(s) not in (unicode, objc.pyobjc_unicode):
+            s = unicode(s, srcencoding)
+    except TypeError:
+        print( "makeunicode type conversion error" )
+        print( "FAILED converting", type(s), "to unicode" )
+    s = unicodedata.normalize(normalizer, s)
+    return s
+
+
+
+
+</t>
+<t tx="karstenw.20220912113721.5">def detectFileTypeAtURL( nsfileurl ):
+    """Not yet sure how to autodetect without reading some files twice.
+
+    So far the parsers used are:
+        OPML: cElementTree (opens string)
+        RSS: feedparser (opens string)
+        XML: cElementTree (opens string)
+        HTML: lxml (opens URL)
+        PLIST: NSDictionary.dictionaryWithContentsOfURL_ (opens URL)
+    """
+    pass
+
+
+</t>
+<t tx="karstenw.20220912113721.6">def detectFileTypeLocalFile( path ):
+    # this needs to be checked against the binary string
+    xmlre = re.compile( r'''^&lt;?xml\s+version\s*="1.0"\s+encoding\s*=\s*"''' )
+
+
+
+
+</t>
+<t tx="karstenw.20220912113721.7">def readURL( nsurl, type_="" ):
+    """Read a file. May be local, may be http"""
+    url = NSURL2str(nsurl)
+    if kwlog:
+        print( "CactusTools.readURL( '%s', '%s' )" % (url, type_) )
+
+
+    translateType = {
+        CactusOPMLType: "opml",
+        CactusHTMLType: "html",
+        CactusXMLType: "xml",
+        CactusRSSType: "rss",
+        CactusPLISTType: "plist",
+        CactusIMLType: "xml"
+    }
+
+    fileext = translateType.get( type_, ".bin")
+
+    defaults = NSUserDefaults.standardUserDefaults()
+    cache = False
+    try:
+        cache = bool(defaults.objectForKey_( u'optCache'))
+    except StandardError, err:
+        print( "ERROR reading defaults.", repr(err) )
+    
+    # pdb.set_trace()
+    
+    if cache:
+        if not nsurl.isFileURL():
+            nsurl = cache_url(nsurl, fileext)
+
+    url = NSURL2str(nsurl)
+
+    if 0:
+        # does not work with file urls
+        r = requests.get( url )
+        s = r.content
+        headers = r.headers
+        r.close()
+    else:
+        # fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
+        fob = feedparser._open_resource(url, None, None, None, None, [], {})
+        s = fob.read()
+        fob.close()
+
+    # check for gzip compressed opml file
+    # pdb.set_trace()
+    try:
+        if len(s) &gt; 2:
+            if ord(s[0]) == 0x1f:
+                if ord(s[1]) == 0x8b:
+                    unzipped = gzip.GzipFile( fileobj=StringIO.StringIO(s) ).read()
+                    s = unzipped
+    except Exception:
+        pass
+
+    if type_ == CactusOPMLType:
+        # this is a quick &amp; dirty approach and should be applied much more carefully
+        # than it is now... perhaps those errors get corrected and &lt;directivecache&gt;
+        # will be a propper node.
+
+        # clean up bogative xml declaration. OPML-Editor, I'm looking at you...
+        if s.startswith("""&lt;?xml encoding="ISO-8859-1" version="1.0"?&gt;"""):
+            s = s.replace("""&lt;?xml encoding="ISO-8859-1" version="1.0"?&gt;""",
+                          """&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;""")
+
+            if kwlog:
+                print( "\nBOGUS XML DELARATION REPLACED\n" )
+
+        # this error occurs up until now only combined with the previous one
+        if "&lt;directiveCache&gt;" in s:
+            s = s.replace( "&lt;directiveCache&gt;", "&lt;/outline&gt;")
+            if kwlog:
+                print( "\nBOGUS &lt;directiveCache&gt; XML TAG REPLACED\n" )
+
+        #
+        # opmleditor rules error
+        #
+        startrule = """text="&amp;lt;rules &lt;"""
+        endrule = """&amp;gt;"&gt;"""
+
+        if startrule in s:
+            n = s.count(startrule)
+            if kwlog:
+                print( "BOGUS OPML RULE SECTION: %i SUBSTITUTIONS" % n )
+            idx = s1 = s2 = 0
+            for i in range(1, n+1):
+                # get location o next start- ans endrule
+                s1 = s.find( startrule,s2 )
+                s2 = s.find( endrule, s1 )
+                s2 = s2 + len(endrule)
+
+                # save stuff before, location and after bogative rule
+                pre = s[:s1]
+                defectiveSnippet = s[s1:s2]
+                post = s[s2:]
+
+                if kwlog:
+                    print( "\nOLD", repr(defectiveSnippet) )
+
+                # clear out false markers
+                defectiveSnippet = defectiveSnippet.replace( startrule, "&lt;")
+                defectiveSnippet = defectiveSnippet.replace( endrule, "")
+
+                defectiveSnippet = defectiveSnippet.replace( '&lt;', "&amp;lt;")
+                defectiveSnippet = defectiveSnippet.replace( '&gt;', "&amp;gt;")
+                defectiveSnippet = defectiveSnippet.replace( '"', "&amp;quot;")
+
+                # restore start and end
+                defectiveSnippet = 'text="' + defectiveSnippet + '"&gt;'
+
+                # advance pointer
+                s2 = len(pre) + len(defectiveSnippet)
+
+                # restore s
+                s = pre + defectiveSnippet + post
+
+                if kwlog:
+                    print( "\nNEW", repr(defectiveSnippet) )
+
+    if type_ in CactusDocumentXMLBasedTypesSet:
+        # this apllies to all since cactus currently only reads xml files
+        if s.startswith("&lt;?xml ") or s.startswith("&lt;opml") or s.startswith("&lt;rss"):
+            re_bogusCharacters = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f]')
+
+            # TBD: perhaps an effort to preserve the replaced character should be made here
+            # use urlescape
+            t = re.sub( re_bogusCharacters, "???", s)
+            if s != t:
+                print( "Bogus characters in XML..." )
+            s = t
+    return s
+
+
+# UNUSED
+</t>
+<t tx="karstenw.20220912113721.8">def classifyAndReadUrl( url ):
+    """TBD
+
+    Read in an URL and try to classify it as opml, bogative opml, rss, xml.
+    """
+
+    s = readURL( url )
+
+    # check for bogative OPML editor xml declaration
+    bogus = re.compile( """&lt;?xml encoding=["']ISO-8859-1["'] version=["']1.0["']?&gt;""" )
+    if s.startswith("""&lt;?xml encoding="ISO-8859-1" version="1.0"?&gt;"""):
+        pass
+
+
+    # the type should be determinable within the first 250 bytes
+    checkpart = s[:250]
+
+    xmlre = re.compile( "^&lt;?xml\W+version" )
+    rspre = re.compile( "&lt;reallySimplePhoto" )
+    opmlre = re.compile( "&lt;opml version" )
+
+    if checkpart.startswith( "&lt;?xml version" ):
+        pass
+        # we have a xml based document
+
+    if checkpart.startswith( "&lt;?xml version" ):
+        pass
+        # check for opml
+        # check for rss
+
+
+#
+# dialogs
+#
+</t>
+<t tx="karstenw.20220912113721.9">def cancelContinueAlert(title, message, butt1="OK", butt2=False):
+    """Run a generic Alert with buttons "Weiter" &amp; "Abbrechen".
+
+       Returns True if "Weiter"; False otherwise
+    """
+    alert = NSAlert.alloc().init()
+    alert.setAlertStyle_( 0 )
+    alert.setInformativeText_( title )
+    alert.setMessageText_( message )
+    alert.setShowsHelp_( False )
+    alert.addButtonWithTitle_( butt1 )
+
+    if butt2:
+        # button 2 has keyboard equivalent "Escape"
+        button2 = alert.addButtonWithTitle_( butt2 )
+        button2.setKeyEquivalent_( unichr(27) )
+
+    f = alert.runModal()
+    return f == AppKit.NSAlertFirstButtonReturn
+
+
+</t>
+<t tx="karstenw.20220912113812.1"></t>
+<t tx="karstenw.20220912114003.1"># py3 stuff
+py3 = False
+try:
+    unicode('')
+    punicode = unicode
+    pstr = str
+    punichr = unichr
+except NameError:
+    punicode = str
+    pstr = bytes
+    py3 = True
+    punichr = chr
+    long = int
+
+</t>
 </tnodes>
 </leo_file>

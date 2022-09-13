@@ -1,6 +1,8 @@
 
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 
 """
 """
@@ -59,12 +61,12 @@ OutlineNode = CactusOutlineNode.OutlineNode
 
 def openOPML_(rootOPML):
     if kwlog:
-        print "openOPML_()"
+        print( "openOPML_()" )
     return openOPML_withURLTag_(rootOPML, False)
 
 def openOPML_withURLTag_(rootOPML, urltag):
     if kwlog:
-        print "CactusFileOpeners.openOPML_withURLTag_()"
+        print( "CactusFileOpeners.openOPML_withURLTag_()" )
     """This builds the node tree and returns the root node."""
 
     defaults = NSUserDefaults.standardUserDefaults()
@@ -194,8 +196,8 @@ def openOPML_withURLTag_(rootOPML, urltag):
             if len(children) > 0:
                 try:
                     getChildrenforNode( node, children, root )
-                except Exception, err:
-                    print err
+                except Exception as err:
+                    print( err )
                     pp(children)
                     pp(item)
     #title = os
@@ -207,7 +209,7 @@ def openXML_( rootXML):
         s = repr(rootXML)
         if len(s) > 90:
             s = s[:91]
-        print "openXML_( %s )" % s
+        print( "openXML_( %s )" % s )
 
     """This builds the node tree and returns the root node."""
 
@@ -236,13 +238,13 @@ def openXML_( rootXML):
 
             try:
                 newnode = OutlineNode(name, content, node, typeOutline, root)
-            except Exception, err:
-                print "\n\nERROR in openXML_()"
+            except Exception as err:
+                print( "\n\nERROR in openXML_()" )
                 tb = unicode(traceback.format_exc())
-                print err
-                print
-                print tb
-                print
+                print( err )
+                print()
+                print( tb )
+                print()
 
             if txt != "":
                 newnode.setComment_( txt )
@@ -250,9 +252,9 @@ def openXML_( rootXML):
             node.addChild_( newnode )
             try:
                 n = len(childs)
-            except Exception, err:
-                print
-                print err
+            except Exception as err:
+                print()
+                print( err )
             if len(childs) > 0:
                 getChildrenforNode(newnode, childs, root)
             newnode.release()
@@ -286,23 +288,23 @@ def openXML_( rootXML):
 
     try:
         n = len(children)
-    except Exception, err:
-        print "CactusFileOpeners.openXML_() ERROR"
-        print "childen has no length attribute!"
-        print type(children)
-        print err
+    except Exception as err:
+        print( "CactusFileOpeners.openXML_() ERROR" )
+        print( "childen has no length attribute!" )
+        print( type(children) )
+        print( err )
 
 
     if n > 0:
         try:
             getChildrenforNode( node, children, root )
-        except Exception, err:
-            print "\n\nERROR in openXML_()"
+        except Exception as err:
+            print( "\n\nERROR in openXML_()" )
             tb = unicode(traceback.format_exc())
-            print err
-            print
-            print tb
-            print
+            print( err )
+            print()
+            print( tb )
+            print()
             # pp(children)
     #title = os
     return root, CactusXMLType
@@ -316,7 +318,7 @@ def openRSS_(url):
         s = repr(url)
         if len(s) > 90:
             s = s[:91]
-        print "openRSS_( %s )" % repr(s)
+        print( "openRSS_( %s )" % repr(s) )
     d = feedparser.parse( url, agent=CactusVersion.user_agent )
 
     # make basic nodes
@@ -354,9 +356,9 @@ def openRSS_(url):
             v = d.feed[k]
             if type(v) in (list,):
                 if len(v) > 1:
-                    print "Large header list"
-                    print k
-                    print repr(v)
+                    print( "Large header list" )
+                    print( k )
+                    print( repr(v) )
                 elif len(v) == 1:
                     v = v[0]
 
@@ -372,11 +374,11 @@ def openRSS_(url):
                 else:
                     # if k in ('',)
                     if 1:
-                        print "ATTENTION RSS Head values"
-                        print "KEY:", k
-                        print "TYPE:", type(v)
-                        print "REPR:", repr(v)
-                        print
+                        print( "ATTENTION RSS Head values" )
+                        print( "KEY:", k )
+                        print( "TYPE:", type(v) )
+                        print( "REPR:", repr(v) )
+                        print()
                     v = repr(v)
             node = OutlineNode(k, v, head, typeOutline, root)
             head.addChild_( node )
@@ -484,7 +486,7 @@ def getPLISTValue(nsvalue):
     value = ""
     valueTypeName = ""
     if valueType == bool:
-        # print "BOOLVALUE: '%s' --> '%s'" % (repr(nsvalue), repr(bool(nsvalue)) )
+        # print( "BOOLVALUE: '%s' --> '%s'" % (repr(nsvalue), repr(bool(nsvalue)) ) )
         value = repr(bool(nsvalue))
         valueTypeName = [ ('cactusNodeType', "bool") ]
 
@@ -503,8 +505,8 @@ def getPLISTValue(nsvalue):
         value = unicode(nsvalue.description())
         valueTypeName = [ ('cactusNodeType', "string") ]
     else:
-        print "BOGATIVE VALUE TYPE:", repr(valueType)
-        print
+        print( "BOGATIVE VALUE TYPE:", repr(valueType) )
+        print()
     return value, valueTypeName
 
 
@@ -521,7 +523,7 @@ def openIML_( nsdict ):
         s = repr(nsdict)
         if len(s) > 90:
             s = s[:91]
-        print "openPLIST_( %s )" % s
+        print( "openPLIST_( %s )" % s )
 
     """This builds the node tree and returns the root node."""
 
@@ -574,7 +576,7 @@ def openIML_( nsdict ):
             # itemName = u"%s - %s" % (trackAlbum, trackName)
             itemName = trackName
 
-            # print repr(itemName)
+            # print( repr(itemName) )
             trackNode.setName_( itemName )
             trackNode.setValue_( trackAttributes )
             trackNode.setMaxLineHeight()
@@ -586,8 +588,8 @@ def openIML_( nsdict ):
                 if i % 100000 == 0:
                     sys.stdout.write('\n')
                     sys.stdout.flush()
-        print
-        print "%i Tracks." % i
+        print()
+        print( "%i Tracks." % i )
         return id_trackname
 
     def makePlaylistNode( name, curPlaylist, value, parent, root, type_):
@@ -731,10 +733,10 @@ def openIML_( nsdict ):
                     if i % 100000 == 0:
                         sys.stdout.write('\n')
                         sys.stdout.flush()
-            print
-            print "%s has %i Playlist Items." % (repr(playlistName), j)
-        print
-        print "A total of %i Playlist Items." % i
+            print()
+            print( "%s has %i Playlist Items." % (repr(playlistName), j) )
+        print()
+        print( "A total of %i Playlist Items." % i )
 
 
     def dispatchLevel( nsdict, parent, root, progressCount ):
@@ -811,7 +813,7 @@ def openPLIST_( nsdict ):
         s = repr(nsdict)
         if len(s) > 90:
             s = s[:91]
-        print "openPLIST_( %s )" % s
+        print( "openPLIST_( %s )" % s )
 
     """This builds the node tree and returns the root node."""
 
@@ -870,7 +872,7 @@ def openPLIST_( nsdict ):
             node = OutlineNode(itemName, "", parent, typeOutline, root)
 
             if valueType == bool:
-                # print "BOOLVALUE: '%s' --> '%s'" % (repr(nsvalue), repr(bool(nsvalue)) )
+                # print( "BOOLVALUE: '%s' --> '%s'" % (repr(nsvalue), repr(bool(nsvalue)) ) )
                 value = repr(bool(nsvalue))
                 node.setValue_( [ ('cactusNodeType', "bool") ] )
 
@@ -897,8 +899,8 @@ def openPLIST_( nsdict ):
                 value = unicode(nsvalue.description())
                 node.setValue_( [ ('cactusNodeType', "string") ] )
             else:
-                print "BOGATIVE VALUE TYPE:", repr(valueType)
-                print
+                print( "BOGATIVE VALUE TYPE:", repr(valueType) )
+                print()
 
             node.setComment_( value )
             parent.addChild_(node)

@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
+
 """
 """
 
@@ -75,8 +78,8 @@ class OpenURLWindowController(NSWindowController):
         self.noOfRecentURLs = 40
         try:
             self.noOfRecentURLs = int(defaults.objectForKey_( u'txtNoOfRecentURLs'))
-        except StandardError, err:
-            print "ERROR reading defaults.", repr(err)
+        except StandardError as err:
+            print( "ERROR reading defaults.", repr(err) )
 
         # cap recentURLs to max size
         if len(self.visitedURLs) > self.noOfRecentURLs:

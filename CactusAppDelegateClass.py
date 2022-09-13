@@ -1,6 +1,8 @@
 
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 """
 """
 
@@ -103,7 +105,7 @@ class Document(object):
 class CactusDocumentController(NSDocumentController):
     def init(self):
         if kwlog:
-            print "CactusDocumentController.init()"
+            print( "CactusDocumentController.init()" )
         self = super( CactusDocumentController, self).init()
         self.selectedType = u"automatic"
         self.urllist = []
@@ -114,8 +116,8 @@ class CactusDocumentController(NSDocumentController):
 
     def runModalOpenPanel_forTypes_( self, panel, types ):
         if kwlog:
-            print
-            print "CactusDocumentController.runModalOpenPanel_forTypes_()",
+            print()
+            print( "CactusDocumentController.runModalOpenPanel_forTypes_()", )
         self.selectedType = "automatic"
         extensionCtrl = CactusOpenAsAccessoryController.alloc().init()
 
@@ -128,12 +130,12 @@ class CactusDocumentController(NSDocumentController):
             self.urllist = set([NSURL2str(t) for t in panel.URLs()])
         if kwlog:
             pp(result) 
-            print
+            print()
         return result
 
     def makeDocumentWithContentsOfURL_ofType_error_(self, url, theType, err):
         if kwlog:
-            print "CactusDocumentController.makeDocumentWithContentsOfURL_ofType_error_()"
+            print( "CactusDocumentController.makeDocumentWithContentsOfURL_ofType_error_()" )
 
         if self.selectedType != "automatic" and len(self.urllist) > 0:
             u = NSURL2str( url )
@@ -150,7 +152,7 @@ class CactusAppDelegate(NSObject):
 
     def initialize(self):
         if kwlog:
-            print "CactusAppDelegate.initialize()"
+            print( "CactusAppDelegate.initialize()" )
         self.visitedURLs = []
         self.documentcontroller = None
         # default settings for preferences
@@ -208,7 +210,7 @@ class CactusAppDelegate(NSObject):
 
     def applicationDidFinishLaunching_(self, notification):
         if kwlog:
-            print "CactusAppDelegate.applicationDidFinishLaunching_()"
+            print( "CactusAppDelegate.applicationDidFinishLaunching_()" )
         self.documentcontroller = CactusDocumentController.alloc().init()
         app = NSApplication.sharedApplication()
         app.activateIgnoringOtherApps_(True)
@@ -216,13 +218,13 @@ class CactusAppDelegate(NSObject):
     @objc.IBAction
     def applicationShouldOpenUntitledFile_( self, sender ):
         if kwlog:
-            print "CactusAppDelegate.applicationShouldOpenUntitledFile_()"
+            print( "CactusAppDelegate.applicationShouldOpenUntitledFile_()" )
         defaults = NSUserDefaults.standardUserDefaults()
         return defaults.objectForKey_( u"optNewDocumentOnStart" )
 
     def applicationShouldHandleReopen_hasVisibleWindows_( self, theApplication, flag ):
         if kwlog:
-            print "CactusAppDelegate.applicationShouldHandleReopen_hasVisibleWindows_()"
+            print( "CactusAppDelegate.applicationShouldHandleReopen_hasVisibleWindows_()" )
         # this is needed to prevent creating an untitled document when clicking the dock
         #
         # should really be in the (not yet existent) preferences
@@ -250,12 +252,12 @@ class CactusAppDelegate(NSObject):
     """ """
     def newTableWithRoot_(self, root):
         if kwlog:
-            print "CactusAppDelegate.newTableWithRoot_()"
+            print( "CactusAppDelegate.newTableWithRoot_()" )
         self.newTableWithRoot_title_(root, None)
 
     def newTableWithRoot_title_(self, root, title):
         if kwlog:
-            print "DEPRECATED CactusAppDelegate.newTableWithRoot_title_()"
+            print( "DEPRECATED CactusAppDelegate.newTableWithRoot_title_()" )
         # find owning controller here and pass on
         if not title:
             title = u"Table Editor"
@@ -264,7 +266,7 @@ class CactusAppDelegate(NSObject):
 
     def newTableWithRoot_fromNode_(self, root, parentNode):
         if kwlog:
-            print "DEPRECATED CactusAppDelegate.newTableWithRoot_fromNode_()"
+            print( "DEPRECATED CactusAppDelegate.newTableWithRoot_fromNode_()" )
         title = "Unnamed"
         if parentNode:
             title = parentNode.name
@@ -277,7 +279,7 @@ class CactusAppDelegate(NSObject):
     @objc.IBAction
     def newTable_(self, sender):
         if kwlog:
-            print "DEPRECATED CactusAppDelegate.newTable_()"
+            print( "DEPRECATED CactusAppDelegate.newTable_()" )
         doc = Document("Untitled Table", None)
         CactusWindowController_OLD.alloc().initWithObject_type_(doc, typeTable)
 
@@ -287,7 +289,7 @@ class CactusAppDelegate(NSObject):
     @objc.IBAction
     def newOutline_(self, sender):
         if kwlog:
-            print "DEPRECATED CactusAppDelegate.newOutline_()"
+            print( "DEPRECATED CactusAppDelegate.newOutline_()" )
 
     # UNUSED
     @objc.IBAction
@@ -306,16 +308,16 @@ class CactusAppDelegate(NSObject):
     @objc.IBAction
     def handleNodeMenu_(self, sender):
         if kwlog:
-            print "CactusAppDelegate.handleNodeMenu_(%s)" % repr(sender)
+            print( "CactusAppDelegate.handleNodeMenu_(%s)" % repr(sender) )
         app = NSApplication.sharedApplication()
         win = app.keyWindow()
         if win:
-            print "Save As...", win.title()
+            print( "Save As...", win.title() )
             windelg = win.delegate()
             if windelg:
                 ov = windelg.outlineView
                 name = sender.title()
-                print name
+                print( name )
                 if name == u"Move up":
                     ov.moveSelectionUp()
                 elif name == u"Move down":
@@ -358,8 +360,8 @@ class CactusAppDelegate(NSObject):
 
     def newOutlineFromURL_Type_(self, url, type_):
         if kwlog:
-            print "CactusAppDelegate.newOutlineFromURL_Type_(\n\t%s\m\t%s )" % (
-                repr(url), repr(type_))
+            print( "CactusAppDelegate.newOutlineFromURL_Type_(\n\t%s\m\t%s )" %
+                                                    repr(url), repr(type_))
 
         if not isinstance(url, NSURL):
             url = NSURL.URLWithString_( url )
@@ -378,7 +380,7 @@ class CactusAppDelegate(NSObject):
     @objc.IBAction
     def newBrowser_(self, sender):
         if kwlog:
-            print "CactusAppDelegate.newBrowser_()"
+            print( "CactusAppDelegate.newBrowser_()" )
         # The CactusWindowController_OLD instance will retain itself,
         # so we don't (have to) keep track of all instances here.
         doc = Document("Untitled Outline", None)
@@ -387,19 +389,19 @@ class CactusAppDelegate(NSObject):
     @objc.IBAction
     def openOutlineDocument_(self, sender):
         if kwlog:
-            print "CactusAppDelegate.openOutlineDocument_()"
+            print( "CactusAppDelegate.openOutlineDocument_()" )
         docctrl = NSDocumentController.sharedDocumentController()
         docctrl.openDocument_(sender)
 
     @objc.IBAction
     def openFile_(self, sender):
         if kwlog:
-            print "DEPRECATED CactusAppDelegate.openFile_()"
+            print( "DEPRECATED CactusAppDelegate.openFile_()" )
         # this is ugly
         f = getFileDialog(multiple=True)
         if f:
             for opmlFile in f:
-                print "Reading OPML '%s'" % (opmlFile.encode("utf-8"),)
+                print( "Reading OPML '%s'" % (opmlFile.encode("utf-8"),) )
                 fob = open(opmlFile, 'r')
                 folder, filename = os.path.split(opmlFile)
                 s = fob.read()
@@ -410,13 +412,13 @@ class CactusAppDelegate(NSObject):
                     doc = Document(opmlFile, root)
                     CactusWindowController_OLD.alloc().initWithObject_type_(doc, typeOutline)
 
-                    print "Reading OPML '%s' Done." % (opmlFile.encode("utf-8"),)
+                    print( "Reading OPML '%s' Done." % (opmlFile.encode("utf-8"),) )
                 else:
-                    print "Reading OPML '%s' FAILED." % (opmlFile.encode("utf-8"),)
+                    print( "Reading OPML '%s' FAILED." % (opmlFile.encode("utf-8"),) )
 
     def openOPML_(self, rootOPML):
         if kwlog:
-            print "CactusAppDelegate.openOPML_()"
+            print( "CactusAppDelegate.openOPML_()" )
         """This builds the node tree and opens a window."""
         #
         #  Split this up.
@@ -459,7 +461,7 @@ class CactusAppDelegate(NSObject):
                 #v = {'value': v}
 
                 node = OutlineNode(k, v, head, typeOutline)
-                #print "HEAD:", node.name
+                #print( "HEAD:", node.name )
                 head.addChild_( node )
 
         # fill in missing opml attributes here
@@ -495,8 +497,8 @@ class CactusAppDelegate(NSObject):
                 if len(children) > 0:
                     try:
                         getChildrenforNode( node, children )
-                    except Exception, err:
-                        print err
+                    except Exception as err:
+                        print( err )
                         pp(children)
                         pp(item)
         return root
@@ -504,12 +506,12 @@ class CactusAppDelegate(NSObject):
     @objc.IBAction
     def saveAs_(self, sender):
         if kwlog:
-            print "DEPRECATED CactusAppDelegate.saveAs_()"
-        print "Save As..."
+            print( "DEPRECATED CactusAppDelegate.saveAs_()" )
+        print( "Save As..." )
         app = NSApplication.sharedApplication()
         win = app.keyWindow()
         if win:
-            print "Save As...", win.title()
+            print( "Save As...", win.title() )
             windelg = win.delegate()
             if windelg:
                 path = windelg.path
@@ -526,17 +528,17 @@ class CactusAppDelegate(NSObject):
 
     def getCurrentAppWindow(self):
         if kwlog:
-            print "CactusAppDelegate.getCurrentAppWindow()"
+            print( "CactusAppDelegate.getCurrentAppWindow()" )
         return NSApplication.sharedApplication().keyWindow()
 
     def getCurrentDocument(self):
         if kwlog:
-            print "CactusAppDelegate.getCurrentDocument()"
+            print( "CactusAppDelegate.getCurrentDocument()" )
         return NSDocumentController.sharedDocumentController().currentDocument()
 
     def getCurrentOutlineView(self):
         if kwlog:
-            print "CactusAppDelegate.getCurrentOutlineView()"
+            print( "CactusAppDelegate.getCurrentOutlineView()" )
         doc = self.getCurrentDocument()
         if isinstance(doc, CactusOutlineDocument):
             win = self.getCurrentAppWindow()
@@ -547,7 +549,7 @@ class CactusAppDelegate(NSObject):
     @objc.IBAction
     def outlineMenuExpand_(self, sender):
         if kwlog:
-            print "CactusAppDelegate.outlineMenuExpand_()"
+            print( "CactusAppDelegate.outlineMenuExpand_()" )
         ov = self.getCurrentOutlineView()
         if ov:
             ov.expandSelection_(sender)
@@ -555,7 +557,7 @@ class CactusAppDelegate(NSObject):
     @objc.IBAction
     def outlineMenuExpandAll_(self, sender):
         if kwlog:
-            print "CactusAppDelegate.outlineMenuExpandAll_()"
+            print( "CactusAppDelegate.outlineMenuExpandAll_()" )
         ov = self.getCurrentOutlineView()
         if ov:
             ov.expandAllSelection_(sender)
@@ -563,7 +565,7 @@ class CactusAppDelegate(NSObject):
     @objc.IBAction
     def outlineMenuCollapse_(self, sender):
         if kwlog:
-            print "CactusAppDelegate.outlineMenuCollapse_()"
+            print( "CactusAppDelegate.outlineMenuCollapse_()" )
         ov = self.getCurrentOutlineView()
         if ov:
             ov.collapseSelection_(sender)
@@ -571,7 +573,7 @@ class CactusAppDelegate(NSObject):
     @objc.IBAction
     def outlineMenuCollapseAll_(self, sender):
         if kwlog:
-            print "CactusAppDelegate.outlineMenuCollapseAll_()"
+            print( "CactusAppDelegate.outlineMenuCollapseAll_()" )
         ov = self.getCurrentOutlineView()
         if ov:
             ov.collapseAllSelection_(sender)
@@ -579,7 +581,7 @@ class CactusAppDelegate(NSObject):
     @objc.IBAction
     def outlineMenuCollapseToParent_(self, sender):
         if kwlog:
-            print "CactusAppDelegate.outlineMenuCollapseToParent_()"
+            print( "CactusAppDelegate.outlineMenuCollapseToParent_()" )
         ov = self.getCurrentOutlineView()
         if ov:
             ov.collapseToParent_(sender)
@@ -587,7 +589,7 @@ class CactusAppDelegate(NSObject):
     @objc.IBAction
     def makeCalendar_(self, sender):
         if kwlog:
-            print "CactusAppDelegate.makeCalendar_()"
+            print( "CactusAppDelegate.makeCalendar_()" )
         MakeCalendarController().init()
 
     def appendNode_CurrentDoc_(self, node, doc):
@@ -595,7 +597,7 @@ class CactusAppDelegate(NSObject):
 
     def makeCalendarCurrentOrNewDoc_(self, params):
         if kwlog:
-            print "CactusAppDelegate.makeCalendarCurrentOrNewDoc_()"
+            print( "CactusAppDelegate.makeCalendarCurrentOrNewDoc_()" )
         doc = self.getCurrentDocument()
 
         if not doc:
@@ -654,10 +656,12 @@ class CactusAppDelegate(NSObject):
         
         rootNode.addChild_( calRoot )
         
-        years = cal.keys()
+        years = list( cal.keys() )
         
-        try:    years.remove('year')
-        except  Exception:  pass
+        try:
+            years.remove('year')
+        except  Exception:
+             pass
         
         years.sort()
         
@@ -669,7 +673,7 @@ class CactusAppDelegate(NSObject):
             yearNode = OutlineNode(yearString, "", calRoot, typeOutline, theRoot)
             calRoot.addChild_( yearNode )
 
-            months = monthd.keys()
+            months = list( monthd.keys() )
             months.sort()
 
             for monthNumber in months:
@@ -680,7 +684,7 @@ class CactusAppDelegate(NSObject):
                 monthNode = OutlineNode(monthString, "", yearNode, typeOutline, theRoot)
                 yearNode.addChild_( monthNode )
 
-                days = daysd.keys()
+                days = list( daysd.keys() )
                 days.sort()
                 
                 currWeeks = set()
@@ -757,7 +761,7 @@ class CactusWindowController_OLD(NSWindowController):
         # outline or table here
         # tables are outlines with no children
         if kwlog:
-            print "DEPRECATED CactusWindowController_OLD.init()"
+            print( "DEPRECATED CactusWindowController_OLD.init()" )
         doc = Document("Untitled", None)
         return self.initWithObject_type_(doc, typeOutline)
 
@@ -765,7 +769,7 @@ class CactusWindowController_OLD(NSWindowController):
         """This controller is used for outline and table windows."""
 
         if kwlog:
-            print "DEPRECATED CactusWindowController_OLD.initWithObject_type_()"
+            print( "DEPRECATED CactusWindowController_OLD.initWithObject_type_()" )
 
         if theType == typeOutline:
             self = self.initWithWindowNibName_("OutlineEditor")
@@ -848,7 +852,7 @@ class CactusWindowController_OLD(NSWindowController):
 
     def windowWillClose_(self, notification):
         if kwlog:
-            print "DEPRECATED CactusWindowController_OLD.windowWillClose_()"
+            print( "DEPRECATED CactusWindowController_OLD.windowWillClose_()" )
         # see comment in self.initWithObject_type_()
         #
         # check model.dirty
@@ -857,7 +861,7 @@ class CactusWindowController_OLD(NSWindowController):
 
     def doubleClick_(self, sender):
         # Open a new browser window for each selected expandable item
-        print "DEPRECATED doubleClick_()"
+        print( "DEPRECATED doubleClick_()" )
 
     @objc.IBAction
     def applySettings_(self, sender):
@@ -910,8 +914,8 @@ class CactusWindowController_OLD(NSWindowController):
             l = self.menRowLines.title()
             l = int(l)
             self.rowLines = l
-        except StandardError, err:
-            print "\nERROR  ---  Menu Row lines '%'" % repr(l)
+        except StandardError as err:
+            print( "\nERROR  ---  Menu Row lines '%'" % repr(l) )
             self.rowLines = 4
             self.menRowLines.setTitle_( u"4" )
 
