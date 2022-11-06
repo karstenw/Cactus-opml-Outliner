@@ -1,6 +1,8 @@
 
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 
 """
 """
@@ -131,7 +133,7 @@ def boilerplateOPML( rootNode ):
 
     """
     if kwlog:
-        print "boilerplateOPML()"
+        print( "boilerplateOPML()" )
 
     ZERO = datetime.timedelta(0)
     HOUR = datetime.timedelta(hours=1)
@@ -159,8 +161,8 @@ def boilerplateOPML( rootNode ):
     try:
         uname = unicode(defaults.objectForKey_( u'txtUserName'))
         uemail = unicode(defaults.objectForKey_( u'txtUserEmail'))
-    except StandardError, err:
-        print "ERROR reading defaults.", repr(err)
+    except StandardError as err:
+        print( "ERROR reading defaults.", repr(err) )
 
     head.addChild_(OutlineNode("dateCreated", s, head, typeOutline, root))
     head.addChild_(OutlineNode("dateModified", s, head, typeOutline, root))
@@ -180,9 +182,9 @@ def boilerplateOPML( rootNode ):
     #head.release()
     #body.release()
     if 0:
-        print "root:", root.retainCount()
-        print "head:", head.retainCount()
-        print "body:", body.retainCount()
+        print( "root:", root.retainCount() )
+        print( "head:", head.retainCount() )
+        print( "body:", body.retainCount() )
     return
 
 
@@ -214,7 +216,7 @@ class CactusOutlineDocument(NSDocument):
 
     def init(self):
         if kwlog:
-            print "CactusOutlineDocument.init()"
+            print( "CactusOutlineDocument.init()" )
         self = objc.super( CactusOutlineDocument, self).init()
 
         # outline specific
@@ -237,7 +239,7 @@ class CactusOutlineDocument(NSDocument):
         return self
 
     def dealloc(self):
-        print "CactusOutlineDocument.dealloc()"
+        print( "CactusOutlineDocument.dealloc()" )
         objc.super(CactusOutlineDocument, self).dealloc()
 
 
@@ -248,7 +250,7 @@ class CactusOutlineDocument(NSDocument):
     def readFromURL_ofType_error_(self, url, theType, err):
         if kwlog:
             msg = "CactusOutlineDocument.readFromURL_ofType_error_( %s, %s )\n"
-            print msg % (repr(url), repr(theType))
+            print( msg % (repr(url), repr(theType)) )
 
         OK = True
         s = None
@@ -260,7 +262,7 @@ class CactusOutlineDocument(NSDocument):
             d = None
             try:
                 d = CactusOPML.opml_from_string( readURL( url, CactusOPMLType ) )
-            except OPMLParseErrorException, v:
+            except OPMLParseErrorException as v:
                 tb = unicode(traceback.format_exc())
                 v = unicode( repr(v) )
                 err = tb
@@ -272,7 +274,7 @@ class CactusOutlineDocument(NSDocument):
                 del d
                 if not root:
                     if kwlog:
-                        print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                        print( "FAILED CactusOutlineDocument.readFromURL_ofType_error_()" )
                     return (False, "Error creating the outline.")
                 else:
                     self.rootNode = root
@@ -282,7 +284,7 @@ class CactusOutlineDocument(NSDocument):
                         self.updateChangeCount_( NSChangeCleared )
             else:
                 if kwlog:
-                    print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                    print( "FAILED CactusOutlineDocument.readFromURL_ofType_error_()" )
                 return (False, None)
 
         # read rss content
@@ -296,7 +298,7 @@ class CactusOutlineDocument(NSDocument):
                     self.updateChangeCount_( NSChangeCleared )
             else:
                 if kwlog:
-                    print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                    print( "FAILED CactusOutlineDocument.readFromURL_ofType_error_()" )
                 return (False, None)
 
         # read xml content
@@ -304,7 +306,7 @@ class CactusOutlineDocument(NSDocument):
             d = None
             try:
                 d = CactusOPML.xml_from_string( readURL( url, CactusXMLType ) )
-            except XMLParseErrorException, v:
+            except XMLParseErrorException as v:
                 tb = unicode(traceback.format_exc())
                 v = unicode( repr(v) )
                 err = tb
@@ -324,7 +326,7 @@ class CactusOutlineDocument(NSDocument):
                     self.updateChangeCount_( NSChangeCleared )
             else:
                 if kwlog:
-                    print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                    print( "FAILED CactusOutlineDocument.readFromURL_ofType_error_()" )
                 return (False, None)
 
         # read html content
@@ -332,7 +334,7 @@ class CactusOutlineDocument(NSDocument):
             d = None
             try:
                 d = CactusOPML.html_from_url( url )
-            except HTMLParseErrorException, v:
+            except HTMLParseErrorException as v:
                 tb = unicode(traceback.format_exc())
                 v = unicode( repr(v) )
                 err = tb
@@ -351,7 +353,7 @@ class CactusOutlineDocument(NSDocument):
                     self.updateChangeCount_( NSChangeCleared )
             else:
                 if kwlog:
-                    print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                    print( "FAILED CactusOutlineDocument.readFromURL_ofType_error_()" )
                 return (False, None)
 
         # read plist content
@@ -359,7 +361,7 @@ class CactusOutlineDocument(NSDocument):
             d = None
             try:
                 d = CactusOPML.parse_plist( url )
-            except PLISTParseErrorException, v:
+            except PLISTParseErrorException as v:
                 tb = unicode(traceback.format_exc())
                 v = unicode( repr(v) )
                 err = tb
@@ -380,7 +382,7 @@ class CactusOutlineDocument(NSDocument):
                     self.updateChangeCount_( NSChangeCleared )
             else:
                 if kwlog:
-                    print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                    print( "FAILED CactusOutlineDocument.readFromURL_ofType_error_()" )
                 return (False, None)
 
         # read itunes music xml
@@ -388,7 +390,7 @@ class CactusOutlineDocument(NSDocument):
             d = None
             try:
                 d = CactusOPML.parse_plist( url )
-            except PLISTParseErrorException, v:
+            except PLISTParseErrorException as v:
                 tb = unicode(traceback.format_exc())
                 v = unicode( repr(v) )
                 err = tb
@@ -407,7 +409,7 @@ class CactusOutlineDocument(NSDocument):
                     self.updateChangeCount_( NSChangeCleared )
             else:
                 if kwlog:
-                    print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                    print( "FAILED CactusOutlineDocument.readFromURL_ofType_error_()" )
                 return (False, None)
 
         else:
@@ -417,7 +419,7 @@ class CactusOutlineDocument(NSDocument):
             self.setFileURL_( url )
             self.setFileType_( theType )
 
-        print "OK CactusOutlineDocument.readFromURL_ofType_error_()"
+        print( "OK CactusOutlineDocument.readFromURL_ofType_error_()" )
         return (OK, None)
 
 
@@ -425,7 +427,7 @@ class CactusOutlineDocument(NSDocument):
         """Main entry point for opening documents."""
         if kwlog:
             msg = "\nCactusOutlineDocument.initWithContentsOfURL_ofType_error_( %s, %s )\n"
-            print msg % ( repr(theType), repr(url))
+            print( msg % ( repr(theType), repr(url)) )
 
 
         self, err = self.initWithType_error_( theType, err )
@@ -463,7 +465,7 @@ class CactusOutlineDocument(NSDocument):
 
     def initWithType_error_(self, theType, err):
         if kwlog:
-            print "CactusOutlineDocument.initWithType_error_( %s )" % (repr(theType),)
+            print( "CactusOutlineDocument.initWithType_error_( %s )" % (repr(theType),) )
 
         self = self.init()
         if not self:
@@ -473,10 +475,10 @@ class CactusOutlineDocument(NSDocument):
 
         self.rootNode = OutlineNode("__ROOT__", "", None, typeOutline, None)
         if kwlog:
-            print "    .initWithType_error_ rootRetaines %i " % (self.rootNode.retainCount(),)
+            print( "    .initWithType_error_ rootRetaines %i " % (self.rootNode.retainCount(),) )
         boilerplateOPML( self.rootNode )
         if kwlog:
-            print "    .initWithType_error_ boilerplate rootRetaines %i " % (self.rootNode.retainCount(),)
+            print( "    .initWithType_error_ boilerplate rootRetaines %i " % (self.rootNode.retainCount(),) )
         self.updateChangeCount_( NSChangeCleared )
 
         self.variableRowHeight = True
@@ -485,7 +487,7 @@ class CactusOutlineDocument(NSDocument):
 
     def displayName(self):
         if kwlog:
-            print "CactusOutlineDocument.displayName() ->",
+            print( "CactusOutlineDocument.displayName() ->", )
         title = objc.super( CactusOutlineDocument, self).displayName()
 
         if 0:
@@ -505,46 +507,46 @@ class CactusOutlineDocument(NSDocument):
                 t = os.path.split( fullpath )[1]
                 if t:
                     title = t
-            except Exception, err:
-                print
-                print "displayName CRASHED!"
-                print err
-                print
+            except Exception as err:
+                print()
+                print( "displayName CRASHED!" )
+                print( err )
+                print()
             finally:
                 pass
 
         if kwlog:
-            print repr(title)
+            print( repr(title) )
         self.title = title
         return title
 
 
     def awakeFromNib(self):
         if kwlog:
-            print "CactusOutlineDocument.awakeFromNib()"
+            print( "CactusOutlineDocument.awakeFromNib()" )
 
 
     def XXwindowNibName(self):
         # deactivated
         if kwlog:
-            print "CactusOutlineDocument.windowNibName()"
+            print( "CactusOutlineDocument.windowNibName()" )
         return u"OutlineEditor"
 
 
     def fileURL( self ):
         # do nothing the superclass wouldn't do
         if kwlog:
-            print "SUPER CactusOutlineDocument.fileURL()"
+            print( "SUPER CactusOutlineDocument.fileURL()" )
         return objc.super( CactusOutlineDocument, self).fileURL()
 
 
     def setFileURL_( self, theURL ):
-        # print "URLType:", type(theURL)
+        # print( "URLType:", type(theURL) )
         if not isinstance( theURL, NSURL ):
             theURL = NSURL.URLWithString_( theURL )
         # do nothing the superclass wouldn't do
         if kwlog:
-            print "SUPER CactusOutlineDocument.setFileURL()", repr(NSURL2str(theURL))
+            print( "SUPER CactusOutlineDocument.setFileURL()", repr(NSURL2str(theURL)) )
         objc.super( CactusOutlineDocument, self).setFileURL_( theURL )
         self.url = theURL
 
@@ -554,14 +556,14 @@ class CactusOutlineDocument(NSDocument):
     def windowControllerWillLoadNib_( self, aController):
         # do nothing the superclass wouldn't do
         if kwlog:
-            print "SUPER CactusOutlineDocument.windowControllerWillLoadNib_( %s )" % repr(aController)
+            print( "SUPER CactusOutlineDocument.windowControllerWillLoadNib_( %s )" % repr(aController) )
         objc.super( CactusOutlineDocument, self).windowControllerWillLoadNib_(aController)
 
 
     def windowControllerDidLoadNib_( self, aController):
         # do nothing the superclass wouldn't do
         if kwlog:
-            print "SUPER CactusOutlineDocument.windowControllerDidLoadNib_( %s )" % repr(aController)
+            print( "SUPER CactusOutlineDocument.windowControllerDidLoadNib_( %s )" % repr(aController) )
         objc.super( CactusOutlineDocument, self).windowControllerDidLoadNib_(aController)
 
 
@@ -613,16 +615,16 @@ class CactusOutlineDocument(NSDocument):
                     if ov.isItemExpanded_( item ):
                         expanded.append( idx )
                     if idx % 1000 == 0:
-                        print "idx, items", idx, len(expanded)
+                        print( "idx, items", idx, len(expanded) )
 
                 expanded = [str(i) for i in expanded]
                 expanded = ', '.join( expanded )
                 if expanded == "":
                     expanded = "1"
                 if 1: #kwlog:
-                    print "CactusOutlineDocument.calculateExpansionState_()"
-                    print "expansionState: ", repr(expanded)
-                    print
+                    print( "CactusOutlineDocument.calculateExpansionState_()" )
+                    print( "expansionState: ", repr(expanded) )
+                    print()
                 winframe['expansionState'] = expanded
                 return winframe
 
@@ -658,7 +660,7 @@ class CactusOutlineDocument(NSDocument):
 
     def dataRepresentationOfType_( self, theType ):
         if kwlog:
-            print "CactusOutlineDocument.dataRepresentationOfType_( %s )" % repr(theType)
+            print( "CactusOutlineDocument.dataRepresentationOfType_( %s )" % repr(theType) )
 
         defaults = NSUserDefaults.standardUserDefaults()
 
@@ -713,8 +715,8 @@ class CactusOutlineDocument(NSDocument):
                 indent = unicode(defaults.objectForKey_( u'txtIndent'))
                 indent = int(indent)
 
-            except StandardError, err:
-                print "ERROR reading defaults.", repr(err)
+            except StandardError as err:
+                print( "ERROR reading defaults.", repr(err) )
 
             etHTML = CactusOPML.generateHTML( self.rootNode, doctype, encoding, indent )
 
@@ -745,9 +747,9 @@ class CactusOutlineDocument(NSDocument):
             pass
 
         else:
-            print
-            print "ERROR! Bogus filetype for writing: '%s'" % repr(theType)
-            print
+            print()
+            print( "ERROR! Bogus filetype for writing: '%s'" % repr(theType) )
+            print()
 
         # Insert code here to write your document from the given data.
         # You can also choose to override -fileWrapperRepresentationOfType:
@@ -761,15 +763,15 @@ class CactusOutlineDocument(NSDocument):
         # instead.
 
         if kwlog:
-            print "CactusOutlineDocument.dataRepresentationOfType_( %s ) RETURNED NONE" % repr(theType)
+            print( "CactusOutlineDocument.dataRepresentationOfType_( %s ) RETURNED NONE" % repr(theType) )
         return None
 
 
     def loadDataRepresentation_ofType_(self, data, aType):
         if kwlog:
-            print
-            print "------ TBD ----- CactusOutlineDocument.loadDataRepresentation_ofType_()"
-            print
+            print()
+            print( "------ TBD ----- CactusOutlineDocument.loadDataRepresentation_ofType_()" )
+            print()
         # Insert code here to read your document from the given data.  You can
         # also choose to override -loadFileWrapperRepresentation:ofType: or
         # -readFromFile:ofType: instead.
@@ -785,9 +787,9 @@ class CactusOutlineDocument(NSDocument):
     def readFromData_ofType_error_(self, data, typeName, err):
         # This should be deleted
         if kwlog:
-            print "X" * 80
-            print "CactusOutlineDocument.readFromData_ofType_error_()"
-            print "X" * 80
+            print( "X" * 80 )
+            print( "CactusOutlineDocument.readFromData_ofType_error_()" )
+            print( "X" * 80 )
 
         outError = None
         readSuccess = False
@@ -813,13 +815,13 @@ class CactusOutlineDocument(NSDocument):
                 self.rootNode = root
                 readSuccess = True
         else:
-            print "ERROR: Wrong type requested: ", repr(typename)
+            print( "ERROR: Wrong type requested: ", repr(typename) )
         return (readSuccess, outError)
 
 
     def showWindows( self ):
         if kwlog:
-            print "CactusOutlineDocument.showWindows()"
+            print( "CactusOutlineDocument.showWindows()" )
 
         c = objc.super( CactusOutlineDocument, self).showWindows()
         #
@@ -831,7 +833,7 @@ class CactusOutlineDocument(NSDocument):
         doanimate = True
         try:
             doanimate = bool(defaults.objectForKey_( u'optAnimateOPMLOpen'))
-        except Exception, err:
+        except Exception as err:
             pass
 
         for controller in controllers:
@@ -881,9 +883,9 @@ class CactusOutlineDocument(NSDocument):
                     try:
                         rows = rows.split(',')
                         rows = [int(i)+1 for i in rows if i]
-                    except Exception, err:
-                        print "\nERROR: expansionState reading failed.\n", err
-                        print
+                    except Exception as err:
+                        print( "\nERROR: expansionState reading failed.\n", err )
+                        print()
                     if rows:
                         for row in rows:
                             item = outlineView.itemAtRow_( row )
@@ -906,19 +908,19 @@ class CactusOutlineDocument(NSDocument):
                     s = NSMakeRect(coords[0], coords[1], w, h)
 
                     # animation is too slow, ca 0.5s per file
-                    # print "ANIME:", window.animationResizeTime_( s )
+                    # print( "ANIME:", window.animationResizeTime_( s ) )
                     window.setFrame_display_animate_(s, True, doanimate)
 
                     # window.setFrame_display_(s, True)
                     redisplay = False
-                except StandardError, err:
-                    print err
-                    print "No window setting for you."
+                except StandardError as err:
+                    print( err )
+                    print( "No window setting for you." )
             outlineView.setNeedsDisplay_( redisplay )
 
     def makeWindowControllers(self):
         if kwlog:
-            print "CactusOutlineDocument.makeWindowControllers()"
+            print( "CactusOutlineDocument.makeWindowControllers()" )
 
         c = CactusOutlineWindowController.alloc().init()
         self.addWindowController_( c )
@@ -928,7 +930,7 @@ class CactusOutlineDocument(NSDocument):
 
     def windowControllers(self):
         if kwlog:
-            print "CactusOutlineDocument.windowControllers()"
+            print( "CactusOutlineDocument.windowControllers()" )
         #pdb.set_trace()
         #print
         return objc.super( CactusOutlineDocument, self).windowControllers()
@@ -980,12 +982,12 @@ class CactusOutlineWindowController(NSWindowController):
     """
 
     def dealloc(self):
-        print "CactusOutlineWindowController.dealloc()", self.retainCount()
+        print( "CactusOutlineWindowController.dealloc()", self.retainCount() )
         #if self.rootNode:
         #    self.rootNode.release()
         #if self.parentNode:
         #    self.parentNode.release()
-        print "DEALLOCDBG model:", self.model, self.model.retainCount()
+        print( "DEALLOCDBG model:", self.model, self.model.retainCount() )
         self.model.release()
         objc.super(CactusOutlineWindowController, self).dealloc()
 
@@ -1002,7 +1004,7 @@ class CactusOutlineWindowController(NSWindowController):
 
         """
         if kwlog:
-            print "CactusOutlineWindowController.initWithObject_()"
+            print( "CactusOutlineWindowController.initWithObject_()" )
 
         # self = self.initWithWindowNibName_("OutlineEditor")
         title = u"Unnamed Outline"
@@ -1017,7 +1019,7 @@ class CactusOutlineWindowController(NSWindowController):
         document = self.document()
 
         if not isinstance(document, CactusOutlineDocument):
-            print "FAKE document"
+            print( "FAKE document" )
 
         if document.url:
             # self.nsurl = document.url
@@ -1107,8 +1109,8 @@ class CactusOutlineWindowController(NSWindowController):
             self.optVLines.setState_( defaults.objectForKey_( u'optVLines') )
             self.optHLines.setState_( defaults.objectForKey_( u'optHLines') )
 
-        except StandardError, err:
-            print "ERROR reading defaults.", repr(err)
+        except StandardError as err:
+            print( "ERROR reading defaults.", repr(err) )
 
         if document.fileType() in (CactusPLISTType,):
             # disable value column for plist (for now)
@@ -1129,7 +1131,7 @@ class CactusOutlineWindowController(NSWindowController):
         result = None
         try:
             result = self.document().fileURL()
-        except Exception, err:
+        except Exception as err:
             pass
         return result
 
@@ -1137,7 +1139,7 @@ class CactusOutlineWindowController(NSWindowController):
     def displayName(self):
         # get window name
         if 0: #kwlog:
-            print "CactusOutlineWindowController.displayName() ->",
+            print( "CactusOutlineWindowController.displayName() ->", )
         doc = self.document()
         if not doc:
             return ""
@@ -1157,13 +1159,13 @@ class CactusOutlineWindowController(NSWindowController):
             # keep unnamed title
             pass
         if 0: #kwlog:
-            print repr(title)
+            print( repr(title) )
         return title
 
 
     def windowWillClose_(self, notification):
         if kwlog:
-            print "CactusOutlineWindowController.windowWillClose_()"
+            print( "CactusOutlineWindowController.windowWillClose_()" )
         # see comment in self.initWithObject_()
         #
         # TBD: check model.dirty
@@ -1173,29 +1175,29 @@ class CactusOutlineWindowController(NSWindowController):
 
     def doubleClick_(self, sender):
         if kwlog:
-            print "CactusOutlineWindowController.doubleClick_()"
+            print( "CactusOutlineWindowController.doubleClick_()" )
         #objc.super(CactusOutlineWindowController, self).doubleClick_(sender)
 
     def reloadData(self):
         if kwlog:
-            print "CactusOutlineWindowController.reloadData()"
+            print( "CactusOutlineWindowController.reloadData()" )
         self.outlineView.reloadData()
 
     def reloadData_(self, item):
         if kwlog:
-            print "CactusOutlineWindowController.reloadData_(item)"
+            print( "CactusOutlineWindowController.reloadData_(item)" )
         self.outlineView.reloadItem_reloadChildren_( item, True )
 
     def reloadData_reloadChildren_(self, item, children):
         if kwlog:
-            print "CactusOutlineWindowController.reloadData_reloadChildren_(item, children)"
+            print( "CactusOutlineWindowController.reloadData_reloadChildren_(item, children)" )
         self.outlineView.reloadItem_reloadChildren_( item, children )
 
     @objc.IBAction
     def loadFile_(self, sender):
         if kwlog:
-            print "-" * 80
-            print "EMPTY CactusOutlineWindowController.loadFile_()"
+            print( "-" * 80 )
+            print( "EMPTY CactusOutlineWindowController.loadFile_()" )
 
     @objc.IBAction
     def applySettings_(self, sender):
@@ -1203,7 +1205,7 @@ class CactusOutlineWindowController(NSWindowController):
         """
 
         if kwlog:
-            print "CactusOutlineWindowController.applySettings_()"
+            print( "CactusOutlineWindowController.applySettings_()" )
 
         # rowHeight
         self.variableRowHeight = self.optVariableRow.state()
@@ -1252,8 +1254,8 @@ class CactusOutlineWindowController(NSWindowController):
             l = self.menRowLines.title()
             l = int(l)
             self.rowLines = l
-        except StandardError, err:
-            print "\nERROR  ---  Menu Row lines '%'" % repr(l)
+        except StandardError as err:
+            print( "\nERROR  ---  Menu Row lines '%'" % repr(l) )
             self.rowLines = 4
             self.menRowLines.setTitle_( u"4" )
 

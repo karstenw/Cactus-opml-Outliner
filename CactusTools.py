@@ -153,7 +153,7 @@ def readURL( nsurl, type_="" ):
     cache = False
     try:
         cache = bool(defaults.objectForKey_( u'optCache'))
-    except StandardError, err:
+    except StandardError as err:
         print( "ERROR reading defaults.", repr(err) )
     
     # pdb.set_trace()
@@ -431,7 +431,7 @@ def getDownloadFolder( nsurl ):
     cacheFolder = CactusVersion.cachefolder
     try:
         cacheFolder = unicode(defaults.objectForKey_( u'txtCacheFolder'))
-    except StandardError, err:
+    except StandardError as err:
         print( "CactusTools.getDownloadFolder(%s) -> False" % NSURL2str(nsurl) )
         print( "ERROR reading defaults.", repr(err) )
 
@@ -475,7 +475,7 @@ def getRemotefilemodificationDate( url ):
 
     try:
         f = urllib.urlopen( url )
-    except IOError, err:
+    except IOError as err:
         print( "ERROR: Could not open url (%s) for date reading." % url )
         return False
 
@@ -487,7 +487,7 @@ def getRemotefilemodificationDate( url ):
         try:
             rmodfdate = datetime.datetime( *remotemodfdate[:6] )
             #rmodfdate = datetime.datetime( *rinfo.getdate('last-modified')[:6] )
-        except TypeError, err:
+        except TypeError as err:
             print( "Could not get remote file(%s) modification date." % url )
             return False
         return rmodfdate
@@ -578,7 +578,7 @@ def cache_url( nsurl, fileextension ):
                 finder = asc.app(u'Finder.app', terms=Finder10)
                 hfspath = mactypes.File( localpath ).hfspath
                 finder.files[hfspath].comment.set( url )
-            except StandardError, v:
+            except StandardError as v:
                 print( "SET COMMENT FAILED ON '%s'" % localpath )
             # get file date
             lmodfdate = os.stat( localpath ).st_mtime
@@ -596,7 +596,7 @@ def cache_url( nsurl, fileextension ):
 
         returnURL = NSURL.fileURLWithPath_( unicode(localpath) )
 
-    except Exception, err:
+    except Exception as err:
         tb = unicode(traceback.format_exc())
         print( tb )
         print(  )
@@ -639,7 +639,7 @@ def mergeURLs( base, rel ):
     try:
         s = s % ( base, rel, target)
         print( s ) #.encode("utf-8")
-    except Exception, err:
+    except Exception as err:
         print(  )
         print( "ERROR in mergeURL" )
         print( err )

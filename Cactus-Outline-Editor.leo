@@ -10,17 +10,17 @@
 <find_panel_settings/>
 <vnodes>
 <v t="karstenw.20160619130609.2" a="E"><vh>Code</vh>
-<v t="karstenw.20160619192706.1" a="E"><vh>Tools</vh>
-<v t="karstenw.20160619130856.1"><vh>@clean CactusAccessoryController.py</vh>
+<v t="karstenw.20160619192706.1"><vh>Tools</vh>
+<v t="karstenw.20160619130856.1" a="E"><vh>@clean CactusAccessoryController.py</vh>
 <v t="karstenw.20160619130933.1"><vh>CactusAccessoryController declarations</vh></v>
-<v t="karstenw.20160619130933.2"><vh>class CactusOpenAsAccessoryController</vh>
+<v t="karstenw.20160619130933.2" a="E"><vh>class CactusOpenAsAccessoryController</vh>
 <v t="karstenw.20160619130933.3"><vh>__new__</vh></v>
 <v t="karstenw.20160619130933.4"><vh>init</vh></v>
 <v t="karstenw.20160619130933.5"><vh>menuOpenAsType_</vh></v>
 </v>
 </v>
 </v>
-<v t="karstenw.20160619193218.1"><vh>Controllers</vh>
+<v t="karstenw.20160619193218.1" a="E"><vh>Controllers</vh>
 <v t="karstenw.20160619131140.1"><vh>@clean CactusOpenURLController.py</vh>
 <v t="karstenw.20160619131158.1"><vh>CactusOpenURLController declarations</vh></v>
 <v t="karstenw.20160619131158.2"><vh>class OpenURLWindowController</vh>
@@ -324,7 +324,7 @@
 <v t="karstenw.20160619131549.4"><vh>__init__</vh></v>
 </v>
 </v>
-<v t="karstenw.20220912113705.1" a="E"><vh>@clean CactusTools.py</vh>
+<v t="karstenw.20220912113705.1"><vh>@clean CactusTools.py</vh>
 <v t="karstenw.20220912113721.1"><vh>Declarations</vh></v>
 <v t="karstenw.20220912114003.1"><vh>python3 stuff</vh></v>
 <v t="karstenw.20220912113812.1"><vh>+ TOOLS</vh></v>
@@ -3061,6 +3061,8 @@ def OK_(self, sender):
 </t>
 <t tx="karstenw.20160619131225.1"># -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 import os
 import datetime
 
@@ -3202,7 +3204,7 @@ def xml_from_string(xml_text):
 
     try:
         s = etree.fromstring(xml_text)
-    except StandardError, v:
+    except StandardError as v:
         raise XMLParseErrorException, "The XML file could not be parsed.\n%s" % v
     return getXML_( s )
 
@@ -3215,7 +3217,7 @@ def xml_from_string(xml_text):
     try:
         # s = lxmletree.parse(htmlurl, parser)
         s = lxmletree.parse(urlopen(htmlurl), parser)
-    except StandardError, v:
+    except StandardError as v:
         raise HTMLParseErrorException, "The HTML file could not be parsed.\n%s" % v
     return getHTML_( s )
 
@@ -3328,20 +3330,20 @@ def xml_from_string(xml_text):
             continue
         try:
             rootElement.attrib[e] = d[e]
-        except ValueError, err:
-            print
-            print "ERROR ON ATTRIB UPDATE"
-            print err
+        except ValueError as err:
+            print()
+            print( "ERROR ON ATTRIB UPDATE" )
+            print( err )
     comment = baseOP.comment
     if comment:
         rootElement.text = comment
 
     try:
         nodes = createSubNodesHTML(baseOP, rootElement, 1, indent)
-    except Exception, err:
-        print 
-        print err
-        print
+    except Exception as err:
+        print()
+        print( err )
+        print()
 
     if indent:
         indentXML(rootElement, level=0, width=indent)
@@ -3485,7 +3487,7 @@ def generateRSS( rootNode, indent=2 ):
                     else:
                         
                         head_d[name] = value
-        print "HEAD:"
+        print( "HEAD:" )
         pp(head_d)
     body_l = []
     bodyOP = rootNode.findFirstChildWithName_( "body" )
@@ -3509,9 +3511,9 @@ def generateRSS( rootNode, indent=2 ):
                         length, type_ = rest.split(';', 1)
                         try:
                             length = int(length)
-                        except ValueError, err:
+                        except ValueError as err:
                             if kwlog:
-                                print "BOGUS ENCLOSURE LENGTH: %s" % repr(length)
+                                print( "BOGUS ENCLOSURE LENGTH: %s" % repr(length) )
                             length = 0
                         enc = PyRSS2Gen.Enclosure( url, length, type_)
                         d[k] = enc
@@ -3519,9 +3521,9 @@ def generateRSS( rootNode, indent=2 ):
                         # TODO: check for type here; dicts and lists may be bad
                         d[ k ] = v #value[key]
                         if type(d[ k ]) in (list, dict, tuple):
-                            print "\ngenerateRSS() type error.\n"
+                            print( "\ngenerateRSS() type error.\n" )
                         
-            #print "ITEM:"
+            #print( "ITEM:" )
             #pp( d )
             body_l.append( PyRSS2Gen.RSSItem( **d ) )
 
@@ -3672,7 +3674,7 @@ def getOutlineNodes(node):
     return
      etree.Element of rootNode
     """
-    print "opml.generateOPML( %s, %s )" % (rootNode, repr(expansion))
+    print( "opml.generateOPML( %s, %s )" % (rootNode, repr(expansion)) )
 
     defaults = NSUserDefaults.standardUserDefaults()
     merge = defaults.objectForKey_( u'optMergeComment')
@@ -3721,7 +3723,7 @@ def getOutlineNodes(node):
                     node.attrib["_note"] = comment
                 else:
                     node.attrib["comment"] = comment
-            print "HEAD: '%s': '%s' " % (repr(name), repr(v))
+            print( "HEAD: '%s': '%s' " % (repr(name), repr(v)) )
         # add missing keys
         if expansion:
             for key in expansion:
@@ -3746,10 +3748,10 @@ def getOutlineNodes(node):
         else:
             # an outline without body
             nodes = createSubNodesOPML(rootNode, body, 1, merge=merge)
-    except Exception, err:
+    except Exception as err:
         tb = unicode(traceback.format_exc())
-        print tb
-        print 
+        print( tb )
+        print()
 
     if indent:
         indentXML(rootOPML, 0, indent)
@@ -3842,21 +3844,21 @@ def getOutlineNodes(node):
 
     if head:
         for item in list(head):
-            #print "head:", item.tag, item.text
+            #print( "head:", item.tag, item.text )
             d['head'].append( (item.tag, item.text) )
 
     if body:
         d['body'] = getOutlineNodes(body)
 
     if kwlog:
-        print
-        print "KeyTypes", len(keyTypes)
+        print()
+        print( "KeyTypes", len(keyTypes) )
         pp(keyTypes)
-        print
-        print "OPMPTags", len(opmlTags)
+        print()
+        print( "OPMPTags", len(opmlTags) )
         pp(opmlTags)
-        print
-        print "types", len(nodeTypes)
+        print()
+        print( "types", len(nodeTypes) )
         pp(nodeTypes)
         
     return  d
@@ -3866,7 +3868,7 @@ def getOutlineNodes(node):
 <t tx="karstenw.20160619131225.4">def opml_from_string(opml_text):
     try:
         s = etree.fromstring(opml_text)
-    except StandardError, v:
+    except StandardError as v:
         raise OPMLParseErrorException, "The OPML file could not be parsed.\n%s" % v
     return getOPML( s )
 
@@ -3875,7 +3877,7 @@ def getOutlineNodes(node):
 <t tx="karstenw.20160619131225.5">def parse_plist( nsurl ):
     try:
         nsdict = NSDictionary.dictionaryWithContentsOfURL_( nsurl )
-    except StandardError, v:
+    except StandardError as v:
         raise PLISTParseErrorException, "The PLIST file could not be parsed.\n%s" % v
     return nsdict
 
@@ -3980,10 +3982,10 @@ def getXMLNodes( node ):
         if kwlog and kwdbg:
             if tail:
                 if name == u"a":
-                    print
-                    print "NAME:", repr(name)
-                    print "TEXT:", repr(text)
-                    print "TAIL:", repr(tail)
+                    print()
+                    print( "NAME:", repr(name) )
+                    print( "TEXT:", repr(text) )
+                    print( "TAIL:", repr(tail) )
                 
         comment = False
         if n.tag in (CommentNode,):
@@ -4025,6 +4027,7 @@ def getXMLNodes( node ):
 <t tx="karstenw.20160619131238.1">
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 
 """A collection of outline related stuff
 """
@@ -4271,7 +4274,7 @@ g_qtplayer_extensions = g_qtplayer_extensions.split()
 </t>
 <t tx="karstenw.20160619131238.10">def insertSafariLinks_(self, sender):
     if kwlog:
-        print "KWOutlineView.insertSafariLinks_()"
+        print( "KWOutlineView.insertSafariLinks_()" )
     row = self.clickedRow()
     selection = self.getSelectionItems()
     if not selection:
@@ -4291,8 +4294,8 @@ g_qtplayer_extensions = g_qtplayer_extensions.split()
     try:
         src = safari.windows[1].current_tab.source()
         url = safari.windows[1].current_tab.URL()
-    except Exception, err:
-        print err
+    except Exception as err:
+        print( err )
     if not src:
         return
     soup = BeautifulSoup( src )
@@ -4322,7 +4325,7 @@ g_qtplayer_extensions = g_qtplayer_extensions.split()
 
 def insertSafarimages_(self, sender):
     if kwlog:
-        print "KWOutlineView.insertSafariLinks_()"
+        print( "KWOutlineView.insertSafariLinks_()" )
     row = self.clickedRow()
     selection = self.getSelectionItems()
     if not selection:
@@ -4342,8 +4345,8 @@ def insertSafarimages_(self, sender):
     try:
         src = safari.windows[1].current_tab.source()
         url = safari.windows[1].current_tab.URL()
-    except Exception, err:
-        print err
+    except Exception as err:
+        print( err )
     if not src:
         return
     soup = BeautifulSoup( src )
@@ -4377,7 +4380,7 @@ def insertSafarimages_(self, sender):
 </t>
 <t tx="karstenw.20160619131238.11">def copySelectionPython_(self, sender):
     if kwlog:
-        print "KWOutlineView.copySelectionPython_()"
+        print( "KWOutlineView.copySelectionPython_()" )
     row = self.clickedRow()
     selection = self.getSelectionItems()
     result = []
@@ -4390,7 +4393,7 @@ def insertSafarimages_(self, sender):
 
 </t>
 <t tx="karstenw.20160619131238.12">def copySelectionNodes_(self, sender):
-    print "KWOutlineView.copySelectionPython_()"
+    print( "KWOutlineView.copySelectionPython_()" )
     selection = self.getSelectionItems()
     result = []
     for contextItem in selection:
@@ -4427,7 +4430,7 @@ def insertSafarimages_(self, sender):
 </t>
 <t tx="karstenw.20160619131238.14">def contextMenuInclude_(self, sender):
     if kwlog:
-        print "KWOutlineView.contextMenuInclude_()"
+        print( "KWOutlineView.contextMenuInclude_()" )
 
     # TBD: check selection
     # if right-click in selection:
@@ -4460,9 +4463,9 @@ def insertSafarimages_(self, sender):
                             readURL( NSURL.URLWithString_( url ),
                                      CactusOPMLType ) )
 
-            except OPMLParseErrorException, err:
-                print traceback.format_exc()
-                print err
+            except OPMLParseErrorException as err:
+                print( traceback.format_exc() )
+                print( err )
 
             if d:
                 #
@@ -4502,7 +4505,7 @@ def insertSafarimages_(self, sender):
 #
 
 def XdraggingEntered_( self, dragInfo ):
-    print "draggingEntered_"
+    print( "draggingEntered_" )
     pboard = dragInfo.draggingPasteboard()
     mask = dragInfo.draggingSourceOperationMask()
     types = pboard.types()
@@ -4514,7 +4517,7 @@ def XdraggingEntered_( self, dragInfo ):
         return NSDragOperationMove
 
     elif NSFilenamesPboardType in types:
-        print "NSFilenamesPboardType entered"
+        print( "NSFilenamesPboardType entered" )
         return NSDragOperationNone
 
         if mask &amp; NSDragOperationLink:
@@ -4528,23 +4531,23 @@ def XdraggingEntered_( self, dragInfo ):
 
 </t>
 <t tx="karstenw.20160619131238.16">def XdraggingUpdated_( self, dragInfo ):
-    #print "draggingUpdated_",
+    #print( "draggingUpdated_", )
     if dragInfo.draggingSource():
         pp(dragInfo)
         return NSDragOperationMove
     else:
-        print "external"
+        print( "external" )
         return NSDragOperationCopy
 
 </t>
 <t tx="karstenw.20160619131238.17">@objc.IBAction
 def XdraggingExited_( self, dragInfo ):
-    print "draggingExited_"
+    print( "draggingExited_" )
     objc.super(KWOutlineView, self).draggingExited_(dragInfo)
 
 </t>
 <t tx="karstenw.20160619131238.18">def XprepareForDragOperation_( self, dragInfo ):
-    print "KWOutlineView.prepareForDragOperation_"
+    print( "KWOutlineView.prepareForDragOperation_" )
     self.currentDragItems = self.getSelectionItems()
     pp( self.currentDragItems )
     # self.setNeedsDisplay_(True)
@@ -4552,7 +4555,7 @@ def XdraggingExited_( self, dragInfo ):
 
 </t>
 <t tx="karstenw.20160619131238.19">def XperformDragOperation_( self, dragInfo ):
-    print "KWOutlineView.performDragOperation_"
+    print( "KWOutlineView.performDragOperation_" )
     pboard = dragInfo.draggingPasteboard()
     successful = 0
     types = pboard.types()
@@ -4563,14 +4566,14 @@ def XdraggingExited_( self, dragInfo ):
 </t>
 <t tx="karstenw.20160619131238.2">def open_photo( url, open_=True ):
     """opens 2nd biggest picture"""
-    print "CactusOutline.open_photo( %s )" % repr(url)
+    print( "CactusOutline.open_photo( %s )" % repr(url) )
 
     defaults = NSUserDefaults.standardUserDefaults()
     cache = False
     try:
         cache = bool(defaults.objectForKey_( u'optCache'))
-    except StandardError, err:
-        print "ERROR reading defaults.", repr(err)
+    except StandardError as err:
+        print( "ERROR reading defaults.", repr(err) )
 
     s = CactusTools.readURL( NSURL.URLWithString_( url ) )
 
@@ -4620,13 +4623,13 @@ def XdraggingExited_( self, dragInfo ):
 </t>
 <t tx="karstenw.20160619131238.20">@objc.IBAction
 def XconcludeDragOPeration_( self, dragInfo ):
-    print "concludeDragOPeration_", repr(dragInfo)
+    print( "concludeDragOPeration_", repr(dragInfo) )
     self.setNeedsDisplay_(True)
 
 
 </t>
 <t tx="karstenw.20160619131238.21">def XsetDropItem_dropChildIndex_(self, item, index):
-    print "KWOutlineView.setDropItem_dropChildIndex_(%s), %s" % (repr(item), repr(index))
+    print( "KWOutlineView.setDropItem_dropChildIndex_(%s), %s" % (repr(item), repr(index)) )
     # get's called if updateDrop_ is not defined
     
     
@@ -4670,7 +4673,7 @@ def paste_(self, sender):
 
 </t>
 <t tx="karstenw.20160619131238.26">def copyNodesToPasteboard_( self, pb ):
-    print "KWOutlineView.copyNodesToPasteboard_"
+    print( "KWOutlineView.copyNodesToPasteboard_" )
 
     pb.declareTypes_owner_( [DragDropCactusPboardType,
                              NSStringPboardType],
@@ -4718,7 +4721,7 @@ def paste_(self, sender):
     return a set of inserted items.
     """
     if 1: #kwlog:
-        print "KWOutlineView.readNodesFromPasteboard_parent_index_"
+        print( "KWOutlineView.readNodesFromPasteboard_parent_index_" )
 
     types = pb.types()
     t = None
@@ -4822,7 +4825,7 @@ def paste_(self, sender):
 
 </t>
 <t tx="karstenw.20160619131238.28">def draggingSourceOperationMaskForLocal_(self, isLocal):
-    print "KWoutlineView.draggingSourceOperationMaskForLocal_(%s)" % repr(isLocal)
+    print( "KWoutlineView.draggingSourceOperationMaskForLocal_(%s)" % repr(isLocal) )
     if isLocal:
         return NSDragOperationMove
     else:
@@ -4830,9 +4833,9 @@ def paste_(self, sender):
 
 </t>
 <t tx="karstenw.20160619131238.29">def draggedImage_endedAt_operation_( self, theImage, theLocation, theOperation):
-    print "KWoutlineView.draggedImage_endedAt_operation_(%s)" % theOperation
+    print( "KWoutlineView.draggedImage_endedAt_operation_(%s)" % theOperation )
     if theOperation in (NSDragOperationDelete, NSDragOperationMove):
-        # print "lastDrag:"
+        # print( "lastDrag:" )
         # pp(KWOutlineView.lastDrag)
         #deleteNodes(self, nodes=KWOutlineView.lastDrag)
         pass
@@ -4842,7 +4845,7 @@ def paste_(self, sender):
 <t tx="karstenw.20160619131238.3"># TODO: change parameter to node!
 def open_node( url, nodeType=None, open_=False, supressCache=False ):
     if kwdbg:
-        print "CactusOutline.open_node()", repr(url)
+        print( "CactusOutline.open_node()", repr(url) )
         # pp( (url,nodeType,open_, supressCache) )
 
     if chr(10) in url or chr(13) in url:
@@ -4870,9 +4873,9 @@ def open_node( url, nodeType=None, open_=False, supressCache=False ):
                                     path = path, params = purl.params,
                                     query = purl.query, fragment = purl.fragment)
         # for c in url
-        print m
-        print repr(url)
-        print
+        print( m )
+        print( repr(url) )
+        print()
 
     nsurl = NSURL.URLWithString_( url )
 
@@ -4883,8 +4886,8 @@ def open_node( url, nodeType=None, open_=False, supressCache=False ):
     cache = False
     try:
         cache = bool(defaults.objectForKey_( u'optCache'))
-    except StandardError, err:
-        print "ERROR reading defaults.", repr(err)
+    except StandardError as err:
+        print( "ERROR reading defaults.", repr(err) )
 
     appl = NSApplication.sharedApplication()
     appdelg = appl.delegate()
@@ -4966,7 +4969,7 @@ def open_node( url, nodeType=None, open_=False, supressCache=False ):
 # cell editor notifications
 #
 def textDidBeginEditing_(self, aNotification):
-    print "KWOutlineView.textDidBeginEditing_()"
+    print( "KWOutlineView.textDidBeginEditing_()" )
     """Notification."""
     self.editSession = True
 
@@ -4979,7 +4982,7 @@ def textDidBeginEditing_(self, aNotification):
 
 </t>
 <t tx="karstenw.20160619131238.31">def textDidChange_(self, aNotification):
-    print "KWOutlineView.textDidChange_()"
+    print( "KWOutlineView.textDidChange_()" )
     """Notification."""
     self.editSession = True
     userInfo = aNotification.userInfo()
@@ -4988,25 +4991,25 @@ def textDidBeginEditing_(self, aNotification):
 
         # NSCancelTextMovement
         if textMovement == NSReturnTextMovement:
-            print "RETURN MOVEMENT"
+            print( "RETURN MOVEMENT" )
         elif textMovement == NSCancelTextMovement:
-            print "CANCEL MOVEMENT"
+            print( "CANCEL MOVEMENT" )
         elif textMovement == NSTabTextMovement:
-            print "NSTabTextMovement"
+            print( "NSTabTextMovement" )
         elif textMovement == NSBacktabTextMovement:
-            print "NSBacktabTextMovement"
+            print( "NSBacktabTextMovement" )
         elif textMovement == NSLeftTextMovement:
-            print "NSLeftTextMovement"
+            print( "NSLeftTextMovement" )
         elif textMovement == NSRightTextMovement:
-            print "NSRightTextMovement"
+            print( "NSRightTextMovement" )
         elif textMovement == NSUpTextMovement:
-            print "NSUpTextMovement"
+            print( "NSUpTextMovement" )
         elif textMovement == NSDownTextMovement:
-            print "NSDownTextMovement"
+            print( "NSDownTextMovement" )
         elif textMovement == NSOtherTextMovement:
-            print "NSOtherTextMovement"
+            print( "NSOtherTextMovement" )
         elif textMovement == NSIllegalTextMovement:
-            print "NSIllegalTextMovement"
+            print( "NSIllegalTextMovement" )
 
     objc.super( KWOutlineView, self).textDidChange_(aNotification)
     #self.window().makeFirstResponder_(self)
@@ -5016,10 +5019,10 @@ def textDidBeginEditing_(self, aNotification):
 <t tx="karstenw.20160619131238.32">def textDidEndEditing_(self, aNotification):
     """Notification. Text editing ended."""
 
-    print "KWOutlineView.textDidEndEditing_()"
+    print( "KWOutlineView.textDidEndEditing_()" )
 
     if kwlog and kwdbg:
-        print "Edit END"
+        print( "Edit END" )
     userInfo = aNotification.userInfo()
     if kwlog and kwdbg:
         pp(userInfo)
@@ -5033,7 +5036,7 @@ def textDidBeginEditing_(self, aNotification):
 
     textMovement = userInfo.valueForKey_( u"NSTextMovement" ).intValue()
 
-    print "TextMovement: %i" % textMovement,
+    print( "TextMovement: %i" % (textMovement,) )
 
     # check for table/outline editing modes here
 
@@ -5041,7 +5044,7 @@ def textDidBeginEditing_(self, aNotification):
 
     # NSCancelTextMovement
     if textMovement == NSReturnTextMovement:
-        print "RETURN MOVEMENT"
+        print( "RETURN MOVEMENT" )
         returnContinue = True
         newTextActionCode = NSNumber.numberWithInt_(NSDownTextMovement)
         returnInfo.setObject_forKey_( newTextActionCode, str("NSTextMovement"))
@@ -5051,7 +5054,7 @@ def textDidBeginEditing_(self, aNotification):
                     returnInfo)
 
     elif textMovement == NSCancelTextMovement:
-        print "CANCEL MOVEMENT"
+        print( "CANCEL MOVEMENT" )
         cancelled = True
         newTextActionCode = NSNumber.numberWithInt_(NSOtherTextMovement)
         returnInfo.setObject_forKey_( newTextActionCode, str("NSTextMovement"))
@@ -5061,23 +5064,23 @@ def textDidBeginEditing_(self, aNotification):
                     returnInfo)
 
     elif textMovement == NSTabTextMovement:
-        print "NSTabTextMovement"
+        print( "NSTabTextMovement" )
     elif textMovement == NSBacktabTextMovement:
-        print "NSBacktabTextMovement"
+        print( "NSBacktabTextMovement" )
     elif textMovement == NSLeftTextMovement:
-        print "NSLeftTextMovement"
+        print( "NSLeftTextMovement" )
     elif textMovement == NSRightTextMovement:
-        print "NSRightTextMovement"
+        print( "NSRightTextMovement" )
     elif textMovement == NSUpTextMovement:
-        print "NSUpTextMovement"
+        print( "NSUpTextMovement" )
     elif textMovement == NSDownTextMovement:
-        print "NSDownTextMovement"
+        print( "NSDownTextMovement" )
     elif textMovement == NSOtherTextMovement:
-        print "NSOtherTextMovement"
+        print( "NSOtherTextMovement" )
     elif textMovement == NSIllegalTextMovement:
-        print "NSIllegalTextMovement"
+        print( "NSIllegalTextMovement" )
     else:
-        print "UNHANDLED MOVEMENT"
+        print( "UNHANDLED MOVEMENT" )
 
     # finish current cell
     objc.super( KWOutlineView, self).textDidEndEditing_(aNotification)
@@ -5104,7 +5107,7 @@ def textDidBeginEditing_(self, aNotification):
 
 </t>
 <t tx="karstenw.20160619131238.33">def cancelOperation_(self, sender):
-    print "KWOutlineView.cancelOperation_()"
+    print( "KWOutlineView.cancelOperation_()" )
     if self.currentEditor():
         # self.abortEditing()
         self.validateEditing()
@@ -5147,9 +5150,9 @@ def keyDown_(self, theEvent):
 
     if 0: #eventCharNum in mykeys:
         # pass
-        print "mykeys"
+        print( "mykeys" )
         pp(mykeys)
-        print "Event characters:", repr(eventCharacters), eventCharNum
+        print( "Event characters:", repr(eventCharacters), eventCharNum )
 
 
     # tab has       0x09/0x00100
@@ -5199,10 +5202,10 @@ def keyDown_(self, theEvent):
 
     editor = self.currentEditor()
     if editor:
-        print "EDITOR:", editor
+        print( "EDITOR:", editor )
     
     if 0:
-        print "eventCharNum", eventCharNum
+        print( "eventCharNum", eventCharNum )
 
     if eventCharNum not in mykeys:
         objc.super(KWOutlineView, self).keyDown_( theEvent )
@@ -5219,14 +5222,14 @@ def keyDown_(self, theEvent):
     eventModifiers &amp;= NSDeviceIndependentModifierFlagsMask
 
     if kwlog and 0: #kwdbg:
-        print "Key: ", hex(eventCharNum), hex(eventModifiers)
+        print( "Key: ", hex(eventCharNum), hex(eventModifiers) )
 
     ###########################################################################
     #
     # Deleting
     if eventCharacter in (NSBackspaceCharacter, NSDeleteCharacter):
         if kwlog and kwdbg:
-            print "DELETE KEY HANDLED"
+            print( "DELETE KEY HANDLED" )
 
         # while editing, will be handled elsewhere
         # outline: delete selection (saving to a pasteboard stack) TBD
@@ -5244,10 +5247,10 @@ def keyDown_(self, theEvent):
     elif eventCharacter == NSCarriageReturnCharacter:
         if eventModifiers &amp; NSShiftKeyMask:
             if kwlog and kwdbg:
-                print "SHIFT Return"
+                print( "SHIFT Return" )
         else:
             if kwlog and kwdbg:
-                print "KEY: Return"
+                print( "KEY: Return" )
             # open new line and start editing
 
             # TODO: if already editing, start new line, continue editing
@@ -5427,15 +5430,15 @@ def keyDown_(self, theEvent):
                             # no attributes but a &lt;img&gt; in name
                             d = item.getValueDict()
                             if not d:
-                                print name
+                                print( name )
                                 soup = BeautifulSoup(name)
                                 for link in soup.find_all('img'):
                                     dest = link.get('src')
-                                    # print dest
+                                    # print( dest )
                                     open_node(dest)
                                 for link in soup.find_all('a'):
                                     dest = link.get('href')
-                                    # print dest
+                                    # print( dest )
                                     open_node(dest)
                             else:
                                 type = d.get('type', '')
@@ -5511,8 +5514,8 @@ def keyDown_(self, theEvent):
                                 openAttach = False
                                 try:
                                     openAttach = bool(defaults.objectForKey_( u'optRSSOpenEnclosure'))
-                                except Exception ,err:
-                                    print "Error reading defaults:", err
+                                except Exception as err:
+                                    print( "Error reading defaults:", err )
 
                                 # extract enclosure URL
                                 enc = v.get("enclosure", "")
@@ -5554,7 +5557,7 @@ def keyDown_(self, theEvent):
                             elif theType == "scripting2Post":
                                 open_node( url, nodeType="HTML")
                             else:
-                                #print "Unhandled Node open\ntype: '%s'\nurl: '%s'" % (repr(theType), repr(url))
+                                #print( "Unhandled Node open\ntype: '%s'\nurl: '%s'" % (repr(theType), repr(url)) )
                                 open_node( url )
 
                         consumed = True
@@ -5603,10 +5606,10 @@ def keyDown_(self, theEvent):
             if eventModifiers &amp; NSShiftKeyMask:
                 if eventModifiers &amp; NSAlternateKeyMask:
                     if kwlog and kwdbg:
-                        print "SHIFT ALT Enter"
+                        print( "SHIFT ALT Enter" )
                 else:
                     if kwlog and kwdbg:
-                        print "SHIFT Enter"
+                        print( "SHIFT Enter" )
 
                     nodes = visitOutline(delg.root)
                     consumed = True
@@ -5626,7 +5629,7 @@ def keyDown_(self, theEvent):
                 if index != -1:
                     #start editing
                     if kwdbg:
-                        print "Edit START"
+                        print( "Edit START" )
                     self.editColumn_row_withEvent_select_(0, index, None, True)
                     consumed = True
                 else:
@@ -5743,7 +5746,7 @@ def keyDown_(self, theEvent):
                     # deltaH = selfRect.size.height / 2
                     # y += deltaH
                     # 
-                    # print "ScrollTo_( %s, %s )" % (repr(x), repr(y))
+                    # print( "ScrollTo_( %s, %s )" % (repr(x), repr(y)) )
                     # self.superview().scrollToPoint_( NSMakePoint( x, y ) )
                     self.scrollRowToVisible_( first )
 
@@ -5835,7 +5838,7 @@ def moveSelectionDown(self):
 </t>
 <t tx="karstenw.20160619131238.39">def outdentSelection(self):
     if kwlog:
-        print "SHIFT Tab"
+        print( "SHIFT Tab" )
 
     delegate = self.delegate()
 
@@ -5875,7 +5878,7 @@ def moveSelectionDown(self):
 #
 def getSelectionItems(self):
     if kwlog:
-        print "getSelectionItems"
+        print( "getSelectionItems" )
     """The actual nodes of the current selection are returned."""
     sel = self.selectedRowIndexes()
     result = []
@@ -6003,7 +6006,8 @@ def stdAction( node, level ):
     n = str(node.retainCount())
     n = n.ljust(4)
     s = n + s
-    print s.encode("utf-8")
+    if 0:
+        print( s.encode("utf-8") )
 
 
 </t>
@@ -6111,7 +6115,7 @@ def init(self):
 
 </t>
 <t tx="karstenw.20160619131238.59">def dealloc(self):
-    print "OutlineViewDelegateDatasource.dealloc()"
+    print( "OutlineViewDelegateDatasource.dealloc()" )
     #if self.parentNode:
     #    self.parentNode.release()
     if self.root:
@@ -6121,11 +6125,11 @@ def init(self):
             self.root.release()
         self.root=None
     if self.controller:
-        print "TODO OutlineViewDelegateDatasource.controller.release()", self.controller.retainCount()
+        print( "TODO OutlineViewDelegateDatasource.controller.release()", self.controller.retainCount() )
 
     #    self.controller.release()
     if self.document:
-        print "TODO OutlineViewDelegateDatasource.document.release()", self.document.retainCount()
+        print( "TODO OutlineViewDelegateDatasource.document.release()", self.document.retainCount() )
     #    self.document.release()
     objc.super(OutlineViewDelegateDatasource, self).dealloc()
 
@@ -6203,7 +6207,7 @@ def init(self):
         self.controller.reloadData_(item)
     else:
         if kwlog:
-            print "FAILED: reloadData_(%s)" % repr(item)
+            print( "FAILED: reloadData_(%s)" % repr(item) )
 
 </t>
 <t tx="karstenw.20160619131238.65">def isSubEditor(self):
@@ -6238,7 +6242,7 @@ def tableView_objectValueForTableColumn_row_(self, tv, column, row):
 
 </t>
 <t tx="karstenw.20160619131238.68">def numberOfRowsInTableView_(self, tv):
-    print "numberOfRowsInTableView_"
+    print( "numberOfRowsInTableView_" )
     return self.root.children.count()
 
 
@@ -6248,8 +6252,8 @@ def tableView_objectValueForTableColumn_row_(self, tv, column, row):
     column = userInfo.valueForKey_( u"NSTableColumn" )
     oldWidth = userInfo.valueForKey_( u"NSOldWidth" ).intValue()
     newWidth = column.width()
-    # print "COL: '%s' changed from: %i  to  %i" % (column.identifier(),
-    #                                               oldWidth, newWidth)
+    # print( "COL: '%s' changed from: %i  to  %i" % (column.identifier(),
+    #                                                oldWidth, newWidth))
 
 </t>
 <t tx="karstenw.20160619131238.7">#
@@ -6294,8 +6298,8 @@ def outlineView_numberOfChildrenOfItem_(self, view, item):
     if not self.typ in CactusOutlineTypes.hierarchicalTypes:
         return False
     if not hasattr(item, 'noOfChildren'):
-        print
-        print "ITEM", repr(item)
+        print()
+        print( "ITEM", repr(item) )
         return False
     return item.noOfChildren() &gt; 0
 
@@ -6349,15 +6353,15 @@ def outlineView_numberOfChildrenOfItem_(self, view, item):
 # drag and drop
 #
 def outlineView_acceptDrop_item_childIndex_(self, ov, info, targetItem, index):
-    print "DELG.outlineView_acceptDrop_item_childIndex_"
+    print( "DELG.outlineView_acceptDrop_item_childIndex_" )
 
     pb = info.draggingPasteboard()
     # pp(info)
 
     if 1:
-        print "targetItem:", repr(targetItem)
-        print "index", repr(index)
-        print "info", repr(info)
+        print( "targetItem:", repr(targetItem) )
+        print( "index", repr(index) )
+        print( "info", repr(info) )
 
     if targetItem:
         # drop on item
@@ -6390,7 +6394,7 @@ def outlineView_acceptDrop_item_childIndex_(self, ov, info, targetItem, index):
     if 0:
         for item in insertedItems:
             index = ov.rowForItem_( item )
-            print "selectionIndex:", index, item
+            print( "selectionIndex:", index, item )
             if index != -1:
                 s = NSIndexSet.indexSetWithIndex_( index )
                 ov.selectRowIndexes_byExtendingSelection_(s, True)
@@ -6407,11 +6411,11 @@ def outlineView_acceptDrop_item_childIndex_(self, ov, info, targetItem, index):
 <t tx="karstenw.20160619131238.77">def outlineView_validateDrop_proposedItem_proposedChildIndex_(self, ov, dragInfo, item, index):
     if 0 and kwdbg:
         # deactivated. very noysy
-        print "DELG.outlineView_validateDrop_proposedItem_proposedChildIndex_"
+        print( "DELG.outlineView_validateDrop_proposedItem_proposedChildIndex_" )
 
     if dragInfo.draggingSource() == self.outlineView:
-        # print "drag in outlineView()!"
-        # print item
+        # print( "drag in outlineView()!" )
+        # print( item )
         # pp(dragInfo)
         #if index == NSOutlineViewDropOnItemIndex:
         #    return NSDragOperationMove
@@ -6424,7 +6428,7 @@ def outlineView_acceptDrop_item_childIndex_(self, ov, info, targetItem, index):
         return NSDragOperationMove
     else:
         # external drop - not now
-        # print "source:", dragInfo.draggingSource()
+        # print( "source:", dragInfo.draggingSource() )
         return NSDragOperationCopy
 
     return NSDragOperationNone
@@ -6433,7 +6437,7 @@ def outlineView_acceptDrop_item_childIndex_(self, ov, info, targetItem, index):
 </t>
 <t tx="karstenw.20160619131238.78">def outlineView_writeItems_toPasteboard_(self, ov, items, pb):
     if kwdbg:
-        print "DELG.outlineView_writeItems_toPasteboard_"
+        print( "DELG.outlineView_writeItems_toPasteboard_" )
 
     pb.declareTypes_owner_( [DragDropCactusPboardType],
                             self)
@@ -6478,7 +6482,7 @@ def outlineView_heightOfRowByItem_(self, ov, item):
 <t tx="karstenw.20160619131238.8">def validateMenuItem_(self, sender):
     # row = self.selectedRow()
     if kwlog:
-        print "KWOutlineView.validateMenuItem_( %s )" % repr(sender)
+        print( "KWOutlineView.validateMenuItem_( %s )" % repr(sender) )
     return True
 
 </t>
@@ -6497,10 +6501,10 @@ def ovUpdateItem_Key_Value_(self, item, key, value):
 </t>
 <t tx="karstenw.20160619131238.82">def outlineViewSelectionDidChange_( self, aNotification ):
     if kwdbg:
-        print "outlineViewSelectionDidChange_()"
+        print( "outlineViewSelectionDidChange_()" )
     ov = None
     if aNotification:
-        #print aNotification
+        #print( aNotification )
         ov = aNotification.object()
         if not isinstance(ov, KWOutlineView):
             ov = False
@@ -6532,7 +6536,7 @@ def ovUpdateItem_Key_Value_(self, item, key, value):
 #
 def deleteNodes(ov, nodes=(), selection=False):
     if kwdbg:
-        print "CactusOutline.deleteNodes()"
+        print( "CactusOutline.deleteNodes()" )
     if selection:
         sel = ov.getSelectionItems()
     else:
@@ -6552,7 +6556,7 @@ def deleteNodes(ov, nodes=(), selection=False):
 </t>
 <t tx="karstenw.20160619131238.84">def createNode(ov, selection, startEditing=True):
     if kwdbg:
-        print "CactusOutline.createNode()"
+        print( "CactusOutline.createNode()" )
     # create node at selection and start editing
 
     # open new line and start editing
@@ -6593,7 +6597,7 @@ def deleteNodes(ov, nodes=(), selection=False):
 </t>
 <t tx="karstenw.20160619131238.85">def moveSelectionUp(ov, items):
     if kwdbg:
-        print "CactusOutline.moveSelectionUp()"
+        print( "CactusOutline.moveSelectionUp()" )
     delg = ov.delegate()
     for item in items:
         # move item before previous
@@ -6621,7 +6625,7 @@ def deleteNodes(ov, nodes=(), selection=False):
 </t>
 <t tx="karstenw.20160619131238.86">def moveSelectionDown(ov, items):
     if kwdbg:
-        print "CactusOutline.moveSelectionDown()"
+        print( "CactusOutline.moveSelectionDown()" )
     #
     # this really needs to be sorted down; use indices
     # otherwise there will be overlapping moves destroying
@@ -6655,13 +6659,13 @@ def deleteNodes(ov, nodes=(), selection=False):
 </t>
 <t tx="karstenw.20160619131238.87">def moveSelectionLeft(ov, selection):
     if kwdbg:
-        print "EMPTY: CactusOutline.moveSelectionLeft()"
+        print( "EMPTY: CactusOutline.moveSelectionLeft()" )
     pass
 
 </t>
 <t tx="karstenw.20160619131238.88">def moveSelectionRight(ov, selection):
     if kwdbg:
-        print "EMPTY: CactusOutline.moveSelectionRight()"
+        print( "EMPTY: CactusOutline.moveSelectionRight()" )
     pass
 
 
@@ -6680,19 +6684,19 @@ def deleteNodes(ov, nodes=(), selection=False):
             post = urllib.quote( post, "/:?" )
             url = "%s%%23%s" % (pre, post)
     if kwdbg:
-        print "CactusOutline.unmangleFSSpecURL(%s) -&gt; %s" % (repr(orgurl), repr(url) )
+        print( "CactusOutline.unmangleFSSpecURL(%s) -&gt; %s" % (repr(orgurl), repr(url) ) )
     return url
 
 
 </t>
 <t tx="karstenw.20160619131238.9">def menuNeedsUpdate_(self, sender):
     if 0: #kwlog:
-        print "KWOutlineView.menuNeedsUpdate_( %s )" % repr(sender)
+        print( "KWOutlineView.menuNeedsUpdate_( %s )" % repr(sender) )
 
 </t>
 <t tx="karstenw.20160619131238.90">def cleanupURL( url ):
     if kwdbg:
-        print "CactusOutline.cleanupURL()"
+        print( "CactusOutline.cleanupURL()" )
     # lots of URLs contain spaces, &amp;, '
     return unmangleFSSPecURL( url )
 
@@ -6724,10 +6728,10 @@ def deleteNodes(ov, nodes=(), selection=False):
         path = urllib.unquote( 'http://' + path )
         try:
             path = urllib.quote( path )
-        except KeyError, err:
-            print "ERROR"
-            print repr(path)
-            print err
+        except KeyError as err:
+            print( "ERROR" )
+            print( repr(path) )
+            print( err )
         path = path[9:]
         purl[2] = path
         #
@@ -6820,6 +6824,8 @@ def folder2Outline( folder, node, filter=None):
 </t>
 <t tx="karstenw.20160619131254.1">
 # -*- coding: utf-8 -*-
+
+from __future__ import print_function
 
 
 """
@@ -6947,7 +6953,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
 </t>
 <t tx="karstenw.20160619131254.10">def initWithType_error_(self, theType, err):
     if kwlog:
-        print "CactusOutlineDocument.initWithType_error_( %s )" % (repr(theType),)
+        print( "CactusOutlineDocument.initWithType_error_( %s )" % (repr(theType),) )
 
     self = self.init()
     if not self:
@@ -6957,10 +6963,10 @@ openPLIST_ = CactusFileOpeners.openPLIST_
 
     self.rootNode = OutlineNode("__ROOT__", "", None, typeOutline, None)
     if kwlog:
-        print "    .initWithType_error_ rootRetaines %i " % (self.rootNode.retainCount(),)
+        print( "    .initWithType_error_ rootRetaines %i " % (self.rootNode.retainCount(),) )
     boilerplateOPML( self.rootNode )
     if kwlog:
-        print "    .initWithType_error_ boilerplate rootRetaines %i " % (self.rootNode.retainCount(),)
+        print( "    .initWithType_error_ boilerplate rootRetaines %i " % (self.rootNode.retainCount(),) )
     self.updateChangeCount_( NSChangeCleared )
 
     self.variableRowHeight = True
@@ -6970,7 +6976,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
 </t>
 <t tx="karstenw.20160619131254.11">def displayName(self):
     if kwlog:
-        print "CactusOutlineDocument.displayName() -&gt;",
+        print( "CactusOutlineDocument.displayName() -&gt;", )
     title = objc.super( CactusOutlineDocument, self).displayName()
 
     if 0:
@@ -6990,16 +6996,16 @@ openPLIST_ = CactusFileOpeners.openPLIST_
             t = os.path.split( fullpath )[1]
             if t:
                 title = t
-        except Exception, err:
-            print
-            print "displayName CRASHED!"
-            print err
-            print
+        except Exception as err:
+            print()
+            print( "displayName CRASHED!" )
+            print( err )
+            print()
         finally:
             pass
 
     if kwlog:
-        print repr(title)
+        print( repr(title) )
     self.title = title
     return title
 
@@ -7007,14 +7013,14 @@ openPLIST_ = CactusFileOpeners.openPLIST_
 </t>
 <t tx="karstenw.20160619131254.12">def awakeFromNib(self):
     if kwlog:
-        print "CactusOutlineDocument.awakeFromNib()"
+        print( "CactusOutlineDocument.awakeFromNib()" )
 
 
 </t>
 <t tx="karstenw.20160619131254.13">def XXwindowNibName(self):
     # deactivated
     if kwlog:
-        print "CactusOutlineDocument.windowNibName()"
+        print( "CactusOutlineDocument.windowNibName()" )
     return u"OutlineEditor"
 
 
@@ -7022,18 +7028,18 @@ openPLIST_ = CactusFileOpeners.openPLIST_
 <t tx="karstenw.20160619131254.14">def fileURL( self ):
     # do nothing the superclass wouldn't do
     if kwlog:
-        print "SUPER CactusOutlineDocument.fileURL()"
+        print( "SUPER CactusOutlineDocument.fileURL()" )
     return objc.super( CactusOutlineDocument, self).fileURL()
 
 
 </t>
 <t tx="karstenw.20160619131254.15">def setFileURL_( self, theURL ):
-    # print "URLType:", type(theURL)
+    # print( "URLType:", type(theURL) )
     if not isinstance( theURL, NSURL ):
         theURL = NSURL.URLWithString_( theURL )
     # do nothing the superclass wouldn't do
     if kwlog:
-        print "SUPER CactusOutlineDocument.setFileURL()", repr(NSURL2str(theURL))
+        print( "SUPER CactusOutlineDocument.setFileURL()", repr(NSURL2str(theURL)) )
     objc.super( CactusOutlineDocument, self).setFileURL_( theURL )
     self.url = theURL
 
@@ -7044,7 +7050,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
 <t tx="karstenw.20160619131254.16">def windowControllerWillLoadNib_( self, aController):
     # do nothing the superclass wouldn't do
     if kwlog:
-        print "SUPER CactusOutlineDocument.windowControllerWillLoadNib_( %s )" % repr(aController)
+        print( "SUPER CactusOutlineDocument.windowControllerWillLoadNib_( %s )" % repr(aController) )
     objc.super( CactusOutlineDocument, self).windowControllerWillLoadNib_(aController)
 
 
@@ -7052,7 +7058,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
 <t tx="karstenw.20160619131254.17">def windowControllerDidLoadNib_( self, aController):
     # do nothing the superclass wouldn't do
     if kwlog:
-        print "SUPER CactusOutlineDocument.windowControllerDidLoadNib_( %s )" % repr(aController)
+        print( "SUPER CactusOutlineDocument.windowControllerDidLoadNib_( %s )" % repr(aController) )
     objc.super( CactusOutlineDocument, self).windowControllerDidLoadNib_(aController)
 
 
@@ -7105,16 +7111,16 @@ openPLIST_ = CactusFileOpeners.openPLIST_
                 if ov.isItemExpanded_( item ):
                     expanded.append( idx )
                 if idx % 1000 == 0:
-                    print "idx, items", idx, len(expanded)
+                    print( "idx, items", idx, len(expanded) )
 
             expanded = [str(i) for i in expanded]
             expanded = ', '.join( expanded )
             if expanded == "":
                 expanded = "1"
             if 1: #kwlog:
-                print "CactusOutlineDocument.calculateExpansionState_()"
-                print "expansionState: ", repr(expanded)
-                print
+                print( "CactusOutlineDocument.calculateExpansionState_()" )
+                print( "expansionState: ", repr(expanded) )
+                print()
             winframe['expansionState'] = expanded
             return winframe
 
@@ -7151,7 +7157,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
 </t>
 <t tx="karstenw.20160619131254.19">def dataRepresentationOfType_( self, theType ):
     if kwlog:
-        print "CactusOutlineDocument.dataRepresentationOfType_( %s )" % repr(theType)
+        print( "CactusOutlineDocument.dataRepresentationOfType_( %s )" % repr(theType) )
 
     defaults = NSUserDefaults.standardUserDefaults()
 
@@ -7206,8 +7212,8 @@ openPLIST_ = CactusFileOpeners.openPLIST_
             indent = unicode(defaults.objectForKey_( u'txtIndent'))
             indent = int(indent)
 
-        except StandardError, err:
-            print "ERROR reading defaults.", repr(err)
+        except StandardError as err:
+            print( "ERROR reading defaults.", repr(err) )
 
         etHTML = CactusOPML.generateHTML( self.rootNode, doctype, encoding, indent )
 
@@ -7238,9 +7244,9 @@ openPLIST_ = CactusFileOpeners.openPLIST_
         pass
 
     else:
-        print
-        print "ERROR! Bogus filetype for writing: '%s'" % repr(theType)
-        print
+        print()
+        print( "ERROR! Bogus filetype for writing: '%s'" % repr(theType) )
+        print()
 
     # Insert code here to write your document from the given data.
     # You can also choose to override -fileWrapperRepresentationOfType:
@@ -7254,7 +7260,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
     # instead.
 
     if kwlog:
-        print "CactusOutlineDocument.dataRepresentationOfType_( %s ) RETURNED NONE" % repr(theType)
+        print( "CactusOutlineDocument.dataRepresentationOfType_( %s ) RETURNED NONE" % repr(theType) )
     return None
 
 
@@ -7266,7 +7272,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
 
     """
     if kwlog:
-        print "boilerplateOPML()"
+        print( "boilerplateOPML()" )
 
     ZERO = datetime.timedelta(0)
     HOUR = datetime.timedelta(hours=1)
@@ -7294,8 +7300,8 @@ openPLIST_ = CactusFileOpeners.openPLIST_
     try:
         uname = unicode(defaults.objectForKey_( u'txtUserName'))
         uemail = unicode(defaults.objectForKey_( u'txtUserEmail'))
-    except StandardError, err:
-        print "ERROR reading defaults.", repr(err)
+    except StandardError as err:
+        print( "ERROR reading defaults.", repr(err) )
 
     head.addChild_(OutlineNode("dateCreated", s, head, typeOutline, root))
     head.addChild_(OutlineNode("dateModified", s, head, typeOutline, root))
@@ -7315,18 +7321,18 @@ openPLIST_ = CactusFileOpeners.openPLIST_
     #head.release()
     #body.release()
     if 0:
-        print "root:", root.retainCount()
-        print "head:", head.retainCount()
-        print "body:", body.retainCount()
+        print( "root:", root.retainCount() )
+        print( "head:", head.retainCount() )
+        print( "body:", body.retainCount() )
     return
 
 
 </t>
 <t tx="karstenw.20160619131254.20">def loadDataRepresentation_ofType_(self, data, aType):
     if kwlog:
-        print
-        print "------ TBD ----- CactusOutlineDocument.loadDataRepresentation_ofType_()"
-        print
+        print()
+        print( "------ TBD ----- CactusOutlineDocument.loadDataRepresentation_ofType_()" )
+        print()
     # Insert code here to read your document from the given data.  You can
     # also choose to override -loadFileWrapperRepresentation:ofType: or
     # -readFromFile:ofType: instead.
@@ -7343,9 +7349,9 @@ openPLIST_ = CactusFileOpeners.openPLIST_
 <t tx="karstenw.20160619131254.21">def readFromData_ofType_error_(self, data, typeName, err):
     # This should be deleted
     if kwlog:
-        print "X" * 80
-        print "CactusOutlineDocument.readFromData_ofType_error_()"
-        print "X" * 80
+        print( "X" * 80 )
+        print( "CactusOutlineDocument.readFromData_ofType_error_()" )
+        print( "X" * 80 )
 
     outError = None
     readSuccess = False
@@ -7371,14 +7377,14 @@ openPLIST_ = CactusFileOpeners.openPLIST_
             self.rootNode = root
             readSuccess = True
     else:
-        print "ERROR: Wrong type requested: ", repr(typename)
+        print( "ERROR: Wrong type requested: ", repr(typename) )
     return (readSuccess, outError)
 
 
 </t>
 <t tx="karstenw.20160619131254.22">def showWindows( self ):
     if kwlog:
-        print "CactusOutlineDocument.showWindows()"
+        print( "CactusOutlineDocument.showWindows()" )
 
     c = objc.super( CactusOutlineDocument, self).showWindows()
     #
@@ -7390,7 +7396,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
     doanimate = True
     try:
         doanimate = bool(defaults.objectForKey_( u'optAnimateOPMLOpen'))
-    except Exception, err:
+    except Exception as err:
         pass
 
     for controller in controllers:
@@ -7440,9 +7446,9 @@ openPLIST_ = CactusFileOpeners.openPLIST_
                 try:
                     rows = rows.split(',')
                     rows = [int(i)+1 for i in rows if i]
-                except Exception, err:
-                    print "\nERROR: expansionState reading failed.\n", err
-                    print
+                except Exception as err:
+                    print( "\nERROR: expansionState reading failed.\n", err )
+                    print()
                 if rows:
                     for row in rows:
                         item = outlineView.itemAtRow_( row )
@@ -7465,20 +7471,20 @@ openPLIST_ = CactusFileOpeners.openPLIST_
                 s = NSMakeRect(coords[0], coords[1], w, h)
 
                 # animation is too slow, ca 0.5s per file
-                # print "ANIME:", window.animationResizeTime_( s )
+                # print( "ANIME:", window.animationResizeTime_( s ) )
                 window.setFrame_display_animate_(s, True, doanimate)
 
                 # window.setFrame_display_(s, True)
                 redisplay = False
-            except StandardError, err:
-                print err
-                print "No window setting for you."
+            except StandardError as err:
+                print( err )
+                print( "No window setting for you." )
         outlineView.setNeedsDisplay_( redisplay )
 
 </t>
 <t tx="karstenw.20160619131254.23">def makeWindowControllers(self):
     if kwlog:
-        print "CactusOutlineDocument.makeWindowControllers()"
+        print( "CactusOutlineDocument.makeWindowControllers()" )
 
     c = CactusOutlineWindowController.alloc().init()
     self.addWindowController_( c )
@@ -7489,7 +7495,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
 </t>
 <t tx="karstenw.20160619131254.24">def windowControllers(self):
     if kwlog:
-        print "CactusOutlineDocument.windowControllers()"
+        print( "CactusOutlineDocument.windowControllers()" )
     #pdb.set_trace()
     #print
     return objc.super( CactusOutlineDocument, self).windowControllers()
@@ -7539,12 +7545,12 @@ openPLIST_ = CactusFileOpeners.openPLIST_
     @others
 </t>
 <t tx="karstenw.20160619131254.27">def dealloc(self):
-    print "CactusOutlineWindowController.dealloc()", self.retainCount()
+    print( "CactusOutlineWindowController.dealloc()", self.retainCount() )
     #if self.rootNode:
     #    self.rootNode.release()
     #if self.parentNode:
     #    self.parentNode.release()
-    print "DEALLOCDBG model:", self.model, self.model.retainCount()
+    print( "DEALLOCDBG model:", self.model, self.model.retainCount() )
     self.model.release()
     objc.super(CactusOutlineWindowController, self).dealloc()
 
@@ -7563,7 +7569,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
 
     """
     if kwlog:
-        print "CactusOutlineWindowController.initWithObject_()"
+        print( "CactusOutlineWindowController.initWithObject_()" )
 
     # self = self.initWithWindowNibName_("OutlineEditor")
     title = u"Unnamed Outline"
@@ -7578,7 +7584,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
     document = self.document()
 
     if not isinstance(document, CactusOutlineDocument):
-        print "FAKE document"
+        print( "FAKE document" )
 
     if document.url:
         # self.nsurl = document.url
@@ -7668,8 +7674,8 @@ openPLIST_ = CactusFileOpeners.openPLIST_
         self.optVLines.setState_( defaults.objectForKey_( u'optVLines') )
         self.optHLines.setState_( defaults.objectForKey_( u'optHLines') )
 
-    except StandardError, err:
-        print "ERROR reading defaults.", repr(err)
+    except StandardError as err:
+        print( "ERROR reading defaults.", repr(err) )
 
     if document.fileType() in (CactusPLISTType,):
         # disable value column for plist (for now)
@@ -7716,7 +7722,7 @@ class CactusOutlineDocument(NSDocument):
     result = None
     try:
         result = self.document().fileURL()
-    except Exception, err:
+    except Exception as err:
         pass
     return result
 
@@ -7725,7 +7731,7 @@ class CactusOutlineDocument(NSDocument):
 <t tx="karstenw.20160619131254.31">def displayName(self):
     # get window name
     if 0: #kwlog:
-        print "CactusOutlineWindowController.displayName() -&gt;",
+        print( "CactusOutlineWindowController.displayName() -&gt;", )
     doc = self.document()
     if not doc:
         return ""
@@ -7745,14 +7751,14 @@ class CactusOutlineDocument(NSDocument):
         # keep unnamed title
         pass
     if 0: #kwlog:
-        print repr(title)
+        print( repr(title) )
     return title
 
 
 </t>
 <t tx="karstenw.20160619131254.32">def windowWillClose_(self, notification):
     if kwlog:
-        print "CactusOutlineWindowController.windowWillClose_()"
+        print( "CactusOutlineWindowController.windowWillClose_()" )
     # see comment in self.initWithObject_()
     #
     # TBD: check model.dirty
@@ -7763,33 +7769,33 @@ class CactusOutlineDocument(NSDocument):
 </t>
 <t tx="karstenw.20160619131254.33">def doubleClick_(self, sender):
     if kwlog:
-        print "CactusOutlineWindowController.doubleClick_()"
+        print( "CactusOutlineWindowController.doubleClick_()" )
     #objc.super(CactusOutlineWindowController, self).doubleClick_(sender)
 
 </t>
 <t tx="karstenw.20160619131254.34">def reloadData(self):
     if kwlog:
-        print "CactusOutlineWindowController.reloadData()"
+        print( "CactusOutlineWindowController.reloadData()" )
     self.outlineView.reloadData()
 
 </t>
 <t tx="karstenw.20160619131254.35">def reloadData_(self, item):
     if kwlog:
-        print "CactusOutlineWindowController.reloadData_(item)"
+        print( "CactusOutlineWindowController.reloadData_(item)" )
     self.outlineView.reloadItem_reloadChildren_( item, True )
 
 </t>
 <t tx="karstenw.20160619131254.36">def reloadData_reloadChildren_(self, item, children):
     if kwlog:
-        print "CactusOutlineWindowController.reloadData_reloadChildren_(item, children)"
+        print( "CactusOutlineWindowController.reloadData_reloadChildren_(item, children)" )
     self.outlineView.reloadItem_reloadChildren_( item, children )
 
 </t>
 <t tx="karstenw.20160619131254.37">@objc.IBAction
 def loadFile_(self, sender):
     if kwlog:
-        print "-" * 80
-        print "EMPTY CactusOutlineWindowController.loadFile_()"
+        print( "-" * 80 )
+        print( "EMPTY CactusOutlineWindowController.loadFile_()" )
 
 </t>
 <t tx="karstenw.20160619131254.38">@objc.IBAction
@@ -7798,7 +7804,7 @@ def applySettings_(self, sender):
     """
 
     if kwlog:
-        print "CactusOutlineWindowController.applySettings_()"
+        print( "CactusOutlineWindowController.applySettings_()" )
 
     # rowHeight
     self.variableRowHeight = self.optVariableRow.state()
@@ -7847,8 +7853,8 @@ def applySettings_(self, sender):
         l = self.menRowLines.title()
         l = int(l)
         self.rowLines = l
-    except StandardError, err:
-        print "\nERROR  ---  Menu Row lines '%'" % repr(l)
+    except StandardError as err:
+        print( "\nERROR  ---  Menu Row lines '%'" % repr(l) )
         self.rowLines = 4
         self.menRowLines.setTitle_( u"4" )
 
@@ -7877,7 +7883,7 @@ def applySettings_(self, sender):
 </t>
 <t tx="karstenw.20160619131254.5">def init(self):
     if kwlog:
-        print "CactusOutlineDocument.init()"
+        print( "CactusOutlineDocument.init()" )
     self = objc.super( CactusOutlineDocument, self).init()
 
     # outline specific
@@ -7901,7 +7907,7 @@ def applySettings_(self, sender):
 
 </t>
 <t tx="karstenw.20160619131254.6">def dealloc(self):
-    print "CactusOutlineDocument.dealloc()"
+    print( "CactusOutlineDocument.dealloc()" )
     objc.super(CactusOutlineDocument, self).dealloc()
 
 
@@ -7914,7 +7920,7 @@ def applySettings_(self, sender):
 <t tx="karstenw.20160619131254.8">def readFromURL_ofType_error_(self, url, theType, err):
     if kwlog:
         msg = "CactusOutlineDocument.readFromURL_ofType_error_( %s, %s )\n"
-        print msg % (repr(url), repr(theType))
+        print( msg % (repr(url), repr(theType)) )
 
     OK = True
     s = None
@@ -7926,7 +7932,7 @@ def applySettings_(self, sender):
         d = None
         try:
             d = CactusOPML.opml_from_string( readURL( url, CactusOPMLType ) )
-        except OPMLParseErrorException, v:
+        except OPMLParseErrorException as v:
             tb = unicode(traceback.format_exc())
             v = unicode( repr(v) )
             err = tb
@@ -7938,7 +7944,7 @@ def applySettings_(self, sender):
             del d
             if not root:
                 if kwlog:
-                    print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                    print( "FAILED CactusOutlineDocument.readFromURL_ofType_error_()" )
                 return (False, "Error creating the outline.")
             else:
                 self.rootNode = root
@@ -7948,7 +7954,7 @@ def applySettings_(self, sender):
                     self.updateChangeCount_( NSChangeCleared )
         else:
             if kwlog:
-                print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                print( "FAILED CactusOutlineDocument.readFromURL_ofType_error_()" )
             return (False, None)
 
     # read rss content
@@ -7962,7 +7968,7 @@ def applySettings_(self, sender):
                 self.updateChangeCount_( NSChangeCleared )
         else:
             if kwlog:
-                print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                print( "FAILED CactusOutlineDocument.readFromURL_ofType_error_()" )
             return (False, None)
 
     # read xml content
@@ -7970,7 +7976,7 @@ def applySettings_(self, sender):
         d = None
         try:
             d = CactusOPML.xml_from_string( readURL( url, CactusXMLType ) )
-        except XMLParseErrorException, v:
+        except XMLParseErrorException as v:
             tb = unicode(traceback.format_exc())
             v = unicode( repr(v) )
             err = tb
@@ -7990,7 +7996,7 @@ def applySettings_(self, sender):
                 self.updateChangeCount_( NSChangeCleared )
         else:
             if kwlog:
-                print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                print( "FAILED CactusOutlineDocument.readFromURL_ofType_error_()" )
             return (False, None)
 
     # read html content
@@ -7998,7 +8004,7 @@ def applySettings_(self, sender):
         d = None
         try:
             d = CactusOPML.html_from_url( url )
-        except HTMLParseErrorException, v:
+        except HTMLParseErrorException as v:
             tb = unicode(traceback.format_exc())
             v = unicode( repr(v) )
             err = tb
@@ -8017,7 +8023,7 @@ def applySettings_(self, sender):
                 self.updateChangeCount_( NSChangeCleared )
         else:
             if kwlog:
-                print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                print( "FAILED CactusOutlineDocument.readFromURL_ofType_error_()" )
             return (False, None)
 
     # read plist content
@@ -8025,7 +8031,7 @@ def applySettings_(self, sender):
         d = None
         try:
             d = CactusOPML.parse_plist( url )
-        except PLISTParseErrorException, v:
+        except PLISTParseErrorException as v:
             tb = unicode(traceback.format_exc())
             v = unicode( repr(v) )
             err = tb
@@ -8046,7 +8052,7 @@ def applySettings_(self, sender):
                 self.updateChangeCount_( NSChangeCleared )
         else:
             if kwlog:
-                print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                print( "FAILED CactusOutlineDocument.readFromURL_ofType_error_()" )
             return (False, None)
 
     # read itunes music xml
@@ -8054,7 +8060,7 @@ def applySettings_(self, sender):
         d = None
         try:
             d = CactusOPML.parse_plist( url )
-        except PLISTParseErrorException, v:
+        except PLISTParseErrorException as v:
             tb = unicode(traceback.format_exc())
             v = unicode( repr(v) )
             err = tb
@@ -8073,7 +8079,7 @@ def applySettings_(self, sender):
                 self.updateChangeCount_( NSChangeCleared )
         else:
             if kwlog:
-                print "FAILED CactusOutlineDocument.readFromURL_ofType_error_()"
+                print( "FAILED CactusOutlineDocument.readFromURL_ofType_error_()" )
             return (False, None)
 
     else:
@@ -8083,7 +8089,7 @@ def applySettings_(self, sender):
         self.setFileURL_( url )
         self.setFileType_( theType )
 
-    print "OK CactusOutlineDocument.readFromURL_ofType_error_()"
+    print( "OK CactusOutlineDocument.readFromURL_ofType_error_()" )
     return (OK, None)
 
 
@@ -8092,7 +8098,7 @@ def applySettings_(self, sender):
     """Main entry point for opening documents."""
     if kwlog:
         msg = "\nCactusOutlineDocument.initWithContentsOfURL_ofType_error_( %s, %s )\n"
-        print msg % ( repr(theType), repr(url))
+        print( msg % ( repr(theType), repr(url)) )
 
 
     self, err = self.initWithType_error_( theType, err )
@@ -8136,6 +8142,7 @@ def applySettings_(self, sender):
 <t tx="karstenw.20160619131304.1">
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 
 """A collection of outline related stuff
 """
@@ -8261,7 +8268,7 @@ def __new__(cls, *args, **kwargs):
 
 </t>
 <t tx="karstenw.20160619131304.13">def dealloc(self):
-    print "OutlineNode.dealloc()"
+    print( "OutlineNode.dealloc()" )
     # pp(self.__dict__)
     self.children.release()
 
@@ -8314,13 +8321,13 @@ def __new__(cls, *args, **kwargs):
     try:
         lines += val.count( u"\r" )
         lines += val.count( u"\n" )
-    except Exception, err:
-        print "\n\nERROR in lineHeight_()"
+    except Exception as err:
+        print( "\n\nERROR in lineHeight_()" )
         tb = unicode(traceback.format_exc())
-        print err
-        print
-        print tb
-        print
+        print( err )
+        print()
+        print( tb )
+        print()
     vallength = len( val )
     if vallength &gt; 100:
         pass
@@ -8426,7 +8433,7 @@ def updateValue_(self, nameValue):
     try:
         c = r.controller
         c.outlineView.reloadData()
-    except Exception, err:
+    except Exception as err:
         pass
 
 </t>
@@ -8464,7 +8471,7 @@ def noOfChildren(self):
 <t tx="karstenw.20160619131304.27">#
 def addChild_(self, child):
     if kwlog and 0:
-        print "OutlineNode.addChild_", child
+        print( "OutlineNode.addChild_", child )
     # retain: child+1
     if isinstance(child, OutlineNode):
         if child.parent != self:
@@ -8475,7 +8482,7 @@ def addChild_(self, child):
 </t>
 <t tx="karstenw.20160619131304.28">def addChild_atIndex_(self, child, index):
     if kwdbg:
-        print "addChild_atIndex_setParent", child
+        print( "addChild_atIndex_setParent", child )
     # retain: child+1
 
     self.children.insertObject_atIndex_( child, index)
@@ -8501,10 +8508,10 @@ def __init__(self, value):
         elif isinstance(value, dict):
             value = self.listFromDictionary_( value )
         else:
-            print "BOGATIVE VALUETYPE:", type(value)
+            print( "BOGATIVE VALUETYPE:", type(value) )
 
     if type(value) != list:
-        print "VALUE is not list"
+        print( "VALUE is not list" )
 
     self.value = value
     self.typ = len(value) &gt; 1
@@ -8619,8 +8626,8 @@ def siblingCount(self):
     # maxlen = max([len(k) for k in self.value.keys()])
     l = []
     if not isinstance(self.value, list):
-        print "VALUE is not list"
-        print repr(self.value)
+        print( "VALUE is not list" )
+        print( repr(self.value) )
     for t in self.value:
         k, v = t
         if k != "":
@@ -8742,8 +8749,8 @@ def makeChildOf_(self, other):
 <t tx="karstenw.20160619131304.5">def listFromDisplayValue_(self, displayValue):
     try:
         lines = displayValue.split('\n')
-    except AttributeError,err:
-        print err
+    except AttributeError as err:
+        print( err )
         lines = [ unicode(displayValue) ]
 
     l = []
@@ -8832,6 +8839,9 @@ hierarchicalTypes = (typeOutline, typeBrowser)
 #   Copyright 2013 __MyCompanyName__. All rights reserved.
 #
 
+from __future__ import print_function
+
+
 import sys
 import os
 
@@ -8856,7 +8866,7 @@ NSDragOperationNone = AppKit.NSDragOperationNone
     @others
     """
     def draggingEntered_(self,sender):
-        print "CactusOutlineWindow.draggingEntered_"
+        print( "CactusOutlineWindow.draggingEntered_" )
         pboard = sender.draggingPasteboard()
         types = pboard.types()
         opType = NSDragOperationNone
@@ -8865,7 +8875,7 @@ NSDragOperationNone = AppKit.NSDragOperationNone
         return opType
 
     def performDragOperation_(self,sender):
-        print "CactusOutlineWindow.performDragOperation_"
+        print( "CactusOutlineWindow.performDragOperation_" )
         pboard = sender.draggingPasteboard()
         successful = False
         if NSFilenamesPboardType in pboard.types():
@@ -8879,7 +8889,8 @@ NSDragOperationNone = AppKit.NSDragOperationNone
 
             successful = True
         return successful
-    """</t>
+    """
+</t>
 <t tx="karstenw.20160619131524.3"># pass
 def awakeFromNib(self):
     # self.registerForDraggedTypes_([NSFilenamesPboardType])
@@ -9042,6 +9053,8 @@ def chooseFolder_(self, sender):
 <t tx="karstenw.20160619131529.1">
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 
 """
 """
@@ -9190,7 +9203,7 @@ class TableWindowController(AutoBaseClass):
 
     def doubleClick_(self, sender):
         # Open a new browser window for each selected expandable item
-        print "doubleClick_()"
+        print( "doubleClick_()" )
 
     def reloadData_(self, item=None, children=False):
         if item == None:
@@ -9259,7 +9272,8 @@ class TableWindowController(AutoBaseClass):
         #
         self.outlineView.reloadData()
         self.outlineView.setNeedsDisplay_( True )
-'''</t>
+'''
+</t>
 <t tx="karstenw.20160619131535.1">@language python
 @tabwidth -4
 @others
@@ -9420,7 +9434,8 @@ re_bogusCharacters = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f]')
 <t tx="karstenw.20160619132007.1">version = 1.1
 path = 'Finder10.sdef'
 
-classes = [       ('application', 'capp'),
+classes = [
+        ('application', 'capp'),
         ('item', 'cobj'),
         ('container', 'ctnr'),
         ('computer_object', 'ccmp'),
@@ -9453,7 +9468,8 @@ classes = [       ('application', 'capp'),
         ('column', 'lvcl'),
         ('alias_list', 'alst')]
 
-enums = [       ('read_only', 'read'),
+enums = [
+        ('read_only', 'read'),
         ('read_write', 'rdwr'),
         ('write_only', 'writ'),
         ('none', 'none'),
@@ -9532,7 +9548,8 @@ enums = [       ('read_only', 'read'),
         ('comment', 'comt'),
         ('version', 'vers')]
 
-properties = [       ('clipboard', 'pcli'),
+properties = [
+        ('clipboard', 'pcli'),
         ('name', 'pnam'),
         ('visible', 'pvis'),
         ('frontmost', 'pisf'),
@@ -9699,7 +9716,8 @@ properties = [       ('clipboard', 'pcli'),
         ('maximum_width', 'clwm'),
         ('visible', 'pvis')]
 
-elements = [       ('application', 'capp'),
+elements = [
+        ('application', 'capp'),
         ('items', 'cobj'),
         ('containers', 'ctnr'),
         ('computer_objects', 'ccmp'),
@@ -9732,7 +9750,10 @@ elements = [       ('application', 'capp'),
         ('columns', 'lvcl'),
         ('alias_lists', 'alst')]
 
-commands = [       ('open', 'aevtodoc', [('using', 'usin'), ('with_properties', 'prdt')]),
+commands = [
+        ('open', 'aevtodoc', [
+                ('using', 'usin'),
+                ('with_properties', 'prdt')]),
         ('print_', 'aevtpdoc', [('with_properties', 'prdt')]),
         ('quit', 'aevtquit', []),
         ('activate', 'miscactv', []),
@@ -9767,7 +9788,9 @@ commands = [       ('open', 'aevtodoc', [('using', 'usin'), ('with_properties', 
         ('empty', 'fndrempt', [('security', 'sec?')]),
         ('erase', 'fndrfera', []),
         ('reveal', 'miscmvis', []),
-        ('update', 'fndrfupd', [('necessity', 'nec?'), ('registering_applications', 'reg?')]),
+        ('update', 'fndrfupd', [
+                ('necessity', 'nec?'),
+                ('registering_applications', 'reg?')]),
         ('restart', 'fndrrest', []),
         ('shut_down', 'fndrshut', []),
         ('sleep', 'fndrslep', [])]
@@ -10834,7 +10857,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
     cacheFolder = CactusVersion.cachefolder
     try:
         cacheFolder = unicode(defaults.objectForKey_( u'txtCacheFolder'))
-    except StandardError, err:
+    except StandardError as err:
         print( "CactusTools.getDownloadFolder(%s) -&gt; False" % NSURL2str(nsurl) )
         print( "ERROR reading defaults.", repr(err) )
 
@@ -10879,7 +10902,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 
     try:
         f = urllib.urlopen( url )
-    except IOError, err:
+    except IOError as err:
         print( "ERROR: Could not open url (%s) for date reading." % url )
         return False
 
@@ -10891,7 +10914,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
         try:
             rmodfdate = datetime.datetime( *remotemodfdate[:6] )
             #rmodfdate = datetime.datetime( *rinfo.getdate('last-modified')[:6] )
-        except TypeError, err:
+        except TypeError as err:
             print( "Could not get remote file(%s) modification date." % url )
             return False
         return rmodfdate
@@ -10992,7 +11015,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
                 finder = asc.app(u'Finder.app', terms=Finder10)
                 hfspath = mactypes.File( localpath ).hfspath
                 finder.files[hfspath].comment.set( url )
-            except StandardError, v:
+            except StandardError as v:
                 print( "SET COMMENT FAILED ON '%s'" % localpath )
             # get file date
             lmodfdate = os.stat( localpath ).st_mtime
@@ -11010,7 +11033,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 
         returnURL = NSURL.fileURLWithPath_( unicode(localpath) )
 
-    except Exception, err:
+    except Exception as err:
         tb = unicode(traceback.format_exc())
         print( tb )
         print(  )
@@ -11054,7 +11077,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
     try:
         s = s % ( base, rel, target)
         print( s ) #.encode("utf-8")
-    except Exception, err:
+    except Exception as err:
         print(  )
         print( "ERROR in mergeURL" )
         print( err )
@@ -11138,7 +11161,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
     cache = False
     try:
         cache = bool(defaults.objectForKey_( u'optCache'))
-    except StandardError, err:
+    except StandardError as err:
         print( "ERROR reading defaults.", repr(err) )
     
     # pdb.set_trace()

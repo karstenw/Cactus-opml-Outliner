@@ -1,6 +1,7 @@
 
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 
 """A collection of outline related stuff
 """
@@ -73,10 +74,10 @@ class NodeValue(object):
             elif isinstance(value, dict):
                 value = self.listFromDictionary_( value )
             else:
-                print "BOGATIVE VALUETYPE:", type(value)
+                print( "BOGATIVE VALUETYPE:", type(value) )
 
         if type(value) != list:
-            print "VALUE is not list"
+            print( "VALUE is not list" )
 
         self.value = value
         self.typ = len(value) > 1
@@ -85,8 +86,8 @@ class NodeValue(object):
         # maxlen = max([len(k) for k in self.value.keys()])
         l = []
         if not isinstance(self.value, list):
-            print "VALUE is not list"
-            print repr(self.value)
+            print( "VALUE is not list" )
+            print( repr(self.value) )
         for t in self.value:
             k, v = t
             if k != "":
@@ -98,8 +99,8 @@ class NodeValue(object):
     def listFromDisplayValue_(self, displayValue):
         try:
             lines = displayValue.split('\n')
-        except AttributeError,err:
-            print err
+        except AttributeError as err:
+            print( err )
             lines = [ unicode(displayValue) ]
 
         l = []
@@ -210,7 +211,7 @@ class OutlineNode(NSObject):
         return "<OutlineNode(%i, name='%s')" % (self.nodenr, self.name)
 
     def dealloc(self):
-        print "OutlineNode.dealloc()"
+        print( "OutlineNode.dealloc()" )
         # pp(self.__dict__)
         self.children.release()
 
@@ -260,13 +261,13 @@ class OutlineNode(NSObject):
         try:
             lines += val.count( u"\r" )
             lines += val.count( u"\n" )
-        except Exception, err:
-            print "\n\nERROR in lineHeight_()"
+        except Exception as err:
+            print( "\n\nERROR in lineHeight_()" )
             tb = unicode(traceback.format_exc())
-            print err
-            print
-            print tb
-            print
+            print( err )
+            print()
+            print( tb )
+            print()
         vallength = len( val )
         if vallength > 100:
             pass
@@ -355,7 +356,7 @@ class OutlineNode(NSObject):
         try:
             c = r.controller
             c.outlineView.reloadData()
-        except Exception, err:
+        except Exception as err:
             pass
 
     # essential
@@ -389,7 +390,7 @@ class OutlineNode(NSObject):
     #
     def addChild_(self, child):
         if kwlog and 0:
-            print "OutlineNode.addChild_", child
+            print( "OutlineNode.addChild_", child )
         # retain: child+1
         if isinstance(child, OutlineNode):
             if child.parent != self:
@@ -399,7 +400,7 @@ class OutlineNode(NSObject):
 
     def addChild_atIndex_(self, child, index):
         if kwdbg:
-            print "addChild_atIndex_setParent", child
+            print( "addChild_atIndex_setParent", child )
         # retain: child+1
 
         self.children.insertObject_atIndex_( child, index)

@@ -1,6 +1,7 @@
 
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 
 """A collection of outline related stuff
 """
@@ -246,14 +247,14 @@ g_qtplayer_extensions = g_qtplayer_extensions.split()
 
 def open_photo( url, open_=True ):
     """opens 2nd biggest picture"""
-    print "CactusOutline.open_photo( %s )" % repr(url)
+    print( "CactusOutline.open_photo( %s )" % repr(url) )
 
     defaults = NSUserDefaults.standardUserDefaults()
     cache = False
     try:
         cache = bool(defaults.objectForKey_( u'optCache'))
-    except StandardError, err:
-        print "ERROR reading defaults.", repr(err)
+    except StandardError as err:
+        print( "ERROR reading defaults.", repr(err) )
 
     s = CactusTools.readURL( NSURL.URLWithString_( url ) )
 
@@ -303,7 +304,7 @@ def open_photo( url, open_=True ):
 # TODO: change parameter to node!
 def open_node( url, nodeType=None, open_=False, supressCache=False ):
     if kwdbg:
-        print "CactusOutline.open_node()", repr(url)
+        print( "CactusOutline.open_node()", repr(url) )
         # pp( (url,nodeType,open_, supressCache) )
 
     if chr(10) in url or chr(13) in url:
@@ -331,9 +332,9 @@ def open_node( url, nodeType=None, open_=False, supressCache=False ):
                                     path = path, params = purl.params,
                                     query = purl.query, fragment = purl.fragment)
         # for c in url
-        print m
-        print repr(url)
-        print
+        print( m )
+        print( repr(url) )
+        print()
 
     nsurl = NSURL.URLWithString_( url )
 
@@ -344,8 +345,8 @@ def open_node( url, nodeType=None, open_=False, supressCache=False ):
     cache = False
     try:
         cache = bool(defaults.objectForKey_( u'optCache'))
-    except StandardError, err:
-        print "ERROR reading defaults.", repr(err)
+    except StandardError as err:
+        print( "ERROR reading defaults.", repr(err) )
 
     appl = NSApplication.sharedApplication()
     appdelg = appl.delegate()
@@ -485,16 +486,16 @@ class KWOutlineView(NSOutlineView):
     def validateMenuItem_(self, sender):
         # row = self.selectedRow()
         if kwlog:
-            print "KWOutlineView.validateMenuItem_( %s )" % repr(sender)
+            print( "KWOutlineView.validateMenuItem_( %s )" % repr(sender) )
         return True
 
     def menuNeedsUpdate_(self, sender):
         if 0: #kwlog:
-            print "KWOutlineView.menuNeedsUpdate_( %s )" % repr(sender)
+            print( "KWOutlineView.menuNeedsUpdate_( %s )" % repr(sender) )
 
     def insertSafariLinks_(self, sender):
         if kwlog:
-            print "KWOutlineView.insertSafariLinks_()"
+            print( "KWOutlineView.insertSafariLinks_()" )
         row = self.clickedRow()
         selection = self.getSelectionItems()
         if not selection:
@@ -514,8 +515,8 @@ class KWOutlineView(NSOutlineView):
         try:
             src = safari.windows[1].current_tab.source()
             url = safari.windows[1].current_tab.URL()
-        except Exception, err:
-            print err
+        except Exception as err:
+            print( err )
         if not src:
             return
         soup = BeautifulSoup( src )
@@ -545,7 +546,7 @@ class KWOutlineView(NSOutlineView):
 
     def insertSafarimages_(self, sender):
         if kwlog:
-            print "KWOutlineView.insertSafariLinks_()"
+            print( "KWOutlineView.insertSafariLinks_()" )
         row = self.clickedRow()
         selection = self.getSelectionItems()
         if not selection:
@@ -565,8 +566,8 @@ class KWOutlineView(NSOutlineView):
         try:
             src = safari.windows[1].current_tab.source()
             url = safari.windows[1].current_tab.URL()
-        except Exception, err:
-            print err
+        except Exception as err:
+            print( err )
         if not src:
             return
         soup = BeautifulSoup( src )
@@ -599,7 +600,7 @@ class KWOutlineView(NSOutlineView):
 
     def copySelectionPython_(self, sender):
         if kwlog:
-            print "KWOutlineView.copySelectionPython_()"
+            print( "KWOutlineView.copySelectionPython_()" )
         row = self.clickedRow()
         selection = self.getSelectionItems()
         result = []
@@ -611,7 +612,7 @@ class KWOutlineView(NSOutlineView):
         pb.setString_forType_(s, AppKit.NSStringPboardType)
 
     def copySelectionNodes_(self, sender):
-        print "KWOutlineView.copySelectionPython_()"
+        print( "KWOutlineView.copySelectionPython_()" )
         selection = self.getSelectionItems()
         result = []
         for contextItem in selection:
@@ -646,7 +647,7 @@ class KWOutlineView(NSOutlineView):
 
     def contextMenuInclude_(self, sender):
         if kwlog:
-            print "KWOutlineView.contextMenuInclude_()"
+            print( "KWOutlineView.contextMenuInclude_()" )
 
         # TBD: check selection
         # if right-click in selection:
@@ -679,9 +680,9 @@ class KWOutlineView(NSOutlineView):
                                 readURL( NSURL.URLWithString_( url ),
                                          CactusOPMLType ) )
 
-                except OPMLParseErrorException, err:
-                    print traceback.format_exc()
-                    print err
+                except OPMLParseErrorException as err:
+                    print( traceback.format_exc() )
+                    print( err )
 
                 if d:
                     #
@@ -720,7 +721,7 @@ class KWOutlineView(NSOutlineView):
     #
 
     def XdraggingEntered_( self, dragInfo ):
-        print "draggingEntered_"
+        print( "draggingEntered_" )
         pboard = dragInfo.draggingPasteboard()
         mask = dragInfo.draggingSourceOperationMask()
         types = pboard.types()
@@ -732,7 +733,7 @@ class KWOutlineView(NSOutlineView):
             return NSDragOperationMove
 
         elif NSFilenamesPboardType in types:
-            print "NSFilenamesPboardType entered"
+            print( "NSFilenamesPboardType entered" )
             return NSDragOperationNone
 
             if mask & NSDragOperationLink:
@@ -745,28 +746,28 @@ class KWOutlineView(NSOutlineView):
 
 
     def XdraggingUpdated_( self, dragInfo ):
-        #print "draggingUpdated_",
+        #print( "draggingUpdated_", )
         if dragInfo.draggingSource():
             pp(dragInfo)
             return NSDragOperationMove
         else:
-            print "external"
+            print( "external" )
             return NSDragOperationCopy
 
     @objc.IBAction
     def XdraggingExited_( self, dragInfo ):
-        print "draggingExited_"
+        print( "draggingExited_" )
         objc.super(KWOutlineView, self).draggingExited_(dragInfo)
 
     def XprepareForDragOperation_( self, dragInfo ):
-        print "KWOutlineView.prepareForDragOperation_"
+        print( "KWOutlineView.prepareForDragOperation_" )
         self.currentDragItems = self.getSelectionItems()
         pp( self.currentDragItems )
         # self.setNeedsDisplay_(True)
         return 1
 
     def XperformDragOperation_( self, dragInfo ):
-        print "KWOutlineView.performDragOperation_"
+        print( "KWOutlineView.performDragOperation_" )
         pboard = dragInfo.draggingPasteboard()
         successful = 0
         types = pboard.types()
@@ -776,12 +777,12 @@ class KWOutlineView(NSOutlineView):
 
     @objc.IBAction
     def XconcludeDragOPeration_( self, dragInfo ):
-        print "concludeDragOPeration_", repr(dragInfo)
+        print( "concludeDragOPeration_", repr(dragInfo) )
         self.setNeedsDisplay_(True)
 
 
     def XsetDropItem_dropChildIndex_(self, item, index):
-        print "KWOutlineView.setDropItem_dropChildIndex_(%s), %s" % (repr(item), repr(index))
+        print( "KWOutlineView.setDropItem_dropChildIndex_(%s), %s" % (repr(item), repr(index)) )
         # get's called if updateDrop_ is not defined
         
         
@@ -820,7 +821,7 @@ class KWOutlineView(NSOutlineView):
             self.selectItems_(pastedItems)
 
     def copyNodesToPasteboard_( self, pb ):
-        print "KWOutlineView.copyNodesToPasteboard_"
+        print( "KWOutlineView.copyNodesToPasteboard_" )
 
         pb.declareTypes_owner_( [DragDropCactusPboardType,
                                  NSStringPboardType],
@@ -867,7 +868,7 @@ class KWOutlineView(NSOutlineView):
         return a set of inserted items.
         """
         if 1: #kwlog:
-            print "KWOutlineView.readNodesFromPasteboard_parent_index_"
+            print( "KWOutlineView.readNodesFromPasteboard_parent_index_" )
 
         types = pb.types()
         t = None
@@ -970,16 +971,16 @@ class KWOutlineView(NSOutlineView):
 
 
     def draggingSourceOperationMaskForLocal_(self, isLocal):
-        print "KWoutlineView.draggingSourceOperationMaskForLocal_(%s)" % repr(isLocal)
+        print( "KWoutlineView.draggingSourceOperationMaskForLocal_(%s)" % repr(isLocal) )
         if isLocal:
             return NSDragOperationMove
         else:
             return NSDragOperationCopy
 
     def draggedImage_endedAt_operation_( self, theImage, theLocation, theOperation):
-        print "KWoutlineView.draggedImage_endedAt_operation_(%s)" % theOperation
+        print( "KWoutlineView.draggedImage_endedAt_operation_(%s)" % theOperation )
         if theOperation in (NSDragOperationDelete, NSDragOperationMove):
-            # print "lastDrag:"
+            # print( "lastDrag:" )
             # pp(KWOutlineView.lastDrag)
             #deleteNodes(self, nodes=KWOutlineView.lastDrag)
             pass
@@ -989,7 +990,7 @@ class KWOutlineView(NSOutlineView):
     # cell editor notifications
     #
     def textDidBeginEditing_(self, aNotification):
-        print "KWOutlineView.textDidBeginEditing_()"
+        print( "KWOutlineView.textDidBeginEditing_()" )
         """Notification."""
         self.editSession = True
 
@@ -1001,7 +1002,7 @@ class KWOutlineView(NSOutlineView):
 
 
     def textDidChange_(self, aNotification):
-        print "KWOutlineView.textDidChange_()"
+        print( "KWOutlineView.textDidChange_()" )
         """Notification."""
         self.editSession = True
         userInfo = aNotification.userInfo()
@@ -1010,25 +1011,25 @@ class KWOutlineView(NSOutlineView):
 
             # NSCancelTextMovement
             if textMovement == NSReturnTextMovement:
-                print "RETURN MOVEMENT"
+                print( "RETURN MOVEMENT" )
             elif textMovement == NSCancelTextMovement:
-                print "CANCEL MOVEMENT"
+                print( "CANCEL MOVEMENT" )
             elif textMovement == NSTabTextMovement:
-                print "NSTabTextMovement"
+                print( "NSTabTextMovement" )
             elif textMovement == NSBacktabTextMovement:
-                print "NSBacktabTextMovement"
+                print( "NSBacktabTextMovement" )
             elif textMovement == NSLeftTextMovement:
-                print "NSLeftTextMovement"
+                print( "NSLeftTextMovement" )
             elif textMovement == NSRightTextMovement:
-                print "NSRightTextMovement"
+                print( "NSRightTextMovement" )
             elif textMovement == NSUpTextMovement:
-                print "NSUpTextMovement"
+                print( "NSUpTextMovement" )
             elif textMovement == NSDownTextMovement:
-                print "NSDownTextMovement"
+                print( "NSDownTextMovement" )
             elif textMovement == NSOtherTextMovement:
-                print "NSOtherTextMovement"
+                print( "NSOtherTextMovement" )
             elif textMovement == NSIllegalTextMovement:
-                print "NSIllegalTextMovement"
+                print( "NSIllegalTextMovement" )
 
         objc.super( KWOutlineView, self).textDidChange_(aNotification)
         #self.window().makeFirstResponder_(self)
@@ -1037,10 +1038,10 @@ class KWOutlineView(NSOutlineView):
     def textDidEndEditing_(self, aNotification):
         """Notification. Text editing ended."""
 
-        print "KWOutlineView.textDidEndEditing_()"
+        print( "KWOutlineView.textDidEndEditing_()" )
 
         if kwlog and kwdbg:
-            print "Edit END"
+            print( "Edit END" )
         userInfo = aNotification.userInfo()
         if kwlog and kwdbg:
             pp(userInfo)
@@ -1054,7 +1055,7 @@ class KWOutlineView(NSOutlineView):
 
         textMovement = userInfo.valueForKey_( u"NSTextMovement" ).intValue()
 
-        print "TextMovement: %i" % textMovement,
+        print( "TextMovement: %i" % (textMovement,) )
 
         # check for table/outline editing modes here
 
@@ -1062,7 +1063,7 @@ class KWOutlineView(NSOutlineView):
 
         # NSCancelTextMovement
         if textMovement == NSReturnTextMovement:
-            print "RETURN MOVEMENT"
+            print( "RETURN MOVEMENT" )
             returnContinue = True
             newTextActionCode = NSNumber.numberWithInt_(NSDownTextMovement)
             returnInfo.setObject_forKey_( newTextActionCode, str("NSTextMovement"))
@@ -1072,7 +1073,7 @@ class KWOutlineView(NSOutlineView):
                         returnInfo)
 
         elif textMovement == NSCancelTextMovement:
-            print "CANCEL MOVEMENT"
+            print( "CANCEL MOVEMENT" )
             cancelled = True
             newTextActionCode = NSNumber.numberWithInt_(NSOtherTextMovement)
             returnInfo.setObject_forKey_( newTextActionCode, str("NSTextMovement"))
@@ -1082,23 +1083,23 @@ class KWOutlineView(NSOutlineView):
                         returnInfo)
 
         elif textMovement == NSTabTextMovement:
-            print "NSTabTextMovement"
+            print( "NSTabTextMovement" )
         elif textMovement == NSBacktabTextMovement:
-            print "NSBacktabTextMovement"
+            print( "NSBacktabTextMovement" )
         elif textMovement == NSLeftTextMovement:
-            print "NSLeftTextMovement"
+            print( "NSLeftTextMovement" )
         elif textMovement == NSRightTextMovement:
-            print "NSRightTextMovement"
+            print( "NSRightTextMovement" )
         elif textMovement == NSUpTextMovement:
-            print "NSUpTextMovement"
+            print( "NSUpTextMovement" )
         elif textMovement == NSDownTextMovement:
-            print "NSDownTextMovement"
+            print( "NSDownTextMovement" )
         elif textMovement == NSOtherTextMovement:
-            print "NSOtherTextMovement"
+            print( "NSOtherTextMovement" )
         elif textMovement == NSIllegalTextMovement:
-            print "NSIllegalTextMovement"
+            print( "NSIllegalTextMovement" )
         else:
-            print "UNHANDLED MOVEMENT"
+            print( "UNHANDLED MOVEMENT" )
 
         # finish current cell
         objc.super( KWOutlineView, self).textDidEndEditing_(aNotification)
@@ -1124,7 +1125,7 @@ class KWOutlineView(NSOutlineView):
             self.window().makeFirstResponder_(self)
 
     def cancelOperation_(self, sender):
-        print "KWOutlineView.cancelOperation_()"
+        print( "KWOutlineView.cancelOperation_()" )
         if self.currentEditor():
             # self.abortEditing()
             self.validateEditing()
@@ -1165,9 +1166,9 @@ class KWOutlineView(NSOutlineView):
 
         if 0: #eventCharNum in mykeys:
             # pass
-            print "mykeys"
+            print( "mykeys" )
             pp(mykeys)
-            print "Event characters:", repr(eventCharacters), eventCharNum
+            print( "Event characters:", repr(eventCharacters), eventCharNum )
 
 
         # tab has       0x09/0x00100
@@ -1217,10 +1218,10 @@ class KWOutlineView(NSOutlineView):
 
         editor = self.currentEditor()
         if editor:
-            print "EDITOR:", editor
+            print( "EDITOR:", editor )
         
         if 0:
-            print "eventCharNum", eventCharNum
+            print( "eventCharNum", eventCharNum )
 
         if eventCharNum not in mykeys:
             objc.super(KWOutlineView, self).keyDown_( theEvent )
@@ -1237,14 +1238,14 @@ class KWOutlineView(NSOutlineView):
         eventModifiers &= NSDeviceIndependentModifierFlagsMask
 
         if kwlog and 0: #kwdbg:
-            print "Key: ", hex(eventCharNum), hex(eventModifiers)
+            print( "Key: ", hex(eventCharNum), hex(eventModifiers) )
 
         ###########################################################################
         #
         # Deleting
         if eventCharacter in (NSBackspaceCharacter, NSDeleteCharacter):
             if kwlog and kwdbg:
-                print "DELETE KEY HANDLED"
+                print( "DELETE KEY HANDLED" )
 
             # while editing, will be handled elsewhere
             # outline: delete selection (saving to a pasteboard stack) TBD
@@ -1262,10 +1263,10 @@ class KWOutlineView(NSOutlineView):
         elif eventCharacter == NSCarriageReturnCharacter:
             if eventModifiers & NSShiftKeyMask:
                 if kwlog and kwdbg:
-                    print "SHIFT Return"
+                    print( "SHIFT Return" )
             else:
                 if kwlog and kwdbg:
-                    print "KEY: Return"
+                    print( "KEY: Return" )
                 # open new line and start editing
 
                 # TODO: if already editing, start new line, continue editing
@@ -1445,15 +1446,15 @@ class KWOutlineView(NSOutlineView):
                                 # no attributes but a <img> in name
                                 d = item.getValueDict()
                                 if not d:
-                                    print name
+                                    print( name )
                                     soup = BeautifulSoup(name)
                                     for link in soup.find_all('img'):
                                         dest = link.get('src')
-                                        # print dest
+                                        # print( dest )
                                         open_node(dest)
                                     for link in soup.find_all('a'):
                                         dest = link.get('href')
-                                        # print dest
+                                        # print( dest )
                                         open_node(dest)
                                 else:
                                     type = d.get('type', '')
@@ -1529,8 +1530,8 @@ class KWOutlineView(NSOutlineView):
                                     openAttach = False
                                     try:
                                         openAttach = bool(defaults.objectForKey_( u'optRSSOpenEnclosure'))
-                                    except Exception ,err:
-                                        print "Error reading defaults:", err
+                                    except Exception as err:
+                                        print( "Error reading defaults:", err )
 
                                     # extract enclosure URL
                                     enc = v.get("enclosure", "")
@@ -1572,7 +1573,7 @@ class KWOutlineView(NSOutlineView):
                                 elif theType == "scripting2Post":
                                     open_node( url, nodeType="HTML")
                                 else:
-                                    #print "Unhandled Node open\ntype: '%s'\nurl: '%s'" % (repr(theType), repr(url))
+                                    #print( "Unhandled Node open\ntype: '%s'\nurl: '%s'" % (repr(theType), repr(url)) )
                                     open_node( url )
 
                             consumed = True
@@ -1621,10 +1622,10 @@ class KWOutlineView(NSOutlineView):
                 if eventModifiers & NSShiftKeyMask:
                     if eventModifiers & NSAlternateKeyMask:
                         if kwlog and kwdbg:
-                            print "SHIFT ALT Enter"
+                            print( "SHIFT ALT Enter" )
                     else:
                         if kwlog and kwdbg:
-                            print "SHIFT Enter"
+                            print( "SHIFT Enter" )
 
                         nodes = visitOutline(delg.root)
                         consumed = True
@@ -1644,7 +1645,7 @@ class KWOutlineView(NSOutlineView):
                     if index != -1:
                         #start editing
                         if kwdbg:
-                            print "Edit START"
+                            print( "Edit START" )
                         self.editColumn_row_withEvent_select_(0, index, None, True)
                         consumed = True
                     else:
@@ -1761,7 +1762,7 @@ class KWOutlineView(NSOutlineView):
                         # deltaH = selfRect.size.height / 2
                         # y += deltaH
                         # 
-                        # print "ScrollTo_( %s, %s )" % (repr(x), repr(y))
+                        # print( "ScrollTo_( %s, %s )" % (repr(x), repr(y)) )
                         # self.superview().scrollToPoint_( NSMakePoint( x, y ) )
                         self.scrollRowToVisible_( first )
 
@@ -1849,7 +1850,7 @@ class KWOutlineView(NSOutlineView):
 
     def outdentSelection(self):
         if kwlog:
-            print "SHIFT Tab"
+            print( "SHIFT Tab" )
 
         delegate = self.delegate()
 
@@ -1883,7 +1884,7 @@ class KWOutlineView(NSOutlineView):
     #
     def getSelectionItems(self):
         if kwlog:
-            print "getSelectionItems"
+            print( "getSelectionItems" )
         """The actual nodes of the current selection are returned."""
         sel = self.selectedRowIndexes()
         result = []
@@ -1989,7 +1990,8 @@ def stdAction( node, level ):
     n = str(node.retainCount())
     n = n.ljust(4)
     s = n + s
-    print s.encode("utf-8")
+    if 0:
+        print( s.encode("utf-8") )
 
 
 def visitOutline(startnode, startlevel=0, depthFirst=False, action=stdAction):
@@ -2052,7 +2054,7 @@ class OutlineViewDelegateDatasource(NSObject):
         return self
 
     def dealloc(self):
-        print "OutlineViewDelegateDatasource.dealloc()"
+        print( "OutlineViewDelegateDatasource.dealloc()" )
         #if self.parentNode:
         #    self.parentNode.release()
         if self.root:
@@ -2062,11 +2064,11 @@ class OutlineViewDelegateDatasource(NSObject):
                 self.root.release()
             self.root=None
         if self.controller:
-            print "TODO OutlineViewDelegateDatasource.controller.release()", self.controller.retainCount()
+            print( "TODO OutlineViewDelegateDatasource.controller.release()", self.controller.retainCount() )
 
         #    self.controller.release()
         if self.document:
-            print "TODO OutlineViewDelegateDatasource.document.release()", self.document.retainCount()
+            print( "TODO OutlineViewDelegateDatasource.document.release()", self.document.retainCount() )
         #    self.document.release()
         objc.super(OutlineViewDelegateDatasource, self).dealloc()
 
@@ -2104,7 +2106,7 @@ class OutlineViewDelegateDatasource(NSObject):
             self.controller.reloadData_(item)
         else:
             if kwlog:
-                print "FAILED: reloadData_(%s)" % repr(item)
+                print( "FAILED: reloadData_(%s)" % repr(item) )
 
     def isSubEditor(self):
         return self.parentNode != None
@@ -2135,7 +2137,7 @@ class OutlineViewDelegateDatasource(NSObject):
 
 
     def numberOfRowsInTableView_(self, tv):
-        print "numberOfRowsInTableView_"
+        print( "numberOfRowsInTableView_" )
         return self.root.children.count()
 
 
@@ -2144,8 +2146,8 @@ class OutlineViewDelegateDatasource(NSObject):
         column = userInfo.valueForKey_( u"NSTableColumn" )
         oldWidth = userInfo.valueForKey_( u"NSOldWidth" ).intValue()
         newWidth = column.width()
-        # print "COL: '%s' changed from: %i  to  %i" % (column.identifier(),
-        #                                               oldWidth, newWidth)
+        # print( "COL: '%s' changed from: %i  to  %i" % (column.identifier(),
+        #                                                oldWidth, newWidth))
 
     def tableViewColumnDidResize_(self, aNotification):
         # for some reaon only th outlineView delegate is called. Even for tables
@@ -2168,8 +2170,8 @@ class OutlineViewDelegateDatasource(NSObject):
         if not self.typ in CactusOutlineTypes.hierarchicalTypes:
             return False
         if not hasattr(item, 'noOfChildren'):
-            print
-            print "ITEM", repr(item)
+            print()
+            print( "ITEM", repr(item) )
             return False
         return item.noOfChildren() > 0
 
@@ -2220,15 +2222,15 @@ class OutlineViewDelegateDatasource(NSObject):
     # drag and drop
     #
     def outlineView_acceptDrop_item_childIndex_(self, ov, info, targetItem, index):
-        print "DELG.outlineView_acceptDrop_item_childIndex_"
+        print( "DELG.outlineView_acceptDrop_item_childIndex_" )
 
         pb = info.draggingPasteboard()
         # pp(info)
 
         if 1:
-            print "targetItem:", repr(targetItem)
-            print "index", repr(index)
-            print "info", repr(info)
+            print( "targetItem:", repr(targetItem) )
+            print( "index", repr(index) )
+            print( "info", repr(info) )
 
         if targetItem:
             # drop on item
@@ -2261,7 +2263,7 @@ class OutlineViewDelegateDatasource(NSObject):
         if 0:
             for item in insertedItems:
                 index = ov.rowForItem_( item )
-                print "selectionIndex:", index, item
+                print( "selectionIndex:", index, item )
                 if index != -1:
                     s = NSIndexSet.indexSetWithIndex_( index )
                     ov.selectRowIndexes_byExtendingSelection_(s, True)
@@ -2277,11 +2279,11 @@ class OutlineViewDelegateDatasource(NSObject):
     def outlineView_validateDrop_proposedItem_proposedChildIndex_(self, ov, dragInfo, item, index):
         if 0 and kwdbg:
             # deactivated. very noysy
-            print "DELG.outlineView_validateDrop_proposedItem_proposedChildIndex_"
+            print( "DELG.outlineView_validateDrop_proposedItem_proposedChildIndex_" )
 
         if dragInfo.draggingSource() == self.outlineView:
-            # print "drag in outlineView()!"
-            # print item
+            # print( "drag in outlineView()!" )
+            # print( item )
             # pp(dragInfo)
             #if index == NSOutlineViewDropOnItemIndex:
             #    return NSDragOperationMove
@@ -2294,7 +2296,7 @@ class OutlineViewDelegateDatasource(NSObject):
             return NSDragOperationMove
         else:
             # external drop - not now
-            # print "source:", dragInfo.draggingSource()
+            # print( "source:", dragInfo.draggingSource() )
             return NSDragOperationCopy
 
         return NSDragOperationNone
@@ -2302,7 +2304,7 @@ class OutlineViewDelegateDatasource(NSObject):
 
     def outlineView_writeItems_toPasteboard_(self, ov, items, pb):
         if kwdbg:
-            print "DELG.outlineView_writeItems_toPasteboard_"
+            print( "DELG.outlineView_writeItems_toPasteboard_" )
 
         pb.declareTypes_owner_( [DragDropCactusPboardType],
                                 self)
@@ -2355,10 +2357,10 @@ class OutlineViewDelegateDatasource(NSObject):
 
     def outlineViewSelectionDidChange_( self, aNotification ):
         if kwdbg:
-            print "outlineViewSelectionDidChange_()"
+            print( "outlineViewSelectionDidChange_()" )
         ov = None
         if aNotification:
-            #print aNotification
+            #print( aNotification )
             ov = aNotification.object()
             if not isinstance(ov, KWOutlineView):
                 ov = False
@@ -2428,7 +2430,7 @@ class OutlineViewDelegateDatasource(NSObject):
 #
 def deleteNodes(ov, nodes=(), selection=False):
     if kwdbg:
-        print "CactusOutline.deleteNodes()"
+        print( "CactusOutline.deleteNodes()" )
     if selection:
         sel = ov.getSelectionItems()
     else:
@@ -2447,7 +2449,7 @@ def deleteNodes(ov, nodes=(), selection=False):
 
 def createNode(ov, selection, startEditing=True):
     if kwdbg:
-        print "CactusOutline.createNode()"
+        print( "CactusOutline.createNode()" )
     # create node at selection and start editing
 
     # open new line and start editing
@@ -2487,7 +2489,7 @@ def createNode(ov, selection, startEditing=True):
 
 def moveSelectionUp(ov, items):
     if kwdbg:
-        print "CactusOutline.moveSelectionUp()"
+        print( "CactusOutline.moveSelectionUp()" )
     delg = ov.delegate()
     for item in items:
         # move item before previous
@@ -2514,7 +2516,7 @@ def moveSelectionUp(ov, items):
 
 def moveSelectionDown(ov, items):
     if kwdbg:
-        print "CactusOutline.moveSelectionDown()"
+        print( "CactusOutline.moveSelectionDown()" )
     #
     # this really needs to be sorted down; use indices
     # otherwise there will be overlapping moves destroying
@@ -2547,12 +2549,12 @@ def moveSelectionDown(ov, items):
 
 def moveSelectionLeft(ov, selection):
     if kwdbg:
-        print "EMPTY: CactusOutline.moveSelectionLeft()"
+        print( "EMPTY: CactusOutline.moveSelectionLeft()" )
     pass
 
 def moveSelectionRight(ov, selection):
     if kwdbg:
-        print "EMPTY: CactusOutline.moveSelectionRight()"
+        print( "EMPTY: CactusOutline.moveSelectionRight()" )
     pass
 
 
@@ -2570,13 +2572,13 @@ def unmangleFSSPecURL( url ):
             post = urllib.quote( post, "/:?" )
             url = "%s%%23%s" % (pre, post)
     if kwdbg:
-        print "CactusOutline.unmangleFSSpecURL(%s) -> %s" % (repr(orgurl), repr(url) )
+        print( "CactusOutline.unmangleFSSpecURL(%s) -> %s" % (repr(orgurl), repr(url) ) )
     return url
 
 
 def cleanupURL( url ):
     if kwdbg:
-        print "CactusOutline.cleanupURL()"
+        print( "CactusOutline.cleanupURL()" )
     # lots of URLs contain spaces, &, '
     return unmangleFSSPecURL( url )
 
@@ -2608,10 +2610,10 @@ def cleanupURL( url ):
         path = urllib.unquote( 'http://' + path )
         try:
             path = urllib.quote( path )
-        except KeyError, err:
-            print "ERROR"
-            print repr(path)
-            print err
+        except KeyError as err:
+            print( "ERROR" )
+            print( repr(path) )
+            print( err )
         path = path[9:]
         purl[2] = path
         #

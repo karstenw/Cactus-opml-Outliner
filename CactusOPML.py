@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 import os
 import datetime
 
@@ -121,21 +123,21 @@ def getOPML( etRootnode ):
 
     if head:
         for item in list(head):
-            #print "head:", item.tag, item.text
+            #print( "head:", item.tag, item.text )
             d['head'].append( (item.tag, item.text) )
 
     if body:
         d['body'] = getOutlineNodes(body)
 
     if kwlog:
-        print
-        print "KeyTypes", len(keyTypes)
+        print()
+        print( "KeyTypes", len(keyTypes) )
         pp(keyTypes)
-        print
-        print "OPMPTags", len(opmlTags)
+        print()
+        print( "OPMPTags", len(opmlTags) )
         pp(opmlTags)
-        print
-        print "types", len(nodeTypes)
+        print()
+        print( "types", len(nodeTypes) )
         pp(nodeTypes)
         
     return  d
@@ -144,7 +146,7 @@ def getOPML( etRootnode ):
 def opml_from_string(opml_text):
     try:
         s = etree.fromstring(opml_text)
-    except StandardError, v:
+    except StandardError as v:
         raise OPMLParseErrorException, "The OPML file could not be parsed.\n%s" % v
     return getOPML( s )
 
@@ -152,7 +154,7 @@ def opml_from_string(opml_text):
 def parse_plist( nsurl ):
     try:
         nsdict = NSDictionary.dictionaryWithContentsOfURL_( nsurl )
-    except StandardError, v:
+    except StandardError as v:
         raise PLISTParseErrorException, "The PLIST file could not be parsed.\n%s" % v
     return nsdict
 
@@ -253,10 +255,10 @@ def getXMLNodes( node ):
         if kwlog and kwdbg:
             if tail:
                 if name == u"a":
-                    print
-                    print "NAME:", repr(name)
-                    print "TEXT:", repr(text)
-                    print "TAIL:", repr(tail)
+                    print()
+                    print( "NAME:", repr(name) )
+                    print( "TEXT:", repr(text) )
+                    print( "TAIL:", repr(tail) )
                 
         comment = False
         if n.tag in (CommentNode,):
@@ -369,7 +371,7 @@ def xml_from_string(xml_text):
 
     try:
         s = etree.fromstring(xml_text)
-    except StandardError, v:
+    except StandardError as v:
         raise XMLParseErrorException, "The XML file could not be parsed.\n%s" % v
     return getXML_( s )
 
@@ -381,7 +383,7 @@ def html_from_url( htmlurl ):
     try:
         # s = lxmletree.parse(htmlurl, parser)
         s = lxmletree.parse(urlopen(htmlurl), parser)
-    except StandardError, v:
+    except StandardError as v:
         raise HTMLParseErrorException, "The HTML file could not be parsed.\n%s" % v
     return getHTML_( s )
 
@@ -490,20 +492,20 @@ def generateHTML( rootNode, doctype, encoding, indent=0 ):
             continue
         try:
             rootElement.attrib[e] = d[e]
-        except ValueError, err:
-            print
-            print "ERROR ON ATTRIB UPDATE"
-            print err
+        except ValueError as err:
+            print()
+            print( "ERROR ON ATTRIB UPDATE" )
+            print( err )
     comment = baseOP.comment
     if comment:
         rootElement.text = comment
 
     try:
         nodes = createSubNodesHTML(baseOP, rootElement, 1, indent)
-    except Exception, err:
-        print 
-        print err
-        print
+    except Exception as err:
+        print()
+        print( err )
+        print()
 
     if indent:
         indentXML(rootElement, level=0, width=indent)
@@ -645,7 +647,7 @@ def generateRSS( rootNode, indent=2 ):
                     else:
                         
                         head_d[name] = value
-        print "HEAD:"
+        print( "HEAD:" )
         pp(head_d)
     body_l = []
     bodyOP = rootNode.findFirstChildWithName_( "body" )
@@ -669,9 +671,9 @@ def generateRSS( rootNode, indent=2 ):
                         length, type_ = rest.split(';', 1)
                         try:
                             length = int(length)
-                        except ValueError, err:
+                        except ValueError as err:
                             if kwlog:
-                                print "BOGUS ENCLOSURE LENGTH: %s" % repr(length)
+                                print( "BOGUS ENCLOSURE LENGTH: %s" % repr(length) )
                             length = 0
                         enc = PyRSS2Gen.Enclosure( url, length, type_)
                         d[k] = enc
@@ -679,9 +681,9 @@ def generateRSS( rootNode, indent=2 ):
                         # TODO: check for type here; dicts and lists may be bad
                         d[ k ] = v #value[key]
                         if type(d[ k ]) in (list, dict, tuple):
-                            print "\ngenerateRSS() type error.\n"
+                            print( "\ngenerateRSS() type error.\n" )
                         
-            #print "ITEM:"
+            #print( "ITEM:" )
             #pp( d )
             body_l.append( PyRSS2Gen.RSSItem( **d ) )
 
@@ -781,7 +783,7 @@ def generateOPML( rootNode, indent=2, expansion={} ):
     return
      etree.Element of rootNode
     """
-    print "opml.generateOPML( %s, %s )" % (rootNode, repr(expansion))
+    print( "opml.generateOPML( %s, %s )" % (rootNode, repr(expansion)) )
 
     defaults = NSUserDefaults.standardUserDefaults()
     merge = defaults.objectForKey_( u'optMergeComment')
@@ -830,7 +832,7 @@ def generateOPML( rootNode, indent=2, expansion={} ):
                     node.attrib["_note"] = comment
                 else:
                     node.attrib["comment"] = comment
-            print "HEAD: '%s': '%s' " % (repr(name), repr(v))
+            print( "HEAD: '%s': '%s' " % (repr(name), repr(v)) )
         # add missing keys
         if expansion:
             for key in expansion:
@@ -855,10 +857,10 @@ def generateOPML( rootNode, indent=2, expansion={} ):
         else:
             # an outline without body
             nodes = createSubNodesOPML(rootNode, body, 1, merge=merge)
-    except Exception, err:
+    except Exception as err:
         tb = unicode(traceback.format_exc())
-        print tb
-        print 
+        print( tb )
+        print()
 
     if indent:
         indentXML(rootOPML, 0, indent)

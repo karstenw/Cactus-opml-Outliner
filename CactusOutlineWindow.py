@@ -5,6 +5,9 @@
 #   Copyright 2013 __MyCompanyName__. All rights reserved.
 #
 
+from __future__ import print_function
+
+
 import sys
 import os
 
@@ -31,7 +34,7 @@ class CactusOutlineWindow(NSWindow):
         pass
     """
     def draggingEntered_(self,sender):
-        print "CactusOutlineWindow.draggingEntered_"
+        print( "CactusOutlineWindow.draggingEntered_" )
         pboard = sender.draggingPasteboard()
         types = pboard.types()
         opType = NSDragOperationNone
@@ -40,7 +43,7 @@ class CactusOutlineWindow(NSWindow):
         return opType
 
     def performDragOperation_(self,sender):
-        print "CactusOutlineWindow.performDragOperation_"
+        print( "CactusOutlineWindow.performDragOperation_" )
         pboard = sender.draggingPasteboard()
         successful = False
         if NSFilenamesPboardType in pboard.types():

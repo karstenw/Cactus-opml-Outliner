@@ -1,7 +1,8 @@
 version = 1.1
 path = 'Finder10.sdef'
 
-classes = [       ('application', 'capp'),
+classes = [
+        ('application', 'capp'),
         ('item', 'cobj'),
         ('container', 'ctnr'),
         ('computer_object', 'ccmp'),
@@ -34,7 +35,8 @@ classes = [       ('application', 'capp'),
         ('column', 'lvcl'),
         ('alias_list', 'alst')]
 
-enums = [       ('read_only', 'read'),
+enums = [
+        ('read_only', 'read'),
         ('read_write', 'rdwr'),
         ('write_only', 'writ'),
         ('none', 'none'),
@@ -113,7 +115,8 @@ enums = [       ('read_only', 'read'),
         ('comment', 'comt'),
         ('version', 'vers')]
 
-properties = [       ('clipboard', 'pcli'),
+properties = [
+        ('clipboard', 'pcli'),
         ('name', 'pnam'),
         ('visible', 'pvis'),
         ('frontmost', 'pisf'),
@@ -280,7 +283,8 @@ properties = [       ('clipboard', 'pcli'),
         ('maximum_width', 'clwm'),
         ('visible', 'pvis')]
 
-elements = [       ('application', 'capp'),
+elements = [
+        ('application', 'capp'),
         ('items', 'cobj'),
         ('containers', 'ctnr'),
         ('computer_objects', 'ccmp'),
@@ -313,7 +317,10 @@ elements = [       ('application', 'capp'),
         ('columns', 'lvcl'),
         ('alias_lists', 'alst')]
 
-commands = [       ('open', 'aevtodoc', [('using', 'usin'), ('with_properties', 'prdt')]),
+commands = [
+        ('open', 'aevtodoc', [
+                ('using', 'usin'),
+                ('with_properties', 'prdt')]),
         ('print_', 'aevtpdoc', [('with_properties', 'prdt')]),
         ('quit', 'aevtquit', []),
         ('activate', 'miscactv', []),
@@ -348,7 +355,9 @@ commands = [       ('open', 'aevtodoc', [('using', 'usin'), ('with_properties', 
         ('empty', 'fndrempt', [('security', 'sec?')]),
         ('erase', 'fndrfera', []),
         ('reveal', 'miscmvis', []),
-        ('update', 'fndrfupd', [('necessity', 'nec?'), ('registering_applications', 'reg?')]),
+        ('update', 'fndrfupd', [
+                ('necessity', 'nec?'),
+                ('registering_applications', 'reg?')]),
         ('restart', 'fndrrest', []),
         ('shut_down', 'fndrshut', []),
         ('sleep', 'fndrslep', [])]

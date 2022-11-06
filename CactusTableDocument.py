@@ -1,6 +1,8 @@
 
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 
 """
 """
@@ -149,7 +151,7 @@ class TableWindowController(AutoBaseClass):
 
     def doubleClick_(self, sender):
         # Open a new browser window for each selected expandable item
-        print "doubleClick_()"
+        print( "doubleClick_()" )
 
     def reloadData_(self, item=None, children=False):
         if item == None:
