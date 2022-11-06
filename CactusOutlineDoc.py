@@ -126,6 +126,20 @@ openIML_ = CactusFileOpeners.openIML_
 openPLIST_ = CactusFileOpeners.openPLIST_
 
 
+# py3 stuff
+py3 = False
+try:
+    unicode('')
+    punicode = unicode
+    pstr = str
+    punichr = unichr
+except NameError:
+    punicode = str
+    pstr = bytes
+    py3 = True
+    punichr = chr
+    long = int
+
 def boilerplateOPML( rootNode ):
     """Creates the minimal outline nodes for the OPML structure.
 

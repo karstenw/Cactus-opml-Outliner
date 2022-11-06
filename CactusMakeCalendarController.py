@@ -32,6 +32,20 @@ import CactusOutlineDoc
 
 
 
+# py3 stuff
+py3 = False
+try:
+    unicode('')
+    punicode = unicode
+    pstr = str
+    punichr = unichr
+except NameError:
+    punicode = str
+    pstr = bytes
+    py3 = True
+    punichr = chr
+    long = int
+
 def daterange(start, stop, step_days=1):
     # John Machin 
     # http://stackoverflow.com/questions/1060279/iterating-through-a-range-of-dates-in-python
