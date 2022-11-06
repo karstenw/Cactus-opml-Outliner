@@ -113,12 +113,12 @@
 <v t="karstenw.20160619131225.24"><vh>photo_from_string</vh></v>
 <v t="karstenw.20160619131225.25"><vh>getPhotoXML</vh></v>
 </v>
-<v t="karstenw.20160619131230.1"><vh>@clean CactusOutline.py</vh>
+<v t="karstenw.20160619131230.1" a="E"><vh>@clean CactusOutline.py</vh>
 <v t="karstenw.20160619131238.1"><vh>CactusOutline declarations</vh></v>
 <v t="karstenw.20160619131238.2"><vh>open_photo</vh></v>
 <v t="karstenw.20160619131238.3"><vh>open_node</vh></v>
 <v t="karstenw.20160619131238.4"><vh>handleEventReturnKeyOV_Event_</vh></v>
-<v t="karstenw.20160619131238.5"><vh>class KWOutlineView</vh>
+<v t="karstenw.20160619131238.5" a="E"><vh>class KWOutlineView</vh>
 <v t="karstenw.20160619131238.6"><vh>awakeFromNib</vh></v>
 <v t="karstenw.20160619131238.7"><vh>menuForEvent_</vh></v>
 <v t="karstenw.20160619131238.8"><vh>validateMenuItem_</vh></v>
@@ -172,7 +172,7 @@
 <v t="karstenw.20160619131238.54"><vh>stdAction</vh></v>
 <v t="karstenw.20160619131238.55"><vh>visitOutline</vh></v>
 <v t="karstenw.20160619131238.56"><vh>dfid</vh></v>
-<v t="karstenw.20160619131238.57"><vh>class OutlineViewDelegateDatasource</vh>
+<v t="karstenw.20160619131238.57" a="E"><vh>class OutlineViewDelegateDatasource</vh>
 <v t="karstenw.20160619131238.58"><vh>init</vh></v>
 <v t="karstenw.20160619131238.59"><vh>dealloc</vh></v>
 <v t="karstenw.20160619131238.60"><vh>initWithObject_type_parentNode_</vh></v>
@@ -4037,7 +4037,7 @@ import os
 
 import re
 
-import cPickle
+import pickle
 
 import traceback
 
@@ -4695,7 +4695,7 @@ def paste_(self, sender):
         indent = u"\t" * level
         s = u"%s%s" % (indent, item.name)
         names.append( s )
-    data = cPickle.dumps( result )
+    data = pickle.dumps( result )
     l = len(data)
     nsdata = NSData.dataWithBytes_length_(data, l)
 
@@ -4746,7 +4746,7 @@ def paste_(self, sender):
     data = pb.dataForType_(t)
     nodes = []
     if t == DragDropCactusPboardType:
-        nodes = cPickle.loads( data.bytes().tobytes() )
+        nodes = pickle.loads( data.bytes().tobytes() )
     elif t == NSFilenamesPboardType:
         # list of paths
         paths = pb.propertyListForType_(NSFilenamesPboardType)
@@ -6450,7 +6450,7 @@ def outlineView_acceptDrop_item_childIndex_(self, ov, info, targetItem, index):
         result.append( item.copyPython())
         names.append( item.name )
 
-    data = cPickle.dumps( result )
+    data = pickle.dumps( result )
     l = len(data)
     nsdata = NSData.dataWithBytes_length_(data, l)
     pb.setData_forType_(

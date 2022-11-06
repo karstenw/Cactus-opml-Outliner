@@ -11,7 +11,7 @@ import os
 
 import re
 
-import cPickle
+import pickle
 
 import traceback
 
@@ -843,7 +843,7 @@ class KWOutlineView(NSOutlineView):
             indent = u"\t" * level
             s = u"%s%s" % (indent, item.name)
             names.append( s )
-        data = cPickle.dumps( result )
+        data = pickle.dumps( result )
         l = len(data)
         nsdata = NSData.dataWithBytes_length_(data, l)
 
@@ -893,7 +893,7 @@ class KWOutlineView(NSOutlineView):
         data = pb.dataForType_(t)
         nodes = []
         if t == DragDropCactusPboardType:
-            nodes = cPickle.loads( data.bytes().tobytes() )
+            nodes = pickle.loads( data.bytes().tobytes() )
         elif t == NSFilenamesPboardType:
             # list of paths
             paths = pb.propertyListForType_(NSFilenamesPboardType)
@@ -2317,7 +2317,7 @@ class OutlineViewDelegateDatasource(NSObject):
             result.append( item.copyPython())
             names.append( item.name )
 
-        data = cPickle.dumps( result )
+        data = pickle.dumps( result )
         l = len(data)
         nsdata = NSData.dataWithBytes_length_(data, l)
         pb.setData_forType_(
