@@ -1,21 +1,21 @@
 .DS_Store
-*.pyc
-build
-dist
-README.html
-CHANGES
-+sqlite
-edit_all.sh
-+Cocoa Browser.app
-rsstest
 .idea
+*.pyc
+++CURRENT_ERROR.tab
 +class_diagrams
-bugbench
++Cocoa Browser Air.app
++Cocoa Browser.app
 +icon/banner/*
 +latex
-English.lproj/Cactus-Dumm*
++sqlite
+bugbench
+build
+dist
+CHANGES
+edit_all.sh
 English.lproj/*.py
-++CURRENT_ERROR.tab
-+Cocoa Browser Air.app
+English.lproj/Cactus-Dumm*
 oppack.tab
+README.html
 release.sh
+rsstest
