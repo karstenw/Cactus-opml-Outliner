@@ -5,11 +5,16 @@ from __future__ import print_function
 import os
 import datetime
 
-import cStringIO
+import io
+# import StringIO 
 import binascii
 
-import urllib2
-urlopen = urllib2.urlopen
+try:
+    import urllib2
+    urlopen = urllib2.urlopen
+except ModuleNotFoundError:
+    import urllib.request
+    urlopen = urllib.request.urlopen
 
 import pprint
 pp = pprint.pprint
@@ -83,7 +88,7 @@ def getOutlineNodes(node):
     global keyTypes, opmlTags, nodeTypes, urls
     result = []
     for n in list(node):
-        keys = n.attrib.keys()
+        keys = list( n.attrib.keys() )
 
         if kwlog:
             # gather some stuff for debugging and opml analyzing
@@ -161,7 +166,7 @@ def opml_from_string(opml_text):
     try:
         s = etree.fromstring(opml_text)
     except StandardError as v:
-        raise OPMLParseErrorException, "The OPML file could not be parsed.\n%s" % v
+        raise OPMLParseErrorException( "The OPML file could not be parsed.\n%s" % v )
     return getOPML( s )
 
 
@@ -169,7 +174,7 @@ def parse_plist( nsurl ):
     try:
         nsdict = NSDictionary.dictionaryWithContentsOfURL_( nsurl )
     except StandardError as v:
-        raise PLISTParseErrorException, "The PLIST file could not be parsed.\n%s" % v
+        raise PLISTParseErrorException( "The PLIST file could not be parsed.\n%s" % v )
     return nsdict
 
 
@@ -203,8 +208,8 @@ def createSubNodesOPML(OPnode, ETnode, level, merge=False):
     name = OPnode.name
     value = OPnode.getValueDict()
     for k, v in value.items():
-        if type(v) not in (str, unicode):
-            value[k] = unicode(v)
+        if type(v) not in (pstr, punicode):
+            value[k] = makeunicode(v)
     comment = OPnode.comment
 
     # update attributes
@@ -250,19 +255,19 @@ def getXMLNodes( node ):
         name = n.tag
         if not name:
             name = u""
-        name = unicode(name)
+        name = makeunicode(name)
 
         text = n.text
         if not text:
             text = u""
-        text = unicode(text)
+        text = makeunicode(text)
         fulltext = text
         #text = text.strip(u" \t\r\n")
 
         tail = n.tail
         if not tail:
             tail = u""
-        tail = unicode(tail)
+        tail = makeunicode(tail)
         fulltail = tail
         #tail = tail.strip(u" \t\r\n")
 
@@ -290,10 +295,8 @@ def getXMLNodes( node ):
             
             'attributes': {}}
 
-        keys = n.attrib.keys()
-
-        for k in keys:
-            b['attributes'][k] = unicode(n.attrib.get(k, ""))
+        for k in n.attrib.keys():
+            b['attributes'][k] = makeunicode( n.attrib.get(k, "") )
 
         if comment:
             b['attributes']['cactustype'] = u"comment"
@@ -308,18 +311,16 @@ def getXMLNodes( node ):
 
 def getXML_( etRootnode ):
     d = []
-
-    keys = etRootnode.attrib.keys()
-
+    
     b = {
-        'name': unicode(etRootnode.tag),
-        'text': unicode(etRootnode.text),
-        'tail': unicode(etRootnode.tail),
+        'name': makeunicode(etRootnode.tag),
+        'text': makeunicode(etRootnode.text),
+        'tail': makeunicode(etRootnode.tail),
         'children': [],
         
         'attributes': {}}
 
-    for k in keys:
+    for k in etRootnode.attrib.keys():
         b['attributes'][k] = etRootnode.attrib.get(k, "")
     subs = list(etRootnode)
     if subs:
@@ -344,12 +345,11 @@ def getHTML_( etRootnode ):
         'xml_version')
     docinfo = etRootnode.docinfo
     rootnode = etRootnode.getroot()
-    keys = rootnode.attrib.keys()
 
     name = rootnode.tag
     if not name:
         name = u""
-    name = unicode(name)
+    name = makeunicode(name)
 
     comment = False
     if rootnode.tag in (CommentNode,):
@@ -359,7 +359,7 @@ def getHTML_( etRootnode ):
     text = rootnode.text
     if not text:
         text = u""
-    text = unicode(text)
+    text = makeunicode(text)
 
     b = {
         'name': name,
@@ -367,8 +367,8 @@ def getHTML_( etRootnode ):
         'children': [],
         
         'attributes': {}}
-
-    for k in keys:
+    
+    for k in rootnode.attrib.keys():
         b['attributes'][k] = rootnode.attrib.get(k, "")
     if comment:
         b['attributes']['cactustype'] = u"comment"
@@ -386,7 +386,7 @@ def xml_from_string(xml_text):
     try:
         s = etree.fromstring(xml_text)
     except StandardError as v:
-        raise XMLParseErrorException, "The XML file could not be parsed.\n%s" % v
+        raise XMLParseErrorException( "The XML file could not be parsed.\n%s" % v )
     return getXML_( s )
 
 
@@ -398,7 +398,7 @@ def html_from_url( htmlurl ):
         # s = lxmletree.parse(htmlurl, parser)
         s = lxmletree.parse(urlopen(htmlurl), parser)
     except StandardError as v:
-        raise HTMLParseErrorException, "The HTML file could not be parsed.\n%s" % v
+        raise HTMLParseErrorException( "The HTML file could not be parsed.\n%s" % v )
     return getHTML_( s )
 
 
@@ -429,7 +429,7 @@ def createSubNodesXML(OPnode, ETnode, level):
 
 
 def reorderAttribKeys( d ):
-    keys = d.keys()
+    keys = list( d.keys() )
     if 'name' in keys:
         keys.remove( 'name' )
         keys.insert( 0, 'name' )
@@ -574,6 +574,7 @@ def generateXML( rootNode, indent=False ):
         if len(value)>1:
             rootXML.attrib = value
         elif len(value) == 1:
+            
             if value.keys()[0] == u"value" and value[ u"value" ] != u"":
                 rootXML.attrib = value
 
@@ -704,7 +705,7 @@ def generateRSS( rootNode, indent=2 ):
     head_d[ 'items' ] = body_l
 
     rss = PyRSS2Gen.RSS2( **head_d )
-    f = cStringIO.StringIO()
+    f = io.StringIO()
     rss.write_xml( f, encoding='utf-8')
     s = f.getvalue()
     f.close()
@@ -731,7 +732,7 @@ def generatePLISTDict_( rootNode ):
         attrs = child.getValueDict()
         name = child.name
         cactusType = attrs.get( 'cactusNodeType', None)
-        immediateValue = unicode(child.comment)
+        immediateValue = makeunicode(child.comment)
         if cactusType == 'bool':
             plist[ name ] = False
             if immediateValue != u"False":
@@ -762,7 +763,7 @@ def generatePLISTArray_( rootNode ):
         attrs = child.getValueDict()
         name = child.name
         cactusType = attrs.get( 'cactusNodeType', None)
-        immediateValue = unicode(child.comment)
+        immediateValue = makeunicode(child.comment)
         if cactusType == 'bool':
             b = False
             if immediateValue != u"False":
@@ -827,19 +828,20 @@ def generateOPML( rootNode, indent=2, expansion={} ):
             v = ""
 
             if name in expansion:
-                value = { u"": unicode(expansion[name]) }
+                value = { u"": makeunicode(expansion[name]) }
                 expandCreated.add(name)
 
             node = etree.SubElement( head, name)
 
             if value: # != "":
-                v = value[ value.keys()[0] ]
+                # TBD: unwrangle
+                v = value[ list(value.keys())[0] ]
 
                 # node.text = value
-                # node.text = unicode(value.get('value', ''))
+                # node.text = makeunicode(value.get('value', ''))
 
-                # node.text = unicode(value.get( u'', ''))
-                node.text = unicode(v)
+                # node.text = makeunicode(value.get( u'', ''))
+                node.text = makeunicode(v)
             
             if comment != "":
                 if merge:
@@ -852,7 +854,7 @@ def generateOPML( rootNode, indent=2, expansion={} ):
             for key in expansion:
                 if key not in expandCreated:
                     node = etree.SubElement( head, key)
-                    node.text = unicode(expansion[key])
+                    node.text = makeunicode(expansion[key])
                 
     else:
         # create generic head here
@@ -860,7 +862,7 @@ def generateOPML( rootNode, indent=2, expansion={} ):
             for key in expansion:
                 if key not in expandCreated:
                     node = etree.SubElement( head, key)
-                    node.text = unicode(expansion[key])
+                    node.text = makeunicode(expansion[key])
 
     body = etree.SubElement(rootOPML, "body")
     bodyOP = rootNode.findFirstChildWithName_( "body" )
@@ -872,7 +874,7 @@ def generateOPML( rootNode, indent=2, expansion={} ):
             # an outline without body
             nodes = createSubNodesOPML(rootNode, body, 1, merge=merge)
     except Exception as err:
-        tb = unicode(traceback.format_exc())
+        tb = makeunicode(traceback.format_exc())
         print( tb )
         print()
 
