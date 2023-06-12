@@ -19,8 +19,6 @@ import datetime
 import math
 import feedparser
 
-import cPickle
-
 kwdbg = False
 kwlog = True
 
@@ -37,7 +35,10 @@ import CactusOutlineTypes
 typeOutline = CactusOutlineTypes.typeOutline
 
 import objc
-super = objc.super
+# super = objc.super
+objc.options.deprecation_warnings=1
+
+
 
 import CactusTools
 makeunicode = CactusTools.makeunicode
@@ -82,7 +83,7 @@ class NodeValue(object):
 
     def __init__(self, value):
         if type(value) != list:
-            if type(value) in (str, unicode, NSString, bool, int,
+            if type(value) in (pstr, punicode, NSString, bool, int,
                                NSMutableString, objc.pyobjc_unicode):
                 value = self.listFromDisplayValue_( value )
             elif isinstance(value, dict):
@@ -115,7 +116,7 @@ class NodeValue(object):
             lines = displayValue.split('\n')
         except AttributeError as err:
             print( err )
-            lines = [ unicode(displayValue) ]
+            lines = [ makeunicode(displayValue) ]
 
         l = []
         for line in lines:
@@ -132,7 +133,7 @@ class NodeValue(object):
                     d[k] = d[k] + u'\n' + v
                 else:
                     d[k] = v
-            l = d.items()
+            l = list( d.items() )
         return l
 
     def listFromDictionary_(self, value):
@@ -159,6 +160,19 @@ class NodeValue(object):
 class OutlineNode(NSObject):
 
     """Wrapper class for items to be displayed in the outline view."""
+    # objc.ivar
+    objc.ivar("typ")
+    self.typ = typ
+    self.attributes = ""
+    self.name = ""
+    self.comment = ""
+    self.maxHeight = 1
+
+    self.rootNode = rootNode
+    self.nodenr = next( counter )
+    self.children = NSMutableArray.arrayWithCapacity_( 0 )
+    self.maxHeight = 1
+    self.controller = None
 
     # We keep references to all child items (once created). This is
     # neccesary because NSOutlineView holds on to OutlineNode instances
@@ -199,7 +213,7 @@ class OutlineNode(NSObject):
         self.rootNode = rootNode
 
         # debugging
-        self.nodenr = counter.next()
+        self.nodenr = next( counter ) #counter.next()
 
         # these must exists before any name/value is set
         self.children = NSMutableArray.arrayWithCapacity_( 0 )
@@ -227,14 +241,17 @@ class OutlineNode(NSObject):
     def dealloc(self):
         print( "OutlineNode.dealloc()" )
         # pp(self.__dict__)
-        self.children.release()
+        try:
+            self.children.release()
+        except Exception as err:
+            print( "EXCEPTION: OutlineNode.dealloc()" + str(err) )
 
         # 2013-05-15
         # currently crashes during dict dealloc.
         # seems like I'm on the right way to deallocation...
         psolved = False
         if psolved:
-            super(OutlineNode, self).dealloc()
+            objc.super(OutlineNode, self).dealloc()
 
 
     def setMaxLineHeight(self):
@@ -247,21 +264,21 @@ class OutlineNode(NSObject):
     def setAttributes_(self, attrs):
         d = {}
         t = type(attrs)
-        if t in (str, unicode, NSString, bool, int, long,
+        if t in (pstr, punicode, NSString, bool, int, long,
                  NSMutableString, objc.pyobjc_unicode):
             # stringtype
-            d[ u"" ] = unicode(attrs)
+            d[ u"" ] = makeunicode(attrs)
         elif t in (list, tuple):
             #listtype
             for item in attrs:
                 key, val = item
-                key = unicode(key)
-                val = unicode(val)
+                key = makeunicode(key)
+                val = makeunicode(val)
                 d[ key ] = val
         elif t in (dict, feedparser.FeedParserDict):
             for key in attrs:
-                val = unicode(attrs[key])
-                key = unicode(key)
+                val = makeunicode(attrs[key])
+                key = makeunicode(key)
                 d[ key ] = val
         else:
             # ???
@@ -277,7 +294,7 @@ class OutlineNode(NSObject):
             lines += val.count( u"\n" )
         except Exception as err:
             print( "\n\nERROR in lineHeight_()" )
-            tb = unicode(traceback.format_exc())
+            tb = makeunicode(traceback.format_exc())
             print( err )
             print()
             print( tb )
@@ -606,7 +623,7 @@ class OutlineNode(NSObject):
     def copyPython(self):
         result = []
         start = {
-            'name': unicode(self.name),
+            'name': makeunicode(self.name),
             'value': self.getValueDict(),
             'typ': self.typ,
             'children': result}

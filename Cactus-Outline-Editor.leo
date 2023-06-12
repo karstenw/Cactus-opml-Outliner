@@ -81,7 +81,7 @@
 <v t="karstenw.20160619131056.11"><vh>class DoneMessageException</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131102.1"><vh>@clean CactusFileOpeners.py</vh>
+<v t="karstenw.20160619131102.1" a="E"><vh>@clean CactusFileOpeners.py</vh>
 <v t="karstenw.20160619131110.1"><vh>Imports and Globals</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131110.2"><vh>openOPML_</vh></v>
@@ -92,7 +92,7 @@
 <v t="karstenw.20160619131110.7"><vh>openIML_</vh></v>
 <v t="karstenw.20160619131110.8"><vh>openPLIST_</vh></v>
 </v>
-<v t="karstenw.20160619131220.1"><vh>@clean CactusOPML.py</vh>
+<v t="karstenw.20160619131220.1" a="E"><vh>@clean CactusOPML.py</vh>
 <v t="karstenw.20160619131225.1"><vh>CactusOPML declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131225.2"><vh>getOutlineNodes</vh></v>
@@ -120,9 +120,10 @@
 <v t="karstenw.20160619131225.24"><vh>photo_from_string</vh></v>
 <v t="karstenw.20160619131225.25"><vh>getPhotoXML</vh></v>
 </v>
-<v t="karstenw.20160619131230.1"><vh>@clean CactusOutline.py</vh>
+<v t="karstenw.20160619131230.1" a="E"><vh>@clean CactusOutline.py</vh>
 <v t="karstenw.20160619131238.1"><vh>CactusOutline declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
+<v t="karstenw.20221106100010.1"><vh>Py2 / Py3 declarations</vh></v>
 <v t="karstenw.20160619131238.2"><vh>open_photo</vh></v>
 <v t="karstenw.20160619131238.3"><vh>open_node</vh></v>
 <v t="karstenw.20160619131238.4"><vh>handleEventReturnKeyOV_Event_</vh></v>
@@ -218,7 +219,7 @@
 <v t="karstenw.20160619131238.91"><vh>folder2Outline</vh></v>
 <v t="karstenw.20160619131238.92"><vh>makeFilePropertiesNode</vh></v>
 </v>
-<v t="karstenw.20160619131247.1"><vh>@clean CactusOutlineDoc.py</vh>
+<v t="karstenw.20160619131247.1" a="E"><vh>@clean CactusOutlineDoc.py</vh>
 <v t="karstenw.20160619131254.1"><vh>CactusOutlineDoc declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131254.2"><vh>boilerplateOPML</vh></v>
@@ -261,7 +262,7 @@
 <v t="karstenw.20160619131254.38"><vh>applySettings_</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131258.1"><vh>@clean CactusOutlineNode.py</vh>
+<v t="karstenw.20160619131258.1" a="E"><vh>@clean CactusOutlineNode.py</vh>
 <v t="karstenw.20160619131304.1"><vh>CactusOutlineNode declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131304.2"><vh>class NodeValue</vh>
@@ -272,7 +273,8 @@
 <v t="karstenw.20160619131304.7"><vh>isSingleValue</vh></v>
 <v t="karstenw.20160619131304.8"><vh>isMultiValue</vh></v>
 </v>
-<v t="karstenw.20160619131304.9"><vh>class OutlineNode</vh>
+<v t="karstenw.20160619131304.9" a="E"><vh>class OutlineNode</vh>
+<v t="karstenw.20230612123526.1"><vh>instance variables</vh></v>
 <v t="karstenw.20160619131304.10"><vh>__new__</vh></v>
 <v t="karstenw.20160619131304.11"><vh>__init__</vh></v>
 <v t="karstenw.20160619131304.12"><vh>__repr__</vh></v>
@@ -326,7 +328,7 @@
 <v t="karstenw.20160619131524.3"><vh>awakeFromNib</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131515.1"><vh>@clean CactusTableDocument.py</vh>
+<v t="karstenw.20160619131515.1" a="E"><vh>@clean CactusTableDocument.py</vh>
 <v t="karstenw.20160619131529.1"><vh>CactusTableDocument declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 </v>
@@ -338,7 +340,7 @@
 </v>
 <v t="karstenw.20221106095308.1"></v>
 </v>
-<v t="karstenw.20220912113705.1"><vh>@clean CactusTools.py</vh>
+<v t="karstenw.20220912113705.1" a="E"><vh>@clean CactusTools.py</vh>
 <v t="karstenw.20220912113721.1"><vh>Declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20220912113812.1"><vh>+ TOOLS</vh></v>
@@ -365,11 +367,11 @@
 <v t="karstenw.20220912113721.22"><vh>mergeURLs</vh></v>
 <v t="karstenw.20220912113721.23"><vh>getURLExtension</vh></v>
 </v>
-<v t="karstenw.20160619131607.1"><vh>@clean CactusURL.py</vh>
+<v t="karstenw.20160619131607.1" a="E"><vh>@clean CactusURL.py</vh>
 <v t="karstenw.20160619131622.1"><vh>CactusURL declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131622.2"><vh>NSURL2str</vh></v>
-<v t="karstenw.20160619131622.3"><vh>class CactusURL</vh>
+<v t="karstenw.20160619131622.3" a="E"><vh>class CactusURL</vh>
 <v t="karstenw.20160619131622.4"><vh>__init__</vh></v>
 <v t="karstenw.20160619131622.5"><vh>ascachepath</vh></v>
 </v>
@@ -449,7 +451,7 @@
 <v t="karstenw.20160619132023.48"><vh>publish_extensions</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619130952.1"><vh>@clean CactusAppDelegateClass.py</vh>
+<v t="karstenw.20160619130952.1" a="E"><vh>@clean CactusAppDelegateClass.py</vh>
 <v t="karstenw.20160619130959.1"><vh>CactusAppDelegateClass declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619130959.2"><vh>class Document</vh>
@@ -498,7 +500,7 @@
 <v t="karstenw.20160619130959.43"><vh>appendNode_CurrentDoc_</vh></v>
 <v t="karstenw.20160619130959.44"><vh>makeCalendarCurrentOrNewDoc_</vh></v>
 </v>
-<v t="karstenw.20160619130959.45"><vh>class CactusWindowController_OLD</vh>
+<v t="karstenw.20160619130959.45" a="E"><vh>class CactusWindowController_OLD</vh>
 <v t="karstenw.20160619130959.46"><vh>init</vh></v>
 <v t="karstenw.20160619130959.47"><vh>initWithObject_type_</vh></v>
 <v t="karstenw.20160619130959.48"><vh>windowWillClose_</vh></v>
@@ -1681,7 +1683,7 @@ import sys
 <t tx="karstenw.20160619131056.11">class DoneMessageException(CactusBaseException):
     pass
 </t>
-<t tx="karstenw.20160619131056.2">class CactusBaseException(StandardError):
+<t tx="karstenw.20160619131056.2">class CactusBaseException(Exception):
     @others
 </t>
 <t tx="karstenw.20160619131056.3">def __init__(self, *args):
@@ -1768,6 +1770,7 @@ NSUserDefaults = AppKit.NSUserDefaults
 import CactusTools
 num2ostype = CactusTools.num2ostype
 ostype2num = CactusTools.ostype2num
+makeunicode = CactusTools.makeunicode
 
 import CactusOutlineTypes
 typeOutline = CactusOutlineTypes.typeOutline
@@ -1870,8 +1873,8 @@ OutlineNode = CactusOutlineNode.OutlineNode
         if urltag:
             if 'cactusUrl' not in headtags:
                 # add this url only once, not for every open
-                head.addChild_(OutlineNode('cactusUrl', unicode(urltag), head,
-                               typeOutline, root))
+                head.addChild_(OutlineNode('cactusUrl', makeunicode(urltag),
+                               head, typeOutline, root))
     # fill in missing opml attributes here
     # created, modified
     #
@@ -1974,7 +1977,7 @@ OutlineNode = CactusOutlineNode.OutlineNode
                 newnode = OutlineNode(name, content, node, typeOutline, root)
             except Exception as err:
                 print( "\n\nERROR in openXML_()" )
-                tb = unicode(traceback.format_exc())
+                tb = makeunicode(traceback.format_exc())
                 print( err )
                 print()
                 print( tb )
@@ -2034,7 +2037,7 @@ OutlineNode = CactusOutlineNode.OutlineNode
             getChildrenforNode( node, children, root )
         except Exception as err:
             print( "\n\nERROR in openXML_()" )
-            tb = unicode(traceback.format_exc())
+            tb = makeunicode(traceback.format_exc())
             print( err )
             print()
             print( tb )
@@ -2054,7 +2057,10 @@ OutlineNode = CactusOutlineNode.OutlineNode
         if len(s) &gt; 90:
             s = s[:91]
         print( "openRSS_( %s )" % repr(s) )
-    d = feedparser.parse( url, agent=CactusVersion.user_agent )
+
+    # d = feedparser.parse( url, agent=CactusVersion.user_agent )
+    pdb.set_trace()
+    d = feedparser.api.parse( url ) #, response_headers=None, resolve_relative_uris=None, sanitize_html=None,optimistic_encoding_detection=None)
 
     # make basic nodes
     root = OutlineNode("__ROOT__", "", None, typeOutline, None)
@@ -2080,7 +2086,7 @@ OutlineNode = CactusOutlineNode.OutlineNode
                   subtitle subtitle_detail sy_updatefrequency sy_updateperiod
                   title title_detail updated updated_parsed""".split()
 
-        feedkeys = d.feed.keys()
+        feedkeys = list( d.feed.keys() )
         feedkeys.sort()
 
         for k in feedkeys:
@@ -2097,7 +2103,7 @@ OutlineNode = CactusOutlineNode.OutlineNode
                 elif len(v) == 1:
                     v = v[0]
 
-            if type(v) not in (str, unicode, NSString,
+            if type(v) not in (pstr, punicode, NSString,
                                NSMutableString, objc.pyobjc_unicode):
                 if isinstance(v, dict):
                     l = []
@@ -2118,7 +2124,7 @@ OutlineNode = CactusOutlineNode.OutlineNode
             node = OutlineNode(k, v, head, typeOutline, root)
             head.addChild_( node )
 
-    otherkeys = d.keys()
+    otherkeys = list( d.keys() )
 
     if 'feed' in otherkeys:
         otherkeys.remove("feed")
@@ -2129,7 +2135,7 @@ OutlineNode = CactusOutlineNode.OutlineNode
     otherkeys.sort()
     for k in otherkeys:
         v = d[k]
-        if type(v) not in (str, unicode, NSString, NSMutableString,
+        if type(v) not in (pstr, punicode, NSString, NSMutableString,
                            objc.pyobjc_unicode,
                            dict, feedparser.FeedParserDict):
             v = repr(v)
@@ -2228,17 +2234,17 @@ OutlineNode = CactusOutlineNode.OutlineNode
 
     # number
     elif hasattr(nsvalue, "descriptionWithLocale_"):
-        value = unicode(nsvalue.descriptionWithLocale_( None ))
+        value = makeunicode(nsvalue.descriptionWithLocale_( None ))
         valueTypeName = [ ('cactusNodeType', "number") ]
 
     # data
     elif hasattr(nsvalue, "bytes"):
-        value = unicode( binascii.hexlify(nsvalue.bytes()) )
+        value = makeunicode( binascii.hexlify(nsvalue.bytes()) )
         valueTypeName = [ ('cactusNodeType', "data") ]
 
     # anything else
     elif hasattr(nsvalue, "description"):
-        value = unicode(nsvalue.description())
+        value = makeunicode(nsvalue.description())
         valueTypeName = [ ('cactusNodeType', "string") ]
     else:
         print( "BOGATIVE VALUE TYPE:", repr(valueType) )
@@ -2333,11 +2339,11 @@ def openIML_( nsdict ):
         if name in curPlaylist:
 
             if type_ == cactusData:
-                value = unicode( binascii.hexlify(value.bytes()) )
+                value = makeunicode( binascii.hexlify(value.bytes()) )
             elif type_ == cactusBool:
                 value = repr(bool(value))
             elif type_ == cactusNumber:
-                value = unicode(value.descriptionWithLocale_( None ))
+                value = makeunicode(value.descriptionWithLocale_( None ))
             # elif type_ == cactusDictionary:
 
             node = OutlineNode( name,
@@ -2346,7 +2352,7 @@ def openIML_( nsdict ):
                                 typeOutline,
                                 root)
             if value != "":
-                node.setComment_( unicode(value) )
+                node.setComment_( makeunicode(value) )
             parent.addChild_( node )
             return node
 
@@ -2457,7 +2463,7 @@ def openIML_( nsdict ):
                     u"Track ID": id_
                 }
 
-                name = id_track_dict.get(unicode(id_), "###Noname###")
+                name = id_track_dict.get(makeunicode(id_), "###Noname###")
 
                 node = OutlineNode( name, attrs, plnode, typeOutline, root)
                 plnode.addChild_( node )
@@ -2500,7 +2506,7 @@ def openIML_( nsdict ):
                 itemName = str(i)
                 nsvalue = nsdict.objectAtIndex_( i-1 )
             else:
-                itemName = unicode(key)
+                itemName = makeunicode(key)
                 nsvalue = nsdict.objectForKey_(key)
 
             valueType = type(nsvalue)
@@ -2602,7 +2608,7 @@ def openPLIST_( nsdict ):
                 itemName = str(i)
                 nsvalue = nsdict.objectAtIndex_( i-1 )
             else:
-                itemName = unicode(key)
+                itemName = makeunicode(key)
                 nsvalue = nsdict.objectForKey_(key)
 
             valueType = type(nsvalue)
@@ -2624,17 +2630,17 @@ def openPLIST_( nsdict ):
 
             # number
             elif hasattr(nsvalue, "descriptionWithLocale_"):
-                value = unicode(nsvalue.descriptionWithLocale_( None ))
+                value = makeunicode(nsvalue.descriptionWithLocale_( None ))
                 node.setValue_( [ ('cactusNodeType', "number") ] )
 
             # data
             elif hasattr(nsvalue, "bytes"):
-                value = unicode( binascii.hexlify(nsvalue.bytes()) )
+                value = makeunicode( binascii.hexlify(nsvalue.bytes()) )
                 node.setValue_( [ ('cactusNodeType', "data") ] )
 
             # anything else
             elif hasattr(nsvalue, "description"):
-                value = unicode(nsvalue.description())
+                value = makeunicode(nsvalue.description())
                 node.setValue_( [ ('cactusNodeType', "string") ] )
             else:
                 print( "BOGATIVE VALUE TYPE:", repr(valueType) )
@@ -3077,11 +3083,16 @@ from __future__ import print_function
 import os
 import datetime
 
-import cStringIO
+import io
+# import StringIO 
 import binascii
 
-import urllib2
-urlopen = urllib2.urlopen
+try:
+    import urllib2
+    urlopen = urllib2.urlopen
+except ModuleNotFoundError:
+    import urllib.request
+    urlopen = urllib.request.urlopen
 
 import pprint
 pp = pprint.pprint
@@ -3136,18 +3147,16 @@ urls = {}
 </t>
 <t tx="karstenw.20160619131225.10">def getXML_( etRootnode ):
     d = []
-
-    keys = etRootnode.attrib.keys()
-
+    
     b = {
-        'name': unicode(etRootnode.tag),
-        'text': unicode(etRootnode.text),
-        'tail': unicode(etRootnode.tail),
+        'name': makeunicode(etRootnode.tag),
+        'text': makeunicode(etRootnode.text),
+        'tail': makeunicode(etRootnode.tail),
         'children': [],
         
         'attributes': {}}
 
-    for k in keys:
+    for k in etRootnode.attrib.keys():
         b['attributes'][k] = etRootnode.attrib.get(k, "")
     subs = list(etRootnode)
     if subs:
@@ -3173,12 +3182,11 @@ urls = {}
         'xml_version')
     docinfo = etRootnode.docinfo
     rootnode = etRootnode.getroot()
-    keys = rootnode.attrib.keys()
 
     name = rootnode.tag
     if not name:
         name = u""
-    name = unicode(name)
+    name = makeunicode(name)
 
     comment = False
     if rootnode.tag in (CommentNode,):
@@ -3188,7 +3196,7 @@ urls = {}
     text = rootnode.text
     if not text:
         text = u""
-    text = unicode(text)
+    text = makeunicode(text)
 
     b = {
         'name': name,
@@ -3196,8 +3204,8 @@ urls = {}
         'children': [],
         
         'attributes': {}}
-
-    for k in keys:
+    
+    for k in rootnode.attrib.keys():
         b['attributes'][k] = rootnode.attrib.get(k, "")
     if comment:
         b['attributes']['cactustype'] = u"comment"
@@ -3216,7 +3224,7 @@ def xml_from_string(xml_text):
     try:
         s = etree.fromstring(xml_text)
     except StandardError as v:
-        raise XMLParseErrorException, "The XML file could not be parsed.\n%s" % v
+        raise XMLParseErrorException( "The XML file could not be parsed.\n%s" % v )
     return getXML_( s )
 
 
@@ -3229,7 +3237,7 @@ def xml_from_string(xml_text):
         # s = lxmletree.parse(htmlurl, parser)
         s = lxmletree.parse(urlopen(htmlurl), parser)
     except StandardError as v:
-        raise HTMLParseErrorException, "The HTML file could not be parsed.\n%s" % v
+        raise HTMLParseErrorException( "The HTML file could not be parsed.\n%s" % v )
     return getHTML_( s )
 
 
@@ -3262,7 +3270,7 @@ def xml_from_string(xml_text):
 
 </t>
 <t tx="karstenw.20160619131225.15">def reorderAttribKeys( d ):
-    keys = d.keys()
+    keys = list( d.keys() )
     if 'name' in keys:
         keys.remove( 'name' )
         keys.insert( 0, 'name' )
@@ -3410,6 +3418,7 @@ def xml_from_string(xml_text):
         if len(value)&gt;1:
             rootXML.attrib = value
         elif len(value) == 1:
+            
             if value.keys()[0] == u"value" and value[ u"value" ] != u"":
                 rootXML.attrib = value
 
@@ -3541,7 +3550,7 @@ def generateRSS( rootNode, indent=2 ):
     head_d[ 'items' ] = body_l
 
     rss = PyRSS2Gen.RSS2( **head_d )
-    f = cStringIO.StringIO()
+    f = io.StringIO()
     rss.write_xml( f, encoding='utf-8')
     s = f.getvalue()
     f.close()
@@ -3557,7 +3566,7 @@ def getOutlineNodes(node):
     global keyTypes, opmlTags, nodeTypes, urls
     result = []
     for n in list(node):
-        keys = n.attrib.keys()
+        keys = list( n.attrib.keys() )
 
         if kwlog:
             # gather some stuff for debugging and opml analyzing
@@ -3617,7 +3626,7 @@ def getOutlineNodes(node):
         attrs = child.getValueDict()
         name = child.name
         cactusType = attrs.get( 'cactusNodeType', None)
-        immediateValue = unicode(child.comment)
+        immediateValue = makeunicode(child.comment)
         if cactusType == 'bool':
             plist[ name ] = False
             if immediateValue != u"False":
@@ -3649,7 +3658,7 @@ def getOutlineNodes(node):
         attrs = child.getValueDict()
         name = child.name
         cactusType = attrs.get( 'cactusNodeType', None)
-        immediateValue = unicode(child.comment)
+        immediateValue = makeunicode(child.comment)
         if cactusType == 'bool':
             b = False
             if immediateValue != u"False":
@@ -3715,19 +3724,20 @@ def getOutlineNodes(node):
             v = ""
 
             if name in expansion:
-                value = { u"": unicode(expansion[name]) }
+                value = { u"": makeunicode(expansion[name]) }
                 expandCreated.add(name)
 
             node = etree.SubElement( head, name)
 
             if value: # != "":
-                v = value[ value.keys()[0] ]
+                # TBD: unwrangle
+                v = value[ list(value.keys())[0] ]
 
                 # node.text = value
-                # node.text = unicode(value.get('value', ''))
+                # node.text = makeunicode(value.get('value', ''))
 
-                # node.text = unicode(value.get( u'', ''))
-                node.text = unicode(v)
+                # node.text = makeunicode(value.get( u'', ''))
+                node.text = makeunicode(v)
             
             if comment != "":
                 if merge:
@@ -3740,7 +3750,7 @@ def getOutlineNodes(node):
             for key in expansion:
                 if key not in expandCreated:
                     node = etree.SubElement( head, key)
-                    node.text = unicode(expansion[key])
+                    node.text = makeunicode(expansion[key])
                 
     else:
         # create generic head here
@@ -3748,7 +3758,7 @@ def getOutlineNodes(node):
             for key in expansion:
                 if key not in expandCreated:
                     node = etree.SubElement( head, key)
-                    node.text = unicode(expansion[key])
+                    node.text = makeunicode(expansion[key])
 
     body = etree.SubElement(rootOPML, "body")
     bodyOP = rootNode.findFirstChildWithName_( "body" )
@@ -3760,7 +3770,7 @@ def getOutlineNodes(node):
             # an outline without body
             nodes = createSubNodesOPML(rootNode, body, 1, merge=merge)
     except Exception as err:
-        tb = unicode(traceback.format_exc())
+        tb = makeunicode(traceback.format_exc())
         print( tb )
         print()
 
@@ -3880,7 +3890,7 @@ def getOutlineNodes(node):
     try:
         s = etree.fromstring(opml_text)
     except StandardError as v:
-        raise OPMLParseErrorException, "The OPML file could not be parsed.\n%s" % v
+        raise OPMLParseErrorException( "The OPML file could not be parsed.\n%s" % v )
     return getOPML( s )
 
 
@@ -3889,7 +3899,7 @@ def getOutlineNodes(node):
     try:
         nsdict = NSDictionary.dictionaryWithContentsOfURL_( nsurl )
     except StandardError as v:
-        raise PLISTParseErrorException, "The PLIST file could not be parsed.\n%s" % v
+        raise PLISTParseErrorException( "The PLIST file could not be parsed.\n%s" % v )
     return nsdict
 
 
@@ -3926,8 +3936,8 @@ def parse(opml_url):
     name = OPnode.name
     value = OPnode.getValueDict()
     for k, v in value.items():
-        if type(v) not in (str, unicode):
-            value[k] = unicode(v)
+        if type(v) not in (pstr, punicode):
+            value[k] = makeunicode(v)
     comment = OPnode.comment
 
     # update attributes
@@ -3974,19 +3984,19 @@ def getXMLNodes( node ):
         name = n.tag
         if not name:
             name = u""
-        name = unicode(name)
+        name = makeunicode(name)
 
         text = n.text
         if not text:
             text = u""
-        text = unicode(text)
+        text = makeunicode(text)
         fulltext = text
         #text = text.strip(u" \t\r\n")
 
         tail = n.tail
         if not tail:
             tail = u""
-        tail = unicode(tail)
+        tail = makeunicode(tail)
         fulltail = tail
         #tail = tail.strip(u" \t\r\n")
 
@@ -4014,10 +4024,8 @@ def getXMLNodes( node ):
             
             'attributes': {}}
 
-        keys = n.attrib.keys()
-
-        for k in keys:
-            b['attributes'][k] = unicode(n.attrib.get(k, ""))
+        for k in n.attrib.keys():
+            b['attributes'][k] = makeunicode( n.attrib.get(k, "") )
 
         if comment:
             b['attributes']['cactustype'] = u"comment"
@@ -4054,9 +4062,6 @@ import traceback
 
 import time
 import datetime
-
-import urllib
-import urlparse
 
 import math
 import feedparser
@@ -5107,7 +5112,7 @@ def textDidBeginEditing_(self, aNotification):
                 # we are at the end of the outline
                 createNode(self, item, startEditing=True)
             else:
-                row = self.rowForItem_( item.next() )
+                row = self.rowForItem_( next(item) )# item.next() )
                 self.reloadData()
                 self.editColumn_row_withEvent_select_(0, row, None, True)
             return
@@ -5128,7 +5133,7 @@ def textDidBeginEditing_(self, aNotification):
 </t>
 <t tx="karstenw.20160619131238.34">def setWindowStatus_(self, status):
     ctrl = self.delegate().controller
-    ctrl.txtWindowStatus.setStringValue_( unicode(status) )
+    ctrl.txtWindowStatus.setStringValue_( makeunicode(status) )
 
 
 </t>
@@ -5502,7 +5507,7 @@ def keyDown_(self, theEvent):
                                 # sometimes the stream is indirected several layers...
 
                                 audiourl, info = urllib.urlretrieve( url )
-                                faudio = open(audiourl)
+                                faudio = open(audiourl, 'rb')
                                 url = faudio.read()
                                 url = url.strip('\r\n')
                                 faudio.close()
@@ -6013,7 +6018,7 @@ def __init__(self, exc_info):
 def stdAction( node, level ):
     # Debugging HACK
     s = "  " * level
-    s = s + unicode(node)
+    s = s + makeunicode(node)
     n = str(node.retainCount())
     n = n.ljust(4)
     s = n + s
@@ -6190,7 +6195,7 @@ def init(self):
     self.parentNode = parentNode
 
     if not isinstance(obj, OutlineNode):
-        obj = OutlineNode(unicode(obj), "", None, CactusOutlineTypes.typeOutline, None)
+        obj = OutlineNode(makeunicode(obj), "", None, CactusOutlineTypes.typeOutline, None)
     self.root = obj
 
     return self
@@ -6344,7 +6349,7 @@ def outlineView_numberOfChildrenOfItem_(self, view, item):
             # if it has a parentNode it's edited attributes
             if self.parentNode != None:
                 name = item.name
-                self.parentNode.updateValue_( (name, unicode(value)) )
+                self.parentNode.updateValue_( (name, makeunicode(value)) )
             item.setValue_( value )
             self.markDirty()
 
@@ -6650,7 +6655,7 @@ def deleteNodes(ov, nodes=(), selection=False):
         parent = item.parent
         if parent == None:
             return
-        next = item.next()
+        next = next( item ) #item.next()
         if next == -1:
             return
 
@@ -6748,7 +6753,7 @@ def deleteNodes(ov, nodes=(), selection=False):
         #
         purl.append("")
         purl = urlparse.urlunparse( purl )
-        purl = unicode(purl)
+        purl = makeunicode(purl)
         return purl
 
 
@@ -6767,7 +6772,7 @@ def folder2Outline( folder, node, filter=None):
         ignoredot = bool(defaults.objectForKey_( u'optIgnoreDotFiles'))
     except:
         pass
-    root, directories, files = os.walk( folder ).next()
+    root, directories, files = next( os.walk( folder )) # .next()
     if ignoredot:
         files[:] = [f for f in files if not f.startswith('.')]
         directories[:] = [f for f in directories if not f.startswith('.')]
@@ -6848,14 +6853,15 @@ import traceback
 
 import time
 import datetime
-import urllib
+
 import binascii
 import struct
 
 import xml.etree.cElementTree
 etree = xml.etree.cElementTree
 
-import cStringIO
+import io
+# import cStringIO
 
 import pdb
 import pprint
@@ -6965,7 +6971,9 @@ openPLIST_ = CactusFileOpeners.openPLIST_
 <t tx="karstenw.20160619131254.10">def initWithType_error_(self, theType, err):
     if kwlog:
         print( "CactusOutlineDocument.initWithType_error_( %s )" % (repr(theType),) )
-
+    
+    # pdb.set_trace()
+    
     self = self.init()
     if not self:
         return (None, None)
@@ -7182,7 +7190,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
 
         e = etree.ElementTree( rootOPML )
 
-        fob = cStringIO.StringIO()
+        fob = io.StringIO()
         e.write(fob, encoding="utf-8", xml_declaration=True, method="xml" )
         t = fob.getvalue()
         fob.close()
@@ -7205,7 +7213,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
                 u"XML documents can have only 1 to level node. Every node after '%s' will be ommited on save." % (name,))
         e = etree.ElementTree( rootXML )
 
-        fob = cStringIO.StringIO()
+        fob = io.StringIO()
         # e.write(fob, pretty_print=True, encoding="utf-8", xml_declaration=True, method="xml" )
         e.write(fob, encoding="utf-8", xml_declaration=True, method="xml" )
         t = fob.getvalue()
@@ -7218,9 +7226,9 @@ openPLIST_ = CactusFileOpeners.openPLIST_
         doctype = encoding = ""
         indent = 0
         try:
-            doctype = unicode(defaults.objectForKey_( u'menDoctype'))
-            encoding = unicode(defaults.objectForKey_( u'menEncoding'))
-            indent = unicode(defaults.objectForKey_( u'txtIndent'))
+            doctype = makeunicode(defaults.objectForKey_( u'menDoctype'))
+            encoding = makeunicode(defaults.objectForKey_( u'menEncoding'))
+            indent = makeunicode(defaults.objectForKey_( u'txtIndent'))
             indent = int(indent)
 
         except StandardError as err:
@@ -7231,7 +7239,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
         if etHTML:
             # e = etree.ElementTree( rootHTML )
 
-            #fob = cStringIO.StringIO()
+            #fob = io.StringIO()
             ## e.write(fob, pretty_print=True, encoding="utf-8", xml_declaration=True, method="xml" )
             #etHTML.write(fob) # , encoding="utf-8", xml_declaration=False, method="html" )
             #t = fob.getvalue()
@@ -7309,8 +7317,8 @@ openPLIST_ = CactusFileOpeners.openPLIST_
     defaults = NSUserDefaults.standardUserDefaults()
     uname = uemail = ""
     try:
-        uname = unicode(defaults.objectForKey_( u'txtUserName'))
-        uemail = unicode(defaults.objectForKey_( u'txtUserEmail'))
+        uname = makeunicode( defaults.objectForKey_( 'txtUserName' ) )
+        uemail = makeunicode( defaults.objectForKey_('txtUserEmail') )
     except StandardError as err:
         print( "ERROR reading defaults.", repr(err) )
 
@@ -7580,7 +7588,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
 
     """
     if kwlog:
-        print( "CactusOutlineWindowController.initWithObject_()" )
+        print( "CactusOutlineWindowController.finishControllerInit()" )
 
     # self = self.initWithWindowNibName_("OutlineEditor")
     title = u"Unnamed Outline"
@@ -7600,7 +7608,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
     if document.url:
         # self.nsurl = document.url
         if document.url.isFileURL():
-            self.url = unicode(document.url.path())
+            self.url = makeunicode(document.url.path())
         else:
             self.url = NSURL2str(document.url)
     # path is a string or False now
@@ -7751,7 +7759,7 @@ class CactusOutlineDocument(NSDocument):
     url = doc.fileURL()
     
     if url:
-        path = unicode(url.path())
+        path = makeunicode(url.path())
         urslstring = NSURL2str( url )
         if os.path.exists( path ):
             fld, fle = os.path.split( path )
@@ -7857,7 +7865,7 @@ def applySettings_(self, sender):
 
     if self.txtOutlineType:
         s = self.document()
-        self.txtOutlineType.setStringValue_( unicode( s.fileType() ) )
+        self.txtOutlineType.setStringValue_( makeunicode( s.fileType() ) )
 
     # lines per row menu
     try:
@@ -7884,19 +7892,26 @@ def applySettings_(self, sender):
 </t>
 <t tx="karstenw.20160619131254.4">def __repr__(self):
     s = u"CactusOutlineDocument\n"
-    s = s + u"    rootNode: '%s'\n" % self.rootNode
-    s = s + u"    parentNode: '%s'\n" % self.parentNode
-    s = s + u"    url: '%s'\n" % self.url
-    s = s + u"    title: '%s'\n" % self.title
-    s = s + u"    outlineView: '%s'\n" % self.outlineView
-    return s.encode("utf-8")
+    s = s + u"    rootNode: '%s'\n" % str(self.rootNode)
+    s = s + u"    parentNode: '%s'\n" % str(self.parentNode)
+    s = s + u"    url: '%s'\n" % str(self.url)
+
+    # these may not exists yet
+    try:
+        s = s + u"    title: '%s'\n" % self.title
+        s = s + u"    outlineView: '%s'\n" % str(self.outlineView)
+    except:
+        pass
+    return s #.encode("utf-8")
 
 </t>
 <t tx="karstenw.20160619131254.5">def init(self):
     if kwlog:
         print( "CactusOutlineDocument.init()" )
     self = objc.super( CactusOutlineDocument, self).init()
-
+    
+    # pdb.set_trace()
+    
     # outline specific
     # parentNode is used to determine if only an aspect of the outline is edited
     self.parentNode = None
@@ -7914,6 +7929,8 @@ def applySettings_(self, sender):
 
     # TBD
     self.setHasUndoManager_( False )
+    if kwlog:
+        print( "CactusOutlineDocument initialized" )
     return self
 
 </t>
@@ -7940,12 +7957,14 @@ def applySettings_(self, sender):
 
     # read opml content
     if theType == CactusOPMLType:
+        pdb.set_trace()
         d = None
         try:
-            d = CactusOPML.opml_from_string( readURL( url, CactusOPMLType ) )
+            s = readURL( url, CactusOPMLType )
+            d = CactusOPML.opml_from_string( s )
         except OPMLParseErrorException as v:
-            tb = unicode(traceback.format_exc())
-            v = unicode( repr(v) )
+            tb = makeunicode(traceback.format_exc())
+            v = makeunicode( repr(v) )
             err = tb
             errorDialog( message=v, title=tb )
             return (False, None)
@@ -7988,8 +8007,8 @@ def applySettings_(self, sender):
         try:
             d = CactusOPML.xml_from_string( readURL( url, CactusXMLType ) )
         except XMLParseErrorException as v:
-            tb = unicode(traceback.format_exc())
-            v = unicode( repr(v) )
+            tb = makeunicode(traceback.format_exc())
+            v = makeunicode( repr(v) )
             err = tb
             errorDialog( message=v, title=tb )
             return (False, None)
@@ -8016,8 +8035,8 @@ def applySettings_(self, sender):
         try:
             d = CactusOPML.html_from_url( url )
         except HTMLParseErrorException as v:
-            tb = unicode(traceback.format_exc())
-            v = unicode( repr(v) )
+            tb = makeunicode(traceback.format_exc())
+            v = makeunicode( repr(v) )
             err = tb
             errorDialog( message=v, title=tb )
             return (False, None)
@@ -8043,8 +8062,8 @@ def applySettings_(self, sender):
         try:
             d = CactusOPML.parse_plist( url )
         except PLISTParseErrorException as v:
-            tb = unicode(traceback.format_exc())
-            v = unicode( repr(v) )
+            tb = makeunicode(traceback.format_exc())
+            v = makeunicode( repr(v) )
             err = tb
             errorDialog( message=v, title=tb )
             return (False, None)
@@ -8072,8 +8091,8 @@ def applySettings_(self, sender):
         try:
             d = CactusOPML.parse_plist( url )
         except PLISTParseErrorException as v:
-            tb = unicode(traceback.format_exc())
-            v = unicode( repr(v) )
+            tb = makeunicode(traceback.format_exc())
+            v = makeunicode( repr(v) )
             err = tb
             errorDialog( message=v, title=tb )
             return (False, None)
@@ -8116,7 +8135,8 @@ def applySettings_(self, sender):
 
     if not self:
         return( None, None)
-
+    
+    # pdb.set_trace()
     OK, err = self.readFromURL_ofType_error_( url, theType, err )
 
     if OK:
@@ -8171,8 +8191,6 @@ import datetime
 import math
 import feedparser
 
-import cPickle
-
 kwdbg = False
 kwlog = True
 
@@ -8189,7 +8207,10 @@ import CactusOutlineTypes
 typeOutline = CactusOutlineTypes.typeOutline
 
 import objc
-super = objc.super
+# super = objc.super
+objc.options.deprecation_warnings=1
+
+
 
 import CactusTools
 makeunicode = CactusTools.makeunicode
@@ -8251,7 +8272,7 @@ def __new__(cls, *args, **kwargs):
     self.rootNode = rootNode
 
     # debugging
-    self.nodenr = counter.next()
+    self.nodenr = next( counter ) #counter.next()
 
     # these must exists before any name/value is set
     self.children = NSMutableArray.arrayWithCapacity_( 0 )
@@ -8281,14 +8302,17 @@ def __new__(cls, *args, **kwargs):
 <t tx="karstenw.20160619131304.13">def dealloc(self):
     print( "OutlineNode.dealloc()" )
     # pp(self.__dict__)
-    self.children.release()
+    try:
+        self.children.release()
+    except Exception as err:
+        print( "EXCEPTION: OutlineNode.dealloc()" + str(err) )
 
     # 2013-05-15
     # currently crashes during dict dealloc.
     # seems like I'm on the right way to deallocation...
     psolved = False
     if psolved:
-        super(OutlineNode, self).dealloc()
+        objc.super(OutlineNode, self).dealloc()
 
 
 </t>
@@ -8303,21 +8327,21 @@ def __new__(cls, *args, **kwargs):
 <t tx="karstenw.20160619131304.15">def setAttributes_(self, attrs):
     d = {}
     t = type(attrs)
-    if t in (str, unicode, NSString, bool, int, long,
+    if t in (pstr, punicode, NSString, bool, int, long,
              NSMutableString, objc.pyobjc_unicode):
         # stringtype
-        d[ u"" ] = unicode(attrs)
+        d[ u"" ] = makeunicode(attrs)
     elif t in (list, tuple):
         #listtype
         for item in attrs:
             key, val = item
-            key = unicode(key)
-            val = unicode(val)
+            key = makeunicode(key)
+            val = makeunicode(val)
             d[ key ] = val
     elif t in (dict, feedparser.FeedParserDict):
         for key in attrs:
-            val = unicode(attrs[key])
-            key = unicode(key)
+            val = makeunicode(attrs[key])
+            key = makeunicode(key)
             d[ key ] = val
     else:
         # ???
@@ -8334,7 +8358,7 @@ def __new__(cls, *args, **kwargs):
         lines += val.count( u"\n" )
     except Exception as err:
         print( "\n\nERROR in lineHeight_()" )
-        tb = unicode(traceback.format_exc())
+        tb = makeunicode(traceback.format_exc())
         print( err )
         print()
         print( tb )
@@ -8513,7 +8537,7 @@ def addChild_(self, child):
 <t tx="karstenw.20160619131304.3">
 def __init__(self, value):
     if type(value) != list:
-        if type(value) in (str, unicode, NSString, bool, int,
+        if type(value) in (pstr, punicode, NSString, bool, int,
                            NSMutableString, objc.pyobjc_unicode):
             value = self.listFromDisplayValue_( value )
         elif isinstance(value, dict):
@@ -8738,7 +8762,7 @@ def makeChildOf_(self, other):
 <t tx="karstenw.20160619131304.48">def copyPython(self):
     result = []
     start = {
-        'name': unicode(self.name),
+        'name': makeunicode(self.name),
         'value': self.getValueDict(),
         'typ': self.typ,
         'children': result}
@@ -8762,7 +8786,7 @@ def makeChildOf_(self, other):
         lines = displayValue.split('\n')
     except AttributeError as err:
         print( err )
-        lines = [ unicode(displayValue) ]
+        lines = [ makeunicode(displayValue) ]
 
     l = []
     for line in lines:
@@ -8779,7 +8803,7 @@ def makeChildOf_(self, other):
                 d[k] = d[k] + u'\n' + v
             else:
                 d[k] = v
-        l = d.items()
+        l = list( d.items() )
     return l
 
 </t>
@@ -9324,7 +9348,9 @@ class CactusTableNode(NSObject):
     self.maxHeight = 1
     self.setMaxLineHeight()
 
-    self.retain</t>
+    self.retain
+
+</t>
 <t tx="karstenw.20160619131607.1">@language python
 @tabwidth -4
 @others
@@ -10694,6 +10720,8 @@ import unicodedata
 
 import struct
 
+import io
+
 import mactypes
 import appscript
 asc = appscript
@@ -10707,10 +10735,17 @@ import pdb
 
 import re
 import requests
+try:
+    import urllib2
+    urlopen = urllib2.urlopen
+except ModuleNotFoundError:
+    import urllib.request
+    urlopen = urllib.request.urlopen
+
 import urllib
-import urllib2
-import urlparse
-import StringIO
+import urllib.parse as urlparse
+# import urlparse
+
 import gzip
 
 import CactusDocumentTypes
@@ -10867,8 +10902,8 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
     defaults = NSUserDefaults.standardUserDefaults()
     cacheFolder = CactusVersion.cachefolder
     try:
-        cacheFolder = unicode(defaults.objectForKey_( u'txtCacheFolder'))
-    except StandardError as err:
+        cacheFolder = makeunicode(defaults.objectForKey_( u'txtCacheFolder'))
+    except Exception as err:
         print( "CactusTools.getDownloadFolder(%s) -&gt; False" % NSURL2str(nsurl) )
         print( "ERROR reading defaults.", repr(err) )
 
@@ -10911,24 +10946,39 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 </t>
 <t tx="karstenw.20220912113721.19">def getRemotefilemodificationDate( url ):
 
-    try:
-        f = urllib.urlopen( url )
-    except IOError as err:
-        print( "ERROR: Could not open url (%s) for date reading." % url )
-        return False
-
-    rinfo = f.info()
-    f.close()
-
-    remotemodfdate = rinfo.getdate('last-modified')
-    if remotemodfdate:
+    if 0:
         try:
-            rmodfdate = datetime.datetime( *remotemodfdate[:6] )
-            #rmodfdate = datetime.datetime( *rinfo.getdate('last-modified')[:6] )
-        except TypeError as err:
-            print( "Could not get remote file(%s) modification date." % url )
+            f = urlopen( url )
+        except IOError as err:
+            print( "ERROR: Could not open url (%s) for date reading." % url )
             return False
-        return rmodfdate
+        rinfo = f.info()
+        f.close()
+
+        remotemodfdate = rinfo.getdate('last-modified')
+        if remotemodfdate:
+            try:
+                rmodfdate = datetime.datetime( *remotemodfdate[:6] )
+                #rmodfdate = datetime.datetime( *rinfo.getdate('last-modified')[:6] )
+            except TypeError as err:
+                print( "Could not get remote file(%s) modification date '%s'." % (url, str(remotemodfdate)) )
+                return False
+            return rmodfdate
+    else:
+        rmodfdate = False
+        header = requests.head(url).headers
+        if 'Last-Modified' in header:
+            rmodfdate =  header['Last-Modified']
+
+            dts = feedparser.datetimes._parse_date( rmodfdate )
+            try:
+                dts = time.mktime( dts )
+            except Exception as err:
+                print("dts = time.mktime( dts ) FAILED.\n'%s'\n%s" % (str(dts),err))
+                
+            if dts:
+                dt = datetime.datetime.fromtimestamp( dts )
+                return dt
     return False
 
 </t>
@@ -10959,8 +11009,6 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 
     returnURL = nsurl
     url = NSURL2str( nsurl )
-
-    # pdb.set_trace()
 
     try:
         localpath, localname = getDownloadFolder(nsurl)
@@ -11012,13 +11060,17 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
             s = r.content
             headers = r.headers
             r.close()
-            fob = open(localpath, 'w')
+            fob = io.open(localpath, 'wb')
             fob.write( s )
             fob.close()
             
             dt = datetime.datetime.now()
-            dts = feedparser._parse_date( headers.get( 'last-modified', '' ) )
-            dts = time.mktime( dts )
+            dts = feedparser.datetimes._parse_date( headers.get( 'last-modified', '' ) )
+            try:
+                dts = time.mktime( dts )
+            except Exception as err:
+                print("dts = time.mktime( dts ) FAILED.\n'%s'\n%s" % (str(dts),err))
+                
             if dts:
                 dt = datetime.datetime.fromtimestamp( dts )
 
@@ -11026,7 +11078,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
                 finder = asc.app(u'Finder.app', terms=Finder10)
                 hfspath = mactypes.File( localpath ).hfspath
                 finder.files[hfspath].comment.set( url )
-            except StandardError as v:
+            except Exception as v:
                 print( "SET COMMENT FAILED ON '%s'" % localpath )
             # get file date
             lmodfdate = os.stat( localpath ).st_mtime
@@ -11042,10 +11094,10 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
             print( "LOAD: %s...done" % url )
             print( "LOCAL:", repr(localpath) )
 
-        returnURL = NSURL.fileURLWithPath_( unicode(localpath) )
+        returnURL = NSURL.fileURLWithPath_( makeunicode(localpath) )
 
     except Exception as err:
-        tb = unicode(traceback.format_exc())
+        tb = makeunicode(traceback.format_exc())
         print( tb )
         print(  )
 
@@ -11116,8 +11168,8 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 </t>
 <t tx="karstenw.20220912113721.4">def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
     try:
-        if type(s) not in (unicode, objc.pyobjc_unicode):
-            s = unicode(s, srcencoding)
+        if type(s) not in (punicode, objc.pyobjc_unicode):
+            s = makeunicode(s, srcencoding)
     except TypeError:
         print( "makeunicode type conversion error" )
         print( "FAILED converting", type(s), "to unicode" )
@@ -11172,17 +11224,17 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
     cache = False
     try:
         cache = bool(defaults.objectForKey_( u'optCache'))
-    except StandardError as err:
+    except Exception as err:
         print( "ERROR reading defaults.", repr(err) )
     
-    # pdb.set_trace()
     
     if cache:
+        # pdb.set_trace()
         if not nsurl.isFileURL():
             nsurl = cache_url(nsurl, fileext)
-
-    url = NSURL2str(nsurl)
-
+            url = NSURL2str(nsurl)
+    
+    
     if 0:
         # does not work with file urls
         r = requests.get( url )
@@ -11191,7 +11243,9 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
         r.close()
     else:
         # fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
-        fob = feedparser._open_resource(url, None, None, None, None, [], {})
+        pdb.set_trace()
+        result = dict()
+        fob = feedparser.api._open_resource(url, result)
         s = fob.read()
         fob.close()
 
@@ -11201,7 +11255,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
         if len(s) &gt; 2:
             if ord(s[0]) == 0x1f:
                 if ord(s[1]) == 0x8b:
-                    unzipped = gzip.GzipFile( fileobj=StringIO.StringIO(s) ).read()
+                    unzipped = gzip.GzipFile( fileobj=io.BytesIO(s) ).read()
                     s = unzipped
     except Exception:
         pass
@@ -11367,6 +11421,30 @@ if __name__ == "__main__":
     AppHelper.runEventLoop(pdb=devVersion)
 
 
+</t>
+<t tx="karstenw.20221106100010.1">
+if not py3:
+    import urllib
+    import urlparse
+else:
+    from urllib.parse import urlparse
+
+import requests
+
+</t>
+<t tx="karstenw.20230612123526.1"># objc.ivar
+objc.ivar("typ")
+self.typ = typ
+self.attributes = ""
+self.name = ""
+self.comment = ""
+self.maxHeight = 1
+
+self.rootNode = rootNode
+self.nodenr = next( counter )
+self.children = NSMutableArray.arrayWithCapacity_( 0 )
+self.maxHeight = 1
+self.controller = None
 </t>
 </tnodes>
 </leo_file>

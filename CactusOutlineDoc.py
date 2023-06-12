@@ -13,14 +13,15 @@ import traceback
 
 import time
 import datetime
-import urllib
+
 import binascii
 import struct
 
 import xml.etree.cElementTree
 etree = xml.etree.cElementTree
 
-import cStringIO
+import io
+# import cStringIO
 
 import pdb
 import pprint
@@ -173,8 +174,8 @@ def boilerplateOPML( rootNode ):
     defaults = NSUserDefaults.standardUserDefaults()
     uname = uemail = ""
     try:
-        uname = unicode(defaults.objectForKey_( u'txtUserName'))
-        uemail = unicode(defaults.objectForKey_( u'txtUserEmail'))
+        uname = makeunicode( defaults.objectForKey_( 'txtUserName' ) )
+        uemail = makeunicode( defaults.objectForKey_('txtUserEmail') )
     except StandardError as err:
         print( "ERROR reading defaults.", repr(err) )
 
@@ -221,18 +222,25 @@ class CactusOutlineDocument(NSDocument):
 
     def __repr__(self):
         s = u"CactusOutlineDocument\n"
-        s = s + u"    rootNode: '%s'\n" % self.rootNode
-        s = s + u"    parentNode: '%s'\n" % self.parentNode
-        s = s + u"    url: '%s'\n" % self.url
-        s = s + u"    title: '%s'\n" % self.title
-        s = s + u"    outlineView: '%s'\n" % self.outlineView
-        return s.encode("utf-8")
+        s = s + u"    rootNode: '%s'\n" % str(self.rootNode)
+        s = s + u"    parentNode: '%s'\n" % str(self.parentNode)
+        s = s + u"    url: '%s'\n" % str(self.url)
+
+        # these may not exists yet
+        try:
+            s = s + u"    title: '%s'\n" % self.title
+            s = s + u"    outlineView: '%s'\n" % str(self.outlineView)
+        except:
+            pass
+        return s #.encode("utf-8")
 
     def init(self):
         if kwlog:
             print( "CactusOutlineDocument.init()" )
         self = objc.super( CactusOutlineDocument, self).init()
-
+        
+        # pdb.set_trace()
+        
         # outline specific
         # parentNode is used to determine if only an aspect of the outline is edited
         self.parentNode = None
@@ -250,6 +258,8 @@ class CactusOutlineDocument(NSDocument):
 
         # TBD
         self.setHasUndoManager_( False )
+        if kwlog:
+            print( "CactusOutlineDocument initialized" )
         return self
 
     def dealloc(self):
@@ -273,12 +283,14 @@ class CactusOutlineDocument(NSDocument):
 
         # read opml content
         if theType == CactusOPMLType:
+            pdb.set_trace()
             d = None
             try:
-                d = CactusOPML.opml_from_string( readURL( url, CactusOPMLType ) )
+                s = readURL( url, CactusOPMLType )
+                d = CactusOPML.opml_from_string( s )
             except OPMLParseErrorException as v:
-                tb = unicode(traceback.format_exc())
-                v = unicode( repr(v) )
+                tb = makeunicode(traceback.format_exc())
+                v = makeunicode( repr(v) )
                 err = tb
                 errorDialog( message=v, title=tb )
                 return (False, None)
@@ -321,8 +333,8 @@ class CactusOutlineDocument(NSDocument):
             try:
                 d = CactusOPML.xml_from_string( readURL( url, CactusXMLType ) )
             except XMLParseErrorException as v:
-                tb = unicode(traceback.format_exc())
-                v = unicode( repr(v) )
+                tb = makeunicode(traceback.format_exc())
+                v = makeunicode( repr(v) )
                 err = tb
                 errorDialog( message=v, title=tb )
                 return (False, None)
@@ -349,8 +361,8 @@ class CactusOutlineDocument(NSDocument):
             try:
                 d = CactusOPML.html_from_url( url )
             except HTMLParseErrorException as v:
-                tb = unicode(traceback.format_exc())
-                v = unicode( repr(v) )
+                tb = makeunicode(traceback.format_exc())
+                v = makeunicode( repr(v) )
                 err = tb
                 errorDialog( message=v, title=tb )
                 return (False, None)
@@ -376,8 +388,8 @@ class CactusOutlineDocument(NSDocument):
             try:
                 d = CactusOPML.parse_plist( url )
             except PLISTParseErrorException as v:
-                tb = unicode(traceback.format_exc())
-                v = unicode( repr(v) )
+                tb = makeunicode(traceback.format_exc())
+                v = makeunicode( repr(v) )
                 err = tb
                 errorDialog( message=v, title=tb )
                 return (False, None)
@@ -405,8 +417,8 @@ class CactusOutlineDocument(NSDocument):
             try:
                 d = CactusOPML.parse_plist( url )
             except PLISTParseErrorException as v:
-                tb = unicode(traceback.format_exc())
-                v = unicode( repr(v) )
+                tb = makeunicode(traceback.format_exc())
+                v = makeunicode( repr(v) )
                 err = tb
                 errorDialog( message=v, title=tb )
                 return (False, None)
@@ -448,7 +460,8 @@ class CactusOutlineDocument(NSDocument):
 
         if not self:
             return( None, None)
-
+        
+        # pdb.set_trace()
         OK, err = self.readFromURL_ofType_error_( url, theType, err )
 
         if OK:
@@ -480,7 +493,9 @@ class CactusOutlineDocument(NSDocument):
     def initWithType_error_(self, theType, err):
         if kwlog:
             print( "CactusOutlineDocument.initWithType_error_( %s )" % (repr(theType),) )
-
+        
+        # pdb.set_trace()
+        
         self = self.init()
         if not self:
             return (None, None)
@@ -688,7 +703,7 @@ class CactusOutlineDocument(NSDocument):
 
             e = etree.ElementTree( rootOPML )
 
-            fob = cStringIO.StringIO()
+            fob = io.StringIO()
             e.write(fob, encoding="utf-8", xml_declaration=True, method="xml" )
             t = fob.getvalue()
             fob.close()
@@ -711,7 +726,7 @@ class CactusOutlineDocument(NSDocument):
                     u"XML documents can have only 1 to level node. Every node after '%s' will be ommited on save." % (name,))
             e = etree.ElementTree( rootXML )
 
-            fob = cStringIO.StringIO()
+            fob = io.StringIO()
             # e.write(fob, pretty_print=True, encoding="utf-8", xml_declaration=True, method="xml" )
             e.write(fob, encoding="utf-8", xml_declaration=True, method="xml" )
             t = fob.getvalue()
@@ -724,9 +739,9 @@ class CactusOutlineDocument(NSDocument):
             doctype = encoding = ""
             indent = 0
             try:
-                doctype = unicode(defaults.objectForKey_( u'menDoctype'))
-                encoding = unicode(defaults.objectForKey_( u'menEncoding'))
-                indent = unicode(defaults.objectForKey_( u'txtIndent'))
+                doctype = makeunicode(defaults.objectForKey_( u'menDoctype'))
+                encoding = makeunicode(defaults.objectForKey_( u'menEncoding'))
+                indent = makeunicode(defaults.objectForKey_( u'txtIndent'))
                 indent = int(indent)
 
             except StandardError as err:
@@ -737,7 +752,7 @@ class CactusOutlineDocument(NSDocument):
             if etHTML:
                 # e = etree.ElementTree( rootHTML )
 
-                #fob = cStringIO.StringIO()
+                #fob = io.StringIO()
                 ## e.write(fob, pretty_print=True, encoding="utf-8", xml_declaration=True, method="xml" )
                 #etHTML.write(fob) # , encoding="utf-8", xml_declaration=False, method="html" )
                 #t = fob.getvalue()
@@ -1018,7 +1033,7 @@ class CactusOutlineWindowController(NSWindowController):
 
         """
         if kwlog:
-            print( "CactusOutlineWindowController.initWithObject_()" )
+            print( "CactusOutlineWindowController.finishControllerInit()" )
 
         # self = self.initWithWindowNibName_("OutlineEditor")
         title = u"Unnamed Outline"
@@ -1038,7 +1053,7 @@ class CactusOutlineWindowController(NSWindowController):
         if document.url:
             # self.nsurl = document.url
             if document.url.isFileURL():
-                self.url = unicode(document.url.path())
+                self.url = makeunicode(document.url.path())
             else:
                 self.url = NSURL2str(document.url)
         # path is a string or False now
@@ -1162,7 +1177,7 @@ class CactusOutlineWindowController(NSWindowController):
         url = doc.fileURL()
         
         if url:
-            path = unicode(url.path())
+            path = makeunicode(url.path())
             urslstring = NSURL2str( url )
             if os.path.exists( path ):
                 fld, fle = os.path.split( path )
@@ -1261,7 +1276,7 @@ class CactusOutlineWindowController(NSWindowController):
 
         if self.txtOutlineType:
             s = self.document()
-            self.txtOutlineType.setStringValue_( unicode( s.fileType() ) )
+            self.txtOutlineType.setStringValue_( makeunicode( s.fileType() ) )
 
         # lines per row menu
         try:

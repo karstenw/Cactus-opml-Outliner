@@ -18,9 +18,6 @@ import traceback
 import time
 import datetime
 
-import urllib
-import urlparse
-
 import math
 import feedparser
 
@@ -258,6 +255,15 @@ except NameError:
     py3 = True
     punichr = chr
     long = int
+
+
+if not py3:
+    import urllib
+    import urlparse
+else:
+    from urllib.parse import urlparse
+
+import requests
 
 def open_photo( url, open_=True ):
     """opens 2nd biggest picture"""
@@ -1129,7 +1135,7 @@ class KWOutlineView(NSOutlineView):
                     # we are at the end of the outline
                     createNode(self, item, startEditing=True)
                 else:
-                    row = self.rowForItem_( item.next() )
+                    row = self.rowForItem_( next(item) )# item.next() )
                     self.reloadData()
                     self.editColumn_row_withEvent_select_(0, row, None, True)
                 return
@@ -1148,7 +1154,7 @@ class KWOutlineView(NSOutlineView):
 
     def setWindowStatus_(self, status):
         ctrl = self.delegate().controller
-        ctrl.txtWindowStatus.setStringValue_( unicode(status) )
+        ctrl.txtWindowStatus.setStringValue_( makeunicode(status) )
 
 
     #
@@ -1521,7 +1527,7 @@ class KWOutlineView(NSOutlineView):
                                     # sometimes the stream is indirected several layers...
 
                                     audiourl, info = urllib.urlretrieve( url )
-                                    faudio = open(audiourl)
+                                    faudio = open(audiourl, 'rb')
                                     url = faudio.read()
                                     url = url.strip('\r\n')
                                     faudio.close()
@@ -2000,7 +2006,7 @@ class NiceError(object):
 def stdAction( node, level ):
     # Debugging HACK
     s = "  " * level
-    s = s + unicode(node)
+    s = s + makeunicode(node)
     n = str(node.retainCount())
     n = n.ljust(4)
     s = n + s
@@ -2096,7 +2102,7 @@ class OutlineViewDelegateDatasource(NSObject):
         self.parentNode = parentNode
 
         if not isinstance(obj, OutlineNode):
-            obj = OutlineNode(unicode(obj), "", None, CactusOutlineTypes.typeOutline, None)
+            obj = OutlineNode(makeunicode(obj), "", None, CactusOutlineTypes.typeOutline, None)
         self.root = obj
 
         return self
@@ -2217,7 +2223,7 @@ class OutlineViewDelegateDatasource(NSObject):
                 # if it has a parentNode it's edited attributes
                 if self.parentNode != None:
                     name = item.name
-                    self.parentNode.updateValue_( (name, unicode(value)) )
+                    self.parentNode.updateValue_( (name, makeunicode(value)) )
                 item.setValue_( value )
                 self.markDirty()
 
@@ -2544,7 +2550,7 @@ def moveSelectionDown(ov, items):
         parent = item.parent
         if parent == None:
             return
-        next = item.next()
+        next = next( item ) #item.next()
         if next == -1:
             return
 
@@ -2633,7 +2639,7 @@ def cleanupURL( url ):
         #
         purl.append("")
         purl = urlparse.urlunparse( purl )
-        purl = unicode(purl)
+        purl = makeunicode(purl)
         return purl
 
 
@@ -2651,7 +2657,7 @@ def folder2Outline( folder, node, filter=None):
         ignoredot = bool(defaults.objectForKey_( u'optIgnoreDotFiles'))
     except:
         pass
-    root, directories, files = os.walk( folder ).next()
+    root, directories, files = next( os.walk( folder )) # .next()
     if ignoredot:
         files[:] = [f for f in files if not f.startswith('.')]
         directories[:] = [f for f in directories if not f.startswith('.')]
