@@ -18,6 +18,8 @@ import unicodedata
 
 import struct
 
+import io
+
 import mactypes
 import appscript
 asc = appscript
@@ -31,10 +33,17 @@ import pdb
 
 import re
 import requests
+try:
+    import urllib2
+    urlopen = urllib2.urlopen
+except ModuleNotFoundError:
+    import urllib.request
+    urlopen = urllib.request.urlopen
+
 import urllib
-import urllib2
-import urlparse
-import StringIO
+import urllib.parse as urlparse
+# import urlparse
+
 import gzip
 
 import CactusDocumentTypes
@@ -89,8 +98,8 @@ except NameError:
 
 def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
     try:
-        if type(s) not in (unicode, objc.pyobjc_unicode):
-            s = unicode(s, srcencoding)
+        if type(s) not in (punicode, objc.pyobjc_unicode):
+            s = makeunicode(s, srcencoding)
     except TypeError:
         print( "makeunicode type conversion error" )
         print( "FAILED converting", type(s), "to unicode" )
@@ -153,17 +162,17 @@ def readURL( nsurl, type_="" ):
     cache = False
     try:
         cache = bool(defaults.objectForKey_( u'optCache'))
-    except StandardError as err:
+    except Exception as err:
         print( "ERROR reading defaults.", repr(err) )
     
-    # pdb.set_trace()
     
     if cache:
+        # pdb.set_trace()
         if not nsurl.isFileURL():
             nsurl = cache_url(nsurl, fileext)
-
-    url = NSURL2str(nsurl)
-
+            url = NSURL2str(nsurl)
+    
+    
     if 0:
         # does not work with file urls
         r = requests.get( url )
@@ -172,7 +181,9 @@ def readURL( nsurl, type_="" ):
         r.close()
     else:
         # fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
-        fob = feedparser._open_resource(url, None, None, None, None, [], {})
+        pdb.set_trace()
+        result = dict()
+        fob = feedparser.api._open_resource(url, result)
         s = fob.read()
         fob.close()
 
@@ -182,7 +193,7 @@ def readURL( nsurl, type_="" ):
         if len(s) > 2:
             if ord(s[0]) == 0x1f:
                 if ord(s[1]) == 0x8b:
-                    unzipped = gzip.GzipFile( fileobj=StringIO.StringIO(s) ).read()
+                    unzipped = gzip.GzipFile( fileobj=io.BytesIO(s) ).read()
                     s = unzipped
     except Exception:
         pass
@@ -430,8 +441,8 @@ def getDownloadFolder( nsurl ):
     defaults = NSUserDefaults.standardUserDefaults()
     cacheFolder = CactusVersion.cachefolder
     try:
-        cacheFolder = unicode(defaults.objectForKey_( u'txtCacheFolder'))
-    except StandardError as err:
+        cacheFolder = makeunicode(defaults.objectForKey_( u'txtCacheFolder'))
+    except Exception as err:
         print( "CactusTools.getDownloadFolder(%s) -> False" % NSURL2str(nsurl) )
         print( "ERROR reading defaults.", repr(err) )
 
@@ -473,24 +484,39 @@ def getDownloadFolder( nsurl ):
 
 def getRemotefilemodificationDate( url ):
 
-    try:
-        f = urllib.urlopen( url )
-    except IOError as err:
-        print( "ERROR: Could not open url (%s) for date reading." % url )
-        return False
-
-    rinfo = f.info()
-    f.close()
-
-    remotemodfdate = rinfo.getdate('last-modified')
-    if remotemodfdate:
+    if 0:
         try:
-            rmodfdate = datetime.datetime( *remotemodfdate[:6] )
-            #rmodfdate = datetime.datetime( *rinfo.getdate('last-modified')[:6] )
-        except TypeError as err:
-            print( "Could not get remote file(%s) modification date." % url )
+            f = urlopen( url )
+        except IOError as err:
+            print( "ERROR: Could not open url (%s) for date reading." % url )
             return False
-        return rmodfdate
+        rinfo = f.info()
+        f.close()
+
+        remotemodfdate = rinfo.getdate('last-modified')
+        if remotemodfdate:
+            try:
+                rmodfdate = datetime.datetime( *remotemodfdate[:6] )
+                #rmodfdate = datetime.datetime( *rinfo.getdate('last-modified')[:6] )
+            except TypeError as err:
+                print( "Could not get remote file(%s) modification date '%s'." % (url, str(remotemodfdate)) )
+                return False
+            return rmodfdate
+    else:
+        rmodfdate = False
+        header = requests.head(url).headers
+        if 'Last-Modified' in header:
+            rmodfdate =  header['Last-Modified']
+
+            dts = feedparser.datetimes._parse_date( rmodfdate )
+            try:
+                dts = time.mktime( dts )
+            except Exception as err:
+                print("dts = time.mktime( dts ) FAILED.\n'%s'\n%s" % (str(dts),err))
+                
+            if dts:
+                dt = datetime.datetime.fromtimestamp( dts )
+                return dt
     return False
 
 def setFileModificationDate( filepath, modfdt ):
@@ -511,8 +537,6 @@ def cache_url( nsurl, fileextension ):
 
     returnURL = nsurl
     url = NSURL2str( nsurl )
-
-    # pdb.set_trace()
 
     try:
         localpath, localname = getDownloadFolder(nsurl)
@@ -564,13 +588,17 @@ def cache_url( nsurl, fileextension ):
             s = r.content
             headers = r.headers
             r.close()
-            fob = open(localpath, 'w')
+            fob = io.open(localpath, 'wb')
             fob.write( s )
             fob.close()
             
             dt = datetime.datetime.now()
-            dts = feedparser._parse_date( headers.get( 'last-modified', '' ) )
-            dts = time.mktime( dts )
+            dts = feedparser.datetimes._parse_date( headers.get( 'last-modified', '' ) )
+            try:
+                dts = time.mktime( dts )
+            except Exception as err:
+                print("dts = time.mktime( dts ) FAILED.\n'%s'\n%s" % (str(dts),err))
+                
             if dts:
                 dt = datetime.datetime.fromtimestamp( dts )
 
@@ -578,7 +606,7 @@ def cache_url( nsurl, fileextension ):
                 finder = asc.app(u'Finder.app', terms=Finder10)
                 hfspath = mactypes.File( localpath ).hfspath
                 finder.files[hfspath].comment.set( url )
-            except StandardError as v:
+            except Exception as v:
                 print( "SET COMMENT FAILED ON '%s'" % localpath )
             # get file date
             lmodfdate = os.stat( localpath ).st_mtime
@@ -594,10 +622,10 @@ def cache_url( nsurl, fileextension ):
             print( "LOAD: %s...done" % url )
             print( "LOCAL:", repr(localpath) )
 
-        returnURL = NSURL.fileURLWithPath_( unicode(localpath) )
+        returnURL = NSURL.fileURLWithPath_( makeunicode(localpath) )
 
     except Exception as err:
-        tb = unicode(traceback.format_exc())
+        tb = makeunicode(traceback.format_exc())
         print( tb )
         print(  )
 
