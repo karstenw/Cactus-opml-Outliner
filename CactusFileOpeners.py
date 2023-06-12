@@ -37,6 +37,7 @@ NSUserDefaults = AppKit.NSUserDefaults
 import CactusTools
 num2ostype = CactusTools.num2ostype
 ostype2num = CactusTools.ostype2num
+makeunicode = CactusTools.makeunicode
 
 import CactusOutlineTypes
 typeOutline = CactusOutlineTypes.typeOutline
@@ -151,8 +152,8 @@ def openOPML_withURLTag_(rootOPML, urltag):
         if urltag:
             if 'cactusUrl' not in headtags:
                 # add this url only once, not for every open
-                head.addChild_(OutlineNode('cactusUrl', unicode(urltag), head,
-                               typeOutline, root))
+                head.addChild_(OutlineNode('cactusUrl', makeunicode(urltag),
+                               head, typeOutline, root))
     # fill in missing opml attributes here
     # created, modified
     #
@@ -254,7 +255,7 @@ def openXML_( rootXML):
                 newnode = OutlineNode(name, content, node, typeOutline, root)
             except Exception as err:
                 print( "\n\nERROR in openXML_()" )
-                tb = unicode(traceback.format_exc())
+                tb = makeunicode(traceback.format_exc())
                 print( err )
                 print()
                 print( tb )
@@ -314,7 +315,7 @@ def openXML_( rootXML):
             getChildrenforNode( node, children, root )
         except Exception as err:
             print( "\n\nERROR in openXML_()" )
-            tb = unicode(traceback.format_exc())
+            tb = makeunicode(traceback.format_exc())
             print( err )
             print()
             print( tb )
@@ -333,7 +334,10 @@ def openRSS_(url):
         if len(s) > 90:
             s = s[:91]
         print( "openRSS_( %s )" % repr(s) )
-    d = feedparser.parse( url, agent=CactusVersion.user_agent )
+
+    # d = feedparser.parse( url, agent=CactusVersion.user_agent )
+    pdb.set_trace()
+    d = feedparser.api.parse( url ) #, response_headers=None, resolve_relative_uris=None, sanitize_html=None,optimistic_encoding_detection=None)
 
     # make basic nodes
     root = OutlineNode("__ROOT__", "", None, typeOutline, None)
@@ -359,7 +363,7 @@ def openRSS_(url):
                   subtitle subtitle_detail sy_updatefrequency sy_updateperiod
                   title title_detail updated updated_parsed""".split()
 
-        feedkeys = d.feed.keys()
+        feedkeys = list( d.feed.keys() )
         feedkeys.sort()
 
         for k in feedkeys:
@@ -376,7 +380,7 @@ def openRSS_(url):
                 elif len(v) == 1:
                     v = v[0]
 
-            if type(v) not in (str, unicode, NSString,
+            if type(v) not in (pstr, punicode, NSString,
                                NSMutableString, objc.pyobjc_unicode):
                 if isinstance(v, dict):
                     l = []
@@ -397,7 +401,7 @@ def openRSS_(url):
             node = OutlineNode(k, v, head, typeOutline, root)
             head.addChild_( node )
 
-    otherkeys = d.keys()
+    otherkeys = list( d.keys() )
 
     if 'feed' in otherkeys:
         otherkeys.remove("feed")
@@ -408,7 +412,7 @@ def openRSS_(url):
     otherkeys.sort()
     for k in otherkeys:
         v = d[k]
-        if type(v) not in (str, unicode, NSString, NSMutableString,
+        if type(v) not in (pstr, punicode, NSString, NSMutableString,
                            objc.pyobjc_unicode,
                            dict, feedparser.FeedParserDict):
             v = repr(v)
@@ -506,17 +510,17 @@ def getPLISTValue(nsvalue):
 
     # number
     elif hasattr(nsvalue, "descriptionWithLocale_"):
-        value = unicode(nsvalue.descriptionWithLocale_( None ))
+        value = makeunicode(nsvalue.descriptionWithLocale_( None ))
         valueTypeName = [ ('cactusNodeType', "number") ]
 
     # data
     elif hasattr(nsvalue, "bytes"):
-        value = unicode( binascii.hexlify(nsvalue.bytes()) )
+        value = makeunicode( binascii.hexlify(nsvalue.bytes()) )
         valueTypeName = [ ('cactusNodeType', "data") ]
 
     # anything else
     elif hasattr(nsvalue, "description"):
-        value = unicode(nsvalue.description())
+        value = makeunicode(nsvalue.description())
         valueTypeName = [ ('cactusNodeType', "string") ]
     else:
         print( "BOGATIVE VALUE TYPE:", repr(valueType) )
@@ -610,11 +614,11 @@ def openIML_( nsdict ):
         if name in curPlaylist:
 
             if type_ == cactusData:
-                value = unicode( binascii.hexlify(value.bytes()) )
+                value = makeunicode( binascii.hexlify(value.bytes()) )
             elif type_ == cactusBool:
                 value = repr(bool(value))
             elif type_ == cactusNumber:
-                value = unicode(value.descriptionWithLocale_( None ))
+                value = makeunicode(value.descriptionWithLocale_( None ))
             # elif type_ == cactusDictionary:
 
             node = OutlineNode( name,
@@ -623,7 +627,7 @@ def openIML_( nsdict ):
                                 typeOutline,
                                 root)
             if value != "":
-                node.setComment_( unicode(value) )
+                node.setComment_( makeunicode(value) )
             parent.addChild_( node )
             return node
 
@@ -734,7 +738,7 @@ def openIML_( nsdict ):
                     u"Track ID": id_
                 }
 
-                name = id_track_dict.get(unicode(id_), "###Noname###")
+                name = id_track_dict.get(makeunicode(id_), "###Noname###")
 
                 node = OutlineNode( name, attrs, plnode, typeOutline, root)
                 plnode.addChild_( node )
@@ -777,7 +781,7 @@ def openIML_( nsdict ):
                 itemName = str(i)
                 nsvalue = nsdict.objectAtIndex_( i-1 )
             else:
-                itemName = unicode(key)
+                itemName = makeunicode(key)
                 nsvalue = nsdict.objectForKey_(key)
 
             valueType = type(nsvalue)
@@ -878,7 +882,7 @@ def openPLIST_( nsdict ):
                 itemName = str(i)
                 nsvalue = nsdict.objectAtIndex_( i-1 )
             else:
-                itemName = unicode(key)
+                itemName = makeunicode(key)
                 nsvalue = nsdict.objectForKey_(key)
 
             valueType = type(nsvalue)
@@ -900,17 +904,17 @@ def openPLIST_( nsdict ):
 
             # number
             elif hasattr(nsvalue, "descriptionWithLocale_"):
-                value = unicode(nsvalue.descriptionWithLocale_( None ))
+                value = makeunicode(nsvalue.descriptionWithLocale_( None ))
                 node.setValue_( [ ('cactusNodeType', "number") ] )
 
             # data
             elif hasattr(nsvalue, "bytes"):
-                value = unicode( binascii.hexlify(nsvalue.bytes()) )
+                value = makeunicode( binascii.hexlify(nsvalue.bytes()) )
                 node.setValue_( [ ('cactusNodeType', "data") ] )
 
             # anything else
             elif hasattr(nsvalue, "description"):
-                value = unicode(nsvalue.description())
+                value = makeunicode(nsvalue.description())
                 node.setValue_( [ ('cactusNodeType', "string") ] )
             else:
                 print( "BOGATIVE VALUE TYPE:", repr(valueType) )
