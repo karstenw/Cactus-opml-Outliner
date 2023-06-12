@@ -20,7 +20,7 @@ except NameError:
     punichr = chr
     long = int
 
-class CactusBaseException(StandardError):
+class CactusBaseException(Exception):
     def __init__(self, *args):
         Exception.__init__(self, *args)
         self.wrapped_exc = sys.exc_info()
