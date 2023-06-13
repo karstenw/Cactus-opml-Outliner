@@ -42,7 +42,7 @@ import CactusOutlineTypes
 typeOutline = CactusOutlineTypes.typeOutline
 
 import objc
-
+objc.options.deprecation_warnings=1
 
 import Foundation
 NSObject = Foundation.NSObject
@@ -273,7 +273,7 @@ def open_photo( url, open_=True ):
     cache = False
     try:
         cache = bool(defaults.objectForKey_( u'optCache'))
-    except StandardError as err:
+    except Exception as err:
         print( "ERROR reading defaults.", repr(err) )
 
     s = CactusTools.readURL( NSURL.URLWithString_( url ) )
@@ -365,7 +365,7 @@ def open_node( url, nodeType=None, open_=False, supressCache=False ):
     cache = False
     try:
         cache = bool(defaults.objectForKey_( u'optCache'))
-    except StandardError as err:
+    except Exception as err:
         print( "ERROR reading defaults.", repr(err) )
 
     appl = NSApplication.sharedApplication()

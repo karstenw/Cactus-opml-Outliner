@@ -160,19 +160,6 @@ class NodeValue(object):
 class OutlineNode(NSObject):
 
     """Wrapper class for items to be displayed in the outline view."""
-    # objc.ivar
-    objc.ivar("typ")
-    self.typ = typ
-    self.attributes = ""
-    self.name = ""
-    self.comment = ""
-    self.maxHeight = 1
-
-    self.rootNode = rootNode
-    self.nodenr = next( counter )
-    self.children = NSMutableArray.arrayWithCapacity_( 0 )
-    self.maxHeight = 1
-    self.controller = None
 
     # We keep references to all child items (once created). This is
     # neccesary because NSOutlineView holds on to OutlineNode instances
@@ -203,6 +190,18 @@ class OutlineNode(NSObject):
 
     def __init__(self, name, obj, parent, typ, rootNode):
 
+        self.typ = objc.ivar()
+        self.attributes = objc.ivar()
+        self.name = objc.ivar()
+        self.comment = objc.ivar()
+        self.maxHeight = objc.ivar()
+        
+        self.rootNode = objc.ivar()
+        self.nodenr = objc.ivar()
+        self.children = objc.ivar()
+        self.maxHeight = objc.ivar()
+        self.controller = objc.ivar()
+        
         # this is outlinetype, not valueType
         self.typ = typ
         self.attributes = ""

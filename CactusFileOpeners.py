@@ -28,6 +28,7 @@ import time
 import feedparser
 
 import objc
+objc.options.deprecation_warnings=1
 
 import AppKit
 NSString = AppKit.NSString

@@ -33,16 +33,13 @@ import pdb
 
 import re
 import requests
-try:
-    import urllib2
-    urlopen = urllib2.urlopen
-except ModuleNotFoundError:
-    import urllib.request
-    urlopen = urllib.request.urlopen
 
 import urllib
-import urllib.parse as urlparse
-# import urlparse
+#import urllib.parse
+#import urllib.request
+urlopen = urllib.request.urlopen
+url2pathname = urllib.request.url2pathname
+urlparse = urllib.parse.urlparse
 
 import gzip
 
@@ -63,6 +60,7 @@ re_bogusCharacters = CactusXMLProperties.re_bogusCharacters
 import feedparser
 
 import objc
+objc.options.deprecation_warnings=1
 
 import Foundation
 NSURL = Foundation.NSURL
@@ -146,7 +144,6 @@ def readURL( nsurl, type_="" ):
     if kwlog:
         print( "CactusTools.readURL( '%s', '%s' )" % (url, type_) )
 
-
     translateType = {
         CactusOPMLType: "opml",
         CactusHTMLType: "html",
@@ -158,41 +155,43 @@ def readURL( nsurl, type_="" ):
 
     fileext = translateType.get( type_, ".bin")
 
+
     defaults = NSUserDefaults.standardUserDefaults()
     cache = False
     try:
         cache = bool(defaults.objectForKey_( u'optCache'))
     except Exception as err:
         print( "ERROR reading defaults.", repr(err) )
-    
-    
+
+    pdb.set_trace()
+
     if cache:
         # pdb.set_trace()
         if not nsurl.isFileURL():
             nsurl = cache_url(nsurl, fileext)
             url = NSURL2str(nsurl)
-    
-    
-    if 0:
+
+
+    if url.startswith("file://"):
+        p = urlparse( url )
+        filepath = url2pathname( p.path )
+        f = open( filepath, 'rb')
+        s = f.read()
+        f.close()
+    else:
         # does not work with file urls
         r = requests.get( url )
         s = r.content
         headers = r.headers
         r.close()
-    else:
-        # fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
-        pdb.set_trace()
-        result = dict()
-        fob = feedparser.api._open_resource(url, result)
-        s = fob.read()
-        fob.close()
+
 
     # check for gzip compressed opml file
     # pdb.set_trace()
     try:
         if len(s) > 2:
-            if ord(s[0]) == 0x1f:
-                if ord(s[1]) == 0x8b:
+            if s[0] == 0x1f: #if ord(s[0]) == 0x1f:
+                if s[1] == 0x8b: #if ord(s[1]) == 0x8b:
                     unzipped = gzip.GzipFile( fileobj=io.BytesIO(s) ).read()
                     s = unzipped
     except Exception:

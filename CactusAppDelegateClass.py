@@ -22,6 +22,7 @@ cachefolder = CactusVersion.cachefolder
 
 import objc
 super = objc.super
+objc.options.deprecation_warnings=1
 
 import Foundation
 NSObject = Foundation.NSObject
@@ -374,17 +375,21 @@ class CactusAppDelegate(NSObject):
 
     def newOutlineFromURL_Type_(self, url, type_):
         if kwlog:
-            print( "CactusAppDelegate.newOutlineFromURL_Type_(\n\t%s\m\t%s )" %
-                                                    repr(url), repr(type_))
+            print( "CactusAppDelegate.newOutlineFromURL_Type_(\n\t%s\m\t%s )" % (repr(url), repr(type_)) )
+
+        pdb.set_trace()
 
         if not isinstance(url, NSURL):
             url = NSURL.URLWithString_( url )
+
         # just check for local files
         docc = NSDocumentController.sharedDocumentController()
         localurl = url.isFileURL()
         loaded = True
+
         if localurl:
             loaded = docc.documentForURL_( url )
+
         if not loaded or not localurl:
             doc, err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
                                                                        type_,
@@ -928,7 +933,7 @@ class CactusWindowController_OLD(NSWindowController):
             l = self.menRowLines.title()
             l = int(l)
             self.rowLines = l
-        except StandardError as err:
+        except Exception as err:
             print( "\nERROR  ---  Menu Row lines '%'" % repr(l) )
             self.rowLines = 4
             self.menRowLines.setTitle_( u"4" )

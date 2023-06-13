@@ -6,6 +6,7 @@
 
 
 import objc
+objc.options.deprecation_warnings=1
 
 import Foundation
 NSUserDefaults = Foundation.NSUserDefaults

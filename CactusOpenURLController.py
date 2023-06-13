@@ -6,9 +6,10 @@ from __future__ import print_function
 """
 """
 
-
+import pdb
 
 import objc
+objc.options.deprecation_warnings=1
 
 import Foundation
 NSObject = Foundation.NSObject
@@ -53,6 +54,10 @@ class OpenURLWindowController(NSWindowController):
     textfield = objc.IBOutlet()
     menuLastVisited = objc.IBOutlet()
     menuOpenAs = objc.IBOutlet()
+    
+    objc.ivar("readAsType")
+    objc.ivar("visitedURLs")
+    objc.ivar("noOfRecentURLs")
 
     # class defined in OpenURL.nib
     # OpenURLWindowController(NSWindowController)
@@ -92,7 +97,7 @@ class OpenURLWindowController(NSWindowController):
         self.noOfRecentURLs = 40
         try:
             self.noOfRecentURLs = int(defaults.objectForKey_( u'txtNoOfRecentURLs'))
-        except StandardError as err:
+        except Exception as err:
             print( "ERROR reading defaults.", repr(err) )
 
         # cap recentURLs to max size
@@ -128,10 +133,11 @@ class OpenURLWindowController(NSWindowController):
     @objc.IBAction
     def OK_(self, sender):
         "User pressed OK button. Get data and try to open that stuff."
-
+        pdb.set_trace()
         app = NSApplication.sharedApplication()
         delg = app.delegate()
         t_url = self.textfield.stringValue()
+        t_url = t_url.strip()
         url = NSURL.URLWithString_( t_url )
         self.readAsType = self.menuOpenAs.title()
         if t_url == u"":
@@ -150,7 +156,7 @@ class OpenURLWindowController(NSWindowController):
             for menuItem in self.visitedURLs:
                 self.menuLastVisited.addItemWithTitle_( menuItem )
         delg.visitedURLs = self.visitedURLs[:]
-        delg.newOutlineFromURL_Type_( url, str(self.readAsType) )
+        delg.newOutlineFromURL_Type_( t_url, str(self.readAsType) )
         self.close()
 
     @objc.IBAction

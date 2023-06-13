@@ -48,6 +48,7 @@ HTMLParseErrorException = CactusExceptions.HTMLParseErrorException
 PLISTParseErrorException = CactusExceptions.PLISTParseErrorException
 
 import objc
+objc.options.deprecation_warnings=1
 
 import Foundation
 NSObject = Foundation.NSObject
@@ -176,7 +177,7 @@ def boilerplateOPML( rootNode ):
     try:
         uname = makeunicode( defaults.objectForKey_( 'txtUserName' ) )
         uemail = makeunicode( defaults.objectForKey_('txtUserEmail') )
-    except StandardError as err:
+    except Exception as err:
         print( "ERROR reading defaults.", repr(err) )
 
     head.addChild_(OutlineNode("dateCreated", s, head, typeOutline, root))
@@ -283,9 +284,9 @@ class CactusOutlineDocument(NSDocument):
 
         # read opml content
         if theType == CactusOPMLType:
-            pdb.set_trace()
             d = None
             try:
+                # pdb.set_trace()
                 s = readURL( url, CactusOPMLType )
                 d = CactusOPML.opml_from_string( s )
             except OPMLParseErrorException as v:
@@ -744,7 +745,7 @@ class CactusOutlineDocument(NSDocument):
                 indent = makeunicode(defaults.objectForKey_( u'txtIndent'))
                 indent = int(indent)
 
-            except StandardError as err:
+            except Exception as err:
                 print( "ERROR reading defaults.", repr(err) )
 
             etHTML = CactusOPML.generateHTML( self.rootNode, doctype, encoding, indent )
@@ -942,7 +943,7 @@ class CactusOutlineDocument(NSDocument):
 
                     # window.setFrame_display_(s, True)
                     redisplay = False
-                except StandardError as err:
+                except Exception as err:
                     print( err )
                     print( "No window setting for you." )
             outlineView.setNeedsDisplay_( redisplay )
@@ -1022,6 +1023,12 @@ class CactusOutlineWindowController(NSWindowController):
 
     def init(self):
         self = self.initWithWindowNibName_("OutlineEditor")
+        self.path = objc.ivar()
+        self.rootNode = objc.ivar()
+        self.parentNode = objc.ivar()
+        self.variableRowHeight = objc.ivar()
+        self.rowLines = objc.ivar()
+        self.url = objc.ivar()
         self.retain()
         return self
 
@@ -1138,7 +1145,7 @@ class CactusOutlineWindowController(NSWindowController):
             self.optVLines.setState_( defaults.objectForKey_( u'optVLines') )
             self.optHLines.setState_( defaults.objectForKey_( u'optHLines') )
 
-        except StandardError as err:
+        except Exception as err:
             print( "ERROR reading defaults.", repr(err) )
 
         if document.fileType() in (CactusPLISTType,):
@@ -1283,7 +1290,7 @@ class CactusOutlineWindowController(NSWindowController):
             l = self.menRowLines.title()
             l = int(l)
             self.rowLines = l
-        except StandardError as err:
+        except Exception as err:
             print( "\nERROR  ---  Menu Row lines '%'" % repr(l) )
             self.rowLines = 4
             self.menRowLines.setTitle_( u"4" )

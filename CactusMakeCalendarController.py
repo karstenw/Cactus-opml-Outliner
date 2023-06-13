@@ -14,6 +14,7 @@ pp = pprint.pprint
 import pdb
 
 import objc
+objc.options.deprecation_warnings=1
 
 import Foundation
 NSObject = Foundation.NSObject

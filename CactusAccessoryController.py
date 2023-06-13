@@ -7,6 +7,7 @@ import sys
 import os
 
 import objc
+objc.options.deprecation_warnings=1
 
 import Foundation
 NSObject = Foundation.NSObject

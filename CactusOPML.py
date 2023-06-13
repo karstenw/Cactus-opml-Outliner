@@ -163,9 +163,10 @@ def getOPML( etRootnode ):
 
 
 def opml_from_string(opml_text):
+    pdb.set_trace()
     try:
         s = etree.fromstring(opml_text)
-    except StandardError as v:
+    except Exception as v:
         raise OPMLParseErrorException( "The OPML file could not be parsed.\n%s" % v )
     return getOPML( s )
 
@@ -173,7 +174,7 @@ def opml_from_string(opml_text):
 def parse_plist( nsurl ):
     try:
         nsdict = NSDictionary.dictionaryWithContentsOfURL_( nsurl )
-    except StandardError as v:
+    except Exception as v:
         raise PLISTParseErrorException( "The PLIST file could not be parsed.\n%s" % v )
     return nsdict
 
@@ -385,7 +386,7 @@ def xml_from_string(xml_text):
 
     try:
         s = etree.fromstring(xml_text)
-    except StandardError as v:
+    except Exception as v:
         raise XMLParseErrorException( "The XML file could not be parsed.\n%s" % v )
     return getXML_( s )
 
@@ -397,7 +398,7 @@ def html_from_url( htmlurl ):
     try:
         # s = lxmletree.parse(htmlurl, parser)
         s = lxmletree.parse(urlopen(htmlurl), parser)
-    except StandardError as v:
+    except Exception as v:
         raise HTMLParseErrorException( "The HTML file could not be parsed.\n%s" % v )
     return getHTML_( s )
 

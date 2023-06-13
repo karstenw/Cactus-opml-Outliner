@@ -10,11 +10,11 @@
 <find_panel_settings/>
 <vnodes>
 <v t="karstenw.20160619130609.2" a="E"><vh>Code</vh>
-<v t="karstenw.20160619192706.1" a="E"><vh>Tools</vh>
+<v t="karstenw.20160619192706.1"><vh>Tools</vh>
 <v t="karstenw.20160619130856.1"><vh>@clean CactusAccessoryController.py</vh>
 <v t="karstenw.20160619130933.1"><vh>CactusAccessoryController declarations</vh></v>
 <v t="karstenw.20221106095308.1"><vh>python3 stuff</vh></v>
-<v t="karstenw.20160619130933.2" a="E"><vh>class CactusOpenAsAccessoryController</vh>
+<v t="karstenw.20160619130933.2"><vh>class CactusOpenAsAccessoryController</vh>
 <v t="karstenw.20160619130933.3"><vh>__new__</vh></v>
 <v t="karstenw.20160619130933.4"><vh>init</vh></v>
 <v t="karstenw.20160619130933.5"><vh>menuOpenAsType_</vh></v>
@@ -59,7 +59,7 @@
 </v>
 </v>
 </v>
-<v t="karstenw.20160619131033.1" a="E"><vh>@clean CactusDocumentTypes.py</vh>
+<v t="karstenw.20160619131033.1"><vh>@clean CactusDocumentTypes.py</vh>
 <v t="karstenw.20160619131040.1"><vh>CactusDocumentTypes declarations</vh></v>
 </v>
 <v t="karstenw.20160619131050.1"><vh>@clean CactusExceptions.py</vh>
@@ -81,7 +81,7 @@
 <v t="karstenw.20160619131056.11"><vh>class DoneMessageException</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131102.1" a="E"><vh>@clean CactusFileOpeners.py</vh>
+<v t="karstenw.20160619131102.1"><vh>@clean CactusFileOpeners.py</vh>
 <v t="karstenw.20160619131110.1"><vh>Imports and Globals</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131110.2"><vh>openOPML_</vh></v>
@@ -92,7 +92,7 @@
 <v t="karstenw.20160619131110.7"><vh>openIML_</vh></v>
 <v t="karstenw.20160619131110.8"><vh>openPLIST_</vh></v>
 </v>
-<v t="karstenw.20160619131220.1" a="E"><vh>@clean CactusOPML.py</vh>
+<v t="karstenw.20160619131220.1"><vh>@clean CactusOPML.py</vh>
 <v t="karstenw.20160619131225.1"><vh>CactusOPML declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131225.2"><vh>getOutlineNodes</vh></v>
@@ -120,14 +120,14 @@
 <v t="karstenw.20160619131225.24"><vh>photo_from_string</vh></v>
 <v t="karstenw.20160619131225.25"><vh>getPhotoXML</vh></v>
 </v>
-<v t="karstenw.20160619131230.1" a="E"><vh>@clean CactusOutline.py</vh>
+<v t="karstenw.20160619131230.1"><vh>@clean CactusOutline.py</vh>
 <v t="karstenw.20160619131238.1"><vh>CactusOutline declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20221106100010.1"><vh>Py2 / Py3 declarations</vh></v>
 <v t="karstenw.20160619131238.2"><vh>open_photo</vh></v>
 <v t="karstenw.20160619131238.3"><vh>open_node</vh></v>
 <v t="karstenw.20160619131238.4"><vh>handleEventReturnKeyOV_Event_</vh></v>
-<v t="karstenw.20160619131238.5" a="E"><vh>class KWOutlineView</vh>
+<v t="karstenw.20160619131238.5"><vh>class KWOutlineView</vh>
 <v t="karstenw.20160619131238.6"><vh>awakeFromNib</vh></v>
 <v t="karstenw.20160619131238.7"><vh>menuForEvent_</vh></v>
 <v t="karstenw.20160619131238.8"><vh>validateMenuItem_</vh></v>
@@ -181,7 +181,7 @@
 <v t="karstenw.20160619131238.54"><vh>stdAction</vh></v>
 <v t="karstenw.20160619131238.55"><vh>visitOutline</vh></v>
 <v t="karstenw.20160619131238.56"><vh>dfid</vh></v>
-<v t="karstenw.20160619131238.57" a="E"><vh>class OutlineViewDelegateDatasource</vh>
+<v t="karstenw.20160619131238.57"><vh>class OutlineViewDelegateDatasource</vh>
 <v t="karstenw.20160619131238.58"><vh>init</vh></v>
 <v t="karstenw.20160619131238.59"><vh>dealloc</vh></v>
 <v t="karstenw.20160619131238.60"><vh>initWithObject_type_parentNode_</vh></v>
@@ -219,11 +219,11 @@
 <v t="karstenw.20160619131238.91"><vh>folder2Outline</vh></v>
 <v t="karstenw.20160619131238.92"><vh>makeFilePropertiesNode</vh></v>
 </v>
-<v t="karstenw.20160619131247.1" a="E"><vh>@clean CactusOutlineDoc.py</vh>
+<v t="karstenw.20160619131247.1"><vh>@clean CactusOutlineDoc.py</vh>
 <v t="karstenw.20160619131254.1"><vh>CactusOutlineDoc declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131254.2"><vh>boilerplateOPML</vh></v>
-<v t="karstenw.20160619131254.3"><vh>class CactusOutlineDocument</vh>
+<v t="karstenw.20160619131254.3" a="E"><vh>class CactusOutlineDocument</vh>
 <v t="karstenw.20160619131254.4"><vh>__repr__</vh></v>
 <v t="karstenw.20160619131254.5"><vh>init</vh></v>
 <v t="karstenw.20160619131254.6"><vh>dealloc</vh></v>
@@ -247,7 +247,7 @@
 <v t="karstenw.20160619131254.24"><vh>windowControllers</vh></v>
 <v t="karstenw.20160619131254.25"><vh>printShowingPrintPanel_</vh></v>
 </v>
-<v t="karstenw.20160619131254.26"><vh>class CactusOutlineWindowController</vh>
+<v t="karstenw.20160619131254.26" a="E"><vh>class CactusOutlineWindowController</vh>
 <v t="karstenw.20160619131254.27"><vh>dealloc</vh></v>
 <v t="karstenw.20160619131254.28"><vh>init</vh></v>
 <v t="karstenw.20160619131254.29"><vh>finishControllerInit</vh></v>
@@ -262,7 +262,7 @@
 <v t="karstenw.20160619131254.38"><vh>applySettings_</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131258.1" a="E"><vh>@clean CactusOutlineNode.py</vh>
+<v t="karstenw.20160619131258.1"><vh>@clean CactusOutlineNode.py</vh>
 <v t="karstenw.20160619131304.1"><vh>CactusOutlineNode declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131304.2"><vh>class NodeValue</vh>
@@ -328,7 +328,7 @@
 <v t="karstenw.20160619131524.3"><vh>awakeFromNib</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131515.1" a="E"><vh>@clean CactusTableDocument.py</vh>
+<v t="karstenw.20160619131515.1"><vh>@clean CactusTableDocument.py</vh>
 <v t="karstenw.20160619131529.1"><vh>CactusTableDocument declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 </v>
@@ -349,7 +349,11 @@
 <v t="karstenw.20220912113721.3"><vh>ostype2num</vh></v>
 <v t="karstenw.20220912113721.5"><vh>detectFileTypeAtURL</vh></v>
 <v t="karstenw.20220912113721.6"><vh>detectFileTypeLocalFile</vh></v>
-<v t="karstenw.20220912113721.7"><vh>readURL</vh></v>
+<v t="karstenw.20220912113721.7" a="E"><vh>readURL</vh>
+<v t="karstenw.20230612134848.1"><vh>&lt;&lt; get filetype &gt;&gt;</vh></v>
+<v t="karstenw.20230612145731.1"><vh>&lt;&lt; cache file &gt;&gt;</vh></v>
+<v t="karstenw.20230612145838.1"><vh>&lt;&lt; load file from url or cache &gt;&gt;</vh></v>
+</v>
 <v t="karstenw.20220912113721.8"><vh>classifyAndReadUrl</vh></v>
 <v t="karstenw.20220912113721.9"><vh>cancelContinueAlert</vh></v>
 <v t="karstenw.20220912113721.10"><vh>errorDialog</vh></v>
@@ -367,7 +371,7 @@
 <v t="karstenw.20220912113721.22"><vh>mergeURLs</vh></v>
 <v t="karstenw.20220912113721.23"><vh>getURLExtension</vh></v>
 </v>
-<v t="karstenw.20160619131607.1" a="E"><vh>@clean CactusURL.py</vh>
+<v t="karstenw.20160619131607.1"><vh>@clean CactusURL.py</vh>
 <v t="karstenw.20160619131622.1"><vh>CactusURL declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131622.2"><vh>NSURL2str</vh></v>
@@ -451,7 +455,7 @@
 <v t="karstenw.20160619132023.48"><vh>publish_extensions</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619130952.1" a="E"><vh>@clean CactusAppDelegateClass.py</vh>
+<v t="karstenw.20160619130952.1"><vh>@clean CactusAppDelegateClass.py</vh>
 <v t="karstenw.20160619130959.1"><vh>CactusAppDelegateClass declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619130959.2"><vh>class Document</vh>
@@ -463,7 +467,7 @@
 <v t="karstenw.20160619130959.7"><vh>runModalOpenPanel_forTypes_</vh></v>
 <v t="karstenw.20160619130959.8"><vh>makeDocumentWithContentsOfURL_ofType_error_</vh></v>
 </v>
-<v t="karstenw.20160619130959.9"><vh>class CactusAppDelegate</vh>
+<v t="karstenw.20160619130959.9" a="E"><vh>class CactusAppDelegate</vh>
 <v t="karstenw.20160619130959.10"><vh>initialize</vh></v>
 <v t="karstenw.20160619130959.11"><vh>awakeFromNib</vh></v>
 <v t="karstenw.20160619130959.12"><vh>applicationDidFinishLaunching_</vh></v>
@@ -500,7 +504,7 @@
 <v t="karstenw.20160619130959.43"><vh>appendNode_CurrentDoc_</vh></v>
 <v t="karstenw.20160619130959.44"><vh>makeCalendarCurrentOrNewDoc_</vh></v>
 </v>
-<v t="karstenw.20160619130959.45" a="E"><vh>class CactusWindowController_OLD</vh>
+<v t="karstenw.20160619130959.45"><vh>class CactusWindowController_OLD</vh>
 <v t="karstenw.20160619130959.46"><vh>init</vh></v>
 <v t="karstenw.20160619130959.47"><vh>initWithObject_type_</vh></v>
 <v t="karstenw.20160619130959.48"><vh>windowWillClose_</vh></v>
@@ -508,7 +512,7 @@
 <v t="karstenw.20160619130959.50"><vh>applySettings_</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131126.1" a="E"><vh>@clean CactusMain.py</vh>
+<v t="karstenw.20160619131126.1"><vh>@clean CactusMain.py</vh>
 <v t="karstenw.20160619131153.1"><vh>CactusMain declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20221106095747.1"><vh>+ + + MAIN + + +</vh></v>
@@ -543,6 +547,7 @@ import sys
 import os
 
 import objc
+objc.options.deprecation_warnings=1
 
 import Foundation
 NSObject = Foundation.NSObject
@@ -599,6 +604,7 @@ cachefolder = CactusVersion.cachefolder
 
 import objc
 super = objc.super
+objc.options.deprecation_warnings=1
 
 import Foundation
 NSObject = Foundation.NSObject
@@ -900,17 +906,21 @@ def openDownloadsPage_(self, sender):
 
 def newOutlineFromURL_Type_(self, url, type_):
     if kwlog:
-        print( "CactusAppDelegate.newOutlineFromURL_Type_(\n\t%s\m\t%s )" %
-                                                repr(url), repr(type_))
+        print( "CactusAppDelegate.newOutlineFromURL_Type_(\n\t%s\m\t%s )" % (repr(url), repr(type_)) )
+
+    pdb.set_trace()
 
     if not isinstance(url, NSURL):
         url = NSURL.URLWithString_( url )
+
     # just check for local files
     docc = NSDocumentController.sharedDocumentController()
     localurl = url.isFileURL()
     loaded = True
+
     if localurl:
         loaded = docc.documentForURL_( url )
+
     if not loaded or not localurl:
         doc, err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
                                                                    type_,
@@ -1502,7 +1512,7 @@ def applySettings_(self, sender):
         l = self.menRowLines.title()
         l = int(l)
         self.rowLines = l
-    except StandardError as err:
+    except Exception as err:
         print( "\nERROR  ---  Menu Row lines '%'" % repr(l) )
         self.rowLines = 4
         self.menRowLines.setTitle_( u"4" )
@@ -1761,6 +1771,7 @@ import time
 import feedparser
 
 import objc
+objc.options.deprecation_warnings=1
 
 import AppKit
 NSString = AppKit.NSString
@@ -2708,6 +2719,7 @@ pp = pprint.pprint
 import pdb
 
 import objc
+objc.options.deprecation_warnings=1
 
 import Foundation
 NSObject = Foundation.NSObject
@@ -2924,9 +2936,10 @@ from __future__ import print_function
 """
 """
 
-
+import pdb
 
 import objc
+objc.options.deprecation_warnings=1
 
 import Foundation
 NSObject = Foundation.NSObject
@@ -2963,6 +2976,10 @@ class OpenURLWindowController(NSWindowController):
     textfield = objc.IBOutlet()
     menuLastVisited = objc.IBOutlet()
     menuOpenAs = objc.IBOutlet()
+    
+    objc.ivar("readAsType")
+    objc.ivar("visitedURLs")
+    objc.ivar("noOfRecentURLs")
 
     @others
 </t>
@@ -3005,7 +3022,7 @@ def __new__(cls):
     self.noOfRecentURLs = 40
     try:
         self.noOfRecentURLs = int(defaults.objectForKey_( u'txtNoOfRecentURLs'))
-    except StandardError as err:
+    except Exception as err:
         print( "ERROR reading defaults.", repr(err) )
 
     # cap recentURLs to max size
@@ -3046,10 +3063,11 @@ def openAsMenuSelection_(self, sender):
 <t tx="karstenw.20160619131158.9">@objc.IBAction
 def OK_(self, sender):
     "User pressed OK button. Get data and try to open that stuff."
-
+    pdb.set_trace()
     app = NSApplication.sharedApplication()
     delg = app.delegate()
     t_url = self.textfield.stringValue()
+    t_url = t_url.strip()
     url = NSURL.URLWithString_( t_url )
     self.readAsType = self.menuOpenAs.title()
     if t_url == u"":
@@ -3068,7 +3086,7 @@ def OK_(self, sender):
         for menuItem in self.visitedURLs:
             self.menuLastVisited.addItemWithTitle_( menuItem )
     delg.visitedURLs = self.visitedURLs[:]
-    delg.newOutlineFromURL_Type_( url, str(self.readAsType) )
+    delg.newOutlineFromURL_Type_( t_url, str(self.readAsType) )
     self.close()
 
 </t>
@@ -3223,7 +3241,7 @@ def xml_from_string(xml_text):
 
     try:
         s = etree.fromstring(xml_text)
-    except StandardError as v:
+    except Exception as v:
         raise XMLParseErrorException( "The XML file could not be parsed.\n%s" % v )
     return getXML_( s )
 
@@ -3236,7 +3254,7 @@ def xml_from_string(xml_text):
     try:
         # s = lxmletree.parse(htmlurl, parser)
         s = lxmletree.parse(urlopen(htmlurl), parser)
-    except StandardError as v:
+    except Exception as v:
         raise HTMLParseErrorException( "The HTML file could not be parsed.\n%s" % v )
     return getHTML_( s )
 
@@ -3887,9 +3905,10 @@ def getOutlineNodes(node):
 
 </t>
 <t tx="karstenw.20160619131225.4">def opml_from_string(opml_text):
+    pdb.set_trace()
     try:
         s = etree.fromstring(opml_text)
-    except StandardError as v:
+    except Exception as v:
         raise OPMLParseErrorException( "The OPML file could not be parsed.\n%s" % v )
     return getOPML( s )
 
@@ -3898,7 +3917,7 @@ def getOutlineNodes(node):
 <t tx="karstenw.20160619131225.5">def parse_plist( nsurl ):
     try:
         nsdict = NSDictionary.dictionaryWithContentsOfURL_( nsurl )
-    except StandardError as v:
+    except Exception as v:
         raise PLISTParseErrorException( "The PLIST file could not be parsed.\n%s" % v )
     return nsdict
 
@@ -4087,7 +4106,7 @@ import CactusOutlineTypes
 typeOutline = CactusOutlineTypes.typeOutline
 
 import objc
-
+objc.options.deprecation_warnings=1
 
 import Foundation
 NSObject = Foundation.NSObject
@@ -4588,7 +4607,7 @@ def XdraggingExited_( self, dragInfo ):
     cache = False
     try:
         cache = bool(defaults.objectForKey_( u'optCache'))
-    except StandardError as err:
+    except Exception as err:
         print( "ERROR reading defaults.", repr(err) )
 
     s = CactusTools.readURL( NSURL.URLWithString_( url ) )
@@ -4902,7 +4921,7 @@ def open_node( url, nodeType=None, open_=False, supressCache=False ):
     cache = False
     try:
         cache = bool(defaults.objectForKey_( u'optCache'))
-    except StandardError as err:
+    except Exception as err:
         print( "ERROR reading defaults.", repr(err) )
 
     appl = NSApplication.sharedApplication()
@@ -6888,6 +6907,7 @@ HTMLParseErrorException = CactusExceptions.HTMLParseErrorException
 PLISTParseErrorException = CactusExceptions.PLISTParseErrorException
 
 import objc
+objc.options.deprecation_warnings=1
 
 import Foundation
 NSObject = Foundation.NSObject
@@ -7231,7 +7251,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
             indent = makeunicode(defaults.objectForKey_( u'txtIndent'))
             indent = int(indent)
 
-        except StandardError as err:
+        except Exception as err:
             print( "ERROR reading defaults.", repr(err) )
 
         etHTML = CactusOPML.generateHTML( self.rootNode, doctype, encoding, indent )
@@ -7319,7 +7339,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
     try:
         uname = makeunicode( defaults.objectForKey_( 'txtUserName' ) )
         uemail = makeunicode( defaults.objectForKey_('txtUserEmail') )
-    except StandardError as err:
+    except Exception as err:
         print( "ERROR reading defaults.", repr(err) )
 
     head.addChild_(OutlineNode("dateCreated", s, head, typeOutline, root))
@@ -7495,7 +7515,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
 
                 # window.setFrame_display_(s, True)
                 redisplay = False
-            except StandardError as err:
+            except Exception as err:
                 print( err )
                 print( "No window setting for you." )
         outlineView.setNeedsDisplay_( redisplay )
@@ -7576,6 +7596,12 @@ openPLIST_ = CactusFileOpeners.openPLIST_
 </t>
 <t tx="karstenw.20160619131254.28">def init(self):
     self = self.initWithWindowNibName_("OutlineEditor")
+    self.path = objc.ivar()
+    self.rootNode = objc.ivar()
+    self.parentNode = objc.ivar()
+    self.variableRowHeight = objc.ivar()
+    self.rowLines = objc.ivar()
+    self.url = objc.ivar()
     self.retain()
     return self
 
@@ -7693,7 +7719,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
         self.optVLines.setState_( defaults.objectForKey_( u'optVLines') )
         self.optHLines.setState_( defaults.objectForKey_( u'optHLines') )
 
-    except StandardError as err:
+    except Exception as err:
         print( "ERROR reading defaults.", repr(err) )
 
     if document.fileType() in (CactusPLISTType,):
@@ -7872,7 +7898,7 @@ def applySettings_(self, sender):
         l = self.menRowLines.title()
         l = int(l)
         self.rowLines = l
-    except StandardError as err:
+    except Exception as err:
         print( "\nERROR  ---  Menu Row lines '%'" % repr(l) )
         self.rowLines = 4
         self.menRowLines.setTitle_( u"4" )
@@ -7957,9 +7983,9 @@ def applySettings_(self, sender):
 
     # read opml content
     if theType == CactusOPMLType:
-        pdb.set_trace()
         d = None
         try:
+            # pdb.set_trace()
             s = readURL( url, CactusOPMLType )
             d = CactusOPML.opml_from_string( s )
         except OPMLParseErrorException as v:
@@ -8262,6 +8288,18 @@ def __new__(cls, *args, **kwargs):
 </t>
 <t tx="karstenw.20160619131304.11">def __init__(self, name, obj, parent, typ, rootNode):
 
+    self.typ = objc.ivar()
+    self.attributes = objc.ivar()
+    self.name = objc.ivar()
+    self.comment = objc.ivar()
+    self.maxHeight = objc.ivar()
+    
+    self.rootNode = objc.ivar()
+    self.nodenr = objc.ivar()
+    self.children = objc.ivar()
+    self.maxHeight = objc.ivar()
+    self.controller = objc.ivar()
+    
     # this is outlinetype, not valueType
     self.typ = typ
     self.attributes = ""
@@ -8939,6 +8977,7 @@ def awakeFromNib(self):
 
 
 import objc
+objc.options.deprecation_warnings=1
 
 import Foundation
 NSUserDefaults = Foundation.NSUserDefaults
@@ -9429,9 +9468,9 @@ import os
 appname ="Cactus Outline-Editor"
 appnameshort = "Cactus"
 
-copyright = 'Copyright 2011-2021 Karsten Wolf'
+copyright = 'Copyright 2011-2023 Karsten Wolf'
 
-version = "0.7.8"
+version = "0.8.0"
 
 # 
 user_agent = "%s/%s +https://github.com/karstenw/Cactus-opml-Outliner" % (appname, version)
@@ -9440,7 +9479,8 @@ document_creator = "Created by %s %s" % (appname, version)
 
 cachefolder = os.path.expanduser("~/Library/Application Support/%s" % appname )
 
-developmentversion = False
+developmentversion = True
+
 </t>
 <t tx="karstenw.20160619131631.1">@language python
 @tabwidth -4
@@ -10735,16 +10775,13 @@ import pdb
 
 import re
 import requests
-try:
-    import urllib2
-    urlopen = urllib2.urlopen
-except ModuleNotFoundError:
-    import urllib.request
-    urlopen = urllib.request.urlopen
 
 import urllib
-import urllib.parse as urlparse
-# import urlparse
+#import urllib.parse
+#import urllib.request
+urlopen = urllib.request.urlopen
+url2pathname = urllib.request.url2pathname
+urlparse = urllib.parse.urlparse
 
 import gzip
 
@@ -10765,6 +10802,7 @@ re_bogusCharacters = CactusXMLProperties.re_bogusCharacters
 import feedparser
 
 import objc
+objc.options.deprecation_warnings=1
 
 import Foundation
 NSURL = Foundation.NSURL
@@ -11208,53 +11246,18 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
     if kwlog:
         print( "CactusTools.readURL( '%s', '%s' )" % (url, type_) )
 
+    &lt;&lt; get filetype &gt;&gt;
 
-    translateType = {
-        CactusOPMLType: "opml",
-        CactusHTMLType: "html",
-        CactusXMLType: "xml",
-        CactusRSSType: "rss",
-        CactusPLISTType: "plist",
-        CactusIMLType: "xml"
-    }
+    &lt;&lt; cache file &gt;&gt;
 
-    fileext = translateType.get( type_, ".bin")
-
-    defaults = NSUserDefaults.standardUserDefaults()
-    cache = False
-    try:
-        cache = bool(defaults.objectForKey_( u'optCache'))
-    except Exception as err:
-        print( "ERROR reading defaults.", repr(err) )
-    
-    
-    if cache:
-        # pdb.set_trace()
-        if not nsurl.isFileURL():
-            nsurl = cache_url(nsurl, fileext)
-            url = NSURL2str(nsurl)
-    
-    
-    if 0:
-        # does not work with file urls
-        r = requests.get( url )
-        s = r.content
-        headers = r.headers
-        r.close()
-    else:
-        # fob = feedparser._open_resource(url, None, None, CactusVersion.user_agent, None, [], {})
-        pdb.set_trace()
-        result = dict()
-        fob = feedparser.api._open_resource(url, result)
-        s = fob.read()
-        fob.close()
+    &lt;&lt; load file from url or cache &gt;&gt;
 
     # check for gzip compressed opml file
     # pdb.set_trace()
     try:
         if len(s) &gt; 2:
-            if ord(s[0]) == 0x1f:
-                if ord(s[1]) == 0x8b:
+            if s[0] == 0x1f: #if ord(s[0]) == 0x1f:
+                if s[1] == 0x8b: #if ord(s[1]) == 0x8b:
                     unzipped = gzip.GzipFile( fileobj=io.BytesIO(s) ).read()
                     s = unzipped
     except Exception:
@@ -11432,19 +11435,48 @@ else:
 import requests
 
 </t>
-<t tx="karstenw.20230612123526.1"># objc.ivar
-objc.ivar("typ")
-self.typ = typ
-self.attributes = ""
-self.name = ""
-self.comment = ""
-self.maxHeight = 1
+<t tx="karstenw.20230612123526.1"></t>
+<t tx="karstenw.20230612134848.1">translateType = {
+    CactusOPMLType: "opml",
+    CactusHTMLType: "html",
+    CactusXMLType: "xml",
+    CactusRSSType: "rss",
+    CactusPLISTType: "plist",
+    CactusIMLType: "xml"
+}
 
-self.rootNode = rootNode
-self.nodenr = next( counter )
-self.children = NSMutableArray.arrayWithCapacity_( 0 )
-self.maxHeight = 1
-self.controller = None
+fileext = translateType.get( type_, ".bin")
+
+</t>
+<t tx="karstenw.20230612145731.1">defaults = NSUserDefaults.standardUserDefaults()
+cache = False
+try:
+    cache = bool(defaults.objectForKey_( u'optCache'))
+except Exception as err:
+    print( "ERROR reading defaults.", repr(err) )
+
+pdb.set_trace()
+
+if cache:
+    # pdb.set_trace()
+    if not nsurl.isFileURL():
+        nsurl = cache_url(nsurl, fileext)
+        url = NSURL2str(nsurl)
+
+</t>
+<t tx="karstenw.20230612145838.1">if url.startswith("file://"):
+    p = urlparse( url )
+    filepath = url2pathname( p.path )
+    f = open( filepath, 'rb')
+    s = f.read()
+    f.close()
+else:
+    # does not work with file urls
+    r = requests.get( url )
+    s = r.content
+    headers = r.headers
+    r.close()
+
 </t>
 </tnodes>
 </leo_file>
