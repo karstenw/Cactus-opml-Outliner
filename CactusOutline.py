@@ -260,6 +260,7 @@ except NameError:
 if not py3:
     import urllib
     import urlparse
+    urlparse = urlparse.urlparse
 else:
     from urllib.parse import urlparse
 
@@ -345,12 +346,15 @@ def open_node( url, nodeType=None, open_=False, supressCache=False ):
             break
     url = url.replace(" ", '%20')
 
-    purl = urlparse.urlparse( url )
+    purl = urlparse( url )
     if m:
         path = purl.path #urllib.quote( purl.path )
-        url = urlparse.ParseResult( scheme = purl.scheme, netloc = purl.netloc,
-                                    path = path, params = purl.params,
-                                    query = purl.query, fragment = purl.fragment)
+        url = urlparse.ParseResult( scheme = purl.scheme,
+                                    netloc = purl.netloc,
+                                    path = path,
+                                    params = purl.params,
+                                    query = purl.query,
+                                    fragment = purl.fragment)
         # for c in url
         print( m )
         print( repr(url) )
@@ -542,7 +546,7 @@ class KWOutlineView(NSOutlineView):
         soup = BeautifulSoup( src )
         links = soup.find_all( 'a' )
 
-        purl = urlparse.urlparse( url )
+        purl = urlparse( url )
 
         listroot = OutlineNode(url, "", parent, typeOutline, item.rootNode)
         parent.addChild_atIndex_( listroot, idx+1 )
@@ -554,7 +558,7 @@ class KWOutlineView(NSOutlineView):
                 continue
             name = link.text
             d['name'] = name
-            pdest = urlparse.urlparse( dest )
+            pdest = urlparse( dest )
             target = mergeURLs( url, dest )
             d['url'] = target
 
@@ -593,7 +597,7 @@ class KWOutlineView(NSOutlineView):
         soup = BeautifulSoup( src )
         links = soup.find_all( 'img' )
 
-        purl = urlparse.urlparse( url )
+        purl = urlparse( url )
 
         listroot = OutlineNode(url, "", parent, typeOutline, item.rootNode)
         parent.addChild_atIndex_( listroot, idx+1 )
@@ -607,7 +611,7 @@ class KWOutlineView(NSOutlineView):
                 continue
             name = link.text
             d['name'] = name
-            pdest = urlparse.urlparse( dest )
+            pdest = urlparse( dest )
             target = mergeURLs( url, dest )
             d['url'] = target
 
@@ -2622,7 +2626,7 @@ def cleanupURL( url ):
         # this mess needs serious cleaning
         #
 
-        # purl = urlparse.urlparse( url )
+        # purl = urlparse( url )
         purl = urlparse.urlsplit( url, allow_fragments=False )
         path = purl.path
         purl = list( purl )
