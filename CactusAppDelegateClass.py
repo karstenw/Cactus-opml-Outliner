@@ -375,10 +375,11 @@ class CactusAppDelegate(NSObject):
 
     def newOutlineFromURL_Type_(self, url, type_):
         if kwlog:
-            print( "CactusAppDelegate.newOutlineFromURL_Type_(\n\t%s\m\t%s )" % (repr(url), repr(type_)) )
-
-        pdb.set_trace()
-
+            print( "CactusAppDelegate.newOutlineFromURL_Type_(\n\t%s\m\t%s )"
+                    % (repr(url), repr(type_)) )
+        
+        # pdb.set_trace()
+        
         if not isinstance(url, NSURL):
             url = NSURL.URLWithString_( url )
 
