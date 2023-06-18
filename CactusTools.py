@@ -97,7 +97,7 @@ except NameError:
 def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
     try:
         if type(s) not in (punicode, objc.pyobjc_unicode):
-            s = makeunicode(s, srcencoding)
+            s = str(s, srcencoding)
     except TypeError:
         print( "makeunicode type conversion error" )
         print( "FAILED converting", type(s), "to unicode" )
@@ -163,7 +163,7 @@ def readURL( nsurl, type_="" ):
     except Exception as err:
         print( "ERROR reading defaults.", repr(err) )
 
-    pdb.set_trace()
+    # pdb.set_trace()
 
     if cache:
         # pdb.set_trace()
@@ -196,7 +196,11 @@ def readURL( nsurl, type_="" ):
                     s = unzipped
     except Exception:
         pass
-
+    
+    try:
+        s = makeunicode( s )
+    except Exception as err:
+        print("readURL() - Decode content failed:", err)
     if type_ == CactusOPMLType:
         # this is a quick & dirty approach and should be applied much more carefully
         # than it is now... perhaps those errors get corrected and <directivecache>
@@ -634,7 +638,7 @@ def mergeURLs( base, rel ):
     """create an url with base as the base, updated by existing parts of rel."""
     s = u"CactusTools.mergeURLs(%s, %s) ->  %s"
 
-    prel = urlparse.urlparse( rel )
+    prel = urlparse( rel )
     if prel.scheme and prel.netloc:
         return prel.geturl()
 
@@ -643,7 +647,7 @@ def mergeURLs( base, rel ):
     
     # it's a relative path
 
-    pbase = urlparse.urlparse( base )
+    pbase = urlparse( base )
 
     path = pbase.path
     folder, filename = os.path.split( path )
@@ -678,7 +682,7 @@ def mergeURLs( base, rel ):
 
 
 def getURLExtension( url ):
-    purl = urlparse.urlparse( url )
+    purl = urlparse( url )
     path = purl.path
     folder, filename = os.path.split( path )
     basename, ext = os.path.splitext( filename )
