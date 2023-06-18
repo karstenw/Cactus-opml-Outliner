@@ -133,7 +133,9 @@ class OpenURLWindowController(NSWindowController):
     @objc.IBAction
     def OK_(self, sender):
         "User pressed OK button. Get data and try to open that stuff."
-        pdb.set_trace()
+        
+        # pdb.set_trace()
+        
         app = NSApplication.sharedApplication()
         delg = app.delegate()
         t_url = self.textfield.stringValue()
