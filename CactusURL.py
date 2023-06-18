@@ -27,9 +27,18 @@ import pdb
 
 import re
 
-import urllib
-import urllib2
-import urlparse
+#import urllib
+#import urllib2
+#import urlparse
+
+if not py3:
+    import urllib
+    import urlparse
+    urlparse = urlparse.urlparse
+else:
+    from urllib.parse import urlparse
+
+
 
 import Foundation
 NSURL = Foundation.NSURL
@@ -65,7 +74,7 @@ class CactusURL(object):
             self.url = url
         elif t in (NSURL,):
             self.url = NSURL2str( url )
-        p = urlparse.urlparse( self.url )
+        p = urlparse( self.url )
         self.schema = p.schema
     def ascachepath(self):
         pass
