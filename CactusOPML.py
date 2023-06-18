@@ -163,7 +163,9 @@ def getOPML( etRootnode ):
 
 
 def opml_from_string(opml_text):
-    pdb.set_trace()
+    
+    # pdb.set_trace()
+    
     try:
         s = etree.fromstring(opml_text)
     except Exception as v:
