@@ -96,6 +96,8 @@ except NameError:
 
 def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
     try:
+        if s in (None, False):
+            s = str(s)
         if type(s) not in (punicode, objc.pyobjc_unicode):
             s = str(s, srcencoding)
     except TypeError:
