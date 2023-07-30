@@ -373,6 +373,10 @@ def openRSS_(url):
                 continue
 
             v = d.feed[k]
+            if v in (True, False):
+                v = str(v)
+            if v == None:
+                v = ""
             if type(v) in (list,):
                 if len(v) > 1:
                     print( "Large header list" )
