@@ -1,22 +1,15 @@
 .DS_Store
 .idea
 *.pyc
-++CURRENT_ERROR.tab
-+class_diagrams
 +Cocoa Browser Air.app
 +Cocoa Browser.app
 +icon/banner/*
 +latex
-+sqlite
-+reflect
-bugbench
++private
 build
 dist
-CHANGES
 edit_all.sh
 English.lproj/*.py
 English.lproj/Cactus-Dumm*
-oppack.tab
 README.html
 release.sh
-rsstest
