@@ -24,8 +24,9 @@ copyright = CactusVersion.copyright
 
 version = CactusVersion.version
 
-
 infostr = appname + ' ' + version + ' ' + copyright
+
+aeusage = "Cactus uses Apple events to coax Safari to get info about webpages."
 
 
 setup(
@@ -94,6 +95,7 @@ setup(
             ],
             'LSHasLocalizedDisplayName': False,
             'NSAppleScriptEnabled': False,
+            'NSAppleEventsUsageDescription': aeusage,
             'NSHumanReadableCopyright': copyright}}],
 
     data_files=["English.lproj/MainMenu.nib",

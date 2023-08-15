@@ -661,7 +661,7 @@ def generateRSS( rootNode, indent=2 ):
 
                 else:
                     if len(value) == 1:
-                        head_d[name] = value.values()[0]
+                        head_d[name] = list(value.values())[0]
                     else:
                         
                         head_d[name] = value
@@ -706,9 +706,11 @@ def generateRSS( rootNode, indent=2 ):
             body_l.append( PyRSS2Gen.RSSItem( **d ) )
 
     head_d[ 'items' ] = body_l
-
+    
+    pdb.set_trace()
+    
     rss = PyRSS2Gen.RSS2( **head_d )
-    f = io.StringIO()
+    f = io.BytesIO()
     rss.write_xml( f, encoding='utf-8')
     s = f.getvalue()
     f.close()
