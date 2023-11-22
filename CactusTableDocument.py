@@ -13,8 +13,8 @@ import os
 import datetime
 import urllib
 
-import xml.etree.cElementTree
-etree = xml.etree.cElementTree
+import xml.etree.ElementTree
+etree = xml.etree.ElementTree
 
 import pprint
 pp = pprint.pprint
