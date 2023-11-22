@@ -21,7 +21,7 @@
 </v>
 </v>
 </v>
-<v t="karstenw.20160619193218.1" a="E"><vh>Controllers</vh>
+<v t="karstenw.20160619193218.1"><vh>Controllers</vh>
 <v t="karstenw.20160619131140.1"><vh>@clean CactusOpenURLController.py</vh>
 <v t="karstenw.20160619131158.1"><vh>CactusOpenURLController declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
@@ -247,7 +247,7 @@
 <v t="karstenw.20160619131254.24"><vh>windowControllers</vh></v>
 <v t="karstenw.20160619131254.25"><vh>printShowingPrintPanel_</vh></v>
 </v>
-<v t="karstenw.20160619131254.26" a="E"><vh>class CactusOutlineWindowController</vh>
+<v t="karstenw.20160619131254.26"><vh>class CactusOutlineWindowController</vh>
 <v t="karstenw.20160619131254.27"><vh>dealloc</vh></v>
 <v t="karstenw.20160619131254.28"><vh>init</vh></v>
 <v t="karstenw.20160619131254.29"><vh>finishControllerInit</vh></v>
@@ -340,7 +340,7 @@
 </v>
 <v t="karstenw.20221106095308.1"></v>
 </v>
-<v t="karstenw.20220912113705.1" a="E"><vh>@clean CactusTools.py</vh>
+<v t="karstenw.20220912113705.1"><vh>@clean CactusTools.py</vh>
 <v t="karstenw.20220912113721.1"><vh>Declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20220912113812.1"><vh>+ TOOLS</vh></v>
@@ -528,7 +528,6 @@
 </v>
 <v t="karstenw.20160619132221.1"><vh>@clean release.sh</vh></v>
 <v t="karstenw.20160619132048.1"><vh>@clean edit_all.sh</vh></v>
-<v t="karstenw.20160619132317.1"><vh>@clean CHANGES</vh></v>
 <v t="karstenw.20160619132335.1"><vh>@clean Makefile</vh></v>
 </v>
 </vnodes>
@@ -906,10 +905,11 @@ def openDownloadsPage_(self, sender):
 
 def newOutlineFromURL_Type_(self, url, type_):
     if kwlog:
-        print( "CactusAppDelegate.newOutlineFromURL_Type_(\n\t%s\m\t%s )" % (repr(url), repr(type_)) )
-
-    pdb.set_trace()
-
+        print( "CactusAppDelegate.newOutlineFromURL_Type_(\n\t%s\m\t%s )"
+                % (repr(url), repr(type_)) )
+    
+    # pdb.set_trace()
+    
     if not isinstance(url, NSURL):
         url = NSURL.URLWithString_( url )
 
@@ -2106,6 +2106,10 @@ OutlineNode = CactusOutlineNode.OutlineNode
                 continue
 
             v = d.feed[k]
+            if v in (True, False):
+                v = str(v)
+            if v == None:
+                v = ""
             if type(v) in (list,):
                 if len(v) &gt; 1:
                     print( "Large header list" )
@@ -3063,7 +3067,9 @@ def openAsMenuSelection_(self, sender):
 <t tx="karstenw.20160619131158.9">@objc.IBAction
 def OK_(self, sender):
     "User pressed OK button. Get data and try to open that stuff."
-    pdb.set_trace()
+    
+    # pdb.set_trace()
+    
     app = NSApplication.sharedApplication()
     delg = app.delegate()
     t_url = self.textfield.stringValue()
@@ -3126,13 +3132,14 @@ import pdb
 import lxml
 import lxml.etree
 lxmletree = lxml.etree
-
-import xml.etree.cElementTree
-etree = xml.etree.cElementTree
+CommentNode = lxml.etree.Comment
 
 import lxml.html
 #import lxml.html.builder
-CommentNode = lxml.etree.Comment
+
+
+import xml.etree.ElementTree
+etree = xml.etree.ElementTree
 
 
 import PyRSS2Gen
@@ -3142,6 +3149,10 @@ OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
 XMLParseErrorException = CactusExceptions.XMLParseErrorException
 HTMLParseErrorException = CactusExceptions.HTMLParseErrorException
 PLISTParseErrorException = CactusExceptions.PLISTParseErrorException
+
+import CactusTools
+makeunicode = CactusTools.makeunicode
+
 
 import Foundation
 NSURL = Foundation.NSURL
@@ -3521,7 +3532,7 @@ def generateRSS( rootNode, indent=2 ):
 
                 else:
                     if len(value) == 1:
-                        head_d[name] = value.values()[0]
+                        head_d[name] = list(value.values())[0]
                     else:
                         
                         head_d[name] = value
@@ -3566,9 +3577,11 @@ def generateRSS( rootNode, indent=2 ):
             body_l.append( PyRSS2Gen.RSSItem( **d ) )
 
     head_d[ 'items' ] = body_l
-
+    
+    pdb.set_trace()
+    
     rss = PyRSS2Gen.RSS2( **head_d )
-    f = io.StringIO()
+    f = io.BytesIO()
     rss.write_xml( f, encoding='utf-8')
     s = f.getvalue()
     f.close()
@@ -3905,7 +3918,9 @@ def getOutlineNodes(node):
 
 </t>
 <t tx="karstenw.20160619131225.4">def opml_from_string(opml_text):
-    pdb.set_trace()
+    
+    # pdb.set_trace()
+    
     try:
         s = etree.fromstring(opml_text)
     except Exception as v:
@@ -3999,10 +4014,22 @@ def getXMLNodes( node ):
     """
     result = []
     for n in list(node):
-
+        print("node:", n)
+        
+        #nt = type(n)
+        #if nt 
         name = n.tag
         if not name:
             name = u""
+            
+        if type(name) not in (float, int, str, bytes):
+            try:
+                name = name()
+            except Exception as err:
+                pdb.set_trace()
+                print( err )
+                print()
+                print( type(name), name )
         name = makeunicode(name)
 
         text = n.text
@@ -4336,7 +4363,7 @@ g_qtplayer_extensions = g_qtplayer_extensions.split()
     soup = BeautifulSoup( src )
     links = soup.find_all( 'a' )
 
-    purl = urlparse.urlparse( url )
+    purl = urlparse( url )
 
     listroot = OutlineNode(url, "", parent, typeOutline, item.rootNode)
     parent.addChild_atIndex_( listroot, idx+1 )
@@ -4348,7 +4375,7 @@ g_qtplayer_extensions = g_qtplayer_extensions.split()
             continue
         name = link.text
         d['name'] = name
-        pdest = urlparse.urlparse( dest )
+        pdest = urlparse( dest )
         target = mergeURLs( url, dest )
         d['url'] = target
 
@@ -4387,7 +4414,7 @@ def insertSafarimages_(self, sender):
     soup = BeautifulSoup( src )
     links = soup.find_all( 'img' )
 
-    purl = urlparse.urlparse( url )
+    purl = urlparse( url )
 
     listroot = OutlineNode(url, "", parent, typeOutline, item.rootNode)
     parent.addChild_atIndex_( listroot, idx+1 )
@@ -4401,7 +4428,7 @@ def insertSafarimages_(self, sender):
             continue
         name = link.text
         d['name'] = name
-        pdest = urlparse.urlparse( dest )
+        pdest = urlparse( dest )
         target = mergeURLs( url, dest )
         d['url'] = target
 
@@ -4901,12 +4928,15 @@ def open_node( url, nodeType=None, open_=False, supressCache=False ):
             break
     url = url.replace(" ", '%20')
 
-    purl = urlparse.urlparse( url )
+    purl = urlparse( url )
     if m:
         path = purl.path #urllib.quote( purl.path )
-        url = urlparse.ParseResult( scheme = purl.scheme, netloc = purl.netloc,
-                                    path = path, params = purl.params,
-                                    query = purl.query, fragment = purl.fragment)
+        url = urlparse.ParseResult( scheme = purl.scheme,
+                                    netloc = purl.netloc,
+                                    path = path,
+                                    params = purl.params,
+                                    query = purl.query,
+                                    fragment = purl.fragment)
         # for c in url
         print( m )
         print( repr(url) )
@@ -6755,7 +6785,7 @@ def deleteNodes(ov, nodes=(), selection=False):
         # this mess needs serious cleaning
         #
 
-        # purl = urlparse.urlparse( url )
+        # purl = urlparse( url )
         purl = urlparse.urlsplit( url, allow_fragments=False )
         path = purl.path
         purl = list( purl )
@@ -6876,8 +6906,8 @@ import datetime
 import binascii
 import struct
 
-import xml.etree.cElementTree
-etree = xml.etree.cElementTree
+import xml.etree.ElementTree
+etree = xml.etree.ElementTree
 
 import io
 # import cStringIO
@@ -7209,8 +7239,10 @@ openPLIST_ = CactusFileOpeners.openPLIST_
         rootOPML = CactusOPML.generateOPML( self.rootNode, indent=1, expansion=expansionState )
 
         e = etree.ElementTree( rootOPML )
-
-        fob = io.StringIO()
+        
+        # pdb.set_trace()
+        
+        fob = io.BytesIO()
         e.write(fob, encoding="utf-8", xml_declaration=True, method="xml" )
         t = fob.getvalue()
         fob.close()
@@ -7233,7 +7265,7 @@ openPLIST_ = CactusFileOpeners.openPLIST_
                 u"XML documents can have only 1 to level node. Every node after '%s' will be ommited on save." % (name,))
         e = etree.ElementTree( rootXML )
 
-        fob = io.StringIO()
+        fob = io.BytesIO()
         # e.write(fob, pretty_print=True, encoding="utf-8", xml_declaration=True, method="xml" )
         e.write(fob, encoding="utf-8", xml_declaration=True, method="xml" )
         t = fob.getvalue()
@@ -9139,8 +9171,8 @@ import os
 import datetime
 import urllib
 
-import xml.etree.cElementTree
-etree = xml.etree.cElementTree
+import xml.etree.ElementTree
+etree = xml.etree.ElementTree
 
 import pprint
 pp = pprint.pprint
@@ -9427,9 +9459,18 @@ import pdb
 
 import re
 
-import urllib
-import urllib2
-import urlparse
+#import urllib
+#import urllib2
+#import urlparse
+
+if not py3:
+    import urllib
+    import urlparse
+    urlparse = urlparse.urlparse
+else:
+    from urllib.parse import urlparse
+
+
 
 import Foundation
 NSURL = Foundation.NSURL
@@ -9455,7 +9496,7 @@ NSString = Foundation.NSString
         self.url = url
     elif t in (NSURL,):
         self.url = NSURL2str( url )
-    p = urlparse.urlparse( self.url )
+    p = urlparse( self.url )
     self.schema = p.schema
 </t>
 <t tx="karstenw.20160619131622.5">def ascachepath(self):
@@ -9470,7 +9511,7 @@ appnameshort = "Cactus"
 
 copyright = 'Copyright 2011-2023 Karsten Wolf'
 
-version = "0.8.0"
+version = "0.8.1"
 
 # 
 user_agent = "%s/%s +https://github.com/karstenw/Cactus-opml-Outliner" % (appname, version)
@@ -10425,8 +10466,9 @@ copyright = CactusVersion.copyright
 
 version = CactusVersion.version
 
-
 infostr = appname + ' ' + version + ' ' + copyright
+
+aeusage = "Cactus uses Apple events to coax Safari to get info about webpages."
 
 
 setup(
@@ -10495,6 +10537,7 @@ setup(
             ],
             'LSHasLocalizedDisplayName': False,
             'NSAppleScriptEnabled': False,
+            'NSAppleEventsUsageDescription': aeusage,
             'NSHumanReadableCopyright': copyright}}],
 
     data_files=["English.lproj/MainMenu.nib",
@@ -10657,8 +10700,6 @@ The isoschematron implementation uses several XSL and RelaxNG resources:
    src/lxml/isoschematron/resources/xsl/RNG2Schtrn.xsl and
    src/lxml/isoschematron/resources/xsl/XSD2Schtrn.xsl)
 </t>
-<t tx="karstenw.20160619132317.1">@language unknown_language
-CHANGES</t>
 <t tx="karstenw.20160619132327.1">@nocolor
 Cactus is released under the following license:
 
@@ -11146,7 +11187,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
     """create an url with base as the base, updated by existing parts of rel."""
     s = u"CactusTools.mergeURLs(%s, %s) -&gt;  %s"
 
-    prel = urlparse.urlparse( rel )
+    prel = urlparse( rel )
     if prel.scheme and prel.netloc:
         return prel.geturl()
 
@@ -11155,7 +11196,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
     
     # it's a relative path
 
-    pbase = urlparse.urlparse( base )
+    pbase = urlparse( base )
 
     path = pbase.path
     folder, filename = os.path.split( path )
@@ -11191,7 +11232,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 
 </t>
 <t tx="karstenw.20220912113721.23">def getURLExtension( url ):
-    purl = urlparse.urlparse( url )
+    purl = urlparse( url )
     path = purl.path
     folder, filename = os.path.split( path )
     basename, ext = os.path.splitext( filename )
@@ -11206,11 +11247,17 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 </t>
 <t tx="karstenw.20220912113721.4">def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
     try:
+        if type( s ) in (int, float):
+            s = str( s )
+        if s in (None, False, True):
+            s = str( s )
         if type(s) not in (punicode, objc.pyobjc_unicode):
-            s = makeunicode(s, srcencoding)
-    except TypeError:
+            s = str(s, srcencoding)
+    except TypeError as err:
+        # pdb.set_trace()
         print( "makeunicode type conversion error" )
         print( "FAILED converting", type(s), "to unicode" )
+        print( "ERROR:", err )
     s = unicodedata.normalize(normalizer, s)
     return s
 
@@ -11222,9 +11269,9 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
     """Not yet sure how to autodetect without reading some files twice.
 
     So far the parsers used are:
-        OPML: cElementTree (opens string)
+        OPML: ElementTree (opens string)
         RSS: feedparser (opens string)
-        XML: cElementTree (opens string)
+        XML: ElementTree (opens string)
         HTML: lxml (opens URL)
         PLIST: NSDictionary.dictionaryWithContentsOfURL_ (opens URL)
     """
@@ -11262,7 +11309,11 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
                     s = unzipped
     except Exception:
         pass
-
+    
+    try:
+        s = makeunicode( s )
+    except Exception as err:
+        print("readURL() - Decode content failed:", err)
     if type_ == CactusOPMLType:
         # this is a quick &amp; dirty approach and should be applied much more carefully
         # than it is now... perhaps those errors get corrected and &lt;directivecache&gt;
@@ -11429,6 +11480,7 @@ if __name__ == "__main__":
 if not py3:
     import urllib
     import urlparse
+    urlparse = urlparse.urlparse
 else:
     from urllib.parse import urlparse
 
@@ -11455,7 +11507,7 @@ try:
 except Exception as err:
     print( "ERROR reading defaults.", repr(err) )
 
-pdb.set_trace()
+# pdb.set_trace()
 
 if cache:
     # pdb.set_trace()
