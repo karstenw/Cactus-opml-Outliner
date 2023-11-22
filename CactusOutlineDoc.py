@@ -17,8 +17,8 @@ import datetime
 import binascii
 import struct
 
-import xml.etree.cElementTree
-etree = xml.etree.cElementTree
+import xml.etree.ElementTree
+etree = xml.etree.ElementTree
 
 import io
 # import cStringIO
@@ -703,8 +703,10 @@ class CactusOutlineDocument(NSDocument):
             rootOPML = CactusOPML.generateOPML( self.rootNode, indent=1, expansion=expansionState )
 
             e = etree.ElementTree( rootOPML )
-
-            fob = io.StringIO()
+            
+            # pdb.set_trace()
+            
+            fob = io.BytesIO()
             e.write(fob, encoding="utf-8", xml_declaration=True, method="xml" )
             t = fob.getvalue()
             fob.close()
@@ -727,7 +729,7 @@ class CactusOutlineDocument(NSDocument):
                     u"XML documents can have only 1 to level node. Every node after '%s' will be ommited on save." % (name,))
             e = etree.ElementTree( rootXML )
 
-            fob = io.StringIO()
+            fob = io.BytesIO()
             # e.write(fob, pretty_print=True, encoding="utf-8", xml_declaration=True, method="xml" )
             e.write(fob, encoding="utf-8", xml_declaration=True, method="xml" )
             t = fob.getvalue()
