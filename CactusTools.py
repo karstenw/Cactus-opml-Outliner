@@ -102,9 +102,11 @@ def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
             s = str( s )
         if type(s) not in (punicode, objc.pyobjc_unicode):
             s = str(s, srcencoding)
-    except TypeError:
+    except TypeError as err:
+        # pdb.set_trace()
         print( "makeunicode type conversion error" )
         print( "FAILED converting", type(s), "to unicode" )
+        print( "ERROR:", err )
     s = unicodedata.normalize(normalizer, s)
     return s
 
@@ -126,9 +128,9 @@ def detectFileTypeAtURL( nsfileurl ):
     """Not yet sure how to autodetect without reading some files twice.
 
     So far the parsers used are:
-        OPML: cElementTree (opens string)
+        OPML: ElementTree (opens string)
         RSS: feedparser (opens string)
-        XML: cElementTree (opens string)
+        XML: ElementTree (opens string)
         HTML: lxml (opens URL)
         PLIST: NSDictionary.dictionaryWithContentsOfURL_ (opens URL)
     """
