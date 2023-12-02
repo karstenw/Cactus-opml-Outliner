@@ -36,6 +36,7 @@ typeOutline = CactusOutlineTypes.typeOutline
 
 import objc
 # super = objc.super
+from objc._pythonify import OC_PythonFloat, OC_PythonLong
 objc.options.deprecation_warnings=1
 
 
@@ -83,8 +84,9 @@ class NodeValue(object):
 
     def __init__(self, value):
         if type(value) != list:
-            if type(value) in (pstr, punicode, NSString, bool, int,
-                               NSMutableString, objc.pyobjc_unicode):
+            if type(value) in (pstr, punicode, NSString, bool, int, long,
+                               NSMutableString, objc.pyobjc_unicode,
+                               OC_PythonFloat, OC_PythonLong):
                 value = self.listFromDisplayValue_( value )
             elif isinstance(value, dict):
                 value = self.listFromDictionary_( value )

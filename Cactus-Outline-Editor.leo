@@ -81,7 +81,7 @@
 <v t="karstenw.20160619131056.11"><vh>class DoneMessageException</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131102.1"><vh>@clean CactusFileOpeners.py</vh>
+<v t="karstenw.20160619131102.1" a="E"><vh>@clean CactusFileOpeners.py</vh>
 <v t="karstenw.20160619131110.1"><vh>Imports and Globals</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131110.2"><vh>openOPML_</vh></v>
@@ -89,7 +89,12 @@
 <v t="karstenw.20160619131110.4"><vh>openXML_</vh></v>
 <v t="karstenw.20160619131110.5"><vh>openRSS_</vh></v>
 <v t="karstenw.20160619131110.6"><vh>getPLISTValue</vh></v>
-<v t="karstenw.20160619131110.7"><vh>openIML_</vh></v>
+<v t="karstenw.20160619131110.7" a="E"><vh>openIML_</vh>
+<v t="karstenw.20231202211856.1"><vh>&lt;&lt; getTracks &gt;&gt;</vh></v>
+<v t="karstenw.20231202211923.1"><vh>&lt;&lt; makePlaylistNode &gt;&gt;</vh></v>
+<v t="karstenw.20231202211924.1"><vh>&lt;&lt; getPlaylists &gt;&gt;</vh></v>
+<v t="karstenw.20231202211924.2"><vh>&lt;&lt; dispatchLevel &gt;&gt;</vh></v>
+</v>
 <v t="karstenw.20160619131110.8"><vh>openPLIST_</vh></v>
 </v>
 <v t="karstenw.20160619131220.1"><vh>@clean CactusOPML.py</vh>
@@ -223,7 +228,7 @@
 <v t="karstenw.20160619131254.1"><vh>CactusOutlineDoc declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131254.2"><vh>boilerplateOPML</vh></v>
-<v t="karstenw.20160619131254.3" a="E"><vh>class CactusOutlineDocument</vh>
+<v t="karstenw.20160619131254.3"><vh>class CactusOutlineDocument</vh>
 <v t="karstenw.20160619131254.4"><vh>__repr__</vh></v>
 <v t="karstenw.20160619131254.5"><vh>init</vh></v>
 <v t="karstenw.20160619131254.6"><vh>dealloc</vh></v>
@@ -262,10 +267,10 @@
 <v t="karstenw.20160619131254.38"><vh>applySettings_</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131258.1"><vh>@clean CactusOutlineNode.py</vh>
+<v t="karstenw.20160619131258.1" a="E"><vh>@clean CactusOutlineNode.py</vh>
 <v t="karstenw.20160619131304.1"><vh>CactusOutlineNode declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
-<v t="karstenw.20160619131304.2"><vh>class NodeValue</vh>
+<v t="karstenw.20160619131304.2" a="E"><vh>class NodeValue</vh>
 <v t="karstenw.20160619131304.3"><vh>__init__</vh></v>
 <v t="karstenw.20160619131304.4"><vh>displayValue</vh></v>
 <v t="karstenw.20160619131304.5"><vh>listFromDisplayValue</vh></v>
@@ -273,7 +278,7 @@
 <v t="karstenw.20160619131304.7"><vh>isSingleValue</vh></v>
 <v t="karstenw.20160619131304.8"><vh>isMultiValue</vh></v>
 </v>
-<v t="karstenw.20160619131304.9" a="E"><vh>class OutlineNode</vh>
+<v t="karstenw.20160619131304.9"><vh>class OutlineNode</vh>
 <v t="karstenw.20230612123526.1"><vh>instance variables</vh></v>
 <v t="karstenw.20160619131304.10"><vh>__new__</vh></v>
 <v t="karstenw.20160619131304.11"><vh>__init__</vh></v>
@@ -340,7 +345,7 @@
 </v>
 <v t="karstenw.20221106095308.1"></v>
 </v>
-<v t="karstenw.20220912113705.1"><vh>@clean CactusTools.py</vh>
+<v t="karstenw.20220912113705.1" a="E"><vh>@clean CactusTools.py</vh>
 <v t="karstenw.20220912113721.1"><vh>Declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20220912113812.1"><vh>+ TOOLS</vh></v>
@@ -375,7 +380,7 @@
 <v t="karstenw.20160619131622.1"><vh>CactusURL declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131622.2"><vh>NSURL2str</vh></v>
-<v t="karstenw.20160619131622.3" a="E"><vh>class CactusURL</vh>
+<v t="karstenw.20160619131622.3"><vh>class CactusURL</vh>
 <v t="karstenw.20160619131622.4"><vh>__init__</vh></v>
 <v t="karstenw.20160619131622.5"><vh>ascachepath</vh></v>
 </v>
@@ -2279,9 +2284,9 @@ cactusData = [ ('cactusNodeType', "data") ]
 def openIML_( nsdict ):
     if kwlog:
         s = repr(nsdict)
-        if len(s) &gt; 90:
-            s = s[:91]
-        print( "openPLIST_( %s )" % s )
+        if len(s) &gt; 255:
+            s = s[:255]
+        print( "openIML_( %s )" % s )
 
     """This builds the node tree and returns the root node."""
 
@@ -2293,271 +2298,17 @@ def openIML_( nsdict ):
 
     progressCount = 0
 
-    def getTracks( nsdict, parent ):
-        i = 0
-        id_trackname = {}
-        for trackItem in nsdict:
-            trackData = nsdict.objectForKey_( trackItem )
-            trackNode = OutlineNode("", "", parent, typeOutline, root)
-            trackAttributes = []
-            trackName = ""
-            trackAlbum = ""
-            trackArtist = ""
-            trackID = ""
-            for trackAttribute in trackData:
-                nsvalue = trackData.objectForKey_( trackAttribute )
-                value, valueType = getPLISTValue( nsvalue)
+    &lt;&lt; getTracks &gt;&gt;
 
-                if trackAttribute == u"Track ID":
-                    trackID = value
+    &lt;&lt; makePlaylistNode &gt;&gt;
 
-                elif trackAttribute == u"Name":
-                    trackName = value
+    &lt;&lt; getPlaylists &gt;&gt;
 
-                elif trackAttribute == u"Album":
-                    trackAlbum = value
-
-                elif trackAttribute in (u"File Creator", u"File Type"):
-                    value = num2ostype( long(value) )
-
-                elif trackAttribute == u"Total Time":
-                    # formatted duration hack
-                    secondsTotal = int(value) / 1000.0
-                    minutes = secondsTotal // 60
-                    seconds = round(secondsTotal % 60, 1)
-                    seconds = "0%.1f" % seconds
-                    value = u"%i:%s" % (minutes, seconds[-4:])
-
-                trackAttributes.append( (trackAttribute, value) )
-                id_trackname[ trackID ] = trackName
-
-            # itemName = u"%s - %s" % (trackAlbum, trackName)
-            itemName = trackName
-
-            # print( repr(itemName) )
-            trackNode.setName_( itemName )
-            trackNode.setValue_( trackAttributes )
-            trackNode.setMaxLineHeight()
-            parent.addChild_( trackNode )
-            i += 1
-            if i % 1000 == 0:
-                sys.stdout.write('.')
-                sys.stdout.flush()
-                if i % 100000 == 0:
-                    sys.stdout.write('\n')
-                    sys.stdout.flush()
-        print()
-        print( "%i Tracks." % i )
-        return id_trackname
-
-    def makePlaylistNode( name, curPlaylist, value, parent, root, type_):
-        if name in curPlaylist:
-
-            if type_ == cactusData:
-                value = makeunicode( binascii.hexlify(value.bytes()) )
-            elif type_ == cactusBool:
-                value = repr(bool(value))
-            elif type_ == cactusNumber:
-                value = makeunicode(value.descriptionWithLocale_( None ))
-            # elif type_ == cactusDictionary:
-
-            node = OutlineNode( name,
-                                type_,
-                                parent,
-                                typeOutline,
-                                root)
-            if value != "":
-                node.setComment_( makeunicode(value) )
-            parent.addChild_( node )
-            return node
-
-    def getPlaylists( nsdict, parent, id_track_dict ):
-
-        defaults = NSUserDefaults.standardUserDefaults()
-        optIMLImportSystemLibraries = defaults.objectForKey_( u'optIMLImportSystemLibraries')
-        systemLibraries = (
-            u"Library",
-            u"Music",
-            u"Movies",
-            u"Podcasts",
-            u"iTunes U",
-            u"Books")
-
-        root = parent.rootNode
-        # add the standard playlist attributes
-        i = 0
-        for playlist in nsdict:
-
-            #
-            # check for keys not listed here
-            #
-
-            playlistName = playlist.get( u"Name", "")
-
-            playlistNode = OutlineNode( playlistName, "", parent, typeOutline, root)
-            parent.addChild_( playlistNode )
-
-            # drop out if AllItems pref is false
-            if playlistName in systemLibraries:
-                if not optIMLImportSystemLibraries:
-                    continue
-
-            makePlaylistNode( u"Name", playlist,
-                              playlistName,
-                              playlistNode, root, cactusString)
-
-            makePlaylistNode( u"Master", playlist,
-                              playlist.get( u"Master", "False"),
-                              playlistNode, root, cactusBool)
-
-            makePlaylistNode( u"Playlist ID", playlist,
-                              playlist.get( u"Playlist ID", "0"),
-                              playlistNode, root, cactusNumber)
-
-            makePlaylistNode( u"Playlist Persistent ID", playlist,
-                              playlist.get( u"Playlist Persistent ID", ""),
-                              playlistNode, root, cactusString)
-
-            makePlaylistNode( u"Parent Persistent ID", playlist,
-                              playlist.get( u"Playlist Persistent ID", ""),
-                              playlistNode, root, cactusString)
-
-            makePlaylistNode( u"Distinguished Kind", playlist,
-                              playlist.get( u"Distinguished Kind", 0),
-                              playlistNode, root, cactusNumber)
-
-            makePlaylistNode( u"Movies", playlist,
-                              playlist.get( u"Movies", "False"),
-                              playlistNode, root, cactusBool)
-
-            makePlaylistNode( u"Podcasts", playlist,
-                              playlist.get( u"Podcasts", "False"),
-                              playlistNode, root, cactusBool)
-
-            makePlaylistNode( u"iTunesU", playlist,
-                              playlist.get( u"iTunesU", "False"),
-                              playlistNode, root, cactusBool)
-
-            makePlaylistNode( u"Audiobooks", playlist,
-                              playlist.get( u"Audiobooks", "False"),
-                              playlistNode, root, cactusBool)
-
-            makePlaylistNode( u"Smart Info", playlist,
-                              playlist.get( u"Smart Info", ""),
-                              playlistNode, root, cactusData)
-
-            makePlaylistNode( u"Smart Criteria", playlist,
-                              playlist.get( u"Smart Criteria", ""),
-                              playlistNode, root, cactusData)
-
-            makePlaylistNode( u"Visible", playlist,
-                              playlist.get( u"Visible", "False"),
-                              playlistNode, root, cactusBool)
-
-            makePlaylistNode( u"All Items", playlist,
-                              playlist.get( u"All Items", "False"),
-                              playlistNode, root, cactusBool)
-
-            makePlaylistNode( u"Folder", playlist,
-                              playlist.get( u"Folder", "False"),
-                              playlistNode, root, cactusBool)
-
-            plnode = makePlaylistNode( u"Playlist Items", playlist,
-                                       "",
-                                       playlistNode, root, cactusDictionary)
-
-            i += 7
-            j = 0
-
-            if not u"Playlist Items" in playlist:
-                continue
-
-            for item in playlist[ u"Playlist Items" ]:
-                id_ = item[u"Track ID"]
-                attrs = {
-                    u"Track ID": id_
-                }
-
-                name = id_track_dict.get(makeunicode(id_), "###Noname###")
-
-                node = OutlineNode( name, attrs, plnode, typeOutline, root)
-                plnode.addChild_( node )
-
-                i += 1
-                j += 1
-                if i % 1000 == 0:
-                    sys.stdout.write('.')
-                    sys.stdout.flush()
-                    if i % 100000 == 0:
-                        sys.stdout.write('\n')
-                        sys.stdout.flush()
-            print()
-            print( "%s has %i Playlist Items." % (repr(playlistName), j) )
-        print()
-        print( "A total of %i Playlist Items." % i )
-
-
-    def dispatchLevel( nsdict, parent, root, progressCount ):
-        # array or dict
-        i = 0
-        selfTypeName = "None"
-        if hasattr(nsdict, "objectForKey_"):
-            selfTypeName = "dictionary"
-        elif hasattr(nsdict, "objectAtIndex_"):
-            selfTypeName = "list"
-
-        selfType = [ ('cactusNodeType', selfTypeName) ]
-
-        parent.setValue_( selfType )
-
-        id_track_dict = {}
-        for key in nsdict:
-            i += 1
-
-            typeAttribute = ""
-            value = ""
-
-            if selfTypeName == "list":
-                itemName = str(i)
-                nsvalue = nsdict.objectAtIndex_( i-1 )
-            else:
-                itemName = makeunicode(key)
-                nsvalue = nsdict.objectForKey_(key)
-
-            valueType = type(nsvalue)
-
-            node = OutlineNode(itemName, "", parent, typeOutline, root)
-
-            if itemName == u"Tracks":
-                id_track_dict = getTracks( nsvalue, node )
-            elif itemName == u"Playlists":
-                getPlaylists( nsvalue, node, id_track_dict )
-            else:
-                # dict
-                if hasattr(nsvalue, "objectForKey_"):
-                    progressCount = dispatchLevel(nsvalue, node, root, progressCount)
-
-                # list
-                elif hasattr(nsvalue, "objectAtIndex_"):
-                    progressCount = dispatchLevel(nsvalue, node, root, progressCount)
-
-                else:
-                    value, valueType = getPLISTValue( nsvalue )
-                    node.setValue_( valueType )
-            node.setComment_( value )
-            parent.addChild_(node)
-            progressCount += 1
-            if kwlog:
-                if progressCount % 1000 == 0:
-                    sys.stdout.write('.')
-                    sys.stdout.flush()
-                    if progressCount % 100000 == 0:
-                        sys.stdout.write('\n')
-                        sys.stdout.flush()
-        return progressCount
+    &lt;&lt; dispatchLevel &gt;&gt;
 
     dispatchLevel(nsdict, root, root, progressCount)
     return root, CactusIMLType
+
 
 </t>
 <t tx="karstenw.20160619131110.8">###
@@ -3729,11 +3480,10 @@ def getOutlineNodes(node):
 
     defaults = NSUserDefaults.standardUserDefaults()
     merge = defaults.objectForKey_( u'optMergeComment')
-
-
+    
     rootOPML = etree.Element("opml")
     rootOPML.attrib["version"] = "2.0"
-
+    
     now = str(datetime.datetime.now())
     now = now[:19]
     now = now.replace(" ", "_")
@@ -8266,6 +8016,7 @@ typeOutline = CactusOutlineTypes.typeOutline
 
 import objc
 # super = objc.super
+from objc._pythonify import OC_PythonFloat, OC_PythonLong
 objc.options.deprecation_warnings=1
 
 
@@ -8466,6 +8217,7 @@ class NodeValue(object):
     """NodeValue is a helper with the value column which in some cases has
     a dual existence as a string or as a table.
     """
+
     @others
 </t>
 <t tx="karstenw.20160619131304.20">def setValue_(self, value):
@@ -8604,11 +8356,11 @@ def addChild_(self, child):
     return None
 
 </t>
-<t tx="karstenw.20160619131304.3">
-def __init__(self, value):
+<t tx="karstenw.20160619131304.3">def __init__(self, value):
     if type(value) != list:
-        if type(value) in (pstr, punicode, NSString, bool, int,
-                           NSMutableString, objc.pyobjc_unicode):
+        if type(value) in (pstr, punicode, NSString, bool, int, long,
+                           NSMutableString, objc.pyobjc_unicode,
+                           OC_PythonFloat, OC_PythonLong):
             value = self.listFromDisplayValue_( value )
         elif isinstance(value, dict):
             value = self.listFromDictionary_( value )
@@ -10843,6 +10595,7 @@ re_bogusCharacters = CactusXMLProperties.re_bogusCharacters
 import feedparser
 
 import objc
+from objc._pythonify import OC_PythonFloat, OC_PythonLong
 objc.options.deprecation_warnings=1
 
 import Foundation
@@ -11247,11 +11000,15 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 </t>
 <t tx="karstenw.20220912113721.4">def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
     try:
-        if type( s ) in (int, float):
+        if type(s) in (OC_PythonLong,):
+            s = long( s )
+        if type(s) in (OC_PythonFloat,):
+            s = float( s )
+        if type( s ) in (int, long, float):
             s = str( s )
-        if s in (None, False, True):
+        elif s in (None, False, True):
             s = str( s )
-        if type(s) not in (punicode, objc.pyobjc_unicode):
+        elif type(s) not in (punicode, objc.pyobjc_unicode):
             s = str(s, srcencoding)
     except TypeError as err:
         # pdb.set_trace()
@@ -11528,6 +11285,285 @@ else:
     s = r.content
     headers = r.headers
     r.close()
+
+</t>
+<t tx="karstenw.20231202211856.1">def getTracks( nsdict, parent ):
+    i = 0
+    id_trackname = {}
+    
+    # pdb.set_trace()
+    
+    pydict = {}
+    i = 0
+    for key in nsdict:
+        
+        tracknsdict = nsdict.objectForKey_( key )
+        key = str( key )
+        pydict[key] = {}
+        trackAttributes = []
+        for fieldname in tracknsdict:
+            val = tracknsdict.objectForKey_( fieldname )
+            fieldname = str( fieldname )
+            if fieldname in ( "File Creator", "File Type"):
+                val = num2ostype( long(val) )
+            elif fieldname in ( "Total Time", ):
+                # formatted duration hack
+                secondsTotal = long(val) / 1000.0
+                minutes = secondsTotal // 60
+                seconds = round(secondsTotal % 60, 1)
+                seconds = "0%.1f" % (seconds,)
+                val = "%i:%s" % (minutes, seconds[-4:])
+            else:
+                val = str( val )
+            
+            # OPML (and therefore XML) attribute name cant have ' ' space characters
+            if ' ' in fieldname:
+                fieldname = fieldname.replace(" ", "_" )
+            pydict[key][fieldname] = val
+            trackAttributes.append( (fieldname, val) )
+
+        trackID = pydict[key].get( "Track_ID", "-1" )
+        trackName = pydict[key].get( "Name", "***NO NAME***" )
+        if trackID != "-1":
+            id_trackname[ trackID ] = trackName
+        else:
+            print("ERROR TRACK:")
+            pp( pydict[key] )
+        
+        trackNode = OutlineNode("", "", parent, typeOutline, root)
+        trackNode.setName_( trackName )
+        
+        # pdb.set_trace()
+        
+        trackNode.setValue_( trackAttributes )
+        trackNode.setMaxLineHeight()
+        parent.addChild_( trackNode )
+
+        i += 1
+        if i % 1000 == 0:
+            sys.stdout.write('.')
+            sys.stdout.flush()
+            if i % 100000 == 0:
+                sys.stdout.write('\n')
+                sys.stdout.flush()
+
+
+    print()
+    print( "%i Tracks." % i )
+    return id_trackname
+
+</t>
+<t tx="karstenw.20231202211923.1">def makePlaylistNode( name, curPlaylist, value, parent, root, type_):
+    if name in curPlaylist:
+
+        if type_ == cactusData:
+            value = makeunicode( binascii.hexlify(value.bytes()) )
+        elif type_ == cactusBool:
+            value = repr(bool(value))
+        elif type_ == cactusNumber:
+            value = makeunicode(value.descriptionWithLocale_( None ))
+        # elif type_ == cactusDictionary:
+
+        node = OutlineNode( name,
+                            type_,
+                            parent,
+                            typeOutline,
+                            root)
+        if value != "":
+            node.setComment_( makeunicode(value) )
+        parent.addChild_( node )
+        return node
+</t>
+<t tx="karstenw.20231202211924.1">def getPlaylists( nsdict, parent, id_track_dict ):
+
+    defaults = NSUserDefaults.standardUserDefaults()
+    optIMLImportSystemLibraries = defaults.objectForKey_( u'optIMLImportSystemLibraries')
+    systemLibraries = (
+        u"Library",
+        u"Music",
+        u"Movies",
+        u"Podcasts",
+        u"iTunes U",
+        u"Books")
+
+    root = parent.rootNode
+    # add the standard playlist attributes
+    i = 0
+    
+    pdb.set_trace()
+    
+    for playlist in nsdict:
+
+        #
+        # check for keys not listed here
+        #
+
+        playlistName = playlist.get( u"Name", "")
+
+        playlistNode = OutlineNode( playlistName, "", parent, typeOutline, root)
+        parent.addChild_( playlistNode )
+
+        # drop out if AllItems pref is false
+        if playlistName in systemLibraries:
+            if not optIMLImportSystemLibraries:
+                continue
+        # name, curPlaylist, value, parent, root, type_
+        makePlaylistNode( u"Name", playlist,
+                          playlistName,
+                          playlistNode, root, cactusString)
+
+        makePlaylistNode( u"Master", playlist,
+                          playlist.get( u"Master", "False"),
+                          playlistNode, root, cactusBool)
+
+        makePlaylistNode( u"Playlist ID", playlist,
+                          playlist.get( u"Playlist ID", "0"),
+                          playlistNode, root, cactusNumber)
+
+        makePlaylistNode( u"Playlist Persistent ID", playlist,
+                          playlist.get( u"Playlist Persistent ID", ""),
+                          playlistNode, root, cactusString)
+
+        makePlaylistNode( u"Parent Persistent ID", playlist,
+                          playlist.get( u"Playlist Persistent ID", ""),
+                          playlistNode, root, cactusString)
+
+        makePlaylistNode( u"Distinguished Kind", playlist,
+                          playlist.get( u"Distinguished Kind", 0),
+                          playlistNode, root, cactusNumber)
+
+        makePlaylistNode( u"Movies", playlist,
+                          playlist.get( u"Movies", "False"),
+                          playlistNode, root, cactusBool)
+
+        makePlaylistNode( u"Podcasts", playlist,
+                          playlist.get( u"Podcasts", "False"),
+                          playlistNode, root, cactusBool)
+
+        makePlaylistNode( u"iTunesU", playlist,
+                          playlist.get( u"iTunesU", "False"),
+                          playlistNode, root, cactusBool)
+
+        makePlaylistNode( u"Audiobooks", playlist,
+                          playlist.get( u"Audiobooks", "False"),
+                          playlistNode, root, cactusBool)
+
+        makePlaylistNode( u"Smart Info", playlist,
+                          playlist.get( u"Smart Info", ""),
+                          playlistNode, root, cactusData)
+
+        makePlaylistNode( u"Smart Criteria", playlist,
+                          playlist.get( u"Smart Criteria", ""),
+                          playlistNode, root, cactusData)
+
+        makePlaylistNode( u"Visible", playlist,
+                          playlist.get( u"Visible", "False"),
+                          playlistNode, root, cactusBool)
+
+        makePlaylistNode( u"All Items", playlist,
+                          playlist.get( u"All Items", "False"),
+                          playlistNode, root, cactusBool)
+
+        makePlaylistNode( u"Folder", playlist,
+                          playlist.get( u"Folder", "False"),
+                          playlistNode, root, cactusBool)
+
+        plnode = makePlaylistNode( u"Playlist Items", playlist,
+                                   "",
+                                   playlistNode, root, cactusDictionary)
+
+        i += 7
+        j = 0
+
+        if not u"Playlist Items" in playlist:
+            continue
+
+        for item in playlist[ u"Playlist Items" ]:
+            id_ = item[u"Track ID"]
+            attrs = {
+                u"Track ID": id_
+            }
+
+            name = id_track_dict.get( str(id_), "###Noname###")
+
+            node = OutlineNode( name, attrs, plnode, typeOutline, root)
+            plnode.addChild_( node )
+
+            i += 1
+            j += 1
+            if i % 1000 == 0:
+                sys.stdout.write('.')
+                sys.stdout.flush()
+                if i % 100000 == 0:
+                    sys.stdout.write('\n')
+                    sys.stdout.flush()
+        print()
+        print( "%s has %i Playlist Items." % (repr(playlistName), j) )
+    print()
+    print( "A total of %i Playlist Items." % i )
+</t>
+<t tx="karstenw.20231202211924.2">def dispatchLevel( nscontainer, parent, root, progressCount ):
+    # array or dict
+    i = 0
+    selfTypeName = "None"
+    if hasattr(nscontainer, "objectForKey_"):
+        selfTypeName = "dictionary"
+    elif hasattr(nscontainer, "objectAtIndex_"):
+        selfTypeName = "list"
+
+    selfType = [ ('cactusNodeType', selfTypeName) ]
+
+    parent.setValue_( selfType )
+
+    id_track_dict = {}
+    for key in nscontainer:
+        i += 1
+
+        typeAttribute = ""
+        value = ""
+
+        if selfTypeName == "list":
+            itemName = str(i)
+            nsvalue = nscontainer.objectAtIndex_( i-1 )
+        else:
+            itemName = makeunicode(key)
+            nsvalue = nscontainer.objectForKey_(key)
+
+        valueType = type(nsvalue)
+        # name, obj, parent, typ, rootNode
+        node = OutlineNode(itemName, "", parent, typeOutline, root)
+
+        if itemName == u"Tracks":
+            id_track_dict = getTracks( nsvalue, node )
+
+        elif itemName == u"Playlists":
+            getPlaylists( nsvalue, node, id_track_dict )
+
+        else:
+            # dict
+            if hasattr(nsvalue, "objectForKey_"):
+                progressCount = dispatchLevel(nsvalue, node, root, progressCount)
+
+            # list
+            elif hasattr(nsvalue, "objectAtIndex_"):
+                progressCount = dispatchLevel(nsvalue, node, root, progressCount)
+
+            else:
+                # value, valueType = getPLISTValue( nsvalue )
+                value, valueTypeName = getPLISTValue( nsvalue )
+                node.setValue_( valueTypeName )
+
+        node.setComment_( value )
+        parent.addChild_(node)
+        progressCount += 1
+        if kwlog:
+            if progressCount % 1000 == 0:
+                sys.stdout.write('.')
+                sys.stdout.flush()
+                if progressCount % 100000 == 0:
+                    sys.stdout.write('\n')
+                    sys.stdout.flush()
+    return progressCount
 
 </t>
 </tnodes>

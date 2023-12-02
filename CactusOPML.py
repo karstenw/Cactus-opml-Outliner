@@ -30,13 +30,14 @@ import pdb
 import lxml
 import lxml.etree
 lxmletree = lxml.etree
-
-import xml.etree.cElementTree
-etree = xml.etree.cElementTree
+CommentNode = lxml.etree.Comment
 
 import lxml.html
 #import lxml.html.builder
-CommentNode = lxml.etree.Comment
+
+
+import xml.etree.ElementTree
+etree = xml.etree.ElementTree
 
 
 import PyRSS2Gen
@@ -46,6 +47,10 @@ OPMLParseErrorException = CactusExceptions.OPMLParseErrorException
 XMLParseErrorException = CactusExceptions.XMLParseErrorException
 HTMLParseErrorException = CactusExceptions.HTMLParseErrorException
 PLISTParseErrorException = CactusExceptions.PLISTParseErrorException
+
+import CactusTools
+makeunicode = CactusTools.makeunicode
+
 
 import Foundation
 NSURL = Foundation.NSURL
@@ -254,10 +259,22 @@ def getXMLNodes( node ):
     """
     result = []
     for n in list(node):
-
+        print("node:", n)
+        
+        #nt = type(n)
+        #if nt 
         name = n.tag
         if not name:
             name = u""
+            
+        if type(name) not in (float, int, str, bytes):
+            try:
+                name = name()
+            except Exception as err:
+                pdb.set_trace()
+                print( err )
+                print()
+                print( type(name), name )
         name = makeunicode(name)
 
         text = n.text
@@ -807,11 +824,10 @@ def generateOPML( rootNode, indent=2, expansion={} ):
 
     defaults = NSUserDefaults.standardUserDefaults()
     merge = defaults.objectForKey_( u'optMergeComment')
-
-
+    
     rootOPML = etree.Element("opml")
     rootOPML.attrib["version"] = "2.0"
-
+    
     now = str(datetime.datetime.now())
     now = now[:19]
     now = now.replace(" ", "_")

@@ -60,6 +60,7 @@ re_bogusCharacters = CactusXMLProperties.re_bogusCharacters
 import feedparser
 
 import objc
+from objc._pythonify import OC_PythonFloat, OC_PythonLong
 objc.options.deprecation_warnings=1
 
 import Foundation
@@ -96,11 +97,15 @@ except NameError:
 
 def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
     try:
-        if type( s ) in (int, float):
+        if type(s) in (OC_PythonLong,):
+            s = long( s )
+        if type(s) in (OC_PythonFloat,):
+            s = float( s )
+        if type( s ) in (int, long, float):
             s = str( s )
-        if s in (None, False, True):
+        elif s in (None, False, True):
             s = str( s )
-        if type(s) not in (punicode, objc.pyobjc_unicode):
+        elif type(s) not in (punicode, objc.pyobjc_unicode):
             s = str(s, srcencoding)
     except TypeError as err:
         # pdb.set_trace()

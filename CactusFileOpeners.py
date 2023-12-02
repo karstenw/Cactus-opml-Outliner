@@ -544,9 +544,9 @@ cactusData = [ ('cactusNodeType', "data") ]
 def openIML_( nsdict ):
     if kwlog:
         s = repr(nsdict)
-        if len(s) > 90:
-            s = s[:91]
-        print( "openPLIST_( %s )" % s )
+        if len(s) > 255:
+            s = s[:255]
+        print( "openIML_( %s )" % s )
 
     """This builds the node tree and returns the root node."""
 
@@ -561,49 +561,55 @@ def openIML_( nsdict ):
     def getTracks( nsdict, parent ):
         i = 0
         id_trackname = {}
-        for trackItem in nsdict:
-            trackData = nsdict.objectForKey_( trackItem )
-            trackNode = OutlineNode("", "", parent, typeOutline, root)
+        
+        # pdb.set_trace()
+        
+        pydict = {}
+        i = 0
+        for key in nsdict:
+            
+            tracknsdict = nsdict.objectForKey_( key )
+            key = str( key )
+            pydict[key] = {}
             trackAttributes = []
-            trackName = ""
-            trackAlbum = ""
-            trackArtist = ""
-            trackID = ""
-            for trackAttribute in trackData:
-                nsvalue = trackData.objectForKey_( trackAttribute )
-                value, valueType = getPLISTValue( nsvalue)
-
-                if trackAttribute == u"Track ID":
-                    trackID = value
-
-                elif trackAttribute == u"Name":
-                    trackName = value
-
-                elif trackAttribute == u"Album":
-                    trackAlbum = value
-
-                elif trackAttribute in (u"File Creator", u"File Type"):
-                    value = num2ostype( long(value) )
-
-                elif trackAttribute == u"Total Time":
+            for fieldname in tracknsdict:
+                val = tracknsdict.objectForKey_( fieldname )
+                fieldname = str( fieldname )
+                if fieldname in ( "File Creator", "File Type"):
+                    val = num2ostype( long(val) )
+                elif fieldname in ( "Total Time", ):
                     # formatted duration hack
-                    secondsTotal = int(value) / 1000.0
+                    secondsTotal = long(val) / 1000.0
                     minutes = secondsTotal // 60
                     seconds = round(secondsTotal % 60, 1)
-                    seconds = "0%.1f" % seconds
-                    value = u"%i:%s" % (minutes, seconds[-4:])
+                    seconds = "0%.1f" % (seconds,)
+                    val = "%i:%s" % (minutes, seconds[-4:])
+                else:
+                    val = str( val )
+                
+                # OPML (and therefore XML) attribute name cant have ' ' space characters
+                if ' ' in fieldname:
+                    fieldname = fieldname.replace(" ", "_" )
+                pydict[key][fieldname] = val
+                trackAttributes.append( (fieldname, val) )
 
-                trackAttributes.append( (trackAttribute, value) )
+            trackID = pydict[key].get( "Track_ID", "-1" )
+            trackName = pydict[key].get( "Name", "***NO NAME***" )
+            if trackID != "-1":
                 id_trackname[ trackID ] = trackName
-
-            # itemName = u"%s - %s" % (trackAlbum, trackName)
-            itemName = trackName
-
-            # print( repr(itemName) )
-            trackNode.setName_( itemName )
+            else:
+                print("ERROR TRACK:")
+                pp( pydict[key] )
+            
+            trackNode = OutlineNode("", "", parent, typeOutline, root)
+            trackNode.setName_( trackName )
+            
+            # pdb.set_trace()
+            
             trackNode.setValue_( trackAttributes )
             trackNode.setMaxLineHeight()
             parent.addChild_( trackNode )
+
             i += 1
             if i % 1000 == 0:
                 sys.stdout.write('.')
@@ -611,9 +617,12 @@ def openIML_( nsdict ):
                 if i % 100000 == 0:
                     sys.stdout.write('\n')
                     sys.stdout.flush()
+
+
         print()
         print( "%i Tracks." % i )
         return id_trackname
+
 
     def makePlaylistNode( name, curPlaylist, value, parent, root, type_):
         if name in curPlaylist:
@@ -651,6 +660,9 @@ def openIML_( nsdict ):
         root = parent.rootNode
         # add the standard playlist attributes
         i = 0
+        
+        pdb.set_trace()
+        
         for playlist in nsdict:
 
             #
@@ -666,7 +678,7 @@ def openIML_( nsdict ):
             if playlistName in systemLibraries:
                 if not optIMLImportSystemLibraries:
                     continue
-
+            # name, curPlaylist, value, parent, root, type_
             makePlaylistNode( u"Name", playlist,
                               playlistName,
                               playlistNode, root, cactusString)
@@ -743,7 +755,7 @@ def openIML_( nsdict ):
                     u"Track ID": id_
                 }
 
-                name = id_track_dict.get(makeunicode(id_), "###Noname###")
+                name = id_track_dict.get( str(id_), "###Noname###")
 
                 node = OutlineNode( name, attrs, plnode, typeOutline, root)
                 plnode.addChild_( node )
@@ -761,14 +773,13 @@ def openIML_( nsdict ):
         print()
         print( "A total of %i Playlist Items." % i )
 
-
-    def dispatchLevel( nsdict, parent, root, progressCount ):
+    def dispatchLevel( nscontainer, parent, root, progressCount ):
         # array or dict
         i = 0
         selfTypeName = "None"
-        if hasattr(nsdict, "objectForKey_"):
+        if hasattr(nscontainer, "objectForKey_"):
             selfTypeName = "dictionary"
-        elif hasattr(nsdict, "objectAtIndex_"):
+        elif hasattr(nscontainer, "objectAtIndex_"):
             selfTypeName = "list"
 
         selfType = [ ('cactusNodeType', selfTypeName) ]
@@ -776,7 +787,7 @@ def openIML_( nsdict ):
         parent.setValue_( selfType )
 
         id_track_dict = {}
-        for key in nsdict:
+        for key in nscontainer:
             i += 1
 
             typeAttribute = ""
@@ -784,19 +795,21 @@ def openIML_( nsdict ):
 
             if selfTypeName == "list":
                 itemName = str(i)
-                nsvalue = nsdict.objectAtIndex_( i-1 )
+                nsvalue = nscontainer.objectAtIndex_( i-1 )
             else:
                 itemName = makeunicode(key)
-                nsvalue = nsdict.objectForKey_(key)
+                nsvalue = nscontainer.objectForKey_(key)
 
             valueType = type(nsvalue)
-
+            # name, obj, parent, typ, rootNode
             node = OutlineNode(itemName, "", parent, typeOutline, root)
 
             if itemName == u"Tracks":
                 id_track_dict = getTracks( nsvalue, node )
+
             elif itemName == u"Playlists":
                 getPlaylists( nsvalue, node, id_track_dict )
+
             else:
                 # dict
                 if hasattr(nsvalue, "objectForKey_"):
@@ -807,8 +820,10 @@ def openIML_( nsdict ):
                     progressCount = dispatchLevel(nsvalue, node, root, progressCount)
 
                 else:
-                    value, valueType = getPLISTValue( nsvalue )
-                    node.setValue_( valueType )
+                    # value, valueType = getPLISTValue( nsvalue )
+                    value, valueTypeName = getPLISTValue( nsvalue )
+                    node.setValue_( valueTypeName )
+
             node.setComment_( value )
             parent.addChild_(node)
             progressCount += 1
@@ -821,8 +836,10 @@ def openIML_( nsdict ):
                         sys.stdout.flush()
         return progressCount
 
+
     dispatchLevel(nsdict, root, root, progressCount)
     return root, CactusIMLType
+
 
 ###
 #
