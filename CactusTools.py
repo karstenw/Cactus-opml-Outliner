@@ -34,9 +34,9 @@ import pdb
 import re
 import requests
 
-import urllib
-#import urllib.parse
-#import urllib.request
+# import urllib
+import urllib.parse
+import urllib.request
 urlopen = urllib.request.urlopen
 url2pathname = urllib.request.url2pathname
 urlparse = urllib.parse.urlparse
@@ -97,15 +97,23 @@ except NameError:
 
 def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
     try:
+        if s in (None, False, True, []):
+            s = str( s )
+
+        if type( s ) in (list, tuple):
+            result = []
+            for item in s:
+                result.append( makeunicode( item ))
+            # pdb.set_trace()
+            return result
         if type(s) in (OC_PythonLong,):
-            s = long( s )
+            s = str( long( s ) )
         if type(s) in (OC_PythonFloat,):
-            s = float( s )
+            s = str( float( s ) )
         if type( s ) in (int, long, float):
             s = str( s )
-        elif s in (None, False, True):
-            s = str( s )
         elif type(s) not in (punicode, objc.pyobjc_unicode):
+            # print("makeunicode surprise type:", type(s))
             s = str(s, srcencoding)
     except TypeError as err:
         # pdb.set_trace()
@@ -669,7 +677,7 @@ def mergeURLs( base, rel ):
         path = os.path.join(path, rel)
     
 
-    target = urlparse.ParseResult(
+    target = urllib.parse.ParseResult(
         scheme = pbase.scheme,
         netloc = pbase.netloc,
         path = path,
@@ -677,7 +685,7 @@ def mergeURLs( base, rel ):
         query = prel.query if (prel.query) else pbase.query,
         fragment = prel.fragment if (prel.fragment) else pbase.fragment)
 
-    target = urlparse.urlunparse( target )
+    target = urllib.parse.urlunparse( target )
     try:
         s = s % ( base, rel, target)
         print( s ) #.encode("utf-8")
