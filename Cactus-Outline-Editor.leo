@@ -81,7 +81,7 @@
 <v t="karstenw.20160619131056.11"><vh>class DoneMessageException</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131102.1" a="E"><vh>@clean CactusFileOpeners.py</vh>
+<v t="karstenw.20160619131102.1"><vh>@clean CactusFileOpeners.py</vh>
 <v t="karstenw.20160619131110.1"><vh>Imports and Globals</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131110.2"><vh>openOPML_</vh></v>
@@ -89,7 +89,7 @@
 <v t="karstenw.20160619131110.4"><vh>openXML_</vh></v>
 <v t="karstenw.20160619131110.5"><vh>openRSS_</vh></v>
 <v t="karstenw.20160619131110.6"><vh>getPLISTValue</vh></v>
-<v t="karstenw.20160619131110.7" a="E"><vh>openIML_</vh>
+<v t="karstenw.20160619131110.7"><vh>openIML_</vh>
 <v t="karstenw.20231202211856.1"><vh>&lt;&lt; getTracks &gt;&gt;</vh></v>
 <v t="karstenw.20231202211923.1"><vh>&lt;&lt; makePlaylistNode &gt;&gt;</vh></v>
 <v t="karstenw.20231202211924.1"><vh>&lt;&lt; getPlaylists &gt;&gt;</vh></v>
@@ -97,7 +97,7 @@
 </v>
 <v t="karstenw.20160619131110.8"><vh>openPLIST_</vh></v>
 </v>
-<v t="karstenw.20160619131220.1"><vh>@clean CactusOPML.py</vh>
+<v t="karstenw.20160619131220.1" a="E"><vh>@clean CactusOPML.py</vh>
 <v t="karstenw.20160619131225.1"><vh>CactusOPML declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131225.2"><vh>getOutlineNodes</vh></v>
@@ -267,7 +267,7 @@
 <v t="karstenw.20160619131254.38"><vh>applySettings_</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131258.1" a="E"><vh>@clean CactusOutlineNode.py</vh>
+<v t="karstenw.20160619131258.1"><vh>@clean CactusOutlineNode.py</vh>
 <v t="karstenw.20160619131304.1"><vh>CactusOutlineNode declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131304.2" a="E"><vh>class NodeValue</vh>
@@ -345,16 +345,17 @@
 </v>
 <v t="karstenw.20221106095308.1"></v>
 </v>
-<v t="karstenw.20220912113705.1" a="E"><vh>@clean CactusTools.py</vh>
+<v t="karstenw.20220912113705.1"><vh>@clean CactusTools.py</vh>
 <v t="karstenw.20220912113721.1"><vh>Declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
-<v t="karstenw.20220912113812.1"><vh>+ TOOLS</vh></v>
+<v t="karstenw.20220912113812.1" a="E"><vh>+ TOOLS</vh>
 <v t="karstenw.20220912113721.4"><vh>makeunicode</vh></v>
 <v t="karstenw.20220912113721.2"><vh>num2ostype</vh></v>
 <v t="karstenw.20220912113721.3"><vh>ostype2num</vh></v>
+</v>
 <v t="karstenw.20220912113721.5"><vh>detectFileTypeAtURL</vh></v>
 <v t="karstenw.20220912113721.6"><vh>detectFileTypeLocalFile</vh></v>
-<v t="karstenw.20220912113721.7" a="E"><vh>readURL</vh>
+<v t="karstenw.20220912113721.7"><vh>readURL</vh>
 <v t="karstenw.20230612134848.1"><vh>&lt;&lt; get filetype &gt;&gt;</vh></v>
 <v t="karstenw.20230612145731.1"><vh>&lt;&lt; cache file &gt;&gt;</vh></v>
 <v t="karstenw.20230612145838.1"><vh>&lt;&lt; load file from url or cache &gt;&gt;</vh></v>
@@ -2075,7 +2076,7 @@ OutlineNode = CactusOutlineNode.OutlineNode
         print( "openRSS_( %s )" % repr(s) )
 
     # d = feedparser.parse( url, agent=CactusVersion.user_agent )
-    pdb.set_trace()
+    # pdb.set_trace()
     d = feedparser.api.parse( url ) #, response_headers=None, resolve_relative_uris=None, sanitize_html=None,optimistic_encoding_detection=None)
 
     # make basic nodes
@@ -2111,6 +2112,8 @@ OutlineNode = CactusOutlineNode.OutlineNode
                 continue
 
             v = d.feed[k]
+            if kwlog:
+                print( "RSS feedkey:", k, v )
             if v in (True, False):
                 v = str(v)
             if v == None:
@@ -3329,7 +3332,7 @@ def generateRSS( rootNode, indent=2 ):
 
     head_d[ 'items' ] = body_l
     
-    pdb.set_trace()
+    # pdb.set_trace()
     
     rss = PyRSS2Gen.RSS2( **head_d )
     f = io.BytesIO()
@@ -4681,7 +4684,7 @@ def open_node( url, nodeType=None, open_=False, supressCache=False ):
     purl = urlparse( url )
     if m:
         path = purl.path #urllib.quote( purl.path )
-        url = urlparse.ParseResult( scheme = purl.scheme,
+        url = urllib.parse.ParseResult( scheme = purl.scheme,
                                     netloc = purl.netloc,
                                     path = path,
                                     params = purl.params,
@@ -10569,9 +10572,9 @@ import pdb
 import re
 import requests
 
-import urllib
-#import urllib.parse
-#import urllib.request
+# import urllib
+import urllib.parse
+import urllib.request
 urlopen = urllib.request.urlopen
 url2pathname = urllib.request.url2pathname
 urlparse = urllib.parse.urlparse
@@ -10960,7 +10963,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
         path = os.path.join(path, rel)
     
 
-    target = urlparse.ParseResult(
+    target = urllib.parse.ParseResult(
         scheme = pbase.scheme,
         netloc = pbase.netloc,
         path = path,
@@ -10968,7 +10971,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
         query = prel.query if (prel.query) else pbase.query,
         fragment = prel.fragment if (prel.fragment) else pbase.fragment)
 
-    target = urlparse.urlunparse( target )
+    target = urllib.parse.urlunparse( target )
     try:
         s = s % ( base, rel, target)
         print( s ) #.encode("utf-8")
@@ -11000,15 +11003,23 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 </t>
 <t tx="karstenw.20220912113721.4">def makeunicode(s, srcencoding="utf-8", normalizer="NFC"):
     try:
+        if s in (None, False, True, []):
+            s = str( s )
+
+        if type( s ) in (list, tuple):
+            result = []
+            for item in s:
+                result.append( makeunicode( item ))
+            # pdb.set_trace()
+            return result
         if type(s) in (OC_PythonLong,):
-            s = long( s )
+            s = str( long( s ) )
         if type(s) in (OC_PythonFloat,):
-            s = float( s )
+            s = str( float( s ) )
         if type( s ) in (int, long, float):
             s = str( s )
-        elif s in (None, False, True):
-            s = str( s )
         elif type(s) not in (punicode, objc.pyobjc_unicode):
+            # print("makeunicode surprise type:", type(s))
             s = str(s, srcencoding)
     except TypeError as err:
         # pdb.set_trace()
@@ -11390,7 +11401,7 @@ else:
     # add the standard playlist attributes
     i = 0
     
-    pdb.set_trace()
+    # pdb.set_trace()
     
     for playlist in nsdict:
 
