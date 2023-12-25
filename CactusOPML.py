@@ -724,7 +724,7 @@ def generateRSS( rootNode, indent=2 ):
 
     head_d[ 'items' ] = body_l
     
-    pdb.set_trace()
+    # pdb.set_trace()
     
     rss = PyRSS2Gen.RSS2( **head_d )
     f = io.BytesIO()
