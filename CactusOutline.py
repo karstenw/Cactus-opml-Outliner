@@ -349,7 +349,7 @@ def open_node( url, nodeType=None, open_=False, supressCache=False ):
     purl = urlparse( url )
     if m:
         path = purl.path #urllib.quote( purl.path )
-        url = urlparse.ParseResult( scheme = purl.scheme,
+        url = urllib.parse.ParseResult( scheme = purl.scheme,
                                     netloc = purl.netloc,
                                     path = path,
                                     params = purl.params,
