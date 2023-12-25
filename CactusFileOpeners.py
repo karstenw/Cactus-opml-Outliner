@@ -337,7 +337,7 @@ def openRSS_(url):
         print( "openRSS_( %s )" % repr(s) )
 
     # d = feedparser.parse( url, agent=CactusVersion.user_agent )
-    pdb.set_trace()
+    # pdb.set_trace()
     d = feedparser.api.parse( url ) #, response_headers=None, resolve_relative_uris=None, sanitize_html=None,optimistic_encoding_detection=None)
 
     # make basic nodes
@@ -373,6 +373,8 @@ def openRSS_(url):
                 continue
 
             v = d.feed[k]
+            if kwlog:
+                print( "RSS feedkey:", k, v )
             if v in (True, False):
                 v = str(v)
             if v == None:
@@ -661,7 +663,7 @@ def openIML_( nsdict ):
         # add the standard playlist attributes
         i = 0
         
-        pdb.set_trace()
+        # pdb.set_trace()
         
         for playlist in nsdict:
 
