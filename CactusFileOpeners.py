@@ -228,19 +228,19 @@ def openXML_( rootXML):
         print( "openXML_( %s )" % s )
 
     """This builds the node tree and returns the root node."""
-
+    
     #
     #  Split this up.
     def getChildrenforNode(node, children, root):
-        for c in children:
-            name = c.get('name', '')
-            tail = c.get('tail', '')
-            childs = c.get('children', [])
-            content = c.get('attributes', "")
-            txt = c.get('text', "")
+        for child in children:
+            name = child.get('name', '')
+            tail = child.get('tail', '')
+            childs = child.get('children', [])
+            content = child.get('attributes', "")
+            txt = child.get('text', "")
 
             if content == "":
-                content = {u'': ""}
+                content = {'': ""}
 
             if content or tail:
                 l = []
@@ -250,7 +250,7 @@ def openXML_( rootXML):
                     l.append( (u'tail', tail) )
                 content = l
             else:
-                content = u""
+                content = ""
 
             try:
                 newnode = OutlineNode(name, content, node, typeOutline, root)
@@ -276,12 +276,15 @@ def openXML_( rootXML):
             newnode.release()
             del newnode
 
+
     ######
 
     # root node for document; never visible,
     # always outline type (even for tables)
     root = OutlineNode("__ROOT__", "", None, typeOutline, None)
-
+    
+    pdb.set_trace()
+    
     rootXML = rootXML
     name = rootXML['name']
     children = rootXML['children']
@@ -309,8 +312,7 @@ def openXML_( rootXML):
         print( "childen has no length attribute!" )
         print( type(children) )
         print( err )
-
-
+    
     if n > 0:
         try:
             getChildrenforNode( node, children, root )

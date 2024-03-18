@@ -81,12 +81,14 @@
 <v t="karstenw.20160619131056.11"><vh>class DoneMessageException</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131102.1"><vh>@clean CactusFileOpeners.py</vh>
+<v t="karstenw.20160619131102.1" a="E"><vh>@clean CactusFileOpeners.py</vh>
 <v t="karstenw.20160619131110.1"><vh>Imports and Globals</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131110.2"><vh>openOPML_</vh></v>
 <v t="karstenw.20160619131110.3"><vh>openOPML_withURLTag_</vh></v>
-<v t="karstenw.20160619131110.4"><vh>openXML_</vh></v>
+<v t="karstenw.20160619131110.4" a="E"><vh>openXML_</vh>
+<v t="karstenw.20240302141656.1"><vh>&lt;&lt; getChildrenforNode &gt;&gt;</vh></v>
+</v>
 <v t="karstenw.20160619131110.5"><vh>openRSS_</vh></v>
 <v t="karstenw.20160619131110.6"><vh>getPLISTValue</vh></v>
 <v t="karstenw.20160619131110.7"><vh>openIML_</vh>
@@ -97,7 +99,7 @@
 </v>
 <v t="karstenw.20160619131110.8"><vh>openPLIST_</vh></v>
 </v>
-<v t="karstenw.20160619131220.1" a="E"><vh>@clean CactusOPML.py</vh>
+<v t="karstenw.20160619131220.1"><vh>@clean CactusOPML.py</vh>
 <v t="karstenw.20160619131225.1"><vh>CactusOPML declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131225.2"><vh>getOutlineNodes</vh></v>
@@ -224,7 +226,7 @@
 <v t="karstenw.20160619131238.91"><vh>folder2Outline</vh></v>
 <v t="karstenw.20160619131238.92"><vh>makeFilePropertiesNode</vh></v>
 </v>
-<v t="karstenw.20160619131247.1"><vh>@clean CactusOutlineDoc.py</vh>
+<v t="karstenw.20160619131247.1" a="E"><vh>@clean CactusOutlineDoc.py</vh>
 <v t="karstenw.20160619131254.1"><vh>CactusOutlineDoc declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131254.2"><vh>boilerplateOPML</vh></v>
@@ -333,7 +335,7 @@
 <v t="karstenw.20160619131524.3"><vh>awakeFromNib</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131515.1"><vh>@clean CactusTableDocument.py</vh>
+<v t="karstenw.20160619131515.1" a="E"><vh>@clean CactusTableDocument.py</vh>
 <v t="karstenw.20160619131529.1"><vh>CactusTableDocument declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 </v>
@@ -386,7 +388,7 @@
 <v t="karstenw.20160619131622.5"><vh>ascachepath</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131616.1"><vh>@clean CactusVersion.py</vh>
+<v t="karstenw.20160619131616.1" a="E"><vh>@clean CactusVersion.py</vh>
 <v t="karstenw.20160619131625.1"><vh>CactusVersion declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 </v>
@@ -1966,60 +1968,17 @@ OutlineNode = CactusOutlineNode.OutlineNode
         print( "openXML_( %s )" % s )
 
     """This builds the node tree and returns the root node."""
-
-    #
-    #  Split this up.
-    def getChildrenforNode(node, children, root):
-        for c in children:
-            name = c.get('name', '')
-            tail = c.get('tail', '')
-            childs = c.get('children', [])
-            content = c.get('attributes', "")
-            txt = c.get('text', "")
-
-            if content == "":
-                content = {u'': ""}
-
-            if content or tail:
-                l = []
-                for k, v in content.items():
-                    l.append( (k, v) )
-                if tail != u"":
-                    l.append( (u'tail', tail) )
-                content = l
-            else:
-                content = u""
-
-            try:
-                newnode = OutlineNode(name, content, node, typeOutline, root)
-            except Exception as err:
-                print( "\n\nERROR in openXML_()" )
-                tb = makeunicode(traceback.format_exc())
-                print( err )
-                print()
-                print( tb )
-                print()
-
-            if txt != "":
-                newnode.setComment_( txt )
-
-            node.addChild_( newnode )
-            try:
-                n = len(childs)
-            except Exception as err:
-                print()
-                print( err )
-            if len(childs) &gt; 0:
-                getChildrenforNode(newnode, childs, root)
-            newnode.release()
-            del newnode
+    
+    &lt;&lt; getChildrenforNode &gt;&gt;
 
     ######
 
     # root node for document; never visible,
     # always outline type (even for tables)
     root = OutlineNode("__ROOT__", "", None, typeOutline, None)
-
+    
+    pdb.set_trace()
+    
     rootXML = rootXML
     name = rootXML['name']
     children = rootXML['children']
@@ -2047,8 +2006,7 @@ OutlineNode = CactusOutlineNode.OutlineNode
         print( "childen has no length attribute!" )
         print( type(children) )
         print( err )
-
-
+    
     if n &gt; 0:
         try:
             getChildrenforNode( node, children, root )
@@ -11575,6 +11533,54 @@ else:
                     sys.stdout.write('\n')
                     sys.stdout.flush()
     return progressCount
+
+</t>
+<t tx="karstenw.20240302141656.1">#
+#  Split this up.
+def getChildrenforNode(node, children, root):
+    for child in children:
+        name = child.get('name', '')
+        tail = child.get('tail', '')
+        childs = child.get('children', [])
+        content = child.get('attributes', "")
+        txt = child.get('text', "")
+
+        if content == "":
+            content = {'': ""}
+
+        if content or tail:
+            l = []
+            for k, v in content.items():
+                l.append( (k, v) )
+            if tail != u"":
+                l.append( (u'tail', tail) )
+            content = l
+        else:
+            content = ""
+
+        try:
+            newnode = OutlineNode(name, content, node, typeOutline, root)
+        except Exception as err:
+            print( "\n\nERROR in openXML_()" )
+            tb = makeunicode(traceback.format_exc())
+            print( err )
+            print()
+            print( tb )
+            print()
+
+        if txt != "":
+            newnode.setComment_( txt )
+
+        node.addChild_( newnode )
+        try:
+            n = len(childs)
+        except Exception as err:
+            print()
+            print( err )
+        if len(childs) &gt; 0:
+            getChildrenforNode(newnode, childs, root)
+        newnode.release()
+        del newnode
 
 </t>
 </tnodes>
