@@ -473,7 +473,8 @@ def getDownloadFolder( nsurl ):
     # parent folder must exists; minimal plausibility
     parent, foldername = os.path.split( cacheFolder )
     if not os.path.exists( parent ):
-        print( "CactusTools.getDownloadFolder(%s) -> False" % NSURL2str(nsurl) )
+        if 0: # kwdbg
+            print( "CactusTools.getDownloadFolder(%s) -> False" % NSURL2str(nsurl) )
         return False, False
 
     if not os.path.exists(cacheFolder):
@@ -498,7 +499,7 @@ def getDownloadFolder( nsurl ):
     if localpath:
         localrelfolder, localname = os.path.split( localpath )
         localpath = os.path.join( cacheFolder, localpath )
-        if kwdbg:
+        if 0: # kwdbg
             print( "CactusTools.getDownloadFolder(%s) -> %s" % (NSURL2str(nsurl), repr(localpath) ) )
         return localpath, localname
     return False, False
@@ -547,7 +548,8 @@ def setFileModificationDate( filepath, modfdt ):
     l['NSFileModificationDate'] = date
     setFileProperties( filepath, l)
     folder, filename = os.path.split( filepath )
-    print( "Setting file(%s) modification date to %s" % (filename, repr(modfdt)) )
+    if 0:
+        print( "Setting file(%s) modification date to %s" % (filename, repr(modfdt)) )
 
 
 def cache_url( nsurl, fileextension ):
@@ -556,7 +558,9 @@ def cache_url( nsurl, fileextension ):
 
     if not nsurl:
         return False
-
+    
+    # pdb.set_trace()
+    
     returnURL = nsurl
     url = NSURL2str( nsurl )
 
@@ -604,7 +608,7 @@ def cache_url( nsurl, fileextension ):
                 if not localpath.lower().endswith( "." + fileextension.lower() ):
                     localpath = localpath + '.' + fileextension
 
-            print( "LOAD: %s..." % url )
+            print( "    LOAD: %s..." % url, end=" " )
             headers = {}
             r = requests.get( url )
             s = r.content
@@ -619,17 +623,25 @@ def cache_url( nsurl, fileextension ):
             try:
                 dts = time.mktime( dts )
             except Exception as err:
-                print("dts = time.mktime( dts ) FAILED.\n'%s'\n%s" % (str(dts),err))
+                if 0:
+                    print("dts = time.mktime( dts ) FAILED.\n'%s'\n%s" % (str(dts),err))
+                pass
                 
             if dts:
                 dt = datetime.datetime.fromtimestamp( dts )
 
             try:
+                # pdb.set_trace()
                 finder = asc.app(u'Finder.app', terms=Finder10)
-                hfspath = mactypes.File( localpath ).hfspath
-                finder.files[hfspath].comment.set( url )
+                cmt = makeunicode( url )
+                fndralias = mactypes.File( localpath ) #.alias
+                finder.files[fndralias].comment.set( url )
+                
             except Exception as v:
                 print( "SET COMMENT FAILED ON '%s'" % localpath )
+                # pdb.set_trace()
+                print( "ERROR:", v )
+            
             # get file date
             lmodfdate = os.stat( localpath ).st_mtime
             lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
@@ -641,8 +653,8 @@ def cache_url( nsurl, fileextension ):
                 # do not cache if modification date cannot be determined
                 print( "NOCACHE: Could not get remote file(%s) modification date." % url )
                 print( err )
-            print( "LOAD: %s...done" % url )
-            print( "LOCAL:", repr(localpath) )
+            print( "...DONE" )
+            print( "    LOCAL:", repr(localpath) )
 
         returnURL = NSURL.fileURLWithPath_( makeunicode(localpath) )
 
@@ -705,6 +717,6 @@ def getURLExtension( url ):
     path = purl.path
     folder, filename = os.path.split( path )
     basename, ext = os.path.splitext( filename )
-    if kwdbg:
+    if 0: # kwdbg:
         print( "CactusTools.getURLExtension(%s) -> '%s' . '%s'" % ( url, basename, ext ) )
     return (basename, ext)

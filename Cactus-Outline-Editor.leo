@@ -81,7 +81,7 @@
 <v t="karstenw.20160619131056.11"><vh>class DoneMessageException</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131102.1" a="E"><vh>@clean CactusFileOpeners.py</vh>
+<v t="karstenw.20160619131102.1"><vh>@clean CactusFileOpeners.py</vh>
 <v t="karstenw.20160619131110.1"><vh>Imports and Globals</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131110.2"><vh>openOPML_</vh></v>
@@ -99,7 +99,7 @@
 </v>
 <v t="karstenw.20160619131110.8"><vh>openPLIST_</vh></v>
 </v>
-<v t="karstenw.20160619131220.1"><vh>@clean CactusOPML.py</vh>
+<v t="karstenw.20160619131220.1" a="E"><vh>@clean CactusOPML.py</vh>
 <v t="karstenw.20160619131225.1"><vh>CactusOPML declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131225.2"><vh>getOutlineNodes</vh></v>
@@ -3732,7 +3732,10 @@ def getXMLNodes( node ):
         name = n.tag
         if not name:
             name = u""
-            
+        
+        if type(name) in (lxml.etree._Comment,):
+            name = name.text
+        
         if type(name) not in (float, int, str, bytes):
             try:
                 name = name()
@@ -3741,7 +3744,11 @@ def getXMLNodes( node ):
                 print( err )
                 print()
                 print( type(name), name )
-        name = makeunicode(name)
+        try:
+            name = makeunicode(name)
+        except Exception as err:
+            pdb.set_trace()
+            print(err)
 
         text = n.text
         if not text:

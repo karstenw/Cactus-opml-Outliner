@@ -324,15 +324,15 @@ def open_photo( url, open_=True ):
 
 # TODO: change parameter to node!
 def open_node( url, nodeType=None, open_=False, supressCache=False ):
-    if kwdbg:
-        print( "CactusOutline.open_node()", repr(url) )
+    if 1: # kwdbg:
+        print( "\nCactusOutline.open_node()", url )
         # pp( (url,nodeType,open_, supressCache) )
 
     if chr(10) in url or chr(13) in url:
         return
-
+    
     # pdb.set_trace()
-
+    
     # manual quoting
     analyzeEncoding = re.compile(r'[\x00-\x22\x24\x80-\xFF]')
     while True:
@@ -345,7 +345,7 @@ def open_node( url, nodeType=None, open_=False, supressCache=False ):
         else:
             break
     url = url.replace(" ", '%20')
-
+    
     purl = urlparse( url )
     if m:
         path = purl.path #urllib.quote( purl.path )
@@ -356,9 +356,10 @@ def open_node( url, nodeType=None, open_=False, supressCache=False ):
                                     query = purl.query,
                                     fragment = purl.fragment)
         # for c in url
-        print( m )
-        print( repr(url) )
-        print()
+        if 0:
+            print( m )
+            print( url )
+            print()
 
     nsurl = NSURL.URLWithString_( url )
 
@@ -1490,6 +1491,7 @@ class KWOutlineView(NSOutlineView):
                             # in an outline
                             else:
                                 #
+                                # pdb.set_trace()
                                 v = item.getValueDict()
                                 theType = v.get("type", "")
                                 url = ""
@@ -1499,15 +1501,23 @@ class KWOutlineView(NSOutlineView):
                                     url = v.get("link", "")
                                 elif 'URL' in v:
                                     url = v.get("URL", "")
-
+                                
                                 url = cleanupURL( url )
-
-                                if theType == "blogpost":
+                                
+                                # early exit if no known type in value; try name
+                                if url in ("",):
+                                    if theType in ("",):
+                                        url = item.name
+                                        if url:
+                                            open_node( url )
+                                
+                                elif theType == "blogpost":
                                     if not url:
                                         url = v.get("urlTemplate", "")
                                         url = cleanupURL( url )
                                     if url:
                                         open_node( url )
+                                
                                 elif theType in ( 'redirect', ):
                                     open_node( url, "HTML" )
 
@@ -2595,14 +2605,15 @@ def unmangleFSSPecURL( url ):
             pre = urllib.quote( pre, "/:?" )
             post = urllib.quote( post, "/:?" )
             url = "%s%%23%s" % (pre, post)
-    if kwdbg:
+    if 0: # kwdbg:
         print( "CactusOutline.unmangleFSSpecURL(%s) -> %s" % (repr(orgurl), repr(url) ) )
     return url
 
 
 def cleanupURL( url ):
-    if kwdbg:
-        print( "CactusOutline.cleanupURL()" )
+    if 0: #kwdbg:
+        print( "CactusOutline.cleanupURL( '%s')" % (url,) )
+        # pdb.set_trace()
     # lots of URLs contain spaces, &, '
     return unmangleFSSPecURL( url )
 

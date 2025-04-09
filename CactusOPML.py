@@ -266,7 +266,10 @@ def getXMLNodes( node ):
         name = n.tag
         if not name:
             name = u""
-            
+        
+        if type(name) in (lxml.etree._Comment,):
+            name = name.text
+        
         if type(name) not in (float, int, str, bytes):
             try:
                 name = name()
@@ -275,7 +278,11 @@ def getXMLNodes( node ):
                 print( err )
                 print()
                 print( type(name), name )
-        name = makeunicode(name)
+        try:
+            name = makeunicode(name)
+        except Exception as err:
+            pdb.set_trace()
+            print(err)
 
         text = n.text
         if not text:
