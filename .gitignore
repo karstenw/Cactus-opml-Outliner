@@ -13,3 +13,5 @@ English.lproj/*.py
 English.lproj/Cactus-Dumm*
 README.html
 release.sh
+
+*.toml
