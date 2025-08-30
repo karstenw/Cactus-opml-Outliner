@@ -119,7 +119,22 @@ setup(
             'packages' : ['lxml'],
             'frameworks' : ['/usr/local/lib/libxml2.2.dylib',
                             '/usr/local/lib/libxslt.1.dylib',
-                            '/usr/local/lib/libexslt.0.dylib']
-          }
+                            '/usr/local/lib/libexslt.0.dylib'],
+            "excludes": [
+                'TkInter', 'tkinter', 'tk', 'wx', 'sphinx',
+                'pyqt5', 'qt5', 'PyQt5', 
+                
+                'setuptools', 'numba', 
+                
+                # 'certifi', 'pytz', 
+                'notebook', 'nbformat', 'jedi', 'testpath', 'docutils',
+                'ipykernel', 'parso', 'Cython', 'sphinx_rtd_theme', 'alabaster',
+                'tornado', 'IPython', 'numpydoc', 'nbconvert', 
+                'scipy', 'matplotlib', 
+                'pandas', 'cv2', 'dlib', 'skimage', 'sklearn', 'mpl_toolkits',
+                
+                'PIL', #'cryptography'
+            ],
+        }
     }
 )
