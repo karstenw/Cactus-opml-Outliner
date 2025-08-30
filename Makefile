@@ -6,13 +6,13 @@ debug:
 	# build the app in debug mode
 	rm -Rf ./build/*
 	rm -Rf ./dist/*
-	python setup.py py2app -A
+	python3 setup.py py2app -A
 
 release:
 	# build the app in release mode
 	rm -Rf ./build/*
 	rm -Rf ./dist/*
-	python setup.py py2app
+	python3 setup.py py2app
 	mkdir -p Cactus_v000
 	
 	# copy the additional licenses
