@@ -21,11 +21,11 @@
 </v>
 </v>
 </v>
-<v t="karstenw.20160619193218.1"><vh>Controllers</vh>
-<v t="karstenw.20160619131140.1"><vh>@clean CactusOpenURLController.py</vh>
+<v t="karstenw.20160619193218.1" a="E"><vh>Controllers</vh>
+<v t="karstenw.20160619131140.1" a="E"><vh>@clean CactusOpenURLController.py</vh>
 <v t="karstenw.20160619131158.1"><vh>CactusOpenURLController declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
-<v t="karstenw.20160619131158.2"><vh>class OpenURLWindowController</vh>
+<v t="karstenw.20160619131158.2" a="E"><vh>class OpenURLWindowController</vh>
 <v t="karstenw.20160619131158.3"><vh>__new__</vh></v>
 <v t="karstenw.20160619131158.4"><vh>init</vh></v>
 <v t="karstenw.20160619131158.5"><vh>clearMenu_</vh></v>
@@ -81,7 +81,7 @@
 <v t="karstenw.20160619131056.11"><vh>class DoneMessageException</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131102.1"><vh>@clean CactusFileOpeners.py</vh>
+<v t="karstenw.20160619131102.1" a="E"><vh>@clean CactusFileOpeners.py</vh>
 <v t="karstenw.20160619131110.1"><vh>Imports and Globals</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131110.2"><vh>openOPML_</vh></v>
@@ -91,7 +91,7 @@
 </v>
 <v t="karstenw.20160619131110.5"><vh>openRSS_</vh></v>
 <v t="karstenw.20160619131110.6"><vh>getPLISTValue</vh></v>
-<v t="karstenw.20160619131110.7"><vh>openIML_</vh>
+<v t="karstenw.20160619131110.7" a="E"><vh>openIML_</vh>
 <v t="karstenw.20231202211856.1"><vh>&lt;&lt; getTracks &gt;&gt;</vh></v>
 <v t="karstenw.20231202211923.1"><vh>&lt;&lt; makePlaylistNode &gt;&gt;</vh></v>
 <v t="karstenw.20231202211924.1"><vh>&lt;&lt; getPlaylists &gt;&gt;</vh></v>
@@ -127,14 +127,14 @@
 <v t="karstenw.20160619131225.24"><vh>photo_from_string</vh></v>
 <v t="karstenw.20160619131225.25"><vh>getPhotoXML</vh></v>
 </v>
-<v t="karstenw.20160619131230.1"><vh>@clean CactusOutline.py</vh>
+<v t="karstenw.20160619131230.1" a="E"><vh>@clean CactusOutline.py</vh>
 <v t="karstenw.20160619131238.1"><vh>CactusOutline declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20221106100010.1"><vh>Py2 / Py3 declarations</vh></v>
 <v t="karstenw.20160619131238.2"><vh>open_photo</vh></v>
 <v t="karstenw.20160619131238.3"><vh>open_node</vh></v>
 <v t="karstenw.20160619131238.4"><vh>handleEventReturnKeyOV_Event_</vh></v>
-<v t="karstenw.20160619131238.5"><vh>class KWOutlineView</vh>
+<v t="karstenw.20160619131238.5" a="E"><vh>class KWOutlineView</vh>
 <v t="karstenw.20160619131238.6"><vh>awakeFromNib</vh></v>
 <v t="karstenw.20160619131238.7"><vh>menuForEvent_</vh></v>
 <v t="karstenw.20160619131238.8"><vh>validateMenuItem_</vh></v>
@@ -188,7 +188,7 @@
 <v t="karstenw.20160619131238.54"><vh>stdAction</vh></v>
 <v t="karstenw.20160619131238.55"><vh>visitOutline</vh></v>
 <v t="karstenw.20160619131238.56"><vh>dfid</vh></v>
-<v t="karstenw.20160619131238.57"><vh>class OutlineViewDelegateDatasource</vh>
+<v t="karstenw.20160619131238.57" a="E"><vh>class OutlineViewDelegateDatasource</vh>
 <v t="karstenw.20160619131238.58"><vh>init</vh></v>
 <v t="karstenw.20160619131238.59"><vh>dealloc</vh></v>
 <v t="karstenw.20160619131238.60"><vh>initWithObject_type_parentNode_</vh></v>
@@ -230,7 +230,7 @@
 <v t="karstenw.20160619131254.1"><vh>CactusOutlineDoc declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131254.2"><vh>boilerplateOPML</vh></v>
-<v t="karstenw.20160619131254.3"><vh>class CactusOutlineDocument</vh>
+<v t="karstenw.20160619131254.3" a="E"><vh>class CactusOutlineDocument</vh>
 <v t="karstenw.20160619131254.4"><vh>__repr__</vh></v>
 <v t="karstenw.20160619131254.5"><vh>init</vh></v>
 <v t="karstenw.20160619131254.6"><vh>dealloc</vh></v>
@@ -335,7 +335,7 @@
 <v t="karstenw.20160619131524.3"><vh>awakeFromNib</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131515.1" a="E"><vh>@clean CactusTableDocument.py</vh>
+<v t="karstenw.20160619131515.1"><vh>@clean CactusTableDocument.py</vh>
 <v t="karstenw.20160619131529.1"><vh>CactusTableDocument declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 </v>
@@ -347,7 +347,7 @@
 </v>
 <v t="karstenw.20221106095308.1"></v>
 </v>
-<v t="karstenw.20220912113705.1"><vh>@clean CactusTools.py</vh>
+<v t="karstenw.20220912113705.1" a="E"><vh>@clean CactusTools.py</vh>
 <v t="karstenw.20220912113721.1"><vh>Declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20220912113812.1" a="E"><vh>+ TOOLS</vh>
@@ -357,7 +357,7 @@
 </v>
 <v t="karstenw.20220912113721.5"><vh>detectFileTypeAtURL</vh></v>
 <v t="karstenw.20220912113721.6"><vh>detectFileTypeLocalFile</vh></v>
-<v t="karstenw.20220912113721.7"><vh>readURL</vh>
+<v t="karstenw.20220912113721.7" a="E"><vh>readURL</vh>
 <v t="karstenw.20230612134848.1"><vh>&lt;&lt; get filetype &gt;&gt;</vh></v>
 <v t="karstenw.20230612145731.1"><vh>&lt;&lt; cache file &gt;&gt;</vh></v>
 <v t="karstenw.20230612145838.1"><vh>&lt;&lt; load file from url or cache &gt;&gt;</vh></v>
@@ -392,7 +392,7 @@
 <v t="karstenw.20160619131625.1"><vh>CactusVersion declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 </v>
-<v t="karstenw.20160619131631.1"><vh>@clean CactusXMLProperties.py</vh>
+<v t="karstenw.20160619131631.1" a="E"><vh>@clean CactusXMLProperties.py</vh>
 <v t="karstenw.20160619131636.1"><vh>CactusXMLProperties declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 </v>
@@ -463,7 +463,7 @@
 <v t="karstenw.20160619132023.48"><vh>publish_extensions</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619130952.1"><vh>@clean CactusAppDelegateClass.py</vh>
+<v t="karstenw.20160619130952.1" a="E"><vh>@clean CactusAppDelegateClass.py</vh>
 <v t="karstenw.20160619130959.1"><vh>CactusAppDelegateClass declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619130959.2"><vh>class Document</vh>
@@ -913,26 +913,27 @@ def openDownloadsPage_(self, sender):
 
 def newOutlineFromURL_Type_(self, url, type_):
     if kwlog:
-        print( "CactusAppDelegate.newOutlineFromURL_Type_(\n\t%s\m\t%s )"
+        print( "CactusAppDelegate.newOutlineFromURL_Type_(\n\t%s\n\t%s )"
                 % (repr(url), repr(type_)) )
     
     # pdb.set_trace()
     
     if not isinstance(url, NSURL):
         url = NSURL.URLWithString_( url )
-
+    
     # just check for local files
     docc = NSDocumentController.sharedDocumentController()
     localurl = url.isFileURL()
     loaded = True
-
+    
     if localurl:
         loaded = docc.documentForURL_( url )
-
+    
     if not loaded or not localurl:
         doc, err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
                                                                    type_,
                                                                    None)
+
 
 </t>
 <t tx="karstenw.20160619130959.29"># UNUSED but defined in class
@@ -1977,7 +1978,7 @@ OutlineNode = CactusOutlineNode.OutlineNode
     # always outline type (even for tables)
     root = OutlineNode("__ROOT__", "", None, typeOutline, None)
     
-    pdb.set_trace()
+    #pdb.set_trace()
     
     rootXML = rootXML
     name = rootXML['name']
@@ -3740,14 +3741,16 @@ def getXMLNodes( node ):
             try:
                 name = name()
             except Exception as err:
-                pdb.set_trace()
+                if kwdbg:
+                    pdb.set_trace()
                 print( err )
                 print()
                 print( type(name), name )
         try:
             name = makeunicode(name)
         except Exception as err:
-            pdb.set_trace()
+            if kwdbg:
+                pdb.set_trace()
             print(err)
 
         text = n.text
@@ -4624,17 +4627,17 @@ def paste_(self, sender):
 </t>
 <t tx="karstenw.20160619131238.3"># TODO: change parameter to node!
 def open_node( url, nodeType=None, open_=False, supressCache=False ):
-    if kwdbg:
-        print( "CactusOutline.open_node()", repr(url) )
+    if 1: # kwdbg:
+        print( "\nCactusOutline.open_node()", url )
         # pp( (url,nodeType,open_, supressCache) )
 
     if chr(10) in url or chr(13) in url:
         return
-
+    
     # pdb.set_trace()
-
+    
     # manual quoting
-    analyzeEncoding = re.compile(r'[\x00-\x22\x24\x80-\xFF]')
+    analyzeEncoding = re.compile( r'[\x00-\x22\x24\x80-\xFF]' )
     while True:
         m = analyzeEncoding.search( url )
         if m:
@@ -4645,7 +4648,7 @@ def open_node( url, nodeType=None, open_=False, supressCache=False ):
         else:
             break
     url = url.replace(" ", '%20')
-
+    
     purl = urlparse( url )
     if m:
         path = purl.path #urllib.quote( purl.path )
@@ -4656,9 +4659,10 @@ def open_node( url, nodeType=None, open_=False, supressCache=False ):
                                     query = purl.query,
                                     fragment = purl.fragment)
         # for c in url
-        print( m )
-        print( repr(url) )
-        print()
+        if 0:
+            print( m )
+            print( url )
+            print()
 
     nsurl = NSURL.URLWithString_( url )
 
@@ -5233,6 +5237,7 @@ def keyDown_(self, theEvent):
                         # in an outline
                         else:
                             #
+                            # pdb.set_trace()
                             v = item.getValueDict()
                             theType = v.get("type", "")
                             url = ""
@@ -5242,15 +5247,23 @@ def keyDown_(self, theEvent):
                                 url = v.get("link", "")
                             elif 'URL' in v:
                                 url = v.get("URL", "")
-
+                            
                             url = cleanupURL( url )
-
-                            if theType == "blogpost":
+                            
+                            # early exit if no known type in value; try name
+                            if url in ("",):
+                                if theType in ("",):
+                                    url = item.name
+                                    if url:
+                                        open_node( url )
+                            
+                            elif theType == "blogpost":
                                 if not url:
                                     url = v.get("urlTemplate", "")
                                     url = cleanupURL( url )
                                 if url:
                                     open_node( url )
+                            
                             elif theType in ( 'redirect', ):
                                 open_node( url, "HTML" )
 
@@ -6466,7 +6479,7 @@ def deleteNodes(ov, nodes=(), selection=False):
             pre = urllib.quote( pre, "/:?" )
             post = urllib.quote( post, "/:?" )
             url = "%s%%23%s" % (pre, post)
-    if kwdbg:
+    if 0: # kwdbg:
         print( "CactusOutline.unmangleFSSpecURL(%s) -&gt; %s" % (repr(orgurl), repr(url) ) )
     return url
 
@@ -6478,8 +6491,9 @@ def deleteNodes(ov, nodes=(), selection=False):
 
 </t>
 <t tx="karstenw.20160619131238.90">def cleanupURL( url ):
-    if kwdbg:
-        print( "CactusOutline.cleanupURL()" )
+    if 0: #kwdbg:
+        print( "CactusOutline.cleanupURL( '%s')" % (url,) )
+        # pdb.set_trace()
     # lots of URLs contain spaces, &amp;, '
     return unmangleFSSPecURL( url )
 
@@ -9240,7 +9254,7 @@ document_creator = "Created by %s %s" % (appname, version)
 
 cachefolder = os.path.expanduser("~/Library/Application Support/%s" % appname )
 
-developmentversion = True
+developmentversion = False
 
 </t>
 <t tx="karstenw.20160619131631.1">@language python
@@ -9263,375 +9277,370 @@ import re
 # 09 - tab
 # 0a - newline
 # 0d - carriage return
-re_bogusCharacters = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f]')
+re_bogusCharacters = re.compile( r'[\x00-\x08\x0b\x0c\x0e-\x1f]' )
 </t>
 <t tx="karstenw.20160619131957.1">@language python
 @tabwidth -4
 @others
 </t>
 <t tx="karstenw.20160619132007.1">version = 1.1
-path = 'Finder10.sdef'
+path = '/System/Library/CoreServices/Finder.app/Contents/Resources/Finder.sdef'
 
 classes = [
-    ('application', 'capp'),
-    ('item', 'cobj'),
-    ('container', 'ctnr'),
-    ('computer_object', 'ccmp'),
-    ('disk', 'cdis'),
-    ('folder', 'cfol'),
-    ('desktop_object', 'cdsk'),
-    ('trash_object', 'ctrs'),
-    ('file', 'file'),
-    ('alias_file', 'alia'),
-    ('application_file', 'appf'),
-    ('document_file', 'docf'),
-    ('internet_location_file', 'inlf'),
-    ('clipping', 'clpf'),
-    ('package', 'pack'),
-    ('window', 'cwin'),
-    ('Finder_window', 'brow'),
-    ('desktop_window', 'dktw'),
-    ('information_window', 'iwnd'),
-    ('preferences_window', 'pwnd'),
-    ('clipping_window', 'lwnd'),
-    ('process', 'prcs'),
-    ('application_process', 'pcap'),
-    ('desk_accessory_process', 'pcda'),
-    ('preferences', 'cprf'),
-    ('label', 'clbl'),
-    ('icon_family', 'ifam'),
-    ('icon_view_options', 'icop'),
-    ('column_view_options', 'cvop'),
-    ('list_view_options', 'lvop'),
-    ('column', 'lvcl'),
-    ('alias_list', 'alst')]
+    ('application', b'capp'),
+    ('item', b'cobj'),
+    ('container', b'ctnr'),
+    ('computer_object', b'ccmp'),
+    ('disk', b'cdis'),
+    ('folder', b'cfol'),
+    ('desktop_object', b'cdsk'),
+    ('trash_object', b'ctrs'),
+    ('file', b'file'),
+    ('alias_file', b'alia'),
+    ('application_file', b'appf'),
+    ('document_file', b'docf'),
+    ('internet_location_file', b'inlf'),
+    ('clipping', b'clpf'),
+    ('package', b'pack'),
+    ('window', b'cwin'),
+    ('Finder_window', b'brow'),
+    ('desktop_window', b'dktw'),
+    ('information_window', b'iwnd'),
+    ('preferences_window', b'pwnd'),
+    ('clipping_window', b'lwnd'),
+    ('process', b'prcs'),
+    ('application_process', b'pcap'),
+    ('desk_accessory_process', b'pcda'),
+    ('preferences', b'cprf'),
+    ('label', b'clbl'),
+    ('icon_family', b'ifam'),
+    ('icon_view_options', b'icop'),
+    ('column_view_options', b'cvop'),
+    ('list_view_options', b'lvop'),
+    ('column', b'lvcl'),
+    ('alias_list', b'alst'),
+]
+
 
 enums = [
-    ('read_only', 'read'),
-    ('read_write', 'rdwr'),
-    ('write_only', 'writ'),
-    ('none', 'none'),
-    ('Mac_OS_format', 'dfhf'),
-    ('Mac_OS_Extended_format', 'dfh+'),
-    ('UFS_format', 'dfuf'),
-    ('NFS_format', 'dfnf'),
-    ('audio_format', 'dfau'),
-    ('ProDOS_format', 'dfpr'),
-    ('MSDOS_format', 'dfms'),
-    ('NTFS_format', 'dfnt'),
-    ('ISO_9660_format', 'df96'),
-    ('High_Sierra_format', 'dfhs'),
-    ('QuickTake_format', 'dfqt'),
-    ('Apple_Photo_format', 'dfph'),
-    ('AppleShare_format', 'dfas'),
-    ('UDF_format', 'dfud'),
-    ('WebDAV_format', 'dfwd'),
-    ('FTP_format', 'dfft'),
-    ('Packet_written_UDF_format', 'dfpu'),
-    ('Xsan_format', 'dfac'),
-    ('unknown_format', 'df??'),
-    ('General_Information_panel', 'gpnl'),
-    ('Sharing_panel', 'spnl'),
-    ('Memory_panel', 'mpnl'),
-    ('Preview_panel', 'vpnl'),
-    ('Application_panel', 'apnl'),
-    ('Languages_panel', 'pklg'),
-    ('Plugins_panel', 'pkpg'),
-    ('Name_and_Extension_panel', 'npnl'),
-    ('Comments_panel', 'cpnl'),
-    ('Content_Index_panel', 'cinl'),
-    ('Burning_panel', 'bpnl'),
-    ('More_Info_panel', 'minl'),
-    ('Simple_Header_panel', 'shnl'),
-    ('General_Preferences_panel', 'pgnp'),
-    ('Label_Preferences_panel', 'plbp'),
-    ('Sidebar_Preferences_panel', 'psid'),
-    ('Advanced_Preferences_panel', 'padv'),
-    ('icon_view', 'icnv'),
-    ('list_view', 'lsvw'),
-    ('column_view', 'clvw'),
-    ('group_view', 'grvw'),
-    ('flow_view', 'flvw'),
-    ('not_arranged', 'narr'),
-    ('snap_to_grid', 'grda'),
-    ('arranged_by_name', 'nama'),
-    ('arranged_by_modification_date', 'mdta'),
-    ('arranged_by_creation_date', 'cdta'),
-    ('arranged_by_size', 'siza'),
-    ('arranged_by_kind', 'kina'),
-    ('arranged_by_label', 'laba'),
-    ('right', 'lrgt'),
-    ('bottom', 'lbot'),
-    ('normal', 'snrm'),
-    ('reversed', 'srvs'),
-    ('name_column', 'elsn'),
-    ('modification_date_column', 'elsm'),
-    ('creation_date_column', 'elsc'),
-    ('size_column', 'elss'),
-    ('kind_column', 'elsk'),
-    ('label_column', 'elsl'),
-    ('version_column', 'elsv'),
-    ('comment_column', 'elsC'),
-    ('small_icon', 'smic'),
-    ('large_icon', 'lgic'),
-    ('mini', 'miic'),
-    ('small', 'smic'),
-    ('large', 'lgic'),
-    ('name', 'pnam'),
-    ('modification_date', 'asmo'),
-    ('creation_date', 'ascd'),
-    ('size', 'phys'),
-    ('kind', 'kind'),
-    ('label_index', 'labi'),
-    ('comment', 'comt'),
-    ('version', 'vers')]
+    ('read_only', b'read'),
+    ('read_write', b'rdwr'),
+    ('write_only', b'writ'),
+    ('none', b'none'),
+    ('Mac_OS_format', b'dfhf'),
+    ('Mac_OS_Extended_format', b'dfh+'),
+    ('UFS_format', b'dfuf'),
+    ('NFS_format', b'dfnf'),
+    ('audio_format', b'dfau'),
+    ('ProDOS_format', b'dfpr'),
+    ('MSDOS_format', b'dfms'),
+    ('NTFS_format', b'dfnt'),
+    ('ISO_9660_format', b'df96'),
+    ('High_Sierra_format', b'dfhs'),
+    ('QuickTake_format', b'dfqt'),
+    ('Apple_Photo_format', b'dfph'),
+    ('AppleShare_format', b'dfas'),
+    ('UDF_format', b'dfud'),
+    ('WebDAV_format', b'dfwd'),
+    ('FTP_format', b'dfft'),
+    ('Packet_written_UDF_format', b'dfpu'),
+    ('Xsan_format', b'dfac'),
+    ('APFS_format', b'dfap'),
+    ('ExFAT_format', b'dfxf'),
+    ('SMB_format', b'dfsm'),
+    ('unknown_format', b'df??'),
+    ('General_Information_panel', b'gpnl'),
+    ('Sharing_panel', b'spnl'),
+    ('Memory_panel', b'mpnl'),
+    ('Preview_panel', b'vpnl'),
+    ('Application_panel', b'apnl'),
+    ('Languages_panel', b'pklg'),
+    ('Plugins_panel', b'pkpg'),
+    ('Name_and_Extension_panel', b'npnl'),
+    ('Comments_panel', b'cpnl'),
+    ('Content_Index_panel', b'cinl'),
+    ('Burning_panel', b'bpnl'),
+    ('More_Info_panel', b'minl'),
+    ('Simple_Header_panel', b'shnl'),
+    ('General_Preferences_panel', b'pgnp'),
+    ('Label_Preferences_panel', b'plbp'),
+    ('Sidebar_Preferences_panel', b'psid'),
+    ('Advanced_Preferences_panel', b'padv'),
+    ('icon_view', b'icnv'),
+    ('list_view', b'lsvw'),
+    ('column_view', b'clvw'),
+    ('group_view', b'grvw'),
+    ('flow_view', b'flvw'),
+    ('not_arranged', b'narr'),
+    ('snap_to_grid', b'grda'),
+    ('arranged_by_name', b'nama'),
+    ('arranged_by_modification_date', b'mdta'),
+    ('arranged_by_creation_date', b'cdta'),
+    ('arranged_by_size', b'siza'),
+    ('arranged_by_kind', b'kina'),
+    ('arranged_by_label', b'laba'),
+    ('right', b'lrgt'),
+    ('bottom', b'lbot'),
+    ('normal', b'snrm'),
+    ('reversed', b'srvs'),
+    ('name_column', b'elsn'),
+    ('modification_date_column', b'elsm'),
+    ('creation_date_column', b'elsc'),
+    ('size_column', b'elss'),
+    ('kind_column', b'elsk'),
+    ('label_column', b'elsl'),
+    ('version_column', b'elsv'),
+    ('comment_column', b'elsC'),
+    ('small_icon', b'smic'),
+    ('large_icon', b'lgic'),
+    ('mini', b'miic'),
+    ('small', b'smic'),
+    ('large', b'lgic'),
+    ('name', b'pnam'),
+    ('modification_date', b'asmo'),
+    ('creation_date', b'ascd'),
+    ('size', b'phys'),
+    ('kind', b'kind'),
+    ('label_index', b'labi'),
+    ('comment', b'comt'),
+    ('version', b'vers'),
+]
+
 
 properties = [
-    ('clipboard', 'pcli'),
-    ('name', 'pnam'),
-    ('visible', 'pvis'),
-    ('frontmost', 'pisf'),
-    ('selection', 'sele'),
-    ('insertion_location', 'pins'),
-    ('product_version', 'ver2'),
-    ('version', 'vers'),
-    ('startup_disk', 'sdsk'),
-    ('desktop', 'desk'),
-    ('trash', 'trsh'),
-    ('home', 'home'),
-    ('computer_container', 'pcmp'),
-    ('Finder_preferences', 'pfrp'),
-    ('name', 'pnam'),
-    ('displayed_name', 'dnam'),
-    ('name_extension', 'nmxt'),
-    ('extension_hidden', 'hidx'),
-    ('index', 'pidx'),
-    ('container', 'ctnr'),
-    ('disk', 'cdis'),
-    ('position', 'posn'),
-    ('desktop_position', 'dpos'),
-    ('bounds', 'pbnd'),
-    ('label_index', 'labi'),
-    ('locked', 'aslk'),
-    ('kind', 'kind'),
-    ('description', 'dscr'),
-    ('comment', 'comt'),
-    ('size', 'ptsz'),
-    ('physical_size', 'phys'),
-    ('creation_date', 'ascd'),
-    ('modification_date', 'asmo'),
-    ('icon', 'iimg'),
-    ('URL', 'pURL'),
-    ('owner', 'sown'),
-    ('group', 'sgrp'),
-    ('owner_privileges', 'ownr'),
-    ('group_privileges', 'gppr'),
-    ('everyones_privileges', 'gstp'),
-    ('information_window', 'iwnd'),
-    ('properties', 'pALL'),
-    ('class_', 'pcls'),
-    ('entire_contents', 'ects'),
-    ('expandable', 'pexa'),
-    ('expanded', 'pexp'),
-    ('completely_expanded', 'pexc'),
-    ('container_window', 'cwnd'),
-    ('id', 'ID  '),
-    ('capacity', 'capa'),
-    ('free_space', 'frsp'),
-    ('ejectable', 'isej'),
-    ('local_volume', 'isrv'),
-    ('startup', 'istd'),
-    ('format', 'dfmt'),
-    ('journaling_enabled', 'Jrnl'),
-    ('ignore_privileges', 'igpr'),
-    ('warns_before_emptying', 'warn'),
-    ('file_type', 'asty'),
-    ('creator_type', 'fcrt'),
-    ('stationery', 'pspd'),
-    ('product_version', 'ver2'),
-    ('version', 'vers'),
-    ('original_item', 'orig'),
-    ('id', 'ID  '),
-    ('suggested_size', 'sprt'),
-    ('minimum_size', 'mprt'),
-    ('preferred_size', 'appt'),
-    ('accepts_high_level_events', 'isab'),
-    ('has_scripting_terminology', 'hscr'),
-    ('opens_in_Classic', 'Clsc'),
-    ('location', 'iloc'),
-    ('clipping_window', 'lwnd'),
-    ('id', 'ID  '),
-    ('position', 'posn'),
-    ('bounds', 'pbnd'),
-    ('titled', 'ptit'),
-    ('name', 'pnam'),
-    ('index', 'pidx'),
-    ('closeable', 'hclb'),
-    ('floating', 'isfl'),
-    ('modal', 'pmod'),
-    ('resizable', 'prsz'),
-    ('zoomable', 'iszm'),
-    ('zoomed', 'pzum'),
-    ('visible', 'pvis'),
-    ('collapsed', 'wshd'),
-    ('properties', 'pALL'),
-    ('target', 'fvtg'),
-    ('current_view', 'pvew'),
-    ('icon_view_options', 'icop'),
-    ('list_view_options', 'lvop'),
-    ('column_view_options', 'cvop'),
-    ('toolbar_visible', 'tbvi'),
-    ('statusbar_visible', 'stvi'),
-    ('sidebar_width', 'sbwi'),
-    ('item', 'cobj'),
-    ('current_panel', 'panl'),
-    ('current_panel', 'panl'),
-    ('name', 'pnam'),
-    ('visible', 'pvis'),
-    ('frontmost', 'pisf'),
-    ('file', 'file'),
-    ('file_type', 'asty'),
-    ('creator_type', 'fcrt'),
-    ('accepts_high_level_events', 'isab'),
-    ('accepts_remote_events', 'revt'),
-    ('has_scripting_terminology', 'hscr'),
-    ('total_partition_size', 'appt'),
-    ('partition_space_used', 'pusd'),
-    ('application_file', 'appf'),
-    ('desk_accessory_file', 'dafi'),
-    ('window', 'cwin'),
-    ('icon_view_options', 'icop'),
-    ('list_view_options', 'lvop'),
-    ('column_view_options', 'cvop'),
-    ('folders_spring_open', 'sprg'),
-    ('delay_before_springing', 'dela'),
-    ('desktop_shows_hard_disks', 'pdhd'),
-    ('desktop_shows_external_hard_disks', 'pehd'),
-    ('desktop_shows_removable_media', 'pdrm'),
-    ('desktop_shows_connected_servers', 'pdsv'),
-    ('new_window_target', 'pnwt'),
-    ('folders_open_in_new_windows', 'ponw'),
-    ('folders_open_in_new_tabs', 'pont'),
-    ('new_windows_open_in_column_view', 'pocv'),
-    ('all_name_extensions_showing', 'psnx'),
-    ('name', 'pnam'),
-    ('index', 'pidx'),
-    ('color', 'colr'),
-    ('large_monochrome_icon_and_mask', 'ICN#'),
-    ('large_8_bit_mask', 'l8mk'),
-    ('large_32_bit_icon', 'il32'),
-    ('large_8_bit_icon', 'icl8'),
-    ('large_4_bit_icon', 'icl4'),
-    ('small_monochrome_icon_and_mask', 'ics#'),
-    ('small_8_bit_mask', 'ics8'),
-    ('small_32_bit_icon', 'is32'),
-    ('small_8_bit_icon', 'ics8'),
-    ('small_4_bit_icon', 'ics4'),
-    ('arrangement', 'iarr'),
-    ('icon_size', 'lvis'),
-    ('shows_item_info', 'mnfo'),
-    ('shows_icon_preview', 'prvw'),
-    ('text_size', 'fsiz'),
-    ('label_position', 'lpos'),
-    ('background_picture', 'ibkg'),
-    ('background_color', 'colr'),
-    ('text_size', 'fsiz'),
-    ('shows_icon', 'shic'),
-    ('shows_icon_preview', 'prvw'),
-    ('shows_preview_column', 'shpr'),
-    ('discloses_preview_pane', 'dspr'),
-    ('calculates_folder_sizes', 'sfsz'),
-    ('shows_icon_preview', 'prvw'),
-    ('icon_size', 'lvis'),
-    ('text_size', 'fsiz'),
-    ('sort_column', 'srtc'),
-    ('uses_relative_dates', 'urdt'),
-    ('index', 'pidx'),
-    ('name', 'pnam'),
-    ('sort_direction', 'sord'),
-    ('width', 'clwd'),
-    ('minimum_width', 'clwn'),
-    ('maximum_width', 'clwm'),
-    ('visible', 'pvis')]
+    ('clipboard', b'pcli'),
+    ('name', b'pnam'),
+    ('visible', b'pvis'),
+    ('frontmost', b'pisf'),
+    ('selection', b'sele'),
+    ('insertion_location', b'pins'),
+    ('product_version', b'ver2'),
+    ('version', b'vers'),
+    ('startup_disk', b'sdsk'),
+    ('desktop', b'desk'),
+    ('trash', b'trsh'),
+    ('home', b'home'),
+    ('computer_container', b'pcmp'),
+    ('Finder_preferences', b'pfrp'),
+    ('name', b'pnam'),
+    ('displayed_name', b'dnam'),
+    ('name_extension', b'nmxt'),
+    ('extension_hidden', b'hidx'),
+    ('index', b'pidx'),
+    ('container', b'ctnr'),
+    ('disk', b'cdis'),
+    ('position', b'posn'),
+    ('desktop_position', b'dpos'),
+    ('bounds', b'pbnd'),
+    ('label_index', b'labi'),
+    ('locked', b'aslk'),
+    ('kind', b'kind'),
+    ('description', b'dscr'),
+    ('comment', b'comt'),
+    ('size', b'ptsz'),
+    ('physical_size', b'phys'),
+    ('creation_date', b'ascd'),
+    ('modification_date', b'asmo'),
+    ('icon', b'iimg'),
+    ('URL', b'pURL'),
+    ('owner', b'sown'),
+    ('group', b'sgrp'),
+    ('owner_privileges', b'ownr'),
+    ('group_privileges', b'gppr'),
+    ('everyones_privileges', b'gstp'),
+    ('information_window', b'iwnd'),
+    ('properties', b'pALL'),
+    ('class_', b'pcls'),
+    ('entire_contents', b'ects'),
+    ('expandable', b'pexa'),
+    ('expanded', b'pexp'),
+    ('completely_expanded', b'pexc'),
+    ('container_window', b'cwnd'),
+    ('id', b'ID  '),
+    ('capacity', b'capa'),
+    ('free_space', b'frsp'),
+    ('ejectable', b'isej'),
+    ('local_volume', b'isrv'),
+    ('startup', b'istd'),
+    ('format', b'dfmt'),
+    ('journaling_enabled', b'Jrnl'),
+    ('ignore_privileges', b'igpr'),
+    ('warns_before_emptying', b'warn'),
+    ('file_type', b'asty'),
+    ('creator_type', b'fcrt'),
+    ('stationery', b'pspd'),
+    ('product_version', b'ver2'),
+    ('version', b'vers'),
+    ('original_item', b'orig'),
+    ('id', b'ID  '),
+    ('suggested_size', b'sprt'),
+    ('minimum_size', b'mprt'),
+    ('preferred_size', b'appt'),
+    ('accepts_high_level_events', b'isab'),
+    ('has_scripting_terminology', b'hscr'),
+    ('opens_in_Classic', b'Clsc'),
+    ('location', b'iloc'),
+    ('clipping_window', b'lwnd'),
+    ('id', b'ID  '),
+    ('position', b'posn'),
+    ('bounds', b'pbnd'),
+    ('titled', b'ptit'),
+    ('name', b'pnam'),
+    ('index', b'pidx'),
+    ('closeable', b'hclb'),
+    ('floating', b'isfl'),
+    ('modal', b'pmod'),
+    ('resizable', b'prsz'),
+    ('zoomable', b'iszm'),
+    ('zoomed', b'pzum'),
+    ('visible', b'pvis'),
+    ('collapsed', b'wshd'),
+    ('properties', b'pALL'),
+    ('target', b'fvtg'),
+    ('current_view', b'pvew'),
+    ('icon_view_options', b'icop'),
+    ('list_view_options', b'lvop'),
+    ('column_view_options', b'cvop'),
+    ('toolbar_visible', b'tbvi'),
+    ('statusbar_visible', b'stvi'),
+    ('sidebar_width', b'sbwi'),
+    ('item', b'cobj'),
+    ('current_panel', b'panl'),
+    ('current_panel', b'panl'),
+    ('name', b'pnam'),
+    ('visible', b'pvis'),
+    ('frontmost', b'pisf'),
+    ('file', b'file'),
+    ('file_type', b'asty'),
+    ('creator_type', b'fcrt'),
+    ('accepts_high_level_events', b'isab'),
+    ('accepts_remote_events', b'revt'),
+    ('has_scripting_terminology', b'hscr'),
+    ('total_partition_size', b'appt'),
+    ('partition_space_used', b'pusd'),
+    ('application_file', b'appf'),
+    ('desk_accessory_file', b'dafi'),
+    ('window', b'cwin'),
+    ('icon_view_options', b'icop'),
+    ('list_view_options', b'lvop'),
+    ('column_view_options', b'cvop'),
+    ('folders_spring_open', b'sprg'),
+    ('delay_before_springing', b'dela'),
+    ('desktop_shows_hard_disks', b'pdhd'),
+    ('desktop_shows_external_hard_disks', b'pehd'),
+    ('desktop_shows_removable_media', b'pdrm'),
+    ('desktop_shows_connected_servers', b'pdsv'),
+    ('new_window_target', b'pnwt'),
+    ('folders_open_in_new_windows', b'ponw'),
+    ('folders_open_in_new_tabs', b'pont'),
+    ('new_windows_open_in_column_view', b'pocv'),
+    ('all_name_extensions_showing', b'psnx'),
+    ('name', b'pnam'),
+    ('index', b'pidx'),
+    ('color', b'colr'),
+    ('large_monochrome_icon_and_mask', b'ICN#'),
+    ('large_8_bit_mask', b'l8mk'),
+    ('large_32_bit_icon', b'il32'),
+    ('large_8_bit_icon', b'icl8'),
+    ('large_4_bit_icon', b'icl4'),
+    ('small_monochrome_icon_and_mask', b'ics#'),
+    ('small_8_bit_mask', b'ics8'),
+    ('small_32_bit_icon', b'is32'),
+    ('small_8_bit_icon', b'ics8'),
+    ('small_4_bit_icon', b'ics4'),
+    ('arrangement', b'iarr'),
+    ('icon_size', b'lvis'),
+    ('shows_item_info', b'mnfo'),
+    ('shows_icon_preview', b'prvw'),
+    ('text_size', b'fsiz'),
+    ('label_position', b'lpos'),
+    ('background_picture', b'ibkg'),
+    ('background_color', b'colr'),
+    ('text_size', b'fsiz'),
+    ('shows_icon', b'shic'),
+    ('shows_icon_preview', b'prvw'),
+    ('shows_preview_column', b'shpr'),
+    ('discloses_preview_pane', b'dspr'),
+    ('calculates_folder_sizes', b'sfsz'),
+    ('shows_icon_preview', b'prvw'),
+    ('icon_size', b'lvis'),
+    ('text_size', b'fsiz'),
+    ('sort_column', b'srtc'),
+    ('uses_relative_dates', b'urdt'),
+    ('index', b'pidx'),
+    ('name', b'pnam'),
+    ('sort_direction', b'sord'),
+    ('width', b'clwd'),
+    ('minimum_width', b'clwn'),
+    ('maximum_width', b'clwm'),
+    ('visible', b'pvis'),
+]
+
 
 elements = [
-    ('application', 'capp'),
-    ('items', 'cobj'),
-    ('containers', 'ctnr'),
-    ('computer_objects', 'ccmp'),
-    ('disks', 'cdis'),
-    ('folders', 'cfol'),
-    ('desktop_objects', 'cdsk'),
-    ('trash_objects', 'ctrs'),
-    ('files', 'file'),
-    ('alias_files', 'alia'),
-    ('application_files', 'appf'),
-    ('document_files', 'docf'),
-    ('internet_location_files', 'inlf'),
-    ('clippings', 'clpf'),
-    ('packages', 'pack'),
-    ('windows', 'cwin'),
-    ('Finder_windows', 'brow'),
-    ('desktop_windows', 'dktw'),
-    ('information_windows', 'iwnd'),
-    ('preferences_windows', 'pwnd'),
-    ('clipping_windows', 'lwnd'),
-    ('process', 'prcs'),
-    ('application_process', 'pcap'),
-    ('desk_accessory_process', 'pcda'),
-    ('preferences', 'cprf'),
-    ('labels', 'clbl'),
-    ('icon_familys', 'ifam'),
-    ('icon_view_options', 'icop'),
-    ('column_view_options', 'cvop'),
-    ('list_view_options', 'lvop'),
-    ('columns', 'lvcl'),
-    ('alias_lists', 'alst')]
+    ('application', b'capp'),
+    ('items', b'cobj'),
+    ('containers', b'ctnr'),
+    ('computer_objects', b'ccmp'),
+    ('disks', b'cdis'),
+    ('folders', b'cfol'),
+    ('desktop_objects', b'cdsk'),
+    ('trash_objects', b'ctrs'),
+    ('files', b'file'),
+    ('alias_files', b'alia'),
+    ('application_files', b'appf'),
+    ('document_files', b'docf'),
+    ('internet_location_files', b'inlf'),
+    ('clippings', b'clpf'),
+    ('packages', b'pack'),
+    ('windows', b'cwin'),
+    ('Finder_windows', b'brow'),
+    ('desktop_windows', b'dktw'),
+    ('information_windows', b'iwnd'),
+    ('preferences_windows', b'pwnd'),
+    ('clipping_windows', b'lwnd'),
+    ('process', b'prcs'),
+    ('application_process', b'pcap'),
+    ('desk_accessory_process', b'pcda'),
+    ('preferences', b'cprf'),
+    ('labels', b'clbl'),
+    ('icon_familys', b'ifam'),
+    ('icon_view_options', b'icop'),
+    ('column_view_options', b'cvop'),
+    ('list_view_options', b'lvop'),
+    ('columns', b'lvcl'),
+    ('alias_lists', b'alst'),
+]
+
 
 commands = [
-    ('open', 'aevtodoc', [
-            ('using', 'usin'),
-            ('with_properties', 'prdt')]),
-    ('print_', 'aevtpdoc', [('with_properties', 'prdt')]),
-    ('quit', 'aevtquit', []),
-    ('activate', 'miscactv', []),
-    ('close', 'coreclos', []),
-    ('count', 'corecnte', [('each', 'kocl')]),
-    ('data_size', 'coredsiz', [('as_', 'rtyp')]),
-    ('delete', 'coredelo', []),
-    (       'duplicate',
-            'coreclon',
-            [       ('to', 'insh'),
-                    ('replacing', 'alrp'),
-                    ('routing_suppressed', 'rout'),
-                    ('exact_copy', 'exct')]),
-    ('exists', 'coredoex', []),
-    (       'make',
-            'corecrel',
-            [       ('new', 'kocl'),
-                    ('at', 'insh'),
-                    ('to', 'to  '),
-                    ('with_properties', 'prdt')]),
-    (       'move',
-            'coremove',
-            [       ('to', 'insh'),
-                    ('replacing', 'alrp'),
-                    ('positioned_at', 'mvpl'),
-                    ('routing_suppressed', 'rout')]),
-    ('select', 'miscslct', []),
-    ('copy', 'misccopy', []),
-    ('sort', 'DATASORT', [('by', 'by  ')]),
-    ('clean_up', 'fndrfclu', [('by', 'by  ')]),
-    ('eject', 'fndrejct', []),
-    ('empty', 'fndrempt', [('security', 'sec?')]),
-    ('erase', 'fndrfera', []),
-    ('reveal', 'miscmvis', []),
-    ('update', 'fndrfupd', [
-            ('necessity', 'nec?'),
-            ('registering_applications', 'reg?')]),
-    ('restart', 'fndrrest', []),
-    ('shut_down', 'fndrshut', []),
-    ('sleep', 'fndrslep', [])]
+    ('open', b'aevtodoc', [('using', b'usin'), ('with_properties', b'prdt')]),
+    ('print', b'aevtpdoc', [('with_properties', b'prdt')]),
+    ('quit', b'aevtquit', []),
+    ('activate', b'miscactv', []),
+    ('close', b'coreclos', []),
+    ('count', b'corecnte', [('each', b'kocl')]),
+    ('data_size', b'coredsiz', [('as_', b'rtyp')]),
+    ('delete', b'coredelo', []),
+    ('duplicate', b'coreclon', [('to', b'insh'), ('replacing', b'alrp'), ('routing_suppressed', b'rout'), ('exact_copy', b'exct')]),
+    ('exists', b'coredoex', []),
+    ('make', b'corecrel', [('new', b'kocl'), ('at', b'insh'), ('to', b'to  '), ('with_properties', b'prdt')]),
+    ('move', b'coremove', [('to', b'insh'), ('replacing', b'alrp'), ('positioned_at', b'mvpl'), ('routing_suppressed', b'rout')]),
+    ('select', b'miscslct', []),
+    ('openVirtualLocation', b'fndrovir', []),
+    ('copy', b'misccopy', []),
+    ('sort', b'DATASORT', [('by', b'by  ')]),
+    ('clean_up', b'fndrfclu', [('by', b'by  ')]),
+    ('eject', b'fndrejct', []),
+    ('empty', b'fndrempt', [('security', b'sec?')]),
+    ('erase', b'fndrfera', []),
+    ('reveal', b'miscmvis', []),
+    ('update', b'fndrfupd', [('necessity', b'nec?'), ('registering_applications', b'reg?')]),
+    ('restart', b'fndrrest', []),
+    ('shut_down', b'fndrshut', []),
+    ('sleep', b'fndrslep', []),
+]
+
 
 </t>
 <t tx="karstenw.20160619132017.1">@language python
@@ -10712,7 +10721,8 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
     # parent folder must exists; minimal plausibility
     parent, foldername = os.path.split( cacheFolder )
     if not os.path.exists( parent ):
-        print( "CactusTools.getDownloadFolder(%s) -&gt; False" % NSURL2str(nsurl) )
+        if 0: # kwdbg
+            print( "CactusTools.getDownloadFolder(%s) -&gt; False" % NSURL2str(nsurl) )
         return False, False
 
     if not os.path.exists(cacheFolder):
@@ -10737,7 +10747,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
     if localpath:
         localrelfolder, localname = os.path.split( localpath )
         localpath = os.path.join( cacheFolder, localpath )
-        if kwdbg:
+        if 0: # kwdbg
             print( "CactusTools.getDownloadFolder(%s) -&gt; %s" % (NSURL2str(nsurl), repr(localpath) ) )
         return localpath, localname
     return False, False
@@ -10796,7 +10806,8 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
     l['NSFileModificationDate'] = date
     setFileProperties( filepath, l)
     folder, filename = os.path.split( filepath )
-    print( "Setting file(%s) modification date to %s" % (filename, repr(modfdt)) )
+    if 0:
+        print( "Setting file(%s) modification date to %s" % (filename, repr(modfdt)) )
 
 
 </t>
@@ -10806,7 +10817,9 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 
     if not nsurl:
         return False
-
+    
+    # pdb.set_trace()
+    
     returnURL = nsurl
     url = NSURL2str( nsurl )
 
@@ -10854,7 +10867,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
                 if not localpath.lower().endswith( "." + fileextension.lower() ):
                     localpath = localpath + '.' + fileextension
 
-            print( "LOAD: %s..." % url )
+            print( "    LOAD: %s..." % url, end=" " )
             headers = {}
             r = requests.get( url )
             s = r.content
@@ -10869,17 +10882,25 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
             try:
                 dts = time.mktime( dts )
             except Exception as err:
-                print("dts = time.mktime( dts ) FAILED.\n'%s'\n%s" % (str(dts),err))
+                if 0:
+                    print("dts = time.mktime( dts ) FAILED.\n'%s'\n%s" % (str(dts),err))
+                pass
                 
             if dts:
                 dt = datetime.datetime.fromtimestamp( dts )
 
             try:
+                # pdb.set_trace()
                 finder = asc.app(u'Finder.app', terms=Finder10)
-                hfspath = mactypes.File( localpath ).hfspath
-                finder.files[hfspath].comment.set( url )
+                cmt = makeunicode( url )
+                fndralias = mactypes.File( localpath ) #.alias
+                finder.files[fndralias].comment.set( url )
+                
             except Exception as v:
                 print( "SET COMMENT FAILED ON '%s'" % localpath )
+                # pdb.set_trace()
+                print( "ERROR:", v )
+            
             # get file date
             lmodfdate = os.stat( localpath ).st_mtime
             lmodfdate = datetime.datetime.utcfromtimestamp( lmodfdate )
@@ -10891,8 +10912,8 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
                 # do not cache if modification date cannot be determined
                 print( "NOCACHE: Could not get remote file(%s) modification date." % url )
                 print( err )
-            print( "LOAD: %s...done" % url )
-            print( "LOCAL:", repr(localpath) )
+            print( "...DONE" )
+            print( "    LOCAL:", repr(localpath) )
 
         returnURL = NSURL.fileURLWithPath_( makeunicode(localpath) )
 
@@ -10957,7 +10978,7 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
     path = purl.path
     folder, filename = os.path.split( path )
     basename, ext = os.path.splitext( filename )
-    if kwdbg:
+    if 0: # kwdbg:
         print( "CactusTools.getURLExtension(%s) -&gt; '%s' . '%s'" % ( url, basename, ext ) )
     return (basename, ext)
 </t>
@@ -11144,9 +11165,9 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
     # the type should be determinable within the first 250 bytes
     checkpart = s[:250]
 
-    xmlre = re.compile( "^&lt;?xml\W+version" )
-    rspre = re.compile( "&lt;reallySimplePhoto" )
-    opmlre = re.compile( "&lt;opml version" )
+    xmlre = re.compile( r"^&lt;?xml\W+version" )
+    rspre = re.compile( r"&lt;reallySimplePhoto" )
+    opmlre = re.compile( r"&lt;opml version" )
 
     if checkpart.startswith( "&lt;?xml version" ):
         pass
