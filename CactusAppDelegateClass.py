@@ -375,26 +375,27 @@ class CactusAppDelegate(NSObject):
 
     def newOutlineFromURL_Type_(self, url, type_):
         if kwlog:
-            print( "CactusAppDelegate.newOutlineFromURL_Type_(\n\t%s\m\t%s )"
+            print( "CactusAppDelegate.newOutlineFromURL_Type_(\n\t%s\n\t%s )"
                     % (repr(url), repr(type_)) )
         
         # pdb.set_trace()
         
         if not isinstance(url, NSURL):
             url = NSURL.URLWithString_( url )
-
+        
         # just check for local files
         docc = NSDocumentController.sharedDocumentController()
         localurl = url.isFileURL()
         loaded = True
-
+        
         if localurl:
             loaded = docc.documentForURL_( url )
-
+        
         if not loaded or not localurl:
             doc, err = docc.makeDocumentWithContentsOfURL_ofType_error_(url,
                                                                        type_,
                                                                        None)
+
 
     # UNUSED but defined in class
     @objc.IBAction

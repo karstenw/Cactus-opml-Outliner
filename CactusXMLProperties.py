@@ -14,7 +14,7 @@ import re
 # 09 - tab
 # 0a - newline
 # 0d - carriage return
-re_bogusCharacters = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f]')
+re_bogusCharacters = re.compile( r'[\x00-\x08\x0b\x0c\x0e-\x1f]' )
 # py3 stuff
 py3 = False
 try:

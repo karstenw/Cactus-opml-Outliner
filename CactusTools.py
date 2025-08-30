@@ -316,9 +316,9 @@ def classifyAndReadUrl( url ):
     # the type should be determinable within the first 250 bytes
     checkpart = s[:250]
 
-    xmlre = re.compile( "^<?xml\W+version" )
-    rspre = re.compile( "<reallySimplePhoto" )
-    opmlre = re.compile( "<opml version" )
+    xmlre = re.compile( r"^<?xml\W+version" )
+    rspre = re.compile( r"<reallySimplePhoto" )
+    opmlre = re.compile( r"<opml version" )
 
     if checkpart.startswith( "<?xml version" ):
         pass

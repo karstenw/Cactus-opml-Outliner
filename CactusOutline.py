@@ -334,7 +334,7 @@ def open_node( url, nodeType=None, open_=False, supressCache=False ):
     # pdb.set_trace()
     
     # manual quoting
-    analyzeEncoding = re.compile(r'[\x00-\x22\x24\x80-\xFF]')
+    analyzeEncoding = re.compile( r'[\x00-\x22\x24\x80-\xFF]' )
     while True:
         m = analyzeEncoding.search( url )
         if m:

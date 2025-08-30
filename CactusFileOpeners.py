@@ -283,7 +283,7 @@ def openXML_( rootXML):
     # always outline type (even for tables)
     root = OutlineNode("__ROOT__", "", None, typeOutline, None)
     
-    pdb.set_trace()
+    #pdb.set_trace()
     
     rootXML = rootXML
     name = rootXML['name']

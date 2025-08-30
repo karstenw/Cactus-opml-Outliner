@@ -274,14 +274,16 @@ def getXMLNodes( node ):
             try:
                 name = name()
             except Exception as err:
-                pdb.set_trace()
+                if kwdbg:
+                    pdb.set_trace()
                 print( err )
                 print()
                 print( type(name), name )
         try:
             name = makeunicode(name)
         except Exception as err:
-            pdb.set_trace()
+            if kwdbg:
+                pdb.set_trace()
             print(err)
 
         text = n.text
