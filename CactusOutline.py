@@ -243,26 +243,13 @@ g_qtplayer_extensions = g_qtplayer_extensions.split()
 
 
 # py3 stuff
-py3 = False
-try:
-    unicode('')
-    punicode = unicode
-    pstr = str
-    punichr = unichr
-except NameError:
-    punicode = str
-    pstr = bytes
-    py3 = True
-    punichr = chr
-    long = int
+punicode = str
+pstr = bytes
+py3 = True
+punichr = chr
+long = int
 
-
-if not py3:
-    import urllib
-    import urlparse
-    urlparse = urlparse.urlparse
-else:
-    from urllib.parse import urlparse
+from urllib.parse import urlparse
 
 import requests
 

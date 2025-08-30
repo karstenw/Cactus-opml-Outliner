@@ -15,18 +15,11 @@ NSBundle = Foundation.NSBundle
 
 
 # py3 stuff
-py3 = False
-try:
-    unicode('')
-    punicode = unicode
-    pstr = str
-    punichr = unichr
-except NameError:
-    punicode = str
-    pstr = bytes
-    py3 = True
-    punichr = chr
-    long = int
+punicode = str
+pstr = bytes
+py3 = True
+punichr = chr
+long = int
 
 class CactusOpenAsAccessoryController(NSObject):
     """Just a holder for some values and an action for a open panel accessory."""

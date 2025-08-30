@@ -10,7 +10,7 @@
 <find_panel_settings/>
 <vnodes>
 <v t="karstenw.20160619130609.2" a="E"><vh>Code</vh>
-<v t="karstenw.20160619192706.1"><vh>Tools</vh>
+<v t="karstenw.20160619192706.1" a="E"><vh>Tools</vh>
 <v t="karstenw.20160619130856.1"><vh>@clean CactusAccessoryController.py</vh>
 <v t="karstenw.20160619130933.1"><vh>CactusAccessoryController declarations</vh></v>
 <v t="karstenw.20221106095308.1"><vh>python3 stuff</vh></v>
@@ -21,8 +21,8 @@
 </v>
 </v>
 </v>
-<v t="karstenw.20160619193218.1"><vh>Controllers</vh>
-<v t="karstenw.20160619131140.1" a="E"><vh>@clean CactusOpenURLController.py</vh>
+<v t="karstenw.20160619193218.1" a="E"><vh>Controllers</vh>
+<v t="karstenw.20160619131140.1"><vh>@clean CactusOpenURLController.py</vh>
 <v t="karstenw.20160619131158.1"><vh>CactusOpenURLController declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131158.2" a="E"><vh>class OpenURLWindowController</vh>
@@ -388,11 +388,10 @@
 <v t="karstenw.20160619131622.5"><vh>ascachepath</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131616.1"><vh>@clean CactusVersion.py</vh>
+<v t="karstenw.20160619131616.1" a="E"><vh>@clean CactusVersion.py</vh>
 <v t="karstenw.20160619131625.1"><vh>CactusVersion declarations</vh></v>
-<v t="karstenw.20221106095308.1"></v>
 </v>
-<v t="karstenw.20160619131631.1"><vh>@clean CactusXMLProperties.py</vh>
+<v t="karstenw.20160619131631.1" a="E"><vh>@clean CactusXMLProperties.py</vh>
 <v t="karstenw.20160619131636.1"><vh>CactusXMLProperties declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 </v>
@@ -463,7 +462,7 @@
 <v t="karstenw.20160619132023.48"><vh>publish_extensions</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619130952.1"><vh>@clean CactusAppDelegateClass.py</vh>
+<v t="karstenw.20160619130952.1" a="E"><vh>@clean CactusAppDelegateClass.py</vh>
 <v t="karstenw.20160619130959.1"><vh>CactusAppDelegateClass declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619130959.2"><vh>class Document</vh>
@@ -675,8 +674,6 @@ OpenURLWindowController = CactusOpenURLController.OpenURLWindowController
 
 import CactusMakeCalendarController
 MakeCalendarController = CactusMakeCalendarController.MakeCalendarController
-
-
 
 
 </t>
@@ -9193,18 +9190,7 @@ import pdb
 
 import re
 
-#import urllib
-#import urllib2
-#import urlparse
-
-if not py3:
-    import urllib
-    import urlparse
-    urlparse = urlparse.urlparse
-else:
-    from urllib.parse import urlparse
-
-
+from urllib.parse import urlparse
 
 import Foundation
 NSURL = Foundation.NSURL
@@ -9243,9 +9229,9 @@ import os
 appname ="Cactus Outline-Editor"
 appnameshort = "Cactus"
 
-copyright = 'Copyright 2011-2023 Karsten Wolf'
+copyright = 'Copyright 2011-2025 Karsten Wolf'
 
-version = "0.8.1"
+version = "0.8.2"
 
 # 
 user_agent = "%s/%s +https://github.com/karstenw/Cactus-opml-Outliner" % (appname, version)
@@ -9255,6 +9241,7 @@ document_creator = "Created by %s %s" % (appname, version)
 cachefolder = os.path.expanduser("~/Library/Application Support/%s" % appname )
 
 developmentversion = False
+
 
 </t>
 <t tx="karstenw.20160619131631.1">@language python
@@ -9278,6 +9265,8 @@ import re
 # 0a - newline
 # 0d - carriage return
 re_bogusCharacters = re.compile( r'[\x00-\x08\x0b\x0c\x0e-\x1f]' )
+
+
 </t>
 <t tx="karstenw.20160619131957.1">@language python
 @tabwidth -4
@@ -11222,18 +11211,11 @@ NSFileHandlingPanelOKButton  = AppKit.NSFileHandlingPanelOKButton
 </t>
 <t tx="karstenw.20220912113812.1"></t>
 <t tx="karstenw.20221106095308.1"># py3 stuff
-py3 = False
-try:
-    unicode('')
-    punicode = unicode
-    pstr = str
-    punichr = unichr
-except NameError:
-    punicode = str
-    pstr = bytes
-    py3 = True
-    punichr = chr
-    long = int
+punicode = str
+pstr = bytes
+py3 = True
+punichr = chr
+long = int
 
 </t>
 <t tx="karstenw.20221106095747.1">if CactusVersion.developmentversion:
@@ -11245,13 +11227,7 @@ if __name__ == "__main__":
 
 
 </t>
-<t tx="karstenw.20221106100010.1">
-if not py3:
-    import urllib
-    import urlparse
-    urlparse = urlparse.urlparse
-else:
-    from urllib.parse import urlparse
+<t tx="karstenw.20221106100010.1">from urllib.parse import urlparse
 
 import requests
 

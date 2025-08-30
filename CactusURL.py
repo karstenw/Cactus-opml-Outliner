@@ -27,18 +27,7 @@ import pdb
 
 import re
 
-#import urllib
-#import urllib2
-#import urlparse
-
-if not py3:
-    import urllib
-    import urlparse
-    urlparse = urlparse.urlparse
-else:
-    from urllib.parse import urlparse
-
-
+from urllib.parse import urlparse
 
 import Foundation
 NSURL = Foundation.NSURL
@@ -46,18 +35,11 @@ NSString = Foundation.NSString
 
 
 # py3 stuff
-py3 = False
-try:
-    unicode('')
-    punicode = unicode
-    pstr = str
-    punichr = unichr
-except NameError:
-    punicode = str
-    pstr = bytes
-    py3 = True
-    punichr = chr
-    long = int
+punicode = str
+pstr = bytes
+py3 = True
+punichr = chr
+long = int
 
 def NSURL2str( nsurl ):
     if isinstance(nsurl, NSURL):

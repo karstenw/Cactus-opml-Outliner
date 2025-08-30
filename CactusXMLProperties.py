@@ -15,17 +15,12 @@ import re
 # 0a - newline
 # 0d - carriage return
 re_bogusCharacters = re.compile( r'[\x00-\x08\x0b\x0c\x0e-\x1f]' )
+
+
 # py3 stuff
-py3 = False
-try:
-    unicode('')
-    punicode = unicode
-    pstr = str
-    punichr = unichr
-except NameError:
-    punicode = str
-    pstr = bytes
-    py3 = True
-    punichr = chr
-    long = int
+punicode = str
+pstr = bytes
+py3 = True
+punichr = chr
+long = int
 
