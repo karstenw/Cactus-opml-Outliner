@@ -6,11 +6,11 @@
 
 It is an outline editor based on the PythonBrowser example from PyObjC.
 
-Developed on OSX with Python2, pyobjc and py2app.
+Developed on OSX with Python3, pyobjc and py2app.
 
-It runs on 10.9 to 10.13. 10.14 and up not tested.
+It runs on 10.13 and up. tested on 10.13 Intel and OS 15.6 ARM
 
-It's still in development but it gets better.
+It's still in development and stayed there for a long time.
 
 Use it to explore OPML, RSS, XML, PLIST, HTML and iTunes XMLfiles. Nodes can be opened in the webbrowser, in Quicktime Player or in Cactus depending on node type. See the shortcuts section at the end.
 
@@ -18,7 +18,7 @@ Use it to explore OPML, RSS, XML, PLIST, HTML and iTunes XMLfiles. Nodes can be 
 
 <http://groups.google.com/group/cactus-outliner-dev>
 
-## Download compiled app from the [github releases](../../releases) ##
+## Download compiled app from the [github releases](https://github.com/karstenw/Cactus-opml-Outliner/releases) ##
 
 Starting with v0,7.7 in 2021-06 the binaries will reside in the github releases.
 
@@ -75,8 +75,7 @@ Currently Cactus can open "iTunes Music Library.xml" files. This is incomplete (
 
 ## Quickstart ##
 
-Download the latest binary from
-https://goo.gl/yAL1Rm
+Download the latest binary from (github releases)[https://github.com/karstenw/Cactus-opml-Outliner/releases]
 unzip and launch.
 
 Do a google search for "filetype:opml"
@@ -104,6 +103,8 @@ OPML should be stable. If you find a bug, please report it on the mailing list.
 With the new "Open As..." option in the file dialogs, it is now possible to load an OPML or RSS file as XML. OPML as RSS and vice versa makes no sense but try to see why. Some files can only be openened as opml because they are buggy and opening as OPML does some repairs. Opening as XML needs a clean XML file.
 
 ## Latest changes ##
+
++ Moved to Python3
 
 + Drag and drop inside Cactus.
 
@@ -154,7 +155,7 @@ With the new "Open As..." option in the file dialogs, it is now possible to load
 
 + XML is now a document type.
 
-+ RSS and OPML are now a document types.
++ RSS and OPML are now document types.
 
 + Document icons for local files.
 
@@ -179,29 +180,26 @@ With the new "Open As..." option in the file dialogs, it is now possible to load
 
 ## Build ##
 
-    python setup.py py2app
+    python3 setup.py py2app
 
 
 Will build the app in the dist folder.
 
 
-#### A compiled binary can be downloaded from my dropbox. Versions >= 0.5.0 need Intel Macs and 10.6.####
-https://goo.gl/yAL1Rm
-
 
 #### Prerequisites for compiling: ####
 
 
-+ python 2.7 - older versions may work
++ python 3.13 - older versions may work
 + PyObjC
 + py2app
 + Apple developer tools
-+ lxml library installed (sudo pip install lxml)
++ lxml library installed (pip3 install lxml)
 
 
 ## Recent versions ##
 
-For more details see the announcements on the dev-list <http://groups.google.com/group/cactus-outliner-dev>
+For more details see the announcements on the (dev-list)[<http://groups.google.com/group/cactus-outliner-dev>]
 
 v0.7.8 - no functional changes. Switched to requests for URL loading.
 
