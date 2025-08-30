@@ -21,7 +21,7 @@
 </v>
 </v>
 </v>
-<v t="karstenw.20160619193218.1" a="E"><vh>Controllers</vh>
+<v t="karstenw.20160619193218.1"><vh>Controllers</vh>
 <v t="karstenw.20160619131140.1" a="E"><vh>@clean CactusOpenURLController.py</vh>
 <v t="karstenw.20160619131158.1"><vh>CactusOpenURLController declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
@@ -81,7 +81,7 @@
 <v t="karstenw.20160619131056.11"><vh>class DoneMessageException</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131102.1" a="E"><vh>@clean CactusFileOpeners.py</vh>
+<v t="karstenw.20160619131102.1"><vh>@clean CactusFileOpeners.py</vh>
 <v t="karstenw.20160619131110.1"><vh>Imports and Globals</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131110.2"><vh>openOPML_</vh></v>
@@ -99,7 +99,7 @@
 </v>
 <v t="karstenw.20160619131110.8"><vh>openPLIST_</vh></v>
 </v>
-<v t="karstenw.20160619131220.1" a="E"><vh>@clean CactusOPML.py</vh>
+<v t="karstenw.20160619131220.1"><vh>@clean CactusOPML.py</vh>
 <v t="karstenw.20160619131225.1"><vh>CactusOPML declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131225.2"><vh>getOutlineNodes</vh></v>
@@ -127,7 +127,7 @@
 <v t="karstenw.20160619131225.24"><vh>photo_from_string</vh></v>
 <v t="karstenw.20160619131225.25"><vh>getPhotoXML</vh></v>
 </v>
-<v t="karstenw.20160619131230.1" a="E"><vh>@clean CactusOutline.py</vh>
+<v t="karstenw.20160619131230.1"><vh>@clean CactusOutline.py</vh>
 <v t="karstenw.20160619131238.1"><vh>CactusOutline declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20221106100010.1"><vh>Py2 / Py3 declarations</vh></v>
@@ -226,7 +226,7 @@
 <v t="karstenw.20160619131238.91"><vh>folder2Outline</vh></v>
 <v t="karstenw.20160619131238.92"><vh>makeFilePropertiesNode</vh></v>
 </v>
-<v t="karstenw.20160619131247.1" a="E"><vh>@clean CactusOutlineDoc.py</vh>
+<v t="karstenw.20160619131247.1"><vh>@clean CactusOutlineDoc.py</vh>
 <v t="karstenw.20160619131254.1"><vh>CactusOutlineDoc declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619131254.2"><vh>boilerplateOPML</vh></v>
@@ -347,7 +347,7 @@
 </v>
 <v t="karstenw.20221106095308.1"></v>
 </v>
-<v t="karstenw.20220912113705.1" a="E"><vh>@clean CactusTools.py</vh>
+<v t="karstenw.20220912113705.1"><vh>@clean CactusTools.py</vh>
 <v t="karstenw.20220912113721.1"><vh>Declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20220912113812.1" a="E"><vh>+ TOOLS</vh>
@@ -388,11 +388,11 @@
 <v t="karstenw.20160619131622.5"><vh>ascachepath</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619131616.1" a="E"><vh>@clean CactusVersion.py</vh>
+<v t="karstenw.20160619131616.1"><vh>@clean CactusVersion.py</vh>
 <v t="karstenw.20160619131625.1"><vh>CactusVersion declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 </v>
-<v t="karstenw.20160619131631.1" a="E"><vh>@clean CactusXMLProperties.py</vh>
+<v t="karstenw.20160619131631.1"><vh>@clean CactusXMLProperties.py</vh>
 <v t="karstenw.20160619131636.1"><vh>CactusXMLProperties declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 </v>
@@ -463,7 +463,7 @@
 <v t="karstenw.20160619132023.48"><vh>publish_extensions</vh></v>
 </v>
 </v>
-<v t="karstenw.20160619130952.1" a="E"><vh>@clean CactusAppDelegateClass.py</vh>
+<v t="karstenw.20160619130952.1"><vh>@clean CactusAppDelegateClass.py</vh>
 <v t="karstenw.20160619130959.1"><vh>CactusAppDelegateClass declarations</vh></v>
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20160619130959.2"><vh>class Document</vh>
@@ -475,7 +475,7 @@
 <v t="karstenw.20160619130959.7"><vh>runModalOpenPanel_forTypes_</vh></v>
 <v t="karstenw.20160619130959.8"><vh>makeDocumentWithContentsOfURL_ofType_error_</vh></v>
 </v>
-<v t="karstenw.20160619130959.9" a="E"><vh>class CactusAppDelegate</vh>
+<v t="karstenw.20160619130959.9"><vh>class CactusAppDelegate</vh>
 <v t="karstenw.20160619130959.10"><vh>initialize</vh></v>
 <v t="karstenw.20160619130959.11"><vh>awakeFromNib</vh></v>
 <v t="karstenw.20160619130959.12"><vh>applicationDidFinishLaunching_</vh></v>
@@ -525,7 +525,7 @@
 <v t="karstenw.20221106095308.1"></v>
 <v t="karstenw.20221106095747.1"><vh>+ + + MAIN + + +</vh></v>
 </v>
-<v t="karstenw.20160619132031.1"><vh>@clean setup.py</vh>
+<v t="karstenw.20160619132031.1" a="E"><vh>@clean setup.py</vh>
 <v t="karstenw.20160619132037.1"><vh>setup declarations</vh></v>
 </v>
 <v t="karstenw.20160619200133.1"><vh>LICENSES</vh>
@@ -10290,8 +10290,23 @@ setup(
             'packages' : ['lxml'],
             'frameworks' : ['/usr/local/lib/libxml2.2.dylib',
                             '/usr/local/lib/libxslt.1.dylib',
-                            '/usr/local/lib/libexslt.0.dylib']
-          }
+                            '/usr/local/lib/libexslt.0.dylib'],
+            "excludes": [
+                'TkInter', 'tkinter', 'tk', 'wx', 'sphinx',
+                'pyqt5', 'qt5', 'PyQt5', 
+                
+                'setuptools', 'numba', 
+                
+                # 'certifi', 'pytz', 
+                'notebook', 'nbformat', 'jedi', 'testpath', 'docutils',
+                'ipykernel', 'parso', 'Cython', 'sphinx_rtd_theme', 'alabaster',
+                'tornado', 'IPython', 'numpydoc', 'nbconvert', 
+                'scipy', 'matplotlib', 
+                'pandas', 'cv2', 'dlib', 'skimage', 'sklearn', 'mpl_toolkits',
+                
+                'PIL', #'cryptography'
+            ],
+        }
     }
 )
 </t>
@@ -10313,7 +10328,7 @@ open /Users/karstenwo/python/pyobjc/+ideen/outliner_kw/Cactus-git/English.lproj/
 rm -Rf ./build/*
 rm -Rf ./dist/*
 
-/usr/bin/env python setup.py py2app -O2 -g -x
+/usr/bin/env python3 setup.py py2app # -O2 -g -x
 
 mkdir -p ../Cactus-opml-Outliner-binaries/Cactus_v000
 
@@ -10466,13 +10481,13 @@ debug:
 	# build the app in debug mode
 	rm -Rf ./build/*
 	rm -Rf ./dist/*
-	python setup.py py2app -A
+	python3 setup.py py2app -A
 
 release:
 	# build the app in release mode
 	rm -Rf ./build/*
 	rm -Rf ./dist/*
-	python setup.py py2app
+	python3 setup.py py2app
 	mkdir -p Cactus_v000
 	
 	# copy the additional licenses
